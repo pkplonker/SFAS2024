@@ -136,10 +136,12 @@
     <ClCompile Include="Source\Engine\IApplication.cpp" />
     <ClCompile Include="Source\Engine\IGraphics.cpp" />
     <ClCompile Include="Source\Engine\IInput.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\IComponent.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Billboard.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Graphics.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Shader.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\GameObject.cpp" />
     <ClCompile Include="Source\Engine\Implementation\XInput\DirectXInput.cpp" />
     <ClCompile Include="Source\Engine\IRenderable.cpp" />
     <ClCompile Include="Source\Engine\IShader.cpp" />
@@ -152,10 +154,13 @@
     <ClInclude Include="Source\Engine\IApplication.h" />
     <ClInclude Include="Source\Engine\IGraphics.h" />
     <ClInclude Include="Source\Engine\IInput.h" />
+    <ClInclude Include="Source\Engine\Implementation\IComponent.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Billboard.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Graphics.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Shader.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.h" />
+    <ClInclude Include="Source\Engine\Implementation\GameObject.h" />
+    <ClInclude Include="Source\Engine\Implementation\IUpdateable.h" />
     <ClInclude Include="Source\Engine\Implementation\XInput\DirectXInput.h" />
     <ClInclude Include="Source\Engine\IRenderable.h" />
     <ClInclude Include="Source\Engine\IShader.h" />
