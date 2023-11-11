@@ -142,6 +142,7 @@
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Shader.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.cpp" />
     <ClCompile Include="Source\Engine\Implementation\GameObject.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\TestComponent.cpp" />
     <ClCompile Include="Source\Engine\Implementation\XInput\DirectXInput.cpp" />
     <ClCompile Include="Source\Engine\IRenderable.cpp" />
     <ClCompile Include="Source\Engine\IShader.cpp" />
@@ -161,11 +162,15 @@
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.h" />
     <ClInclude Include="Source\Engine\Implementation\GameObject.h" />
     <ClInclude Include="Source\Engine\Implementation\IUpdateable.h" />
+    <ClInclude Include="Source\Engine\Implementation\Math\Vector2.h" />
+    <ClInclude Include="Source\Engine\Implementation\Math\Vector3.h" />
+    <ClInclude Include="Source\Engine\Implementation\TestComponent.h" />
     <ClInclude Include="Source\Engine\Implementation\XInput\DirectXInput.h" />
     <ClInclude Include="Source\Engine\IRenderable.h" />
     <ClInclude Include="Source\Engine\IShader.h" />
     <ClInclude Include="Source\Engine\ITexture.h" />
     <ClInclude Include="Source\Engine\Transform2D.h" />
+    <ClInclude Include="Source\Engine\Transform3D.h" />
     <ClInclude Include="Source\Game\Game.h" />
   </ItemGroup>
   <ItemGroup>

@@ -41,7 +41,7 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
 
     for (unsigned int count = 0; count < totalDriverTypes; ++count)
     {
-        hr = D3D11CreateDeviceAndSwapChain(NULL, driverTypes[count], NULL, creationFlags, NULL, 0, D3D11_SDK_VERSION, &sd, &SwapChain, &Device, &FeatureLevel, &Context);
+        hr = D3D11CreateDeviceAndSwapChain(nullptr, driverTypes[count], NULL, creationFlags, NULL, 0, D3D11_SDK_VERSION, &sd, &SwapChain, &Device, &FeatureLevel, &Context);
 
         if (SUCCEEDED(hr))
         {
@@ -66,7 +66,7 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
 
     if (FAILED(hr))
     {
-        MessageBox(NULL, "Graphics Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+        MessageBox(nullptr, "Graphics Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
     }
     else
     {
@@ -79,11 +79,11 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
 
         if (FAILED(hr))
         {
-            MessageBox(NULL, "Graphics Failed to create MVP Buffer", "Error!", MB_ICONEXCLAMATION | MB_OK);
+            MessageBox(nullptr, "Graphics Failed to create MVP Buffer", "Error!", MB_ICONEXCLAMATION | MB_OK);
         }
 
-        float halfWidth = static_cast<float>(width / 2);
-        float halfHeight = static_cast<float>(height / 2);
+        float halfWidth = static_cast<float>(width) / 2.0f;
+        float halfHeight = static_cast<float>(height)/ 2.0f;
         DirectX::XMMATRIX view = DirectX::XMMatrixIdentity();
         DirectX::XMMATRIX projection = DirectX::XMMatrixOrthographicOffCenterLH(-halfWidth, halfWidth, -halfHeight, halfHeight, 0.1f, 10.1f);
         vpMatrix = DirectX::XMMatrixMultiply(view, projection);
@@ -146,7 +146,7 @@ void DirectX11Graphics::Update()
         viewport.TopLeftY = 0.0f;
         Context->RSSetViewports(1, &viewport);
 
-        Context->OMSetRenderTargets(1, &BackbufferView, NULL);
+        Context->OMSetRenderTargets(1, &BackbufferView, nullptr);
 
         for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
         {
@@ -155,7 +155,7 @@ void DirectX11Graphics::Update()
             for (auto renderable = bucket->second.begin(); renderable != bucket->second.end(); ++renderable)
             {
                 SetWorldMatrix((*renderable)->GetTransform());
-                Context->OMSetBlendState(BlendState, NULL, ~0U);
+                Context->OMSetBlendState(BlendState, nullptr, ~0U);
                 (*renderable)->Update();
             }
         }
@@ -178,7 +178,7 @@ ITexture* DirectX11Graphics::CreateTexture(const wchar_t* filepath)
 
     if (IsValid())
     {
-        HRESULT hr = DirectX::CreateDDSTextureFromFile(Device, filepath, NULL, &Texture);
+        HRESULT hr = DirectX::CreateDDSTextureFromFile(Device, filepath, nullptr, &Texture);
 
         if (SUCCEEDED(hr))
         {
@@ -199,7 +199,7 @@ ITexture* DirectX11Graphics::CreateTexture(const wchar_t* filepath)
             ID3D11Resource* textureResource;
             Texture->GetResource(&textureResource);
 
-            ((ID3D11Texture2D*)textureResource)->GetDesc(&Description);
+            static_cast<ID3D11Texture2D*>(textureResource)->GetDesc(&Description);
             textureResource->Release();
         }
 
@@ -316,9 +316,9 @@ IRenderable* DirectX11Graphics::CreateBillboard(IShader* ShaderIn)
 
 void DirectX11Graphics::SetWorldMatrix(const Transform2D& transform)
 {
-    DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(transform.PositionX, transform.PositionY, 10.0f);
+    DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(transform.Position.X, transform.Position.Y, 10.0f);
     DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationZ(transform.Rotation);
-    DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(transform.ScaleX, transform.ScaleY, 1.0f);
+    DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(transform.Scale.X, transform.Scale.Y, 1.0f);
     DirectX::XMMATRIX world = scale * rotation * translation;
     DirectX::XMMATRIX mvp = DirectX::XMMatrixMultiply(world, vpMatrix);
     mvp = DirectX::XMMatrixTranspose(mvp);
@@ -341,7 +341,7 @@ bool DirectX11Graphics::CompileShader(LPCWSTR filepath, LPCSTR entry, LPCSTR sha
     {
         if (errorBuffer)
         {
-            MessageBox(NULL, (char*)errorBuffer->GetBufferPointer(), "Error!", MB_ICONEXCLAMATION | MB_OK);
+            MessageBox(nullptr, static_cast<char*>(errorBuffer->GetBufferPointer()), "Error!", MB_ICONEXCLAMATION | MB_OK);
         }
     }
 

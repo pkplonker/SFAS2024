@@ -2,22 +2,32 @@
 
 const Transform2D& IRenderable::GetTransform() const
 {
-	return Transform;
+    return Transform;
 }
 
 void IRenderable::SetPosition(float x, float y)
 {
-	Transform.PositionX = x;
-	Transform.PositionY = y;
+    Transform.Position.X = x;
+    Transform.Position.Y = y;
+}
+
+void IRenderable::SetPosition(Vector2 position)
+{
+    Transform.Position = position;
 }
 
 void IRenderable::SetRotation(float r)
 {
-	Transform.Rotation = r;
+    Transform.Rotation = r;
 }
 
 void IRenderable::SetScale(float sx, float sy)
 {
-	Transform.ScaleX = sx;
-	Transform.ScaleY = sy;
+    Transform.Scale.X = sx;
+    Transform.Scale.Y = sy;
+}
+
+void IRenderable::SetScale(Vector2 scale)
+{
+    Transform.Scale = scale;
 }

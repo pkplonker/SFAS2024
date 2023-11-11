@@ -20,92 +20,93 @@ IApplication* GetApplication(IGraphics* Graphics, IInput* Input);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	WNDCLASSEX wc;
-	HWND hwnd;
+    WNDCLASSEX wc;
+    HWND hwnd;
 
-	wc.cbSize = sizeof(WNDCLASSEX);
-	wc.style = 0;
-	wc.lpfnWndProc = WndProc;
-	wc.cbClsExtra = 0;
-	wc.cbWndExtra = 0;
-	wc.hInstance = hInstance;
-	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-	wc.lpszMenuName = NULL;
-	wc.lpszClassName = WindowClassName;
-	wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
+    wc.cbSize = sizeof(WNDCLASSEX);
+    wc.style = 0;
+    wc.lpfnWndProc = WndProc;
+    wc.cbClsExtra = 0;
+    wc.cbWndExtra = 0;
+    wc.hInstance = hInstance;
+    wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
+    wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    wc.hbrBackground = reinterpret_cast<HBRUSH>((COLOR_WINDOW + 1));
+    wc.lpszMenuName = nullptr;
+    wc.lpszClassName = WindowClassName;
+    wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
 
-	if (!RegisterClassEx(&wc))
-	{
-		MessageBox(NULL, "Window Registration Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
-		return 0;
-	}
+    if (!RegisterClassEx(&wc))
+    {
+        MessageBox(nullptr, "Window Registration Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+        return 0;
+    }
 
-	hwnd = CreateWindowEx( WS_EX_CLIENTEDGE, WindowClassName, WindowTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, WindowWidth, WindowHeight, NULL, NULL, hInstance, NULL);
+    hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, WindowClassName, WindowTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT,
+                          CW_USEDEFAULT, WindowWidth, WindowHeight, nullptr, nullptr, hInstance, nullptr);
 
-	if (hwnd == NULL)
-	{
-		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
-		return 0;
-	}
+    if (hwnd == nullptr)
+    {
+        MessageBox(nullptr, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+        return 0;
+    }
 
-	ShowWindow(hwnd, nCmdShow);
-	UpdateWindow(hwnd);
+    ShowWindow(hwnd, nCmdShow);
+    UpdateWindow(hwnd);
 
-	MSG msg;
-	msg.message = WM_NULL;
-	msg.wParam = -1;
-	IGraphics * Graphics = new DirectX11Graphics(hwnd);
-	IInput* Input = new DirectXInput();
-	IApplication* Application = GetApplication(Graphics, Input);
+    MSG msg;
+    msg.message = WM_NULL;
+    msg.wParam = -1;
+    IGraphics* Graphics = new DirectX11Graphics(hwnd);
+    IInput* Input = new DirectXInput();
+    IApplication* Application = GetApplication(Graphics, Input);
 
-	if (Graphics && Graphics->IsValid() && Application)
-	{
-		Application->Load();
+    if (Graphics && Graphics->IsValid() && Application)
+    {
+        Application->Load();
 
-		while (msg.message != WM_QUIT && Application->IsValid())
-		{
-			if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
-			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
+        while (msg.message != WM_QUIT && Application->IsValid())
+        {
+            if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+            {
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
 
-			Input->Update();
-			Application->Update();
-			Graphics->Update();
-		}
+            Input->Update();
+            Application->Update();
+            Graphics->Update();
+        }
 
-		Application->Cleanup();
-	}
+        Application->Cleanup();
+    }
 
-	if (Application)
-	{
-		delete Application;
-	}
+    if (Application)
+    {
+        delete Application;
+    }
 
-	if (Graphics)
-	{
-		delete Graphics;
-	}
+    if (Graphics)
+    {
+        delete Graphics;
+    }
 
-	return static_cast<int>(msg.wParam);
+    return static_cast<int>(msg.wParam);
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	switch (msg)
-	{
-	case WM_CLOSE:
-		DestroyWindow(hwnd);
-		break;
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
-	default:
-		return DefWindowProc(hwnd, msg, wParam, lParam);
-	}
+    switch (msg)
+    {
+    case WM_CLOSE:
+        DestroyWindow(hwnd);
+        break;
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        break;
+    default:
+        return DefWindowProc(hwnd, msg, wParam, lParam);
+    }
 
-	return 0;
+    return 0;
 }
