@@ -296,6 +296,7 @@
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Graphics.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Shader.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\SpriteRenderable.cpp" />
     <ClCompile Include="Source\Engine\Implementation\TestComponent.cpp" />
     <ClCompile Include="Source\Engine\Implementation\XInput\DirectXInput.cpp" />
     <ClCompile Include="Source\Engine\IRenderable.cpp" />
@@ -315,6 +316,7 @@
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Graphics.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Shader.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.h" />
+    <ClInclude Include="Source\Engine\Implementation\SpriteRenderable.h" />
     <ClInclude Include="Source\Engine\Implementation\TestComponent.h" />
     <ClInclude Include="Source\Engine\Implementation\XInput\DirectXInput.h" />
     <ClInclude Include="Source\Engine\IRenderable.h" />

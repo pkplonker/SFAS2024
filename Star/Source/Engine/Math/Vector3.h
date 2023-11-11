@@ -22,12 +22,12 @@ struct Vec3
 
     static Vec3 Zero()
     {
-        return {0};
+        return {0,0,0};
     }
 
     static Vec3 One()
     {
-        return {1};
+        return {1,1,1};
     }
 
 
@@ -43,7 +43,7 @@ struct Vec3
 
     [[nodiscard]] float Z() const
     {
-        return vec.x;
+        return vec.z;
     }
 
     void X(float val)

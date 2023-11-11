@@ -34,9 +34,8 @@ private:
 	void UpdateRingTestSelection();
 	void TestRingSolution();
 
-	IRenderable* Rings[NumberOfRings];
-	IRenderable* Arrow;
+	std::shared_ptr<GameObject> Rings[NumberOfRings];
+	std::shared_ptr<GameObject> Arrow;
 	RingLayer SelectedRing;
 	GameState State;
-	std::shared_ptr<GameObject> go;
 };

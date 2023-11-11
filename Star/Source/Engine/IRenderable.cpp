@@ -1,6 +1,6 @@
 #include "IRenderable.h"
 
-Transform2D& IRenderable::GetTransform()
+std::weak_ptr<Transform3D> IRenderable::GetTransform()
 {
     return Transform;
 }

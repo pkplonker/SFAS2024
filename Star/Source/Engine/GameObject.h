@@ -60,10 +60,15 @@ public:
         return nullptr;
     }
 
+    std::shared_ptr<Transform3D> Transform()
+    {
+        return transform;
+    }
+
     void Update() override;
 
 private:
-    std::unique_ptr<std::vector<std::shared_ptr<IComponent>>> components;
-    std::unique_ptr<Transform3D> transform;
+    std::unique_ptr<std::vector<std::shared_ptr<IComponent>>> components{};
+    std::shared_ptr<Transform3D> transform{};
     std::string name = GAMEOBJECT_DEFAULT_NAME;
 };

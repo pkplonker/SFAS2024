@@ -13,16 +13,22 @@ GameObject::GameObject()
 
 GameObject::GameObject(std::unique_ptr<Transform3D> transform) : GameObject()
 {
-    this->transform = std::move(transform);
+    if (transform)
+    {
+        this->transform = std::move(transform);
+    }
 }
 
-GameObject::GameObject(std::string name, std::unique_ptr<Transform3D> transform)
+GameObject::GameObject(std::string name, std::unique_ptr<Transform3D> transform) : GameObject()
 {
-    this->transform = std::move(transform);
+    if (transform)
+    {
+        this->transform = std::move(transform);
+    }
     this->name = std::move(name);
 }
 
-GameObject::GameObject(std::string name)
+GameObject::GameObject(std::string name) : GameObject()
 {
     this->name = std::move(name);
 }

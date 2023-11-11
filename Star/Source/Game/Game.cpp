@@ -8,6 +8,7 @@
 
 #include "Engine/Debug.h"
 #include "Engine/GameObject.h"
+#include "Engine/Implementation/SpriteRenderable.h"
 #include "Engine/Implementation/TestComponent.h"
 
 #define CLAMP(v, x, y) fmin(fmax(v, x), y)
@@ -51,16 +52,34 @@ bool Game::Load()
                                                   "ps_4_0", OuterTexture);
     IShader* ArrowShader = Graphics->CreateShader(L"Resource/Shaders/UnlitColor.fx", "VS_Main", "vs_4_0", "PS_Main",
                                                   "ps_4_0", ArrowTexture);
-    Rings[static_cast<unsigned int>(RingLayer::Inner)] = Graphics->CreateBillboard(InnerShader);
-    Rings[static_cast<unsigned int>(RingLayer::Middle)] = Graphics->CreateBillboard(MiddleShader);
-    Rings[static_cast<unsigned int>(RingLayer::Outer)] = Graphics->CreateBillboard(OuterShader);
-    Arrow = Graphics->CreateBillboard(ArrowShader);
-    go = std::make_shared<GameObject>();
-    const auto component = std::make_shared<TestComponent>(go);
-    const auto component2 = std::make_shared<TestComponent>(go);
 
-    go->AddComponent(component);
-    std::srand(static_cast<unsigned int>(std::time(0)));
+    std::shared_ptr<GameObject> inner = std::make_shared<GameObject>("Inner Ring");
+    std::shared_ptr<GameObject> middle = std::make_shared<GameObject>("Middle Ring");
+    std::shared_ptr<GameObject> outer = std::make_shared<GameObject>("Outer Ring");
+    Arrow = std::make_shared<GameObject>("Arrow");
+
+    std::shared_ptr<SpriteRenderable> sri = std::make_shared<SpriteRenderable>(
+        inner, Graphics->CreateBillboard(InnerShader));
+    std::shared_ptr<SpriteRenderable> srm = std::make_shared<SpriteRenderable>(
+        middle, Graphics->CreateBillboard(MiddleShader));
+    std::shared_ptr<SpriteRenderable> sro = std::make_shared<SpriteRenderable>(
+        outer, Graphics->CreateBillboard(OuterShader));
+    std::shared_ptr<SpriteRenderable> sra = std::make_shared<SpriteRenderable>(
+        Arrow, Graphics->CreateBillboard(ArrowShader));
+
+    inner->AddComponent(sri);
+    middle->AddComponent(srm);
+    outer->AddComponent(sro);
+    Arrow->AddComponent(sra);
+    inner->Transform()->Position.Z(10);
+    middle->Transform()->Position.Z(10);
+    outer->Transform()->Position.Z(10);
+    Arrow->Transform()->Position.Z(10);
+
+    Rings[static_cast<unsigned int>(Inner)] = inner;
+    Rings[static_cast<unsigned int>(Middle)] = middle;
+    Rings[static_cast<unsigned int>(Outer)] = outer;
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
     SelectedRing = RingLayer::Outer;
     State = GameState::Setup;
@@ -80,7 +99,6 @@ void Game::Update()
     // If mode is Playing then read controller input and manage which ring is selected, the rotation of each ring and waiting for select to confirm positions
     if (State == GameState::Playing)
     {
-        go->Update();
         UpdateRingSelection();
         UpdateSelectedRingRotation();
         UpdateRingTestSelection();
@@ -102,10 +120,10 @@ void Game::SetupEachRing()
 {
     for (unsigned int Ring = 0; Ring < NumberOfRings; ++Ring)
     {
-        Rings[Ring]->GetTransform().Rotation = static_cast<float>(fmod(rand(), Pie));
+        Rings[Ring]->Transform()->Rotation = Vec3(0,0,static_cast<float>(fmod(rand(), Pie)));
     }
 
-    Arrow->GetTransform().Rotation = static_cast<float>(fmod(rand(), Pie));
+    Arrow->Transform()->Rotation = Vec3(0,0,static_cast<float>(fmod(rand(), Pie)));
 }
 
 void Game::UpdateRingSelection()
@@ -130,9 +148,9 @@ void Game::UpdateRingSelection()
 void Game::UpdateSelectedRingRotation()
 {
     float delta = Input->GetValue(InputAction::RightStickXAxis) * SpinSpeed * DeltaTime;
-    float rotation = Rings[static_cast<int>(SelectedRing)]->GetTransform().Rotation;
-    float newRotation = static_cast<float>(fmod(rotation + delta, TwoPies));
-    Rings[static_cast<int>(SelectedRing)]->GetTransform().Rotation = newRotation;
+    Vec3 rotation = Rings[static_cast<int>(SelectedRing)]->Transform()->Rotation;
+    Vec3 newRotation = Vec3(0,0, static_cast<float>(fmod(rotation.Z() + delta, TwoPies)));
+    Rings[static_cast<int>(SelectedRing)]->Transform()->Rotation = newRotation;
 }
 
 void Game::UpdateRingTestSelection()
@@ -146,11 +164,11 @@ void Game::UpdateRingTestSelection()
 void Game::TestRingSolution()
 {
     float totalRotationDifference = 0.0f;
-    float arrowRotation = Arrow->GetTransform().Rotation + TwoPies;
+    float arrowRotation = Arrow->Transform()->Rotation.Z() + TwoPies;
 
     for (unsigned int Ring = 0; Ring < NumberOfRings; ++Ring)
     {
-        totalRotationDifference += abs(arrowRotation - (Rings[Ring]->GetTransform().Rotation + TwoPies));
+        totalRotationDifference += abs(arrowRotation - (Rings[Ring]->Transform()->Rotation.Z() + TwoPies));
     }
 
     float averageRotationDifference = totalRotationDifference / NumberOfRings;
