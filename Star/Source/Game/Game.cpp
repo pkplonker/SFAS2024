@@ -10,6 +10,9 @@
 #include <math.h>
 
 #include "Engine/Debug.h"
+#include "Engine/Implementation/GameObject.h"
+#include "Engine/Implementation/IComponent.h"
+#include "Engine/Implementation/TestComponent.h"
 
 #define CLAMP(v, x, y) fmin(fmax(v, x), y)
 
@@ -51,7 +54,11 @@ bool Game::Load()
 	Rings[static_cast<unsigned int>(RingLayer::Middle)] = Graphics->CreateBillboard(MiddleShader);
 	Rings[static_cast<unsigned int>(RingLayer::Outer)] = Graphics->CreateBillboard(OuterShader);
 	Arrow = Graphics->CreateBillboard(ArrowShader);
+	go = std::make_shared<GameObject>();
+	const auto component = std::make_shared<TestComponent>(go);
+	const auto component2 = std::make_shared<TestComponent>(go);
 
+	go->AddComponent(component);
 	std::srand(static_cast<unsigned int>(std::time(0)));
 
 	SelectedRing = RingLayer::Outer;
@@ -72,6 +79,7 @@ void Game::Update()
 	// If mode is Playing then read controller input and manage which ring is selected, the rotation of each ring and waiting for select to confirm positions
 	if (State == GameState::Playing)
 	{
+		go->Update();
 		UpdateRingSelection();
 		UpdateSelectedRingRotation();
 		UpdateRingTestSelection();
@@ -147,10 +155,10 @@ void Game::TestRingSolution()
 
 	if (averageRotationDifference < WinTolerance)
 	{
-		DEBUG("win");
+		Debug("win")
 	}
 	else
 	{
-		DEBUG("Lose");
+		Debug("Lose")
 	}
 }

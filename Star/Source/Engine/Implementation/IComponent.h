@@ -3,9 +3,10 @@
 
 class GameObject;
 
-class IComponent 
+class IComponent
 {
 public:
     IComponent(std::weak_ptr<GameObject> object);
+    virtual ~IComponent() = default;
     std::weak_ptr<GameObject> gameObject;
 };
