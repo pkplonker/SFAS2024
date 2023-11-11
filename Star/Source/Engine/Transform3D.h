@@ -1,12 +1,9 @@
-
 #pragma once
+#include "Implementation/Math/Vector3.h"
 
 struct Transform2D
 {
-	float PositionX = 0;
-	float PositionY = 0;
-	float Rotation = 0;
-	float ScaleX = 1;
-	float ScaleY = 1;
+    Vector3 Position = Vector3::Zero();
+    float Rotation = 0;
+    Vector3 Scale = Vector3::One();
 };
-
