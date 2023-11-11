@@ -1,10 +1,13 @@
 ﻿#pragma once
-#include "IComponent.h"
-#include "IUpdateable.h"
+#include "Engine/IComponent.h"
+#include "Engine/IUpdateable.h"
 
 class TestComponent : public IComponent, public IUpdateable
 {
 public:
-    TestComponent(std::shared_ptr<GameObject> object) : IComponent(object){}
+    TestComponent(std::weak_ptr<GameObject> object) : IComponent(object)
+    {
+    }
+
     void Update() override;
 };

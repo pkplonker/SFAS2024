@@ -316,9 +316,9 @@ IRenderable* DirectX11Graphics::CreateBillboard(IShader* ShaderIn)
 
 void DirectX11Graphics::SetWorldMatrix(const Transform2D& transform)
 {
-    DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(transform.Position.X, transform.Position.Y, 10.0f);
+    DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(transform.Position.X(), transform.Position.Y(), 10.0f);
     DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationZ(transform.Rotation);
-    DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(transform.Scale.X, transform.Scale.Y, 1.0f);
+    DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(transform.Scale.X(), transform.Scale.Y(), 1.0f);
     DirectX::XMMATRIX world = scale * rotation * translation;
     DirectX::XMMATRIX mvp = DirectX::XMMatrixMultiply(world, vpMatrix);
     mvp = DirectX::XMMatrixTranspose(mvp);

@@ -4,5 +4,5 @@
 
 void TestComponent::Update()
 {
-    Debug("Updating test component");
+    //Debug("Updating test component")
 }

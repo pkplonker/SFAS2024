@@ -1,16 +1,23 @@
 ﻿#pragma once
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "IUpdateable.h"
 
+#include "Transform3D.h"
 class IComponent;
 
 class GameObject : IUpdateable
 {
+    std::string GAMEOBJECT_DEFAULT_NAME;
+
 public:
     GameObject();
-    
+    GameObject(std::unique_ptr<Transform3D> transform);
+    GameObject(std::string name, std::unique_ptr<Transform3D> transform);
+    GameObject(std::string name);
+
     template <typename T>
     bool AddComponent(std::shared_ptr<T> component)
     {
@@ -31,14 +38,14 @@ public:
 
         const std::shared_ptr<IComponent> baseComponent = std::static_pointer_cast<IComponent>(component);
         const auto index = std::find(components->begin(), components->end(), baseComponent);
-        if(index != components->end())
+        if (index != components->end())
         {
             components->erase(index);
             return true;
         }
         return false;
     }
-    
+
     template <typename T>
     std::shared_ptr<T> GetComponent() const
     {
@@ -57,4 +64,6 @@ public:
 
 private:
     std::unique_ptr<std::vector<std::shared_ptr<IComponent>>> components;
+    std::unique_ptr<Transform3D> transform;
+    std::string name = GAMEOBJECT_DEFAULT_NAME;
 };
