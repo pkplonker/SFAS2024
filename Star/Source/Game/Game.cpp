@@ -9,6 +9,8 @@
 #include <ctime>
 #include <math.h>
 
+#include "Engine/Debug.h"
+
 #define CLAMP(v, x, y) fmin(fmax(v, x), y)
 
 constexpr float Pie = 3.14159265359f;
@@ -67,7 +69,7 @@ void Game::Update()
 		State = GameState::Playing;
 	}
 
-	// If mode is Playing then read controller input and manage which ring is selected, the rotation of each ring and waiting for select to confirm positions 
+	// If mode is Playing then read controller input and manage which ring is selected, the rotation of each ring and waiting for select to confirm positions
 	if (State == GameState::Playing)
 	{
 		UpdateRingSelection();
@@ -75,7 +77,7 @@ void Game::Update()
 		UpdateRingTestSelection();
 	}
 
-	// If mode is Test then check to see if the rings are in their correct positions, play a noise corresponding to how close the player is 
+	// If mode is Test then check to see if the rings are in their correct positions, play a noise corresponding to how close the player is
 	if (State == GameState::Test)
 	{
 		TestRingSolution();
@@ -85,7 +87,6 @@ void Game::Update()
 
 void Game::Cleanup()
 {
-
 }
 
 void Game::SetupEachRing()
@@ -112,7 +113,7 @@ void Game::UpdateRingSelection()
 		// Change ring selection towards inner
 		selectionChange = 1;
 	}
-		
+
 	SelectedRing = static_cast<RingLayer>(CLAMP(static_cast<int>(SelectedRing) + selectionChange, 0, NumberOfRings - 1));
 }
 
@@ -146,10 +147,10 @@ void Game::TestRingSolution()
 
 	if (averageRotationDifference < WinTolerance)
 	{
-		// Win
+		DEBUG("win");
 	}
 	else
 	{
-		// Lose
+		DEBUG("Lose");
 	}
 }

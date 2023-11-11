@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "Engine/IApplication.h"
@@ -37,4 +36,3 @@ private:
 	RingLayer SelectedRing;
 	GameState State;
 };
-
