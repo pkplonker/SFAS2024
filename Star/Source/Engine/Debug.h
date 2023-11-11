@@ -2,14 +2,16 @@
 #include <iostream>
 #include <string>
 
-#define DEBUG(message) Debug::Log(__FILE__,__LINE__, message)
+#define Debug(message) Debug::Log(__FILE__,__LINE__, message, false);
+#define DebugLine(message) Debug::Log(__FILE__,__LINE__, message, true);
 
 class Debug
 {
 public:
 
-	static void Log(const char* file, const int line, const std::string& message)
+	static void Log(const char* file, const int line, const std::string& message, bool showLine)
 	{
-		std::cout << message << ": " << file << ":" << line << std::endl;
+		if(showLine) std::cout << message << ": " << file << ":" << line << std::endl;
+		else std::cout << message << std::endl;
 	}
 };

@@ -1,7 +1,10 @@
 #pragma once
 
+#include <memory>
+
 #include "Engine/IApplication.h"
 
+class GameObject;
 class IGraphics;
 class ITexture;
 class IShader;
@@ -35,4 +38,5 @@ private:
 	IRenderable* Arrow;
 	RingLayer SelectedRing;
 	GameState State;
+	std::shared_ptr<GameObject> go;
 };
