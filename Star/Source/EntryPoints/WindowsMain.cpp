@@ -6,8 +6,6 @@
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 #include "Engine/Implementation/XInput/DirectXInput.h"
 #include "Engine/IRenderable.h"
-#include "Engine/ITexture.h"
-#include "Engine/IShader.h"
 #include "Engine/IApplication.h"
 
 const char WindowClassName[] = "Star";
@@ -67,7 +65,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
         while (msg.message != WM_QUIT && Application->IsValid())
         {
-            if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+            if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
             {
                 TranslateMessage(&msg);
                 DispatchMessage(&msg);
@@ -80,17 +78,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
         Application->Cleanup();
     }
-
-    if (Application)
-    {
-        delete Application;
-    }
-
-    if (Graphics)
-    {
-        delete Graphics;
-    }
-
+    
+    delete Application;
+    delete Graphics;
+    
     return static_cast<int>(msg.wParam);
 }
 

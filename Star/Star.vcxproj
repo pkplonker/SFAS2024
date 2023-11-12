@@ -305,6 +305,7 @@
     <ClCompile Include="Source\Engine\IRenderableComponent.cpp" />
     <ClCompile Include="Source\Engine\IShader.cpp" />
     <ClCompile Include="Source\Engine\ITexture.cpp" />
+    <ClCompile Include="Source\Engine\ResourceManager.cpp" />
     <ClCompile Include="Source\EntryPoints\WindowsMain.cpp" />
     <ClCompile Include="Source\Game\Game.cpp" />
   </ItemGroup>
@@ -331,6 +332,7 @@
     <ClInclude Include="Source\Engine\IUpdateable.h" />
     <ClInclude Include="Source\Engine\Math\Vector2.h" />
     <ClInclude Include="Source\Engine\Math\Vector3.h" />
+    <ClInclude Include="Source\Engine\ResourceManager.h" />
     <ClInclude Include="Source\Engine\Transform2D.h" />
     <ClInclude Include="Source\Engine\Transform3D.h" />
     <ClInclude Include="Source\Game\Game.h" />

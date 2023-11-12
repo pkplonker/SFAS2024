@@ -9,8 +9,7 @@
 #include "Engine/Debug.h"
 #include "Engine/GameObject.h"
 #include "Engine/GameObjectFactory.h"
-#include "Engine/Implementation/SpriteRenderable.h"
-#include "Engine/Implementation/TestComponent.h"
+#include "Engine/ResourceManager.h"
 
 #define CLAMP(v, x, y) fmin(fmax(v, x), y)
 
@@ -43,40 +42,48 @@ bool Game::IsValid()
 bool Game::Load()
 {
     scene = std::make_shared<Scene>();
-    ITexture* InnerTexture = Graphics->CreateTexture(L"Resource/Textures/InnerRing.dds");
-    ITexture* MiddleTexture = Graphics->CreateTexture(L"Resource/Textures/MiddleRing.dds");
-    ITexture* OuterTexture = Graphics->CreateTexture(L"Resource/Textures/OuterRing.dds");
-    ITexture* ArrowTexture = Graphics->CreateTexture(L"Resource/Textures/Arrow.dds");
-    IShader* InnerShader = Graphics->CreateShader(L"Resource/Shaders/UnlitColor.fx", "VS_Main", "vs_4_0", "PS_Main",
-                                                  "ps_4_0", InnerTexture);
-    IShader* MiddleShader = Graphics->CreateShader(L"Resource/Shaders/UnlitColor.fx", "VS_Main", "vs_4_0", "PS_Main",
-                                                   "ps_4_0", MiddleTexture);
-    IShader* OuterShader = Graphics->CreateShader(L"Resource/Shaders/UnlitColor.fx", "VS_Main", "vs_4_0", "PS_Main",
-                                                  "ps_4_0", OuterTexture);
-    IShader* ArrowShader = Graphics->CreateShader(L"Resource/Shaders/UnlitColor.fx", "VS_Main", "vs_4_0", "PS_Main",
-                                                  "ps_4_0", ArrowTexture);
-    
-    Rings[static_cast<unsigned int>(Inner)] = GameObjectFactory(scene,"Inner")
+    resourceManager = std::make_unique<ResourceManager>(Graphics);;
+
+
+    Rings[static_cast<unsigned int>(Inner)] = GameObjectFactory(scene, "Inner")
                                               .AddPosition(Vec3(0, 0, 1.0f))
-                                              .AddSpriteRenderable(Graphics->CreateBillboard(InnerShader))
+                                              .AddSpriteRenderable(Graphics->CreateBillboard(
+                                                  resourceManager->GetShader(
+                                                      L"Resource/Textures/InnerRing.dds",
+                                                      L"Resource/Shaders/UnlitColor.fx")))
                                               .Build();
-    Rings[static_cast<unsigned int>(Middle)] = GameObjectFactory(scene,"Middle")
+    Rings[static_cast<unsigned int>(Middle)] = GameObjectFactory(scene, "Middle")
                                                .AddPosition(Vec3(0, 0, 1.0f))
-                                               .AddSpriteRenderable(Graphics->CreateBillboard(MiddleShader))
+                                               .AddSpriteRenderable(Graphics->CreateBillboard(
+                                                   resourceManager->GetShader(
+                                                       L"Resource/Textures/MiddleRing.dds",
+                                                       L"Resource/Shaders/UnlitColor.fx")))
                                                .Build();
-    Rings[static_cast<unsigned int>(Outer)] = GameObjectFactory(scene,"Outer")
+    Rings[static_cast<unsigned int>(Outer)] = GameObjectFactory(scene, "Outer")
                                               .AddPosition(Vec3(0, 0, 1.0f))
-                                              .AddSpriteRenderable(Graphics->CreateBillboard(OuterShader))
+                                              .AddSpriteRenderable(Graphics->CreateBillboard(
+                                                  resourceManager->GetShader(
+                                                      L"Resource/Textures/OuterRing.dds",
+                                                      L"Resource/Shaders/UnlitColor.fx")))
                                               .Build();
-    Arrow = GameObjectFactory(scene,"Arrow")
+
+    Arrow = GameObjectFactory(scene, "Arrow")
             .AddPosition(Vec3(0, 0, 1.0f))
-            .AddSpriteRenderable(Graphics->CreateBillboard(ArrowShader))
+            .AddSpriteRenderable(Graphics->CreateBillboard(
+                resourceManager->GetShader(L"Resource/Textures/Arrow.dds", L"Resource/Shaders/UnlitColor.fx")))
             .Build();
-    
+
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
     SelectedRing = RingLayer::Outer;
     State = GameState::Setup;
+
+    testObject = GameObjectFactory(scene, "Outer")
+                 .AddPosition(Vec3(450, 0, 1.0f))
+                 .AddSpriteRenderable(Graphics->CreateBillboard(resourceManager->GetShader(
+                     L"Resource/Textures/OuterRing.dds",
+                     L"Resource/Shaders/UnlitColor.fx")))
+                 .Build();
 
     return true;
 }
