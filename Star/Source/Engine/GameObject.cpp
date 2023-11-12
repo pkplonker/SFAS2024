@@ -8,7 +8,7 @@ GameObject::GameObject()
 {
     components = std::make_unique<std::vector<std::shared_ptr<IComponent>>>();
     transform = std::make_unique<Transform3D>();
-    this->name = GAMEOBJECT_DEFAULT_NAME;
+    this->Name = GAMEOBJECT_DEFAULT_NAME;
 }
 
 GameObject::GameObject(std::unique_ptr<Transform3D> transform) : GameObject()
@@ -25,12 +25,12 @@ GameObject::GameObject(std::string name, std::unique_ptr<Transform3D> transform)
     {
         this->transform = std::move(transform);
     }
-    this->name = std::move(name);
+    this->Name = std::move(name);
 }
 
 GameObject::GameObject(std::string name) : GameObject()
 {
-    this->name = std::move(name);
+    this->Name = std::move(name);
 }
 
 void GameObject::Update()

@@ -215,6 +215,7 @@
       <AdditionalIncludeDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\packages\directxtk_desktop_2019.2023.9.6.1\build\native\..\..\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\External\glm\glm;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\External;</AdditionalIncludeDirectories>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Source\Engine\GameObjectFactory.cpp" />
     <ClCompile Include="Source\Engine\IApplication.cpp" />
     <ClCompile Include="Source\Engine\IComponent.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
@@ -308,6 +309,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Engine\Debug.h" />
     <ClInclude Include="Source\Engine\GameObject.h" />
+    <ClInclude Include="Source\Engine\GameObjectFactory.h" />
     <ClInclude Include="Source\Engine\IApplication.h" />
     <ClInclude Include="Source\Engine\IComponent.h" />
     <ClInclude Include="Source\Engine\IGraphics.h" />

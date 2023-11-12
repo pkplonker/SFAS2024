@@ -8,6 +8,7 @@
 
 #include "Engine/Debug.h"
 #include "Engine/GameObject.h"
+#include "Engine/GameObjectFactory.h"
 #include "Engine/Implementation/SpriteRenderable.h"
 #include "Engine/Implementation/TestComponent.h"
 
@@ -53,32 +54,23 @@ bool Game::Load()
     IShader* ArrowShader = Graphics->CreateShader(L"Resource/Shaders/UnlitColor.fx", "VS_Main", "vs_4_0", "PS_Main",
                                                   "ps_4_0", ArrowTexture);
 
-    std::shared_ptr<GameObject> inner = std::make_shared<GameObject>("Inner Ring");
-    std::shared_ptr<GameObject> middle = std::make_shared<GameObject>("Middle Ring");
-    std::shared_ptr<GameObject> outer = std::make_shared<GameObject>("Outer Ring");
-    Arrow = std::make_shared<GameObject>("Arrow");
-
-    std::shared_ptr<SpriteRenderable> sri = std::make_shared<SpriteRenderable>(
-        inner, Graphics->CreateBillboard(InnerShader));
-    std::shared_ptr<SpriteRenderable> srm = std::make_shared<SpriteRenderable>(
-        middle, Graphics->CreateBillboard(MiddleShader));
-    std::shared_ptr<SpriteRenderable> sro = std::make_shared<SpriteRenderable>(
-        outer, Graphics->CreateBillboard(OuterShader));
-    std::shared_ptr<SpriteRenderable> sra = std::make_shared<SpriteRenderable>(
-        Arrow, Graphics->CreateBillboard(ArrowShader));
-
-    inner->AddComponent(sri);
-    middle->AddComponent(srm);
-    outer->AddComponent(sro);
-    Arrow->AddComponent(sra);
-    inner->Transform()->Position.Z(10);
-    middle->Transform()->Position.Z(10);
-    outer->Transform()->Position.Z(10);
-    Arrow->Transform()->Position.Z(10);
-
-    Rings[static_cast<unsigned int>(Inner)] = inner;
-    Rings[static_cast<unsigned int>(Middle)] = middle;
-    Rings[static_cast<unsigned int>(Outer)] = outer;
+    Rings[static_cast<unsigned int>(Inner)] = GameObjectFactory("Inner")
+                                              .AddPosition(Vec3(0, 0, 1.0f))
+                                              .AddSpriteRenderable(Graphics->CreateBillboard(InnerShader))
+                                              .Build();
+    Rings[static_cast<unsigned int>(Middle)] = GameObjectFactory("Middle")
+                                               .AddPosition(Vec3(0, 0, 1.0f))
+                                               .AddSpriteRenderable(Graphics->CreateBillboard(MiddleShader))
+                                               .Build();
+    Rings[static_cast<unsigned int>(Outer)] = GameObjectFactory("Outer")
+                                              .AddPosition(Vec3(0, 0, 1.0f))
+                                              .AddSpriteRenderable(Graphics->CreateBillboard(OuterShader))
+                                              .Build();
+    Arrow = GameObjectFactory("Arrow")
+            .AddPosition(Vec3(0, 0, 1.0f))
+            .AddSpriteRenderable(Graphics->CreateBillboard(ArrowShader))
+            .Build();
+    
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
     SelectedRing = RingLayer::Outer;
@@ -120,10 +112,10 @@ void Game::SetupEachRing()
 {
     for (unsigned int Ring = 0; Ring < NumberOfRings; ++Ring)
     {
-        Rings[Ring]->Transform()->Rotation = Vec3(0,0,static_cast<float>(fmod(rand(), Pie)));
+        Rings[Ring]->Transform()->Rotation = Vec3(0, 0, static_cast<float>(fmod(rand(), Pie)));
     }
 
-    Arrow->Transform()->Rotation = Vec3(0,0,static_cast<float>(fmod(rand(), Pie)));
+    Arrow->Transform()->Rotation = Vec3(0, 0, static_cast<float>(fmod(rand(), Pie)));
 }
 
 void Game::UpdateRingSelection()
@@ -149,7 +141,7 @@ void Game::UpdateSelectedRingRotation()
 {
     float delta = Input->GetValue(InputAction::RightStickXAxis) * SpinSpeed * DeltaTime;
     Vec3 rotation = Rings[static_cast<int>(SelectedRing)]->Transform()->Rotation;
-    Vec3 newRotation = Vec3(0,0, static_cast<float>(fmod(rotation.Z() + delta, TwoPies)));
+    Vec3 newRotation = Vec3(0, 0, static_cast<float>(fmod(rotation.Z() + delta, TwoPies)));
     Rings[static_cast<int>(SelectedRing)]->Transform()->Rotation = newRotation;
 }
 
