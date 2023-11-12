@@ -1,8 +1,11 @@
-
 #pragma once
 
-#include "Engine/IApplication.h"
+#include <memory>
 
+#include "Engine/IApplication.h"
+#include "Engine/Implementation/Scene.h"
+
+class GameObject;
 class IGraphics;
 class ITexture;
 class IShader;
@@ -32,9 +35,9 @@ private:
 	void UpdateRingTestSelection();
 	void TestRingSolution();
 
-	IRenderable* Rings[NumberOfRings];
-	IRenderable* Arrow;
+	std::shared_ptr<GameObject> Rings[NumberOfRings];
+	std::shared_ptr<GameObject> Arrow;
 	RingLayer SelectedRing;
 	GameState State;
+	std::shared_ptr<Scene> scene;
 };
-

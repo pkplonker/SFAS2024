@@ -1,23 +1,20 @@
-
 #pragma once
 
+#include "GameObject.h"
 #include "Engine/IGraphics.h"
-#include "Engine/Transform2D.h"
+#include "Transform3D.h"
 
 class IRenderable
 {
 public:
+    virtual void Update() = 0;
+    virtual std::weak_ptr<Transform3D> GetTransform();
 
-	virtual void Update() = 0;
-
-	const Transform2D& GetTransform() const;
-	void SetPosition(float x, float y);
-	void SetRotation(float r);
-	void SetScale(float sx, float sy);
+    void SetTransform(std::shared_ptr<Transform3D> transform)
+    {
+        this->Transform = transform;
+    }
 
 private:
-	
-	Transform2D Transform;
-
+    std::shared_ptr<Transform3D> Transform;
 };
-

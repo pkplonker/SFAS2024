@@ -5,7 +5,9 @@
 #include <Windows.h>
 #include <d3dcommon.h>
 #include <DirectXMath.h>
+#include <memory>
 
+struct Transform3D;
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 struct IDXGISwapChain;
@@ -27,14 +29,14 @@ public:
 
 	virtual ITexture* CreateTexture(const wchar_t* filepath);
 	virtual IShader* CreateShader(const wchar_t* filepath, const char* vsentry, const char* vsshader, const char* psentry, const char* psshader, ITexture* TextureIn);
-	virtual IRenderable* CreateBillboard(IShader* ShaderIn);
+	virtual std::shared_ptr<IRenderable> CreateBillboard(IShader* ShaderIn);
 
 	ID3D11Device* GetDevice() const { return Device; }
 	ID3D11DeviceContext* GetContext() const { return Context; }
 
 protected:
 
-	virtual void SetWorldMatrix(const Transform2D& transform);
+	virtual void SetWorldMatrix(std::weak_ptr<Transform3D> transform);
 	virtual bool CompileShader(LPCWSTR filepath, LPCSTR entry, LPCSTR shader, ID3DBlob** buffer);
 
 private:

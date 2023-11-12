@@ -7,15 +7,21 @@
 #include <d3d11.h>
 #include <D3DCompiler.h>
 #include <DDSTextureLoader.h>
+#include <memory>
 
-DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr), BackbufferView(nullptr), BackbufferTexture(nullptr), Mvp(nullptr), vpMatrix(), FeatureLevel(D3D_FEATURE_LEVEL_11_0), hwnd(hwndIn), width(0), height(0)
+#include "Engine/Debug.h"
+
+DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
+                                                    BackbufferView(nullptr), BackbufferTexture(nullptr), Mvp(nullptr),
+                                                    vpMatrix(), FeatureLevel(D3D_FEATURE_LEVEL_11_0), hwnd(hwndIn),
+                                                    width(0), height(0)
 {
     RECT dimensions;
     GetClientRect(hwnd, &dimensions);
     width = dimensions.right - dimensions.left;
     height = dimensions.bottom - dimensions.top;
 
-    D3D_DRIVER_TYPE driverTypes[] = { D3D_DRIVER_TYPE_HARDWARE, D3D_DRIVER_TYPE_WARP, D3D_DRIVER_TYPE_SOFTWARE };
+    D3D_DRIVER_TYPE driverTypes[] = {D3D_DRIVER_TYPE_HARDWARE, D3D_DRIVER_TYPE_WARP, D3D_DRIVER_TYPE_SOFTWARE};
     unsigned int totalDriverTypes = ARRAYSIZE(driverTypes);
 
     DXGI_SWAP_CHAIN_DESC sd;
@@ -41,7 +47,8 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
 
     for (unsigned int count = 0; count < totalDriverTypes; ++count)
     {
-        hr = D3D11CreateDeviceAndSwapChain(NULL, driverTypes[count], NULL, creationFlags, NULL, 0, D3D11_SDK_VERSION, &sd, &SwapChain, &Device, &FeatureLevel, &Context);
+        hr = D3D11CreateDeviceAndSwapChain(nullptr, driverTypes[count], NULL, creationFlags, NULL, 0, D3D11_SDK_VERSION,
+                                           &sd, &SwapChain, &Device, &FeatureLevel, &Context);
 
         if (SUCCEEDED(hr))
         {
@@ -66,7 +73,7 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
 
     if (FAILED(hr))
     {
-        MessageBox(NULL, "Graphics Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+        MessageBox(nullptr, "Graphics Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
     }
     else
     {
@@ -79,13 +86,14 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
 
         if (FAILED(hr))
         {
-            MessageBox(NULL, "Graphics Failed to create MVP Buffer", "Error!", MB_ICONEXCLAMATION | MB_OK);
+            MessageBox(nullptr, "Graphics Failed to create MVP Buffer", "Error!", MB_ICONEXCLAMATION | MB_OK);
         }
 
-        float halfWidth = static_cast<float>(width / 2);
-        float halfHeight = static_cast<float>(height / 2);
+        float halfWidth = static_cast<float>(width) / 2.0f;
+        float halfHeight = static_cast<float>(height) / 2.0f;
         DirectX::XMMATRIX view = DirectX::XMMatrixIdentity();
-        DirectX::XMMATRIX projection = DirectX::XMMatrixOrthographicOffCenterLH(-halfWidth, halfWidth, -halfHeight, halfHeight, 0.1f, 10.1f);
+        DirectX::XMMATRIX projection = DirectX::XMMatrixOrthographicOffCenterLH(
+            -halfWidth, halfWidth, -halfHeight, halfHeight, 0.1f, 10.1f);
         vpMatrix = DirectX::XMMatrixMultiply(view, projection);
 
         D3D11_BLEND_DESC Desc;
@@ -134,28 +142,29 @@ void DirectX11Graphics::Update()
 {
     if (Context && SwapChain)
     {
-        float clearColour[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        float clearColour[4] = {1.0f, 1.0f, 1.0f, 1.0f};
         Context->ClearRenderTargetView(BackbufferView, clearColour);
 
         D3D11_VIEWPORT viewport;
         viewport.Width = static_cast<float>(width);
         viewport.Height = static_cast<float>(height);
         viewport.MinDepth = 0.0f;
-        viewport.MaxDepth = 1.0f;
+        viewport.MaxDepth = 0.0f;
         viewport.TopLeftX = 0.0f;
         viewport.TopLeftY = 0.0f;
         Context->RSSetViewports(1, &viewport);
 
-        Context->OMSetRenderTargets(1, &BackbufferView, NULL);
+        Context->OMSetRenderTargets(1, &BackbufferView, nullptr);
 
         for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
         {
             bucket->first->Update();
- 
+
             for (auto renderable = bucket->second.begin(); renderable != bucket->second.end(); ++renderable)
             {
-                SetWorldMatrix((*renderable)->GetTransform());
-                Context->OMSetBlendState(BlendState, NULL, ~0U);
+                std::weak_ptr<Transform3D> transform = (*renderable)->GetTransform();
+                SetWorldMatrix(transform);
+                Context->OMSetBlendState(BlendState, nullptr, ~0U);
                 (*renderable)->Update();
             }
         }
@@ -178,7 +187,7 @@ ITexture* DirectX11Graphics::CreateTexture(const wchar_t* filepath)
 
     if (IsValid())
     {
-        HRESULT hr = DirectX::CreateDDSTextureFromFile(Device, filepath, NULL, &Texture);
+        HRESULT hr = DirectX::CreateDDSTextureFromFile(Device, filepath, nullptr, &Texture);
 
         if (SUCCEEDED(hr))
         {
@@ -199,7 +208,7 @@ ITexture* DirectX11Graphics::CreateTexture(const wchar_t* filepath)
             ID3D11Resource* textureResource;
             Texture->GetResource(&textureResource);
 
-            ((ID3D11Texture2D*)textureResource)->GetDesc(&Description);
+            static_cast<ID3D11Texture2D*>(textureResource)->GetDesc(&Description);
             textureResource->Release();
         }
 
@@ -213,7 +222,8 @@ ITexture* DirectX11Graphics::CreateTexture(const wchar_t* filepath)
     return Result;
 }
 
-IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vsentry, const char* vsshader, const char* psentry, const char* psshader, ITexture* TextureIn)
+IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vsentry, const char* vsshader,
+                                         const char* psentry, const char* psshader, ITexture* TextureIn)
 {
     IShader* Result = nullptr;
     ID3D11VertexShader* VertexShader = nullptr;
@@ -242,7 +252,8 @@ IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vs
 
                 unsigned int totalLayoutElements = ARRAYSIZE(layout);
 
-                hr = Device->CreateInputLayout(layout, totalLayoutElements, vsBuffer->GetBufferPointer(), vsBuffer->GetBufferSize(), &InputLayout);
+                hr = Device->CreateInputLayout(layout, totalLayoutElements, vsBuffer->GetBufferPointer(),
+                                               vsBuffer->GetBufferSize(), &InputLayout);
                 vsBuffer->Release();
             }
         }
@@ -253,7 +264,8 @@ IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vs
             hr = S_FALSE;
             if (CompileShader(filepath, psentry, psshader, &psBuffer))
             {
-                hr = Device->CreatePixelShader(psBuffer->GetBufferPointer(), psBuffer->GetBufferSize(), 0, &PixelShader);
+                hr = Device->CreatePixelShader(psBuffer->GetBufferPointer(), psBuffer->GetBufferSize(), 0,
+                                               &PixelShader);
                 psBuffer->Release();
             }
         }
@@ -261,16 +273,16 @@ IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vs
         if (SUCCEEDED(hr))
         {
             Result = new DirectX11Shader(Context, VertexShader, PixelShader, InputLayout, TextureIn);
-            Renderables.insert(std::pair<IShader*, std::list<IRenderable*> >(Result, std::list<IRenderable*>()));
+            Renderables.insert(std::pair(Result, std::list<std::shared_ptr<IRenderable>>()));
         }
     }
 
     return Result;
 }
 
-IRenderable* DirectX11Graphics::CreateBillboard(IShader* ShaderIn)
+std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IShader* ShaderIn)
 {
-    IRenderable* Result = nullptr;
+    std::shared_ptr<IRenderable> Result = nullptr;
 
     if (IsValid())
     {
@@ -280,13 +292,13 @@ IRenderable* DirectX11Graphics::CreateBillboard(IShader* ShaderIn)
 
         float vertex_data_array[] =
         {
-            halfWidth,  halfHeight, 0.0f,  1.0f, 1.0f,
-            halfWidth, -halfHeight, 0.0f,  1.0f, 0.0f,
-           -halfWidth, -halfHeight, 0.0f,  0.0f, 0.0f,
+            halfWidth, halfHeight, 0.0f, 1.0f, 1.0f,
+            halfWidth, -halfHeight, 0.0f, 1.0f, 0.0f,
+            -halfWidth, -halfHeight, 0.0f, 0.0f, 0.0f,
 
-           -halfWidth, -halfHeight, 0.0f,  0.0f, 0.0f,
-           -halfWidth,  halfHeight, 0.0f,  0.0f, 1.0f,
-            halfWidth,  halfHeight, 0.0f,  1.0f, 1.0f,
+            -halfWidth, -halfHeight, 0.0f, 0.0f, 0.0f,
+            -halfWidth, halfHeight, 0.0f, 0.0f, 1.0f,
+            halfWidth, halfHeight, 0.0f, 1.0f, 1.0f,
         };
 
         ID3D11Buffer* VertexBuffer;
@@ -306,7 +318,8 @@ IRenderable* DirectX11Graphics::CreateBillboard(IShader* ShaderIn)
 
         if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)))
         {
-            Result = new DirectX11Billboard(Context, VertexBuffer, vertexStride, vertexOffset, vertexCount);
+            Result = std::make_shared<DirectX11Billboard>(Context, VertexBuffer, vertexStride, vertexOffset,
+                                                          vertexCount);
             Renderables[ShaderIn].push_back(Result);
         }
     }
@@ -314,16 +327,23 @@ IRenderable* DirectX11Graphics::CreateBillboard(IShader* ShaderIn)
     return Result;
 }
 
-void DirectX11Graphics::SetWorldMatrix(const Transform2D& transform)
+void DirectX11Graphics::SetWorldMatrix(const std::weak_ptr<Transform3D> transform)
 {
-    DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(transform.PositionX, transform.PositionY, 10.0f);
-    DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationZ(transform.Rotation);
-    DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(transform.ScaleX, transform.ScaleY, 1.0f);
-    DirectX::XMMATRIX world = scale * rotation * translation;
-    DirectX::XMMATRIX mvp = DirectX::XMMatrixMultiply(world, vpMatrix);
-    mvp = DirectX::XMMatrixTranspose(mvp);
-    Context->UpdateSubresource(Mvp, 0, 0, &mvp, 0, 0);
-    Context->VSSetConstantBuffers(0, 1, &Mvp);
+    if (std::shared_ptr<Transform3D> trans = transform.lock())
+    {
+        DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(trans->Position.X(), trans->Position.Y(),
+                                                                     trans->Position.Z());
+        DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationRollPitchYaw(
+            trans->Rotation.X(), trans->Rotation.Y(),
+            trans->Rotation.Z());
+        DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(trans->Scale.X(), trans->Scale.Y(),
+                                                           trans->Scale.Y());
+        DirectX::XMMATRIX world = scale * rotation * translation;
+        DirectX::XMMATRIX mvp = DirectX::XMMatrixMultiply(world, vpMatrix);
+        mvp = DirectX::XMMatrixTranspose(mvp);
+        Context->UpdateSubresource(Mvp, 0, 0, &mvp, 0, 0);
+        Context->VSSetConstantBuffers(0, 1, &Mvp);
+    }
 }
 
 bool DirectX11Graphics::CompileShader(LPCWSTR filepath, LPCSTR entry, LPCSTR shader, ID3DBlob** buffer)
@@ -335,13 +355,15 @@ bool DirectX11Graphics::CompileShader(LPCWSTR filepath, LPCSTR entry, LPCSTR sha
 #endif
 
     ID3DBlob* errorBuffer = 0;
-    HRESULT hr = D3DCompileFromFile(filepath, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, entry, shader, shaderFlags, 0, buffer, &errorBuffer);
+    HRESULT hr = D3DCompileFromFile(filepath, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, entry, shader, shaderFlags, 0,
+                                    buffer, &errorBuffer);
 
     if (FAILED(hr))
     {
         if (errorBuffer)
         {
-            MessageBox(NULL, (char*)errorBuffer->GetBufferPointer(), "Error!", MB_ICONEXCLAMATION | MB_OK);
+            MessageBox(nullptr, static_cast<char*>(errorBuffer->GetBufferPointer()), "Error!",
+                       MB_ICONEXCLAMATION | MB_OK);
         }
     }
 
