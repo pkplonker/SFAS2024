@@ -1,5 +1,6 @@
 ﻿#include "Scene.h"
 
+#include "MeshRenderable.h"
 #include "SpriteRenderable.h"
 
 class SpriteRenderable;
@@ -33,9 +34,9 @@ void Scene::Update()
 
 void Scene::AddRenderable(std::shared_ptr<GameObject> object) const
 {
-    std::shared_ptr<SpriteRenderable> spriteRenderable = object->GetComponent<SpriteRenderable>();
-    if (spriteRenderable != nullptr)
+    std::shared_ptr<IRenderableComponent> renderableComponent = object->GetComponent<IRenderableComponent>();
+    if (renderableComponent != nullptr)
     {
-        renderables->emplace(spriteRenderable->GetRenderable());
+        renderables->emplace(renderableComponent->GetRenderable());
     }
 }

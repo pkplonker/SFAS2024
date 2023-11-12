@@ -41,6 +41,6 @@ private:
 	RingLayer SelectedRing;
 	GameState State;
 	std::shared_ptr<Scene> scene;
-	std::shared_ptr<GameObject> testObject;
+	std::vector<std::shared_ptr<GameObject>> testObjects;
 	std::unique_ptr<ResourceManager> resourceManager;
 };

@@ -45,72 +45,106 @@ bool Game::Load()
     resourceManager = std::make_unique<ResourceManager>(Graphics);;
 
 
-    Rings[static_cast<unsigned int>(Inner)] = GameObjectFactory(scene, "Inner")
-                                              .AddPosition(Vec3(0, 0, 1.0f))
-                                              .AddSpriteRenderable(Graphics->CreateBillboard(
-                                                  resourceManager->GetShader(
-                                                      L"Resource/Textures/InnerRing.dds",
-                                                      L"Resource/Shaders/UnlitColor.fx")))
-                                              .Build();
-    Rings[static_cast<unsigned int>(Middle)] = GameObjectFactory(scene, "Middle")
-                                               .AddPosition(Vec3(0, 0, 1.0f))
-                                               .AddSpriteRenderable(Graphics->CreateBillboard(
-                                                   resourceManager->GetShader(
-                                                       L"Resource/Textures/MiddleRing.dds",
-                                                       L"Resource/Shaders/UnlitColor.fx")))
-                                               .Build();
-    Rings[static_cast<unsigned int>(Outer)] = GameObjectFactory(scene, "Outer")
-                                              .AddPosition(Vec3(0, 0, 1.0f))
-                                              .AddSpriteRenderable(Graphics->CreateBillboard(
-                                                  resourceManager->GetShader(
-                                                      L"Resource/Textures/OuterRing.dds",
-                                                      L"Resource/Shaders/UnlitColor.fx")))
-                                              .Build();
-
-    Arrow = GameObjectFactory(scene, "Arrow")
-            .AddPosition(Vec3(0, 0, 1.0f))
-            .AddSpriteRenderable(Graphics->CreateBillboard(
-                resourceManager->GetShader(L"Resource/Textures/Arrow.dds", L"Resource/Shaders/UnlitColor.fx")))
-            .Build();
+    // Rings[static_cast<unsigned int>(Inner)] = GameObjectFactory(scene, "Inner")
+    //                                           .AddPosition(Vec3(0, 0, 1.0f))
+    //                                           .AddSpriteRenderable(Graphics->CreateBillboard(
+    //                                               resourceManager->GetShader(
+    //                                                   L"Resource/Textures/InnerRing.dds",
+    //                                                   L"Resource/Shaders/UnlitColor.fx")))
+    //                                           .Build();
+    // Rings[static_cast<unsigned int>(Middle)] = GameObjectFactory(scene, "Middle")
+    //                                            .AddPosition(Vec3(0, 0, 1.0f))
+    //                                            .AddSpriteRenderable(Graphics->CreateBillboard(
+    //                                                resourceManager->GetShader(
+    //                                                    L"Resource/Textures/MiddleRing.dds",
+    //                                                    L"Resource/Shaders/UnlitColor.fx")))
+    //                                            .Build();
+    // Rings[static_cast<unsigned int>(Outer)] = GameObjectFactory(scene, "Outer")
+    //                                           .AddPosition(Vec3(0, 0, 1.0f))
+    //                                           .AddSpriteRenderable(Graphics->CreateBillboard(
+    //                                               resourceManager->GetShader(
+    //                                                   L"Resource/Textures/OuterRing.dds",
+    //                                                   L"Resource/Shaders/UnlitColor.fx")))
+    //                                           .Build();
+    //
+    // Arrow = GameObjectFactory(scene, "Arrow")
+    //         .AddPosition(Vec3(0, 0, 1.0f))
+    //         .AddSpriteRenderable(Graphics->CreateBillboard(
+    //             resourceManager->GetShader(L"Resource/Textures/Arrow.dds", L"Resource/Shaders/UnlitColor.fx")))
+    //         .Build();
 
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
     SelectedRing = RingLayer::Outer;
     State = GameState::Setup;
+    testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
+                             .AddPosition(Vec3(0, 0, 10.0f))
+                             .AddRotation(Vec3(45.0f, 45.0f, 45.0f))
+                             .AddScale(Vec3(1,1,1))
+                             .AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
+                                 L"Resource/Textures/Cat.dds",
+                                 L"Resource/Shaders/UnlitColor2.fx")))
+                             .Build());
 
-    testObject = GameObjectFactory(scene, "Outer")
-                 .AddPosition(Vec3(450, 0, 1.0f))
-                 .AddSpriteRenderable(Graphics->CreateBillboard(resourceManager->GetShader(
-                     L"Resource/Textures/OuterRing.dds",
-                     L"Resource/Shaders/UnlitColor.fx")))
-                 .Build();
-
+    // testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
+    //                          .AddPosition(Vec3(450, 150, 10.0f))
+    //                          .AddRotation(Vec3(45.0f, 45.0f, 45.0f))
+    //                          .AddScale(Vec3(10,10,10))
+    //                          .AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
+    //                              L"Resource/Textures/Cat.dds",
+    //                              L"Resource/Shaders/UnlitColor2.fx")))
+    //                          .Build());
+    // testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
+    //                   .AddPosition(Vec3(450, 150, 10.0f))
+    //                   .AddRotation(Vec3(45.0f,45.0f,45.0f))
+    //                   .AddScale(Vec3(5))
+    //
+    //                   .AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
+    //                       L"Resource/Textures/Cat.dds",
+    //                       L"Resource/Shaders/UnlitColor2.fx")))
+    //                   .Build());
+    // testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
+    //                   .AddPosition(Vec3(-450, 150, 3.0f))
+    //                   .AddRotation(Vec3(45.0f,45.0f,45.0f))
+    //                   .AddScale(Vec3(20))
+    //                   .AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
+    //                       L"Resource/Textures/Cat.dds",
+    //                       L"Resource/Shaders/UnlitColor2.fx")))
+    //                   .Build());
+    // testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
+    //               .AddPosition(Vec3(-450, 150, -20.0f))
+    //               .AddRotation(Vec3(45.0f,45.0f,45.0f))
+    //               .AddScale(Vec3(10))
+    //               .AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
+    //                   L"Resource/Textures/Cat.dds",
+    //                   L"Resource/Shaders/UnlitColor2.fx")))
+    //               .Build());
     return true;
 }
 
 void Game::Update()
 {
-    // If mode is Setup game then set each ring to a random rotation
-    if (State == GameState::Setup)
-    {
-        SetupEachRing();
-        State = GameState::Playing;
-    }
-
-    // If mode is Playing then read controller input and manage which ring is selected, the rotation of each ring and waiting for select to confirm positions
-    if (State == GameState::Playing)
-    {
-        UpdateRingSelection();
-        UpdateSelectedRingRotation();
-        UpdateRingTestSelection();
-    }
-
-    // If mode is Test then check to see if the rings are in their correct positions, play a noise corresponding to how close the player is
-    if (State == GameState::Test)
-    {
-        TestRingSolution();
-        State = GameState::Setup;
-    }
+    // // If mode is Setup game then set each ring to a random rotation
+    // if (State == GameState::Setup)
+    // {
+    //     SetupEachRing();
+    //     State = GameState::Playing;
+    // }
+    //
+    // // If mode is Playing then read controller input and manage which ring is selected, the rotation of each ring and waiting for select to confirm positions
+    // if (State == GameState::Playing)
+    // {
+    //     UpdateRingSelection();
+    //     UpdateSelectedRingRotation();
+    //     UpdateRingTestSelection();
+    // }
+    //
+    // // If mode is Test then check to see if the rings are in their correct positions, play a noise corresponding to how close the player is
+    // if (State == GameState::Test)
+    // {
+    //     TestRingSolution();
+    //     State = GameState::Setup;
+    // }
 }
 
 void Game::Cleanup()

@@ -28,5 +28,5 @@ PS_Input VS_Main(VS_Input vertex)
 
 float4 PS_Main(PS_Input frag) : SV_TARGET
 {
-    return colorMap.Sample(colorSample, frag.tex0);
+    return float4(1.0f, 0.0f, 0.0f, 1.0f); // Red color
 }

@@ -9,6 +9,7 @@
 #include <DDSTextureLoader.h>
 #include <memory>
 
+#include "DirectX11Mesh.h"
 #include "Engine/Debug.h"
 
 DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
@@ -91,9 +92,25 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
 
         float halfWidth = static_cast<float>(width) / 2.0f;
         float halfHeight = static_cast<float>(height) / 2.0f;
-        DirectX::XMMATRIX view = DirectX::XMMatrixIdentity();
-        DirectX::XMMATRIX projection = DirectX::XMMatrixOrthographicOffCenterLH(
-            -halfWidth, halfWidth, -halfHeight, halfHeight, 0.1f, 10.1f);
+        //DirectX::XMMATRIX view = DirectX::XMMatrixIdentity();
+        //DirectX::XMMATRIX projection = DirectX::XMMatrixOrthographicOffCenterLH(
+#pragma region PerspectiveTest
+
+        DirectX::XMVECTOR EyePosition = DirectX::XMVectorSet(0.0f, 0.0f, -2.0f, 1.0f); 
+        DirectX::XMVECTOR FocusPoint = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f); 
+        DirectX::XMVECTOR UpDirection = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f); 
+        DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(EyePosition, FocusPoint, UpDirection);
+        float fovAngleY = DirectX::XM_PIDIV4;
+        float aspectRatio = static_cast<float>(width) / height; 
+        float nearZ = 0.1f; 
+        float farZ = 2000.0f; 
+        DirectX::XMMATRIX projection = DirectX::XMMatrixPerspectiveFovLH(
+            fovAngleY,
+            aspectRatio,
+            nearZ,
+            farZ
+        );
+#pragma endregion 
         vpMatrix = DirectX::XMMatrixMultiply(view, projection);
 
         D3D11_BLEND_DESC Desc;
@@ -149,7 +166,7 @@ void DirectX11Graphics::Update()
         viewport.Width = static_cast<float>(width);
         viewport.Height = static_cast<float>(height);
         viewport.MinDepth = 0.0f;
-        viewport.MaxDepth = 0.0f;
+        viewport.MaxDepth = 1.0f;
         viewport.TopLeftX = 0.0f;
         viewport.TopLeftY = 0.0f;
         Context->RSSetViewports(1, &viewport);
@@ -257,7 +274,7 @@ IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vs
                 vsBuffer->Release();
             }
         }
-
+        bool error = false;
         if (SUCCEEDED(hr))
         {
             ID3DBlob* psBuffer = 0;
@@ -268,12 +285,28 @@ IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vs
                                                &PixelShader);
                 psBuffer->Release();
             }
+            else
+            {
+                error = true;
+            }
         }
-
+        else
+        {
+            error = true;
+        }
         if (SUCCEEDED(hr))
         {
             Result = new DirectX11Shader(Context, VertexShader, PixelShader, InputLayout, TextureIn);
             Renderables.insert(std::pair(Result, std::list<std::shared_ptr<IRenderable>>()));
+        }
+        else
+        {
+            error = true;
+        }
+        if (error)
+        {
+            MessageBox(nullptr, "Failed to make shader", "Error!",
+                       MB_ICONEXCLAMATION | MB_OK);
         }
     }
 
@@ -327,6 +360,92 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IShader* ShaderI
     return Result;
 }
 
+std::shared_ptr<IRenderable> DirectX11Graphics::CreateMeshRenderable(IShader* ShaderIn)
+{
+    std::shared_ptr<IRenderable> Result = nullptr;
+
+    if (IsValid())
+    {
+        float halfWidth = .5f;
+        float halfHeight = .5f;
+        float halfDepth = .5f;
+
+        float vertex_data_array[] = {
+            // Front face
+            -halfWidth, -halfHeight, halfDepth, 0.0f, 0.0f,
+            halfWidth, -halfHeight, halfDepth, 1.0f, 0.0f,
+            halfWidth, halfHeight, halfDepth, 1.0f, 1.0f,
+            -halfWidth, -halfHeight, halfDepth, 0.0f, 0.0f,
+            halfWidth, halfHeight, halfDepth, 1.0f, 1.0f,
+            -halfWidth, halfHeight, halfDepth, 0.0f, 1.0f,
+
+            // Back face
+            -halfWidth, -halfHeight, -halfDepth, 1.0f, 0.0f,
+            -halfWidth, halfHeight, -halfDepth, 1.0f, 1.0f,
+            halfWidth, halfHeight, -halfDepth, 0.0f, 1.0f,
+            -halfWidth, -halfHeight, -halfDepth, 1.0f, 0.0f,
+            halfWidth, halfHeight, -halfDepth, 0.0f, 1.0f,
+            halfWidth, -halfHeight, -halfDepth, 0.0f, 0.0f,
+
+            // Left face
+            -halfWidth, halfHeight, halfDepth, 1.0f, 0.0f,
+            -halfWidth, halfHeight, -halfDepth, 1.0f, 1.0f,
+            -halfWidth, -halfHeight, -halfDepth, 0.0f, 1.0f,
+            -halfWidth, -halfHeight, -halfDepth, 0.0f, 1.0f,
+            -halfWidth, -halfHeight, halfDepth, 0.0f, 0.0f,
+            -halfWidth, halfHeight, halfDepth, 1.0f, 0.0f,
+
+            // Right face
+            halfWidth, halfHeight, halfDepth, 1.0f, 1.0f,
+            halfWidth, -halfHeight, -halfDepth, 0.0f, 0.0f,
+            halfWidth, halfHeight, -halfDepth, 0.0f, 1.0f,
+            halfWidth, -halfHeight, -halfDepth, 0.0f, 0.0f,
+            halfWidth, halfHeight, halfDepth, 1.0f, 1.0f,
+            halfWidth, -halfHeight, halfDepth, 1.0f, 0.0f,
+
+            // Top face
+            -halfWidth, halfHeight, -halfDepth, 0.0f, 1.0f,
+            -halfWidth, halfHeight, halfDepth, 0.0f, 0.0f,
+            halfWidth, halfHeight, halfDepth, 1.0f, 0.0f,
+            -halfWidth, halfHeight, -halfDepth, 0.0f, 1.0f,
+            halfWidth, halfHeight, halfDepth, 1.0f, 0.0f,
+            halfWidth, halfHeight, -halfDepth, 1.0f, 1.0f,
+
+            // Bottom face
+            -halfWidth, -halfHeight, -halfDepth, 1.0f, 1.0f,
+            halfWidth, -halfHeight, -halfDepth, 0.0f, 0.0f,
+            halfWidth, -halfHeight, halfDepth, 0.0f, 1.0f,
+            -halfWidth, -halfHeight, -halfDepth, 1.0f, 1.0f,
+            halfWidth, -halfHeight, halfDepth, 0.0f, 1.0f,
+            -halfWidth, -halfHeight, halfDepth, 1.0f, 0.0f,
+        };
+
+        ID3D11Buffer* VertexBuffer;
+        unsigned int vertexStride = 5 * sizeof(float);
+        unsigned int vertexOffset = 0;
+        unsigned int vertexCount = 36;
+
+        D3D11_BUFFER_DESC vertexDescription;
+        ZeroMemory(&vertexDescription, sizeof(vertexDescription));
+        vertexDescription.Usage = D3D11_USAGE_DEFAULT;
+        vertexDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+        vertexDescription.ByteWidth = sizeof(vertex_data_array);
+
+        D3D11_SUBRESOURCE_DATA resourceData;
+        ZeroMemory(&resourceData, sizeof(resourceData));
+        resourceData.pSysMem = vertex_data_array;
+
+        if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)))
+        {
+            Result = std::make_shared<DirectX11Mesh>(Context, VertexBuffer, vertexStride, vertexOffset,
+                                                     vertexCount);
+            Renderables[ShaderIn].push_back(Result);
+        }
+    }
+
+    return Result;
+}
+
 void DirectX11Graphics::SetWorldMatrix(const std::weak_ptr<Transform3D> transform)
 {
     if (std::shared_ptr<Transform3D> trans = transform.lock())
@@ -337,7 +456,7 @@ void DirectX11Graphics::SetWorldMatrix(const std::weak_ptr<Transform3D> transfor
             trans->Rotation.X(), trans->Rotation.Y(),
             trans->Rotation.Z());
         DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(trans->Scale.X(), trans->Scale.Y(),
-                                                           trans->Scale.Y());
+                                                           trans->Scale.Z());
         DirectX::XMMATRIX world = scale * rotation * translation;
         DirectX::XMMATRIX mvp = DirectX::XMMatrixMultiply(world, vpMatrix);
         mvp = DirectX::XMMatrixTranspose(mvp);
