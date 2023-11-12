@@ -12,10 +12,10 @@ IGraphics::~IGraphics()
 {
     for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
     {
-        for (auto renderable = bucket->second.begin(); renderable != bucket->second.end(); ++renderable)
-        {
-            delete (*renderable);
-        }
+        // for (auto renderable = bucket->second.begin(); renderable != bucket->second.end(); ++renderable)
+        // {
+        //     delete (*renderable);
+        // }
         
         delete bucket->first;
     }
