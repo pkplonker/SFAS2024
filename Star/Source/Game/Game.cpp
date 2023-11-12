@@ -28,6 +28,7 @@ IApplication* GetApplication(IGraphics* Graphics, IInput* Input)
 Game::Game(IGraphics* GraphicsIn, IInput* InputIn) : IApplication(GraphicsIn, InputIn), Rings(), Arrow(nullptr),
                                                      SelectedRing(), State()
 {
+    scene = std::make_shared<Scene>();
 }
 
 Game::~Game()
@@ -41,6 +42,7 @@ bool Game::IsValid()
 
 bool Game::Load()
 {
+    scene = std::make_shared<Scene>();
     ITexture* InnerTexture = Graphics->CreateTexture(L"Resource/Textures/InnerRing.dds");
     ITexture* MiddleTexture = Graphics->CreateTexture(L"Resource/Textures/MiddleRing.dds");
     ITexture* OuterTexture = Graphics->CreateTexture(L"Resource/Textures/OuterRing.dds");
@@ -53,20 +55,20 @@ bool Game::Load()
                                                   "ps_4_0", OuterTexture);
     IShader* ArrowShader = Graphics->CreateShader(L"Resource/Shaders/UnlitColor.fx", "VS_Main", "vs_4_0", "PS_Main",
                                                   "ps_4_0", ArrowTexture);
-
-    Rings[static_cast<unsigned int>(Inner)] = GameObjectFactory("Inner")
+    
+    Rings[static_cast<unsigned int>(Inner)] = GameObjectFactory(scene,"Inner")
                                               .AddPosition(Vec3(0, 0, 1.0f))
                                               .AddSpriteRenderable(Graphics->CreateBillboard(InnerShader))
                                               .Build();
-    Rings[static_cast<unsigned int>(Middle)] = GameObjectFactory("Middle")
+    Rings[static_cast<unsigned int>(Middle)] = GameObjectFactory(scene,"Middle")
                                                .AddPosition(Vec3(0, 0, 1.0f))
                                                .AddSpriteRenderable(Graphics->CreateBillboard(MiddleShader))
                                                .Build();
-    Rings[static_cast<unsigned int>(Outer)] = GameObjectFactory("Outer")
+    Rings[static_cast<unsigned int>(Outer)] = GameObjectFactory(scene,"Outer")
                                               .AddPosition(Vec3(0, 0, 1.0f))
                                               .AddSpriteRenderable(Graphics->CreateBillboard(OuterShader))
                                               .Build();
-    Arrow = GameObjectFactory("Arrow")
+    Arrow = GameObjectFactory(scene,"Arrow")
             .AddPosition(Vec3(0, 0, 1.0f))
             .AddSpriteRenderable(Graphics->CreateBillboard(ArrowShader))
             .Build();

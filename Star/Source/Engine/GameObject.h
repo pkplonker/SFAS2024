@@ -49,16 +49,16 @@ public:
     template <typename T>
     std::shared_ptr<T> GetComponent() const
     {
-        for (auto& comp : components)
-        {
-            std::shared_ptr<T> castComp = std::dynamic_pointer_cast<T>(comp);
-            if (castComp)
-            {
-                return castComp;
+
+        for (auto& comp : *components) {
+            T* castComp = dynamic_cast<T*>(comp.get());
+            if (castComp) {
+                return std::shared_ptr<T>(comp, castComp);
             }
         }
         return nullptr;
     }
+
 
     std::shared_ptr<Transform3D> Transform()
     {

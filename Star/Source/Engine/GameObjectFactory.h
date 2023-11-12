@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "IComponent.h"
 #include "IRenderable.h"
+#include "Implementation/Scene.h"
 #include "Implementation/SpriteRenderable.h"
 
 class GameObject;
@@ -11,12 +12,12 @@ class GameObject;
 class GameObjectFactory
 {
 public:
-    GameObjectFactory()
+    GameObjectFactory(std::shared_ptr<Scene> scene) : scene(scene)
     {
         gameObject = std::make_shared<GameObject>();
     }
 
-    GameObjectFactory(std::string name)
+    GameObjectFactory(std::shared_ptr<Scene> scene, std::string name) : scene(scene)
     {
         gameObject = std::make_shared<GameObject>(name);
     }
@@ -60,6 +61,7 @@ public:
 
     std::shared_ptr<GameObject> Build()
     {
+        scene->AddObject(gameObject);
         return gameObject;
     }
 
@@ -82,4 +84,5 @@ public:
 
 private:
     std::shared_ptr<GameObject> gameObject;
+    std::shared_ptr<Scene> scene;
 };

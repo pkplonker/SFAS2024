@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "Engine/IApplication.h"
+#include "Engine/Implementation/Scene.h"
 
 class GameObject;
 class IGraphics;
@@ -38,4 +39,5 @@ private:
 	std::shared_ptr<GameObject> Arrow;
 	RingLayer SelectedRing;
 	GameState State;
+	std::shared_ptr<Scene> scene;
 };
