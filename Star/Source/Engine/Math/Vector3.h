@@ -15,6 +15,9 @@ struct Vec3
     Vec3(float x, float y) : Vec3(x, y, 0)
     {
     }
+    Vec3(float x) : Vec3(x, x, x)
+    {
+    }
 
     Vec3(Vec2 val) : Vec3(val.X(), val.Y(), 0)
     {

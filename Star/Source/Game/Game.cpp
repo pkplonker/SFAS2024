@@ -86,6 +86,15 @@ bool Game::Load()
                                  L"Resource/Shaders/UnlitColor2.fx")))
                              .Build());
 
+    testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
+                             .AddPosition(Vec3(0, 0.5f, 0.0f))
+                             .AddRotation(Vec3(45.0f,0.0f,0.0f))
+                             .AddScale(Vec3(.025f))
+                             .AddSpriteRenderable(Graphics->CreateBillboard(resourceManager->GetShader(
+                                 L"Resource/Textures/MiddleRing.dds",
+                                 L"Resource/Shaders/UnlitColor3.fx")))
+                             .Build());
+
     // testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
     //                          .AddPosition(Vec3(450, 150, 10.0f))
     //                          .AddRotation(Vec3(45.0f, 45.0f, 45.0f))

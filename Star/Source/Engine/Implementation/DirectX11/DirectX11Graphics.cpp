@@ -96,7 +96,7 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         //DirectX::XMMATRIX projection = DirectX::XMMatrixOrthographicOffCenterLH(
 #pragma region PerspectiveTest
 
-        DirectX::XMVECTOR EyePosition = DirectX::XMVectorSet(0.0f, 0.0f, -2.0f, 1.0f); 
+        DirectX::XMVECTOR EyePosition = DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f); 
         DirectX::XMVECTOR FocusPoint = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f); 
         DirectX::XMVECTOR UpDirection = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f); 
         DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(EyePosition, FocusPoint, UpDirection);

@@ -94,7 +94,7 @@ public:
     GameObjectFactory& AddRandomRotation()
     {
         std::srand(static_cast<unsigned int>(std::time(nullptr)));
-        gameObject->Transform()->Rotation = Vec3(std::rand() % 361, std::rand() % 361, std::rand() % 361);
+        gameObject->Transform()->Rotation = Vec3(static_cast<float>(std::rand() % 361), static_cast<float>(std::rand() % 361), static_cast<float>(std::rand() % 361));
         return *this;
     }
 
