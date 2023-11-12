@@ -295,8 +295,10 @@
     <ClCompile Include="Source\Engine\IInput.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Billboard.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Graphics.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Mesh.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Shader.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\MeshRenderable.cpp" />
     <ClCompile Include="Source\Engine\Implementation\Scene.cpp" />
     <ClCompile Include="Source\Engine\Implementation\SpriteRenderable.cpp" />
     <ClCompile Include="Source\Engine\Implementation\TestComponent.cpp" />
@@ -305,6 +307,7 @@
     <ClCompile Include="Source\Engine\IRenderableComponent.cpp" />
     <ClCompile Include="Source\Engine\IShader.cpp" />
     <ClCompile Include="Source\Engine\ITexture.cpp" />
+    <ClCompile Include="Source\Engine\ResourceManager.cpp" />
     <ClCompile Include="Source\EntryPoints\WindowsMain.cpp" />
     <ClCompile Include="Source\Game\Game.cpp" />
   </ItemGroup>
@@ -318,8 +321,10 @@
     <ClInclude Include="Source\Engine\IInput.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Billboard.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Graphics.h" />
+    <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Mesh.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Shader.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.h" />
+    <ClInclude Include="Source\Engine\Implementation\MeshRenderable.h" />
     <ClInclude Include="Source\Engine\Implementation\Scene.h" />
     <ClInclude Include="Source\Engine\Implementation\SpriteRenderable.h" />
     <ClInclude Include="Source\Engine\Implementation\TestComponent.h" />
@@ -331,6 +336,7 @@
     <ClInclude Include="Source\Engine\IUpdateable.h" />
     <ClInclude Include="Source\Engine\Math\Vector2.h" />
     <ClInclude Include="Source\Engine\Math\Vector3.h" />
+    <ClInclude Include="Source\Engine\ResourceManager.h" />
     <ClInclude Include="Source\Engine\Transform2D.h" />
     <ClInclude Include="Source\Engine\Transform3D.h" />
     <ClInclude Include="Source\Game\Game.h" />

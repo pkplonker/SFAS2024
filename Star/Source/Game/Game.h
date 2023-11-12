@@ -5,6 +5,7 @@
 #include "Engine/IApplication.h"
 #include "Engine/Implementation/Scene.h"
 
+class ResourceManager;
 class GameObject;
 class IGraphics;
 class ITexture;
@@ -40,4 +41,6 @@ private:
 	RingLayer SelectedRing;
 	GameState State;
 	std::shared_ptr<Scene> scene;
+	std::vector<std::shared_ptr<GameObject>> testObjects;
+	std::unique_ptr<ResourceManager> resourceManager;
 };

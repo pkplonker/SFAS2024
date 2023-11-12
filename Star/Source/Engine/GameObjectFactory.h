@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "IComponent.h"
 #include "IRenderable.h"
+#include "Implementation/MeshRenderable.h"
 #include "Implementation/Scene.h"
 #include "Implementation/SpriteRenderable.h"
 
@@ -76,6 +77,24 @@ public:
             gameObject->AddComponent(std::move(component));
             return *this;
         }
+        return *this;
+    }
+
+    GameObjectFactory& AddMeshRenderable(std::shared_ptr<IRenderable> renderable)
+    {
+        auto component = std::make_shared<MeshRenderable>(gameObject, renderable);
+        if (component != nullptr)
+        {
+            gameObject->AddComponent(std::move(component));
+            return *this;
+        }
+        return *this;
+    }
+
+    GameObjectFactory& AddRandomRotation()
+    {
+        std::srand(static_cast<unsigned int>(std::time(nullptr)));
+        gameObject->Transform()->Rotation = Vec3(std::rand() % 361, std::rand() % 361, std::rand() % 361);
         return *this;
     }
 
