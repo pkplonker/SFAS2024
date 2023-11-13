@@ -2,15 +2,17 @@
 
 #include "MeshRenderable.h"
 #include "SpriteRenderable.h"
+#include "Engine/ICamera.h"
 
 class SpriteRenderable;
 
-Scene::Scene()
+Scene::Scene(IGraphics* graphics)
 {
     objects = std::make_unique<std::set<std::shared_ptr<
         GameObject>>>();
     renderables = std::make_unique<std::set<std::shared_ptr<
         IRenderable>>>();
+    this->graphics = graphics;
 }
 
 void Scene::AddObject(std::shared_ptr<GameObject> object)
@@ -40,3 +42,12 @@ void Scene::AddRenderable(std::shared_ptr<GameObject> object) const
         renderables->emplace(renderableComponent->GetRenderable());
     }
 }
+
+void Scene::SetActiveCamera(std::shared_ptr<ICamera> camera)
+{
+    this->camera=camera;
+    camera->SetWidth(graphics->GetWidth());
+    camera->SetHeight(graphics->GetHeight());
+    graphics->SetActiveCamera(camera);
+}
+

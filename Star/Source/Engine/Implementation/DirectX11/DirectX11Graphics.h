@@ -7,6 +7,8 @@
 #include <DirectXMath.h>
 #include <memory>
 
+#include "Engine/ICamera.h"
+
 struct Transform3D;
 struct ID3D11Device;
 struct ID3D11DeviceContext;
@@ -31,9 +33,11 @@ public:
 	virtual IShader* CreateShader(const wchar_t* filepath, const char* vsentry, const char* vsshader, const char* psentry, const char* psshader, ITexture* TextureIn);
 	virtual std::shared_ptr<IRenderable> CreateBillboard(IShader* ShaderIn);
 	virtual std::shared_ptr<IRenderable> CreateMeshRenderable(IShader* ShaderIn);
-
+	void SetActiveCamera(std::shared_ptr<ICamera> camera) override;
 	ID3D11Device* GetDevice() const { return Device; }
 	ID3D11DeviceContext* GetContext() const { return Context; }
+	int GetWidth()override {return width;}
+	int GetHeight()override {return height;}
 
 protected:
 
@@ -54,6 +58,7 @@ private:
 	HWND hwnd;
 	int width;
 	int height;
+	std::shared_ptr<ICamera> camera;
 
 };
 

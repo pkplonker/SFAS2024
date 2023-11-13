@@ -90,28 +90,30 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
             MessageBox(nullptr, "Graphics Failed to create MVP Buffer", "Error!", MB_ICONEXCLAMATION | MB_OK);
         }
 
-        float halfWidth = static_cast<float>(width) / 2.0f;
-        float halfHeight = static_cast<float>(height) / 2.0f;
-        //DirectX::XMMATRIX view = DirectX::XMMatrixIdentity();
-        //DirectX::XMMATRIX projection = DirectX::XMMatrixOrthographicOffCenterLH(
-#pragma region PerspectiveTest
 
-        DirectX::XMVECTOR EyePosition = DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f); 
-        DirectX::XMVECTOR FocusPoint = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f); 
-        DirectX::XMVECTOR UpDirection = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f); 
-        DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(EyePosition, FocusPoint, UpDirection);
-        float fovAngleY = DirectX::XM_PIDIV4;
-        float aspectRatio = static_cast<float>(width) / height; 
-        float nearZ = 0.1f; 
-        float farZ = 2000.0f; 
-        DirectX::XMMATRIX projection = DirectX::XMMatrixPerspectiveFovLH(
-            fovAngleY,
-            aspectRatio,
-            nearZ,
-            farZ
-        );
-#pragma endregion 
-        vpMatrix = DirectX::XMMatrixMultiply(view, projection);
+        if (camera == nullptr)
+        {
+            DirectX::XMVECTOR EyePosition = DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f);
+            DirectX::XMVECTOR FocusPoint = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+            DirectX::XMVECTOR UpDirection = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+            DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(EyePosition, FocusPoint, UpDirection);
+            float fovAngleY = DirectX::XM_PIDIV4;
+            float aspectRatio = static_cast<float>(width) / height;
+            float nearZ = 0.1f;
+            float farZ = 2000.0f;
+            DirectX::XMMATRIX projection = DirectX::XMMatrixPerspectiveFovLH(
+                fovAngleY,
+                aspectRatio,
+                nearZ,
+                farZ
+            );
+            vpMatrix = XMMatrixMultiply(view, projection);
+        }
+        else
+        {
+            vpMatrix = camera->GetViewProjectionMatrix();
+        }
+
 
         D3D11_BLEND_DESC Desc;
         ZeroMemory(&Desc, sizeof(D3D11_BLEND_DESC));
@@ -159,6 +161,11 @@ void DirectX11Graphics::Update()
 {
     if (Context && SwapChain)
     {
+        if (camera != nullptr)
+        {
+            vpMatrix = camera->GetViewProjectionMatrix();
+        }
+
         float clearColour[4] = {1.0f, 1.0f, 1.0f, 1.0f};
         Context->ClearRenderTargetView(BackbufferView, clearColour);
 
@@ -444,6 +451,11 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateMeshRenderable(IShader* Sh
     }
 
     return Result;
+}
+
+void DirectX11Graphics::SetActiveCamera(std::shared_ptr<ICamera> camera)
+{
+    this->camera = camera;
 }
 
 void DirectX11Graphics::SetWorldMatrix(const std::weak_ptr<Transform3D> transform)

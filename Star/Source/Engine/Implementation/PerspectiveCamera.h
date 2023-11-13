@@ -2,7 +2,7 @@
 #include "Engine/ICamera.h"
 
 const float DEFAULT_NEAR = 0.1f;
-const float DEFAULT_FAR = 10.1f;
+const float DEFAULT_FAR = 1000.0f;
 
 
 class PerspectiveCamera : public ICamera
@@ -12,7 +12,11 @@ public:
     DirectX::XMMATRIX GetProjectionMatrix() override;
     DirectX::XMMATRIX GetViewMatrix() override;
     DirectX::XMMATRIX GetViewProjectionMatrix() override;
-
+    void SetHeight(int height) override;
+    void SetWidth(int width) override;
+    DirectX::XMVECTOR GetFocusPoint();
+    DirectX::XMVECTOR GetEyePosition();
+    DirectX::XMVECTOR GetUpDirection();
 protected:
     DirectX::XMMATRIX view{};
     DirectX::XMMATRIX projection{};
@@ -21,5 +25,4 @@ protected:
     float far;
     float width;
     float height;
-    bool isDirty;
 };

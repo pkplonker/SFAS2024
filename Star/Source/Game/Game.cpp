@@ -10,6 +10,7 @@
 #include "Engine/GameObject.h"
 #include "Engine/GameObjectFactory.h"
 #include "Engine/ResourceManager.h"
+#include "Engine/Implementation/CameraComponent.h"
 
 #define CLAMP(v, x, y) fmin(fmax(v, x), y)
 
@@ -27,7 +28,7 @@ IApplication* GetApplication(IGraphics* Graphics, IInput* Input)
 Game::Game(IGraphics* GraphicsIn, IInput* InputIn) : IApplication(GraphicsIn, InputIn), Rings(), Arrow(nullptr),
                                                      SelectedRing(), State()
 {
-    scene = std::make_shared<Scene>();
+    scene = std::make_shared<Scene>(Graphics);
 }
 
 Game::~Game()
@@ -41,10 +42,10 @@ bool Game::IsValid()
 
 bool Game::Load()
 {
-    scene = std::make_shared<Scene>();
+    scene = std::make_shared<Scene>(Graphics);
     resourceManager = std::make_unique<ResourceManager>(Graphics);;
 
-
+    //
     // Rings[static_cast<unsigned int>(Inner)] = GameObjectFactory(scene, "Inner")
     //                                           .AddPosition(Vec3(0, 0, 1.0f))
     //                                           .AddSpriteRenderable(Graphics->CreateBillboard(
@@ -74,13 +75,17 @@ bool Game::Load()
     //         .Build();
 
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
-
+    camera = GameObjectFactory(scene, std::to_string(testObjects.size()))
+             .AddPerspectiveCamera()
+             //.AddOrthoCamera()
+             .Build();
+     scene->SetActiveCamera(camera->GetComponent<CameraComponent>());
     SelectedRing = RingLayer::Outer;
     State = GameState::Setup;
     testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
                              .AddPosition(Vec3(0, 0, 10.0f))
                              .AddRotation(Vec3(45.0f, 45.0f, 45.0f))
-                             .AddScale(Vec3(1,1,1))
+                             .AddScale(Vec3(1, 1, 1))
                              .AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
                                  L"Resource/Textures/Cat.dds",
                                  L"Resource/Shaders/UnlitColor2.fx")))
@@ -88,46 +93,13 @@ bool Game::Load()
 
     testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
                              .AddPosition(Vec3(0, 0.5f, 0.0f))
-                             .AddRotation(Vec3(45.0f,0.0f,0.0f))
+                             .AddRotation(Vec3(45.0f, 0.0f, 0.0f))
                              .AddScale(Vec3(.025f))
                              .AddSpriteRenderable(Graphics->CreateBillboard(resourceManager->GetShader(
                                  L"Resource/Textures/MiddleRing.dds",
                                  L"Resource/Shaders/UnlitColor3.fx")))
                              .Build());
 
-    // testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
-    //                          .AddPosition(Vec3(450, 150, 10.0f))
-    //                          .AddRotation(Vec3(45.0f, 45.0f, 45.0f))
-    //                          .AddScale(Vec3(10,10,10))
-    //                          .AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
-    //                              L"Resource/Textures/Cat.dds",
-    //                              L"Resource/Shaders/UnlitColor2.fx")))
-    //                          .Build());
-    // testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
-    //                   .AddPosition(Vec3(450, 150, 10.0f))
-    //                   .AddRotation(Vec3(45.0f,45.0f,45.0f))
-    //                   .AddScale(Vec3(5))
-    //
-    //                   .AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
-    //                       L"Resource/Textures/Cat.dds",
-    //                       L"Resource/Shaders/UnlitColor2.fx")))
-    //                   .Build());
-    // testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
-    //                   .AddPosition(Vec3(-450, 150, 3.0f))
-    //                   .AddRotation(Vec3(45.0f,45.0f,45.0f))
-    //                   .AddScale(Vec3(20))
-    //                   .AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
-    //                       L"Resource/Textures/Cat.dds",
-    //                       L"Resource/Shaders/UnlitColor2.fx")))
-    //                   .Build());
-    // testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
-    //               .AddPosition(Vec3(-450, 150, -20.0f))
-    //               .AddRotation(Vec3(45.0f,45.0f,45.0f))
-    //               .AddScale(Vec3(10))
-    //               .AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
-    //                   L"Resource/Textures/Cat.dds",
-    //                   L"Resource/Shaders/UnlitColor2.fx")))
-    //               .Build());
     return true;
 }
 

@@ -33,3 +33,13 @@ DirectX::XMMATRIX CameraComponent::GetViewProjectionMatrix()
 {
     return camera->GetViewProjectionMatrix();
 }
+
+void CameraComponent::SetHeight(int height)
+{
+    camera->SetHeight(static_cast<float>(height));
+}
+
+void CameraComponent::SetWidth(int width)
+{
+    camera->SetWidth(static_cast<float>(width));;
+}

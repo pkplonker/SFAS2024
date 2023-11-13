@@ -14,6 +14,8 @@ public:
     DirectX::XMMATRIX GetProjectionMatrix() override;
     DirectX::XMMATRIX GetViewMatrix() override;
     DirectX::XMMATRIX GetViewProjectionMatrix() override;
+    void SetHeight(int height);
+    void SetWidth(int width);
 
 private:
     std::shared_ptr<ICamera> camera;

@@ -43,4 +43,5 @@ private:
 	std::shared_ptr<Scene> scene;
 	std::vector<std::shared_ptr<GameObject>> testObjects;
 	std::unique_ptr<ResourceManager> resourceManager;
+	std::shared_ptr<GameObject> camera;
 };
