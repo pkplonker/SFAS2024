@@ -10,7 +10,7 @@ class IComponent;
 
 class GameObject : IUpdateable
 {
-    std::string GAMEOBJECT_DEFAULT_NAME;
+    const std::string GAMEOBJECT_DEFAULT_NAME;
 
 public:
     GameObject();

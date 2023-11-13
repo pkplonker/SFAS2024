@@ -4,10 +4,14 @@
 #include "GameObject.h"
 #include "IComponent.h"
 #include "IRenderable.h"
+#include "OrthographicCamera.h"
+#include "Implementation/CameraComponent.h"
 #include "Implementation/MeshRenderable.h"
+#include "Implementation/PerspectiveCamera.h"
 #include "Implementation/Scene.h"
 #include "Implementation/SpriteRenderable.h"
 
+class CameraComponent;
 class GameObject;
 
 class GameObjectFactory
@@ -94,7 +98,34 @@ public:
     GameObjectFactory& AddRandomRotation()
     {
         std::srand(static_cast<unsigned int>(std::time(nullptr)));
-        gameObject->Transform()->Rotation = Vec3(static_cast<float>(std::rand() % 361), static_cast<float>(std::rand() % 361), static_cast<float>(std::rand() % 361));
+        gameObject->Transform()->Rotation = Vec3(static_cast<float>(std::rand() % 361),
+                                                 static_cast<float>(std::rand() % 361),
+                                                 static_cast<float>(std::rand() % 361));
+        return *this;
+    }
+
+    GameObjectFactory& AddPerspectiveCamera()
+    {
+        auto perspective = std::make_shared<PerspectiveCamera>(0, 0);
+        auto component = std::make_shared<CameraComponent>(gameObject, perspective);
+        if (component != nullptr)
+        {
+            gameObject->AddComponent(std::move(component));
+            return *this;
+        }
+        return *this;
+    }
+
+    GameObjectFactory& AddOrthoCamera()
+    {
+        auto ortho = std::make_shared<OrthographicCamera>(0, 0);
+
+        auto component = std::make_shared<CameraComponent>(gameObject, ortho);
+        if (component != nullptr)
+        {
+            gameObject->AddComponent(std::move(component));
+            return *this;
+        }
         return *this;
     }
 

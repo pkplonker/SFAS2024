@@ -4,6 +4,7 @@
 #include <list>
 #include <memory>
 
+class ICamera;
 class IRenderable;
 class IShader;
 class ITexture;
@@ -22,6 +23,9 @@ public:
                                   const char* psentry, const char* psshader, ITexture* TextureIn) = 0;
     virtual std::shared_ptr<IRenderable> CreateBillboard(IShader* ShaderIn) = 0;
     virtual std::shared_ptr<IRenderable> CreateMeshRenderable(IShader* ShaderIn) =0;
+    virtual void SetActiveCamera(std::shared_ptr<ICamera> camera) =0;
+    virtual int GetWidth() =0;
+    virtual int GetHeight() =0;
 
 protected:
     std::map<IShader*, std::list<std::shared_ptr<IRenderable>>> Renderables;
