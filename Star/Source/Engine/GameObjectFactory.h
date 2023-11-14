@@ -20,11 +20,22 @@ public:
     GameObjectFactory(std::shared_ptr<Scene> scene) : scene(scene)
     {
         gameObject = std::make_shared<GameObject>();
+        SetupRandom();
     }
 
     GameObjectFactory(std::shared_ptr<Scene> scene, std::string name) : scene(scene)
     {
         gameObject = std::make_shared<GameObject>(name);
+        SetupRandom();
+    }
+
+    void SetupRandom()
+    {
+        if (random == false)
+        {
+            std::srand(static_cast<unsigned int>(std::time(nullptr)));
+            random = true;
+        }
     }
 
     template <typename T>
@@ -97,7 +108,6 @@ public:
 
     GameObjectFactory& AddRandomRotation()
     {
-        std::srand(static_cast<unsigned int>(std::time(nullptr)));
         gameObject->Transform()->Rotation = Vec3(static_cast<float>(std::rand() % 361),
                                                  static_cast<float>(std::rand() % 361),
                                                  static_cast<float>(std::rand() % 361));
@@ -135,4 +145,5 @@ public:
 private:
     std::shared_ptr<GameObject> gameObject;
     std::shared_ptr<Scene> scene;
+    inline static bool random = false;
 };

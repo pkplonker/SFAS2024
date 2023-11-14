@@ -1,5 +1,7 @@
 #pragma once
 
+#include <d3d11.h>
+
 #include "Engine/IGraphics.h"
 #include "Engine/Transform2D.h"
 #include <Windows.h>
@@ -51,6 +53,7 @@ private:
 	IDXGISwapChain* SwapChain;
 	ID3D11RenderTargetView* BackbufferView;
 	ID3D11Texture2D* BackbufferTexture;
+	ID3D11DepthStencilView* DepthStencilView;
 	ID3D11BlendState* BlendState;
 	ID3D11Buffer* Mvp;
 	DirectX::XMMATRIX vpMatrix;

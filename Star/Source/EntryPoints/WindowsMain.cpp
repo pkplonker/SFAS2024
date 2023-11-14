@@ -10,7 +10,7 @@
 #include "imgui.h"
 
 const char WindowClassName[] = "Star";
-const char WindowTitle[] = "Search for a Star 2024";
+const char WindowTitle[] = "Stuart Heath SFAS24 - WIP";
 const int WindowWidth = 1920;
 const int WindowHeight = 1080;
 
