@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\External\glm\glm;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\External;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\packages\ImGui\backends;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\packages\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -101,7 +101,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\External\glm\glm;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\External;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\packages\ImGui\backends;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\packages\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -119,7 +119,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\External\glm\glm;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\External;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\packages\ImGui\backends;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\packages\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,7 +136,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\External\glm\glm;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\External;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\packages\ImGui\backends;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\packages\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -150,18 +150,6 @@
     <ClCompile Include="packages\ImGui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="packages\ImGui\examples\example_win32_directx11\main.cpp" />
     <ClCompile Include="packages\ImGui\examples\libs\usynergy\uSynergy.c" />
-    <ClCompile Include="packages\ImGui\imgui-master\backends\imgui_impl_dx11.cpp" />
-    <ClCompile Include="packages\ImGui\imgui-master\backends\imgui_impl_win32.cpp" />
-    <ClCompile Include="packages\ImGui\imgui-master\examples\example_win32_directx11\main.cpp" />
-    <ClCompile Include="packages\ImGui\imgui-master\examples\libs\usynergy\uSynergy.c" />
-    <ClCompile Include="packages\ImGui\imgui-master\imgui.cpp" />
-    <ClCompile Include="packages\ImGui\imgui-master\imgui_demo.cpp" />
-    <ClCompile Include="packages\ImGui\imgui-master\imgui_draw.cpp" />
-    <ClCompile Include="packages\ImGui\imgui-master\imgui_tables.cpp" />
-    <ClCompile Include="packages\ImGui\imgui-master\imgui_widgets.cpp" />
-    <ClCompile Include="packages\ImGui\imgui-master\misc\cpp\imgui_stdlib.cpp" />
-    <ClCompile Include="packages\ImGui\imgui-master\misc\fonts\binary_to_compressed_c.cpp" />
-    <ClCompile Include="packages\ImGui\imgui-master\misc\freetype\imgui_freetype.cpp" />
     <ClCompile Include="packages\ImGui\imgui.cpp" />
     <ClCompile Include="packages\ImGui\imgui_demo.cpp" />
     <ClCompile Include="packages\ImGui\imgui_draw.cpp" />
@@ -425,21 +413,6 @@
     <ClInclude Include="packages\ImGui\examples\libs\glfw\include\GLFW\glfw3native.h" />
     <ClInclude Include="packages\ImGui\examples\libs\usynergy\uSynergy.h" />
     <ClInclude Include="packages\ImGui\imconfig.h" />
-    <ClInclude Include="packages\ImGui\imgui-master\backends\imgui_impl_dx11.h" />
-    <ClInclude Include="packages\ImGui\imgui-master\backends\imgui_impl_win32.h" />
-    <ClInclude Include="packages\ImGui\imgui-master\examples\libs\emscripten\emscripten_mainloop_stub.h" />
-    <ClInclude Include="packages\ImGui\imgui-master\examples\libs\glfw\include\GLFW\glfw3.h" />
-    <ClInclude Include="packages\ImGui\imgui-master\examples\libs\glfw\include\GLFW\glfw3native.h" />
-    <ClInclude Include="packages\ImGui\imgui-master\examples\libs\usynergy\uSynergy.h" />
-    <ClInclude Include="packages\ImGui\imgui-master\imconfig.h" />
-    <ClInclude Include="packages\ImGui\imgui-master\imgui.h" />
-    <ClInclude Include="packages\ImGui\imgui-master\imgui_internal.h" />
-    <ClInclude Include="packages\ImGui\imgui-master\imstb_rectpack.h" />
-    <ClInclude Include="packages\ImGui\imgui-master\imstb_textedit.h" />
-    <ClInclude Include="packages\ImGui\imgui-master\imstb_truetype.h" />
-    <ClInclude Include="packages\ImGui\imgui-master\misc\cpp\imgui_stdlib.h" />
-    <ClInclude Include="packages\ImGui\imgui-master\misc\freetype\imgui_freetype.h" />
-    <ClInclude Include="packages\ImGui\imgui-master\misc\single_file\imgui_single_file.h" />
     <ClInclude Include="packages\ImGui\imgui.h" />
     <ClInclude Include="packages\ImGui\imgui_internal.h" />
     <ClInclude Include="packages\ImGui\imstb_rectpack.h" />
@@ -484,7 +457,6 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="packages\ImGui\examples\libs\emscripten\shell_minimal.html" />
-    <None Include="packages\ImGui\imgui-master\examples\libs\emscripten\shell_minimal.html" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
