@@ -27,7 +27,6 @@ IApplication* GetApplication(IGraphics* Graphics, IInput* Input, ImGuiController
 Game::Game(IGraphics* GraphicsIn, IInput* InputIn, ImGuiController* ImGui) : IApplication(GraphicsIn, InputIn, ImGui), Rings(), Arrow(nullptr),
                                                      SelectedRing(), State()
 {
-    scene = std::make_shared<Scene>(Graphics);
 }
 
 Game::~Game()
@@ -41,7 +40,7 @@ bool Game::IsValid()
 
 bool Game::Load()
 {
-    scene = std::make_shared<Scene>(Graphics);
+    scene = std::make_shared<Scene>(Graphics, ImGui);
     resourceManager = std::make_unique<ResourceManager>(Graphics);;
 
     //

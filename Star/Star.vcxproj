@@ -385,6 +385,7 @@
       <AdditionalIncludeDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\packages\directxtk_desktop_2019.2023.9.6.1\build\native\..\..\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\packages\ImGui\backends;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\packages\ImGui;</AdditionalIncludeDirectories>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Source\Engine\ImGuiFPSCounter.cpp" />
     <ClCompile Include="Source\Engine\Implementation\CameraComponent.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Billboard.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Graphics.cpp" />
@@ -503,8 +504,10 @@
     <ClInclude Include="Source\Engine\ICamera.h" />
     <ClInclude Include="Source\Engine\IComponent.h" />
     <ClInclude Include="Source\Engine\IGraphics.h" />
+    <ClInclude Include="Source\Engine\IImGuiRenderable.h" />
     <ClInclude Include="Source\Engine\IInput.h" />
     <ClInclude Include="Source\Engine\ImGuiController.h" />
+    <ClInclude Include="Source\Engine\ImGuiFPSCounter.h" />
     <ClInclude Include="Source\Engine\Implementation\CameraComponent.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Billboard.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Graphics.h" />

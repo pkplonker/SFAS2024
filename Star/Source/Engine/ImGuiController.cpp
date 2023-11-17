@@ -1,5 +1,8 @@
 ﻿#include "ImGuiController.h"
 
+#include <vector>
+
+#include "IImGuiRenderable.h"
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
@@ -24,15 +27,30 @@ void ImGuiController::PreUpdate()
     ImGui::NewFrame();
 }
 
+
+
 void ImGuiController::Update()
 {
     ImGui::ShowDemoWindow();
-    ImGui::Begin("Hello world");
-    ImGui::Text("Test test test");
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
-                ImGui::GetIO().Framerate);
-    ImGui::End();
     
+    std::vector<std::string> identifiersToRemove;
+
+    for (const auto& renderable : renderables)
+    {
+        if (renderable.second == nullptr)
+        {
+            identifiersToRemove.push_back(renderable.first);
+        }
+        else
+        {
+            renderable.second->Render();
+        }
+    }
+
+    for (const auto& identifier : identifiersToRemove)
+    {
+        renderables.erase(identifier);
+    }
 }
 
 void ImGuiController::PostUpdate()
@@ -46,4 +64,9 @@ void ImGuiController::ShutDown()
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
+}
+
+void ImGuiController::RegisterWindow(IImGuiRenderable* renderable, std::string identifier)
+{
+    renderables.try_emplace(identifier,renderable);
 }

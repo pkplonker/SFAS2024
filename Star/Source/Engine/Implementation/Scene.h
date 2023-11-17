@@ -3,17 +3,21 @@
 #include <set>
 
 #include "Engine/GameObject.h"
+#include "Engine/IImGuiRenderable.h"
 #include "Engine/IRenderable.h"
 
-class Scene : public IUpdateable
+class ImGuiController;
+
+class Scene : public IUpdateable, public IImGuiRenderable
 {
 public:
-    Scene(IGraphics* graphics);
+    Scene(IGraphics* graphics, ImGuiController* ImGui);
     void AddObject(std::shared_ptr<GameObject> object);
     void AddRenderable(std::shared_ptr<IRenderable> object) const;
     void Update() override;
     void AddRenderable(std::shared_ptr<GameObject> object) const;
     void SetActiveCamera(std::shared_ptr<ICamera> camera);
+    void Render() override;
 private:
     std::unique_ptr<std::set<std::shared_ptr<GameObject>>> objects = std::make_unique<std::set<std::shared_ptr<
         GameObject>>>();
@@ -21,4 +25,5 @@ private:
         IRenderable>>>();
     IGraphics* graphics;
     std::shared_ptr<ICamera> camera;
+    ImGuiController* ImGui;
 };
