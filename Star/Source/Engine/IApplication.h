@@ -1,5 +1,6 @@
 
 #pragma once
+#include <memory>
 
 class IGraphics;
 class IInput;
@@ -15,7 +16,6 @@ public:
 	virtual bool Load() = 0;
 	virtual void Update() = 0;
 	virtual void Cleanup() = 0;
-
 protected:
 
 	IGraphics* Graphics;

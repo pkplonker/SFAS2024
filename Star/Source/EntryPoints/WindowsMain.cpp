@@ -8,6 +8,8 @@
 #include "Engine/IRenderable.h"
 #include "Engine/IApplication.h"
 #include "imgui.h"
+#include "Engine/IUpdatePipe.h"
+#include "Engine/Implementation/ImGuiController.h"
 
 const char WindowClassName[] = "Star";
 const char WindowTitle[] = "Stuart Heath SFAS24 - WIP";
@@ -60,7 +62,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	IGraphics* Graphics = new DirectX11Graphics(hwnd);
 	IInput* Input = new DirectXInput();
 	IApplication* Application = GetApplication(Graphics, Input);
-
+	ImGuiController* ImGui = new ImGuiController();
+	ImGui->Init(static_cast<DirectX11Graphics*>(Graphics),Input);
 	if (Graphics && Graphics->IsValid() && Application)
 	{
 		Application->Load();
@@ -72,10 +75,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
-
 			Input->Update();
 			Application->Update();
 			Graphics->Update();
+			ImGui->PreUpdate();
+			ImGui->Update();
+			ImGui->PostUpdate();
+			Graphics->PostUpdate();
 		}
 
 		Application->Cleanup();

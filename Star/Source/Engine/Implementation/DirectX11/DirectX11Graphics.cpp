@@ -10,10 +10,7 @@
 #include <memory>
 
 #include "DirectX11Mesh.h"
-#include "imgui.h"
-#include "backends/imgui_impl_dx11.h"
 #include "Engine/Debug.h"
-#include "imgui_impl_win32.h"
 
 DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
                                                     BackbufferView(nullptr), BackbufferTexture(nullptr), Mvp(nullptr),
@@ -156,14 +153,6 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         Device->CreateDepthStencilView(depthStencil, &depthViewDesc, &DepthStencilView);
         
         Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
-
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO();
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-        ImGui_ImplWin32_Init(hwnd);
-        ImGui_ImplDX11_Init(Device, Context);
     }
 }
 
@@ -193,25 +182,12 @@ DirectX11Graphics::~DirectX11Graphics()
     {
         Device->Release();
     }
-    ImGui_ImplDX11_Shutdown();
-    ImGui_ImplWin32_Shutdown();
-    ImGui::DestroyContext();
 }
 
 void DirectX11Graphics::Update()
 {
     if (Context && SwapChain)
     {
-        ImGui_ImplDX11_NewFrame();
-        ImGui_ImplWin32_NewFrame();
-        
-        ImGui::NewFrame();
-        ImGui::ShowDemoWindow();
-        ImGui::Begin("Hello world");                          
-        ImGui::Text("Test test test");             
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-        ImGui::End();
-        
         if (camera != nullptr)
         {
             vpMatrix = camera->GetViewProjectionMatrix();
@@ -243,10 +219,12 @@ void DirectX11Graphics::Update()
                 (*renderable)->Update();
             }
         }
-        ImGui::Render();
-        ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-        SwapChain->Present(0, 0);
+        
     }
+}
+void DirectX11Graphics::PostUpdate()
+{
+    SwapChain->Present(0, 0);
 }
 
 bool DirectX11Graphics::IsValid()

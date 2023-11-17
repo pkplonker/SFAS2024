@@ -17,7 +17,7 @@ public:
 
     virtual void Update() = 0;
     virtual bool IsValid() = 0;
-
+    virtual void PostUpdate() = 0;
     virtual ITexture* CreateTexture(const wchar_t* filepath) = 0;
     virtual IShader* CreateShader(const wchar_t* filepath, const char* vsentry, const char* vsshader,
                                   const char* psentry, const char* psshader, ITexture* TextureIn) = 0;
