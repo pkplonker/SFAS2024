@@ -20,7 +20,7 @@ class Game : public IApplication
 {
 public:
 
-	Game(IGraphics* Graphics, IInput* InputIn);
+	Game(IGraphics* Graphics, IInput* InputIn, ImGuiController* ImGui);
 	virtual ~Game();
 
 	virtual bool IsValid();

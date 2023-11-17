@@ -3,7 +3,7 @@
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
-#include "DirectX11/DirectX11Graphics.h"
+#include "Implementation/DirectX11/DirectX11Graphics.h"
 #include "Engine/IUpdatePipe.h"
 
 void ImGuiController::Init(DirectX11Graphics* Graphics, IInput* Input)

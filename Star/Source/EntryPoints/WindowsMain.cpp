@@ -8,8 +8,7 @@
 #include "Engine/IRenderable.h"
 #include "Engine/IApplication.h"
 #include "imgui.h"
-#include "Engine/IUpdatePipe.h"
-#include "Engine/Implementation/ImGuiController.h"
+#include "Engine/ImGuiController.h"
 
 const char WindowClassName[] = "Star";
 const char WindowTitle[] = "Stuart Heath SFAS24 - WIP";
@@ -17,7 +16,7 @@ const int WindowWidth = 1920;
 const int WindowHeight = 1080;
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-IApplication* GetApplication(IGraphics* Graphics, IInput* Input);
+IApplication* GetApplication(IGraphics* Graphics, IInput* Input, ImGuiController* ImGui);
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -61,8 +60,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	msg.wParam = -1;
 	IGraphics* Graphics = new DirectX11Graphics(hwnd);
 	IInput* Input = new DirectXInput();
-	IApplication* Application = GetApplication(Graphics, Input);
 	ImGuiController* ImGui = new ImGuiController();
+	IApplication* Application = GetApplication(Graphics, Input, ImGui);
 	ImGui->Init(static_cast<DirectX11Graphics*>(Graphics),Input);
 	if (Graphics && Graphics->IsValid() && Application)
 	{

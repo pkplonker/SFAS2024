@@ -10,20 +10,21 @@
 #include "Engine/GameObjectFactory.h"
 #include "Engine/ResourceManager.h"
 #include "Engine/Implementation/CameraComponent.h"
+#include "Engine/ImGuiController.h"
 #define CLAMP(v, x, y) fmin(fmax(v, x), y)
 
-constexpr float Pie = 3.14159265359f;
-constexpr float TwoPies = Pie * 2.0f;
+constexpr float PieVal = 3.14159265359f;
+constexpr float TwoPies = PieVal * 2.0f;
 constexpr float DeltaTime = 0.016f;
 constexpr float SpinSpeed = 0.1f;
-constexpr float WinTolerance = Pie / 10.0f;
+constexpr float WinTolerance = PieVal / 10.0f;
 
-IApplication* GetApplication(IGraphics* Graphics, IInput* Input)
+IApplication* GetApplication(IGraphics* Graphics, IInput* Input, ImGuiController* ImGui)
 {
-    return new Game(Graphics, Input);
+    return new Game(Graphics, Input, ImGui);
 }
 
-Game::Game(IGraphics* GraphicsIn, IInput* InputIn) : IApplication(GraphicsIn, InputIn), Rings(), Arrow(nullptr),
+Game::Game(IGraphics* GraphicsIn, IInput* InputIn, ImGuiController* ImGui) : IApplication(GraphicsIn, InputIn, ImGui), Rings(), Arrow(nullptr),
                                                      SelectedRing(), State()
 {
     scene = std::make_shared<Scene>(Graphics);
@@ -165,10 +166,10 @@ void Game::SetupEachRing()
 {
     for (unsigned int Ring = 0; Ring < NumberOfRings; ++Ring)
     {
-        Rings[Ring]->Transform()->Rotation = Vec3(0, 0, static_cast<float>(fmod(rand(), Pie)));
+        Rings[Ring]->Transform()->Rotation = Vec3(0, 0, static_cast<float>(fmod(rand(), PieVal)));
     }
 
-    Arrow->Transform()->Rotation = Vec3(0, 0, static_cast<float>(fmod(rand(), Pie)));
+    Arrow->Transform()->Rotation = Vec3(0, 0, static_cast<float>(fmod(rand(), PieVal)));
 }
 
 void Game::UpdateRingSelection()
