@@ -17,7 +17,7 @@ public:
     void Update() override;
     void AddRenderable(std::shared_ptr<GameObject> object) const;
     void SetActiveCamera(std::shared_ptr<ICamera> camera);
-    void Render() override;
+    void Render(std::string window) override;
 private:
     std::unique_ptr<std::set<std::shared_ptr<GameObject>>> objects = std::make_unique<std::set<std::shared_ptr<
         GameObject>>>();

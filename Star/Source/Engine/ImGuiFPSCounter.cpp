@@ -1,6 +1,6 @@
 ﻿#include "ImGuiFPSCounter.h"
 #include "imgui.h"
-void ImGuiFPSCounter::Render()
+void ImGuiFPSCounter::Render(std::string window)
 {
     ImGui::Begin("FPS");
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,

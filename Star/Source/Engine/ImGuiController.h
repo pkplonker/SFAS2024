@@ -9,15 +9,17 @@ class IImGuiRenderable;
 class ImGuiController : public IUpdatePipe
 {
 public:
-    ImGuiController()=default;
+    ImGuiController() = default;
     void Init(DirectX11Graphics* Graphics, IInput* Input);
-    void PreUpdate() override ;
+    void PreUpdate() override;
 
-    void Update() override ;
-    void PostUpdate() override ;
+    void Update() override;
+    void PostUpdate() override;
 
     void ShutDown() override;
+    void DrawMenu();
     void RegisterWindow(IImGuiRenderable* renderable, std::string identifier);
+    //todo serialize window state
 private:
-    std::map<std::string, IImGuiRenderable*> renderables;
+    std::map<std::string, std::pair<IImGuiRenderable*, bool>> renderables;
 };

@@ -6,12 +6,12 @@
 #include "Engine/ICamera.h"
 #include "Engine/ImGuiController.h"
 class SpriteRenderable;
-const std::string SCENE = "SCENE";
+const std::string SCENE = "Scene Hierarchy";
 
 Scene::Scene(IGraphics* graphics, ImGuiController* ImGui)
 {
     objects = std::make_unique<std::set<std::shared_ptr<
-       GameObject>>>();
+        GameObject>>>();
     renderables = std::make_unique<std::set<std::shared_ptr<
         IRenderable>>>();
     this->ImGui = ImGui;
@@ -49,16 +49,18 @@ void Scene::AddRenderable(std::shared_ptr<GameObject> object) const
 
 void Scene::SetActiveCamera(std::shared_ptr<ICamera> camera)
 {
-    this->camera=camera;
+    this->camera = camera;
     camera->SetWidth(graphics->GetWidth());
     camera->SetHeight(graphics->GetHeight());
     graphics->SetActiveCamera(camera);
 }
 
-void Scene::Render()
+void Scene::Render(std::string window)
 {
-    ImGui::Begin("Scene");
-    ImGui::Text("Test test test");
-    ImGui::End();
+    if (window == SCENE)
+    {
+        ImGui::Begin("Scene");
+        ImGui::Text("Test test test");
+        ImGui::End();
+    }
 }
-
