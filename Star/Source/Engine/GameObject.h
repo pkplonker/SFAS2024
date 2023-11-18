@@ -49,10 +49,11 @@ public:
     template <typename T>
     std::shared_ptr<T> GetComponent() const
     {
-
-        for (auto& comp : *components) {
+        for (auto& comp : *components)
+        {
             T* castComp = dynamic_cast<T*>(comp.get());
-            if (castComp) {
+            if (castComp)
+            {
                 return std::shared_ptr<T>(comp, castComp);
             }
         }
@@ -66,6 +67,8 @@ public:
     }
 
     void Update() override;
+    const std::vector<std::shared_ptr<IComponent>>& GetComponents() const;
+    void ImGuiDraw();
     std::string Name = GAMEOBJECT_DEFAULT_NAME;
 
 private:

@@ -30,7 +30,7 @@ void ImGuiController::PreUpdate()
 
 void ImGuiController::Update()
 {
-    ImGui::ShowDemoWindow();
+    //ImGui::ShowDemoWindow();
 
     std::vector<std::string> identifiersToRemove;
 

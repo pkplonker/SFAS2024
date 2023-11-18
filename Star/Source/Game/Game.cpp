@@ -73,14 +73,14 @@ bool Game::Load()
     //         .Build();
 
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
-    camera = GameObjectFactory(scene, std::to_string(testObjects.size()))
+    camera = GameObjectFactory(scene, "Camera")
              .AddPerspectiveCamera()
              //.AddOrthoCamera()
              .Build();
     scene->SetActiveCamera(camera->GetComponent<CameraComponent>());
     SelectedRing = RingLayer::Outer;
     State = GameState::Setup;
-    testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
+    testObjects.emplace_back(GameObjectFactory(scene, "Red")
                              .AddPosition(Vec3(0, 3.5f, 2.0f))
                              .AddRandomRotation()
                              .AddScale(Vec3(1, 1, 1))
@@ -88,7 +88,7 @@ bool Game::Load()
                                  L"Resource/Textures/Cat.dds",
                                  L"Resource/Shaders/UnlitColor2.fx")))
                              .Build());
-    testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
+    testObjects.emplace_back(GameObjectFactory(scene, "Blue")
                              .AddPosition(Vec3(2, 2.5f, 2.0f))
                              .AddRandomRotation()
                              .AddScale(Vec3(1, 1, 1))
@@ -96,7 +96,7 @@ bool Game::Load()
                                  L"Resource/Textures/Cat.dds",
                                  L"Resource/Shaders/UnlitColor4.fx")))
                              .Build());
-    testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
+    testObjects.emplace_back(GameObjectFactory(scene, "Magenta")
                              .AddPosition(Vec3(-2, 2.5f, 2.0f))
                              .AddRandomRotation()
                              .AddScale(Vec3(1, 1, 1))
@@ -104,7 +104,7 @@ bool Game::Load()
                                  L"Resource/Textures/Cat.dds",
                                  L"Resource/Shaders/UnlitColor5.fx")))
                              .Build());
-    testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
+    testObjects.emplace_back(GameObjectFactory(scene, "Yellow")
                              .AddPosition(Vec3(-3.5, 3.5f, 2.0f))
                              .AddRandomRotation()
                              .AddScale(Vec3(1, 1, 1))
@@ -112,7 +112,7 @@ bool Game::Load()
                                  L"Resource/Textures/Cat.dds",
                                  L"Resource/Shaders/UnlitColor6.fx")))
                              .Build());
-    testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
+    testObjects.emplace_back(GameObjectFactory(scene, "Cyan")
                              .AddPosition(Vec3(3.5, 3.5f, 2.0f))
                              .AddRandomRotation()
                              .AddScale(Vec3(1, 1, 1))
@@ -120,8 +120,8 @@ bool Game::Load()
                                  L"Resource/Textures/Cat.dds",
                                  L"Resource/Shaders/UnlitColor7.fx")))
                              .Build());
-    testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
-                             .AddPosition(Vec3(0, 0.5f, 0.0f))
+    testObjects.emplace_back(GameObjectFactory(scene, "Ground")
+                             .AddPosition(Vec3(0, -2.6f, 0.0f))
                              .AddRotation(Vec3(45,0,0))
                              .AddScale(Vec3(.02f))
                              .AddSpriteRenderable(Graphics->CreateBillboard(resourceManager->GetShader(

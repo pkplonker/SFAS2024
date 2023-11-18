@@ -46,3 +46,17 @@ void GameObject::Update()
     }
     //Debug("Updated GO")
 }
+
+const std::vector<std::shared_ptr<IComponent>>& GameObject::GetComponents() const
+{
+    return *components;
+}
+
+void GameObject::ImGuiDraw()
+{
+    transform->ImGuiDraw();
+    for (auto component : *components)
+    {
+        component->ImGuiDraw();
+    }   
+}

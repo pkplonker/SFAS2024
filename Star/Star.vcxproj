@@ -507,6 +507,7 @@
     <ClInclude Include="Source\Engine\IImGuiRenderable.h" />
     <ClInclude Include="Source\Engine\IInput.h" />
     <ClInclude Include="Source\Engine\ImGuiController.h" />
+    <ClInclude Include="Source\Engine\IimGuiDraw.h" />
     <ClInclude Include="Source\Engine\ImGuiFPSCounter.h" />
     <ClInclude Include="Source\Engine\Implementation\CameraComponent.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Billboard.h" />

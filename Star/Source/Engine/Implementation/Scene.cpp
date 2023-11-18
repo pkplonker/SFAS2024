@@ -7,6 +7,8 @@
 #include "Engine/ImGuiController.h"
 class SpriteRenderable;
 const std::string SCENE = "Scene Hierarchy";
+const std::string INSPECTOR = "Inspector";
+const std::string CAMERA = "Camera";
 
 Scene::Scene(IGraphics* graphics, ImGuiController* ImGui)
 {
@@ -17,6 +19,8 @@ Scene::Scene(IGraphics* graphics, ImGuiController* ImGui)
     this->ImGui = ImGui;
     this->graphics = graphics;
     ImGui->RegisterWindow(this, SCENE);
+    ImGui->RegisterWindow(this, INSPECTOR);
+    ImGui->RegisterWindow(this, CAMERA);
 }
 
 void Scene::AddObject(std::shared_ptr<GameObject> object)
@@ -55,12 +59,68 @@ void Scene::SetActiveCamera(std::shared_ptr<ICamera> camera)
     graphics->SetActiveCamera(camera);
 }
 
+void Scene::DrawScene()
+{
+    ImGui::Begin(SCENE.c_str());
+
+    for (const auto& object : *objects)
+    {
+        std::string label = object->Name;
+        bool is_selected = (selectedObject.lock() == object);
+        if (ImGui::Selectable(label.c_str(), is_selected))
+        {
+            selectedObject = object;
+        }
+    }
+
+    ImGui::End();
+    return;
+}
+
+void Scene::DrawInspector()
+{
+    ImGui::Begin(INSPECTOR.c_str());
+
+    auto gameobject = selectedObject.lock();
+    if (gameobject)
+    {
+        ImGui::Text(gameobject->Name.c_str());
+        gameobject->ImGuiDraw();
+        for (auto component : gameobject->GetComponents())
+        {
+            component->ImGuiDraw();
+        }
+    }
+    else
+    {
+        ImGui::Text("Select an object to inspect.");
+    }
+
+    ImGui::End();
+}
+
+void Scene::DrawCamera()
+{
+    ImGui::Begin(CAMERA.c_str());
+    ImGui::Text("Todo");
+    ImGui::End();
+}
+
 void Scene::Render(std::string window)
 {
     if (window == SCENE)
     {
-        ImGui::Begin("Scene");
-        ImGui::Text("Test test test");
-        ImGui::End();
+        DrawScene();
+        return;
+    }
+    if (window == INSPECTOR)
+    {
+        DrawInspector();
+        return;
+    }
+    if (window == CAMERA)
+    {
+        DrawCamera();
+        return;
     }
 }
