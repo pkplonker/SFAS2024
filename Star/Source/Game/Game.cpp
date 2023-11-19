@@ -3,7 +3,6 @@
 #include "Engine/IGraphics.h"
 #include "Engine/IRenderable.h"
 #include "Engine/IInput.h"
-
 #include <ctime>
 
 #include "Engine/Debug.h"
@@ -11,24 +10,24 @@
 #include "Engine/GameObjectFactory.h"
 #include "Engine/ResourceManager.h"
 #include "Engine/Implementation/CameraComponent.h"
-
+#include "Engine/ImGuiController.h"
 #define CLAMP(v, x, y) fmin(fmax(v, x), y)
 
-constexpr float Pie = 3.14159265359f;
-constexpr float TwoPies = Pie * 2.0f;
+constexpr float PieVal = 3.14159265359f;
+constexpr float TwoPies = PieVal * 2.0f;
 constexpr float DeltaTime = 0.016f;
 constexpr float SpinSpeed = 0.1f;
-constexpr float WinTolerance = Pie / 10.0f;
+constexpr float WinTolerance = PieVal / 10.0f;
 
-IApplication* GetApplication(IGraphics* Graphics, IInput* Input)
+IApplication* GetApplication(IGraphics* Graphics, IInput* Input, ImGuiController* ImGui)
 {
-    return new Game(Graphics, Input);
+    return new Game(Graphics, Input, ImGui);
 }
 
-Game::Game(IGraphics* GraphicsIn, IInput* InputIn) : IApplication(GraphicsIn, InputIn), Rings(), Arrow(nullptr),
-                                                     SelectedRing(), State()
+Game::Game(IGraphics* GraphicsIn, IInput* InputIn, ImGuiController* ImGui) : IApplication(GraphicsIn, InputIn, ImGui),
+                                                                             Rings(), Arrow(nullptr),
+                                                                             SelectedRing(), State()
 {
-    scene = std::make_shared<Scene>(Graphics);
 }
 
 Game::~Game()
@@ -42,7 +41,7 @@ bool Game::IsValid()
 
 bool Game::Load()
 {
-    scene = std::make_shared<Scene>(Graphics);
+    scene = std::make_shared<Scene>(Graphics, ImGui);
     resourceManager = std::make_unique<ResourceManager>(Graphics);;
 
     //
@@ -75,30 +74,62 @@ bool Game::Load()
     //         .Build();
 
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
-    camera = GameObjectFactory(scene, std::to_string(testObjects.size()))
+    camera = GameObjectFactory(scene, "Camera")
              .AddPerspectiveCamera()
              //.AddOrthoCamera()
+             .AddPosition(Vec3(0, 0, -12.0f))
              .Build();
-     scene->SetActiveCamera(camera->GetComponent<CameraComponent>());
+    scene->SetActiveCamera(camera->GetComponent<CameraComponent>());
     SelectedRing = RingLayer::Outer;
     State = GameState::Setup;
-    testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
-                             .AddPosition(Vec3(0, 0, 10.0f))
-                             .AddRotation(Vec3(45.0f, 45.0f, 45.0f))
+   GameObjectFactory(scene, "Red")
+                             .AddPosition(Vec3(0, 1.5f, 2.0f))
+                             .AddRandomRotation()
                              .AddScale(Vec3(1, 1, 1))
                              .AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
                                  L"Resource/Textures/Cat.dds",
                                  L"Resource/Shaders/UnlitColor2.fx")))
-                             .Build());
-
-    testObjects.emplace_back(GameObjectFactory(scene, std::to_string(testObjects.size()))
-                             .AddPosition(Vec3(0, 0.5f, 0.0f))
-                             .AddRotation(Vec3(45.0f, 0.0f, 0.0f))
-                             .AddScale(Vec3(.025f))
+                             .Build();
+   GameObjectFactory(scene, "Blue")
+                             .AddPosition(Vec3(2, 0.5f, 2.0f))
+                             .AddRandomRotation()
+                             .AddScale(Vec3(1, 1, 1))
+                             .AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
+                                 L"Resource/Textures/Cat.dds",
+                                 L"Resource/Shaders/UnlitColor4.fx")))
+                             .Build();
+    GameObjectFactory(scene, "Magenta")
+                             .AddPosition(Vec3(-2, 0.5f, 2.0f))
+                             .AddRandomRotation()
+                             .AddScale(Vec3(1, 1, 1))
+                             .AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
+                                 L"Resource/Textures/Cat.dds",
+                                 L"Resource/Shaders/UnlitColor5.fx")))
+                             .Build();
+    GameObjectFactory(scene, "Yellow")
+                             .AddPosition(Vec3(-3.5, 1.5f, 2.0f))
+                             .AddRandomRotation()
+                             .AddScale(Vec3(1, 1, 1))
+                             .AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
+                                 L"Resource/Textures/Cat.dds",
+                                 L"Resource/Shaders/UnlitColor6.fx")))
+                             .Build();
+    GameObjectFactory(scene, "Cyan")
+                             .AddPosition(Vec3(3.5, 1.5f, 2.0f))
+                             .AddRandomRotation()
+                             .AddScale(Vec3(1, 1, 1))
+                             .AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
+                                 L"Resource/Textures/Cat.dds",
+                                 L"Resource/Shaders/UnlitColor7.fx")))
+                             .Build();
+   GameObjectFactory(scene, "Ground")
+                             .AddPosition(Vec3(0, -2.6f, 0.0f))
+                             .AddRotation(Vec3(45, 0, 0))
+                             .AddScale(Vec3(.055f,.1f,.055f))
                              .AddSpriteRenderable(Graphics->CreateBillboard(resourceManager->GetShader(
                                  L"Resource/Textures/MiddleRing.dds",
                                  L"Resource/Shaders/UnlitColor3.fx")))
-                             .Build());
+                             .Build();
 
     return true;
 }
@@ -136,10 +167,10 @@ void Game::SetupEachRing()
 {
     for (unsigned int Ring = 0; Ring < NumberOfRings; ++Ring)
     {
-        Rings[Ring]->Transform()->Rotation = Vec3(0, 0, static_cast<float>(fmod(rand(), Pie)));
+        Rings[Ring]->Transform()->Rotation = Vec3(0, 0, static_cast<float>(fmod(rand(), PieVal)));
     }
 
-    Arrow->Transform()->Rotation = Vec3(0, 0, static_cast<float>(fmod(rand(), Pie)));
+    Arrow->Transform()->Rotation = Vec3(0, 0, static_cast<float>(fmod(rand(), PieVal)));
 }
 
 void Game::UpdateRingSelection()

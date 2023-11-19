@@ -4,7 +4,10 @@
 #include "Engine/ICamera.h"
 #include "Engine/IComponent.h"
 
-class CameraComponent : public IComponent, public ICamera
+struct Transform3D;
+
+class CameraComponent : public IComponent, public ICamera, public std::enable_shared_from_this<CameraComponent>
+
 {
 public:
     CameraComponent(std::weak_ptr<GameObject> object);
@@ -16,6 +19,8 @@ public:
     DirectX::XMMATRIX GetViewProjectionMatrix() override;
     void SetHeight(int height);
     void SetWidth(int width);
+    void ImGuiDraw() override;
+    std::shared_ptr<Transform3D> GetTransform() override;
 
 private:
     std::shared_ptr<ICamera> camera;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <d3d11.h>
+
 #include "Engine/IGraphics.h"
 #include "Engine/Transform2D.h"
 #include <Windows.h>
@@ -24,18 +26,22 @@ class DirectX11Graphics : public IGraphics
 public:
 
 	DirectX11Graphics(HWND hwndIn);
-	virtual ~DirectX11Graphics();
+	~DirectX11Graphics() override;
 
-	virtual void Update();
-	virtual bool IsValid();
+	void Update() override;
+	void RemoveRenderable(const std::shared_ptr<IRenderable>& shared) override;
+	void PostUpdate() override;
+	bool IsValid() override;
 
-	virtual ITexture* CreateTexture(const wchar_t* filepath);
-	virtual IShader* CreateShader(const wchar_t* filepath, const char* vsentry, const char* vsshader, const char* psentry, const char* psshader, ITexture* TextureIn);
-	virtual std::shared_ptr<IRenderable> CreateBillboard(IShader* ShaderIn);
-	virtual std::shared_ptr<IRenderable> CreateMeshRenderable(IShader* ShaderIn);
+	ITexture* CreateTexture(const wchar_t* filepath) override;
+	IShader* CreateShader(const wchar_t* filepath, const char* vsentry, const char* vsshader, const char* psentry, const char* psshader, ITexture* TextureIn) override;
+	std::shared_ptr<IRenderable> CreateBillboard(IShader* ShaderIn) override;
+	std::shared_ptr<IRenderable> CreateMeshRenderable(IShader* ShaderIn) override;
 	void SetActiveCamera(std::shared_ptr<ICamera> camera) override;
 	ID3D11Device* GetDevice() const { return Device; }
+	HWND GetHWND() const { return hwnd; }
 	ID3D11DeviceContext* GetContext() const { return Context; }
+
 	int GetWidth()override {return width;}
 	int GetHeight()override {return height;}
 
@@ -51,6 +57,7 @@ private:
 	IDXGISwapChain* SwapChain;
 	ID3D11RenderTargetView* BackbufferView;
 	ID3D11Texture2D* BackbufferTexture;
+	ID3D11DepthStencilView* DepthStencilView;
 	ID3D11BlendState* BlendState;
 	ID3D11Buffer* Mvp;
 	DirectX::XMMATRIX vpMatrix;

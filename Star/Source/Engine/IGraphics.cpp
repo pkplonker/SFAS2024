@@ -15,3 +15,4 @@ IGraphics::~IGraphics()
 
     Textures.clear();
 }
+

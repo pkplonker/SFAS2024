@@ -90,7 +90,6 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
             MessageBox(nullptr, "Graphics Failed to create MVP Buffer", "Error!", MB_ICONEXCLAMATION | MB_OK);
         }
 
-
         if (camera == nullptr)
         {
             DirectX::XMVECTOR EyePosition = DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f);
@@ -114,7 +113,6 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
             vpMatrix = camera->GetViewProjectionMatrix();
         }
 
-
         D3D11_BLEND_DESC Desc;
         ZeroMemory(&Desc, sizeof(D3D11_BLEND_DESC));
         Desc.RenderTarget[0].BlendEnable = TRUE;
@@ -126,6 +124,35 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         Desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
         Desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
         Device->CreateBlendState(&Desc, &BlendState);
+
+        D3D11_DEPTH_STENCIL_DESC depthStencildesc = {};
+        depthStencildesc.DepthEnable = true;
+        depthStencildesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+        depthStencildesc.DepthFunc = D3D11_COMPARISON_LESS;
+        ID3D11DepthStencilState* depthState;
+        Device->CreateDepthStencilState(&depthStencildesc, &depthState);
+        Context->OMSetDepthStencilState(depthState, 1u);
+
+        ID3D11Texture2D* depthStencil;
+        D3D11_TEXTURE2D_DESC depthDesc = {};
+        depthDesc.Width = width;
+        depthDesc.Height = height;
+        depthDesc.MipLevels = 1;
+        depthDesc.ArraySize = 1;
+        depthDesc.Format = DXGI_FORMAT_D32_FLOAT;
+        depthDesc.SampleDesc.Count = 1;
+        depthDesc.SampleDesc.Quality = 0;
+        depthDesc.Usage = D3D11_USAGE_DEFAULT;
+        depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+        Device->CreateTexture2D(&depthDesc, nullptr, &depthStencil);
+
+        D3D11_DEPTH_STENCIL_VIEW_DESC depthViewDesc = {};
+        depthViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
+        depthViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+        depthViewDesc.Texture2D.MipSlice = 0;
+        Device->CreateDepthStencilView(depthStencil, &depthViewDesc, &DepthStencilView);
+        
+        Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
     }
 }
 
@@ -168,6 +195,7 @@ void DirectX11Graphics::Update()
 
         float clearColour[4] = {1.0f, 1.0f, 1.0f, 1.0f};
         Context->ClearRenderTargetView(BackbufferView, clearColour);
+        Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH,1,0);
 
         D3D11_VIEWPORT viewport;
         viewport.Width = static_cast<float>(width);
@@ -178,7 +206,6 @@ void DirectX11Graphics::Update()
         viewport.TopLeftY = 0.0f;
         Context->RSSetViewports(1, &viewport);
 
-        Context->OMSetRenderTargets(1, &BackbufferView, nullptr);
 
         for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
         {
@@ -192,9 +219,34 @@ void DirectX11Graphics::Update()
                 (*renderable)->Update();
             }
         }
-
-        SwapChain->Present(0, 0);
+        
     }
+}
+
+
+void DirectX11Graphics::RemoveRenderable(const std::shared_ptr<IRenderable>& shared)
+{
+    for (auto& kvp : Renderables)
+    {
+        std::list<std::shared_ptr<IRenderable>>& renderablesList = kvp.second;
+
+        if (auto it = std::find(renderablesList.begin(), renderablesList.end(), shared); it != renderablesList.end())
+        {
+            renderablesList.erase(it);
+
+            if (renderablesList.empty())
+            {
+                IShader* shader = kvp.first;
+                Renderables.erase(shader);
+            }
+            break;
+        }
+    }
+}
+
+void DirectX11Graphics::PostUpdate()
+{
+    SwapChain->Present(0, 0);
 }
 
 bool DirectX11Graphics::IsValid()
