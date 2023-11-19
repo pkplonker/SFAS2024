@@ -393,7 +393,17 @@
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Shader.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.cpp" />
     <ClCompile Include="Source\Engine\Implementation\MeshRenderable.cpp" />
-    <ClCompile Include="Source\Engine\Implementation\PerspectiveCamera.cpp">
+    <ClCompile Include="Source\Engine\Implementation\Scene.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\SpriteRenderable.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\TestComponent.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\XInput\DirectXInput.cpp" />
+    <ClCompile Include="Source\Engine\IRenderable.cpp" />
+    <ClCompile Include="Source\Engine\IRenderableComponent.cpp" />
+    <ClCompile Include="Source\Engine\IShader.cpp" />
+    <ClCompile Include="Source\Engine\ITexture.cpp" />
+    <ClCompile Include="Source\Engine\IUpdatePipe.cpp" />
+    <ClCompile Include="Source\Engine\OrthographicCamera.cpp" />
+    <ClCompile Include="Source\Engine\PerspectiveCamera.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <Optimization>Disabled</Optimization>
@@ -467,16 +477,6 @@
       <AdditionalIncludeDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\packages\directxtk_desktop_2019.2023.9.6.1\build\native\..\..\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\External\glm\glm;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Star\External;</AdditionalIncludeDirectories>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Implementation\Scene.cpp" />
-    <ClCompile Include="Source\Engine\Implementation\SpriteRenderable.cpp" />
-    <ClCompile Include="Source\Engine\Implementation\TestComponent.cpp" />
-    <ClCompile Include="Source\Engine\Implementation\XInput\DirectXInput.cpp" />
-    <ClCompile Include="Source\Engine\IRenderable.cpp" />
-    <ClCompile Include="Source\Engine\IRenderableComponent.cpp" />
-    <ClCompile Include="Source\Engine\IShader.cpp" />
-    <ClCompile Include="Source\Engine\ITexture.cpp" />
-    <ClCompile Include="Source\Engine\IUpdatePipe.cpp" />
-    <ClCompile Include="Source\Engine\OrthographicCamera.cpp" />
     <ClCompile Include="Source\Engine\ResourceManager.cpp" />
     <ClCompile Include="Source\EntryPoints\WindowsMain.cpp" />
     <ClCompile Include="Source\Game\Game.cpp" />
@@ -516,7 +516,6 @@
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Shader.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.h" />
     <ClInclude Include="Source\Engine\Implementation\MeshRenderable.h" />
-    <ClInclude Include="Source\Engine\Implementation\PerspectiveCamera.h" />
     <ClInclude Include="Source\Engine\Implementation\Scene.h" />
     <ClInclude Include="Source\Engine\Implementation\SpriteRenderable.h" />
     <ClInclude Include="Source\Engine\Implementation\TestComponent.h" />
@@ -530,6 +529,7 @@
     <ClInclude Include="Source\Engine\Math\Vector2.h" />
     <ClInclude Include="Source\Engine\Math\Vector3.h" />
     <ClInclude Include="Source\Engine\OrthographicCamera.h" />
+    <ClInclude Include="Source\Engine\PerspectiveCamera.h" />
     <ClInclude Include="Source\Engine\ResourceManager.h" />
     <ClInclude Include="Source\Engine\Transform2D.h" />
     <ClInclude Include="Source\Engine\Transform3D.h" />

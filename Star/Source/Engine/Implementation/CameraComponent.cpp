@@ -1,6 +1,8 @@
 ﻿#include "CameraComponent.h"
 
 #include "imgui.h"
+#include "Engine/GameObject.h"
+#include "Engine/Transform3D.h"
 
 CameraComponent::CameraComponent(std::weak_ptr<GameObject> object): IComponent(object), camera(nullptr)
 {
@@ -52,8 +54,15 @@ void CameraComponent::ImGuiDraw()
     {
         if (camera)
         {
-            if (auto cam = std::dynamic_pointer_cast<IimGuiDraw>(camera)) {
+            if (auto cam = std::dynamic_pointer_cast<IimGuiDraw>(camera))
+            {
+                ImGui::Columns(2, nullptr, false);
+                ImGui::Text("Camera Settings");
                 cam->ImGuiDraw();
+                ImGui::NextColumn();
+                ImGui::Text("Transform Settings");
+                camera->GetTransform()->ImGuiDraw();
+                ImGui::Columns(1);
             }
         }
         else
@@ -61,4 +70,13 @@ void CameraComponent::ImGuiDraw()
             ImGui::Text("No camera attached");
         }
     }
+}
+
+std::shared_ptr<Transform3D> CameraComponent::GetTransform()
+{
+    if (auto object = gameObject.lock())
+    {
+        return object->Transform();
+    }
+    return nullptr;
 }

@@ -105,7 +105,9 @@ void Scene::DrawCamera()
         if (cameraComponent)
         {
             cameraComponent->ImGuiDraw();
+            
         }
+        
         
     
     }

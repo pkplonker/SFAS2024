@@ -2,9 +2,9 @@
 #include "IimGuiDraw.h"
 #include "imgui.h"
 #include "Math/Vector3.h"
+#include <string>
 
-
-struct Transform3D : public IimGuiDraw
+struct Transform3D : IimGuiDraw
 {
     Transform3D() : Transform3D(Vec3::Zero(), Vec3::Zero(), Vec3::One())
     {

@@ -4,6 +4,8 @@
 #include "Engine/ICamera.h"
 #include "Engine/IComponent.h"
 
+struct Transform3D;
+
 class CameraComponent : public IComponent, public ICamera, public IimGuiDraw
 {
 public:
@@ -17,6 +19,7 @@ public:
     void SetHeight(int height);
     void SetWidth(int width);
     void ImGuiDraw() override;
+    std::shared_ptr<Transform3D> GetTransform() override;
 
 private:
     std::shared_ptr<ICamera> camera;
