@@ -29,6 +29,7 @@ public:
 	~DirectX11Graphics() override;
 
 	void Update() override;
+	void RemoveRenderable(const std::shared_ptr<IRenderable>& shared) override;
 	void PostUpdate() override;
 	bool IsValid() override;
 

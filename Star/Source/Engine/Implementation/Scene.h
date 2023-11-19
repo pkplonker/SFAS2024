@@ -13,7 +13,9 @@ class Scene : public IUpdateable, public IImGuiRenderable
 public:
     Scene(IGraphics* graphics, ImGuiController* ImGui);
     void AddObject(std::shared_ptr<GameObject> object);
+    void RemoveObject(std::shared_ptr<GameObject> object);
     void AddRenderable(std::shared_ptr<IRenderable> object) const;
+    void RemoveRenderable(std::shared_ptr<IRenderable> object) const;
     void Update() override;
     void AddRenderable(const std::shared_ptr<GameObject>& object) const;
     void SetActiveCamera(const std::shared_ptr<ICamera>& camera);

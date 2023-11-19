@@ -51,10 +51,10 @@ public:
     {
         for (auto& comp : *components)
         {
-            T* castComp = dynamic_cast<T*>(comp.get());
+            std::shared_ptr<T> castComp = std::dynamic_pointer_cast<T>(comp);
             if (castComp)
             {
-                return std::shared_ptr<T>(comp, castComp);
+                return castComp;
             }
         }
         return nullptr;

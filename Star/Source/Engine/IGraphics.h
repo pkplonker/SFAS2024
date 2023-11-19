@@ -26,6 +26,7 @@ public:
     virtual void SetActiveCamera(std::shared_ptr<ICamera> camera) =0;
     virtual int GetWidth() =0;
     virtual int GetHeight() =0;
+    virtual void RemoveRenderable(const std::shared_ptr<IRenderable>& shared)=0;
 
 protected:
     std::map<IShader*, std::list<std::shared_ptr<IRenderable>>> Renderables;

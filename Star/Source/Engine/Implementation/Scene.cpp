@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "MeshRenderable.h"
 #include "SpriteRenderable.h"
+#include "Engine/Debug.h"
 #include "Engine/ICamera.h"
 #include "Engine/ImGuiController.h"
 class SpriteRenderable;
@@ -30,10 +31,44 @@ void Scene::AddObject(std::shared_ptr<GameObject> object)
     AddRenderable(object);
 }
 
+void Scene::RemoveObject(std::shared_ptr<GameObject> object)
+{
+    auto it = std::find(objects->begin(), objects->end(), object);
+    auto renderable = object->GetComponent<IRenderableComponent>();
+    if (it != objects->end())
+    {
+        objects->erase(it);
+        if (renderable != nullptr)
+        {
+            RemoveRenderable(renderable->GetRenderable());
+        }
+    }
+    else
+    {
+        Debug("Renderable not found to delete");
+    }
+}
+
+
 void Scene::AddRenderable(std::shared_ptr<IRenderable> object) const
 {
     renderables->emplace(object);
 }
+
+void Scene::RemoveRenderable(std::shared_ptr<IRenderable> object) const
+{
+    auto it = std::find(renderables->begin(), renderables->end(), object);
+    if (it != renderables->end())
+    {
+        renderables->erase(it);
+        graphics->RemoveRenderable(object);
+    }
+    else
+    {
+        Debug("Renderable not found to delete");
+    }
+}
+
 
 void Scene::Update()
 {
@@ -48,7 +83,7 @@ void Scene::AddRenderable(const std::shared_ptr<GameObject>& object) const
     std::shared_ptr<IRenderableComponent> renderableComponent = object->GetComponent<IRenderableComponent>();
     if (renderableComponent != nullptr)
     {
-        renderables->emplace(renderableComponent->GetRenderable());
+        AddRenderable(renderableComponent->GetRenderable());
     }
 }
 
@@ -63,20 +98,35 @@ void Scene::SetActiveCamera(const std::shared_ptr<ICamera>& camera)
 void Scene::DrawScene()
 {
     ImGui::Begin(SCENE.c_str());
-
+    std::vector<std::shared_ptr<GameObject>> objectsToRemove;
     for (const auto& object : *objects)
     {
         std::string label = object->Name;
         bool is_selected = (selectedObject.lock() == object);
+
         if (ImGui::Selectable(label.c_str(), is_selected))
         {
             selectedObject = object;
         }
+
+        if (ImGui::BeginPopupContextItem(("ObjectContextMenu##" + label).c_str()))
+        {
+            if (ImGui::MenuItem("Delete"))
+            {
+                objectsToRemove.emplace_back(object);
+            }
+
+            ImGui::EndPopup();
+        }
+    }
+    for (auto object : objectsToRemove)
+    {
+        RemoveObject(object);
     }
 
     ImGui::End();
-    return;
 }
+
 
 void Scene::DrawInspector()
 {
@@ -105,11 +155,7 @@ void Scene::DrawCamera()
         if (cameraComponent)
         {
             cameraComponent->ImGuiDraw();
-            
         }
-        
-        
-    
     }
     else
     {

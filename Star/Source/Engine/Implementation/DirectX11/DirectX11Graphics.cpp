@@ -222,6 +222,28 @@ void DirectX11Graphics::Update()
         
     }
 }
+
+
+void DirectX11Graphics::RemoveRenderable(const std::shared_ptr<IRenderable>& shared)
+{
+    for (auto& kvp : Renderables)
+    {
+        std::list<std::shared_ptr<IRenderable>>& renderablesList = kvp.second;
+
+        if (auto it = std::find(renderablesList.begin(), renderablesList.end(), shared); it != renderablesList.end())
+        {
+            renderablesList.erase(it);
+
+            if (renderablesList.empty())
+            {
+                IShader* shader = kvp.first;
+                Renderables.erase(shader);
+            }
+            break;
+        }
+    }
+}
+
 void DirectX11Graphics::PostUpdate()
 {
     SwapChain->Present(0, 0);

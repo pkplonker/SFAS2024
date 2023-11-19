@@ -6,7 +6,7 @@
 
 struct Transform3D;
 
-class CameraComponent : public IComponent, public ICamera, public IimGuiDraw
+class CameraComponent : public IComponent, public ICamera
 {
 public:
     CameraComponent(std::weak_ptr<GameObject> object);
