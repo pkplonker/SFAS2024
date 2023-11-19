@@ -4,7 +4,7 @@
 #include "Engine/ICamera.h"
 #include "Engine/IComponent.h"
 
-class CameraComponent : public IComponent, public ICamera
+class CameraComponent : public IComponent, public ICamera, public IimGuiDraw
 {
 public:
     CameraComponent(std::weak_ptr<GameObject> object);
@@ -16,6 +16,7 @@ public:
     DirectX::XMMATRIX GetViewProjectionMatrix() override;
     void SetHeight(int height);
     void SetWidth(int width);
+    void ImGuiDraw() override;
 
 private:
     std::shared_ptr<ICamera> camera;

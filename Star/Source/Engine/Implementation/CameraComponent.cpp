@@ -1,5 +1,7 @@
 ﻿#include "CameraComponent.h"
 
+#include "imgui.h"
+
 CameraComponent::CameraComponent(std::weak_ptr<GameObject> object): IComponent(object), camera(nullptr)
 {
 }
@@ -42,4 +44,21 @@ void CameraComponent::SetHeight(int height)
 void CameraComponent::SetWidth(int width)
 {
     camera->SetWidth(width);;
+}
+
+void CameraComponent::ImGuiDraw()
+{
+    if (ImGui::CollapsingHeader("Camera Component", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (camera)
+        {
+            if (auto cam = std::dynamic_pointer_cast<IimGuiDraw>(camera)) {
+                cam->ImGuiDraw();
+            }
+        }
+        else
+        {
+            ImGui::Text("No camera attached");
+        }
+    }
 }

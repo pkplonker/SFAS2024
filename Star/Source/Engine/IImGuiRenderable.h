@@ -4,5 +4,5 @@ class IImGuiRenderable
 {
 public:
     virtual ~IImGuiRenderable() = default;
-    virtual void Render(std::string window) = 0;
+    virtual void ImGuiRender(std::string window) = 0;
 };

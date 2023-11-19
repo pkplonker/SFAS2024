@@ -1,21 +1,17 @@
 ﻿#include "OrthographicCamera.h"
 
-OrthographicCamera::OrthographicCamera(float width, float height) : width(width), height(height)
+#include "imgui.h"
+#include "Implementation/DirectX11/DirectX11Billboard.h"
+
+OrthographicCamera::OrthographicCamera(float width, float height, float nearZ, float farZ) : width(width),
+    height(height), nearZ(nearZ), farZ(farZ)
 {
 }
 
+
 DirectX::XMMATRIX OrthographicCamera::GetProjectionMatrix()
 {
-    float fovAngleY = DirectX::XM_PIDIV4;
-    float aspectRatio = width / height;
-    float nearZ = 0.1f;
-    float farZ = 2000.0f;
-    projection = DirectX::XMMatrixPerspectiveFovLH(
-        fovAngleY,
-        aspectRatio,
-        nearZ,
-        farZ
-    );
+    projection = DirectX::XMMatrixOrthographicLH(width, height, nearZ, farZ);
     return projection;
 }
 
@@ -40,4 +36,29 @@ void OrthographicCamera::SetHeight(int height)
 void OrthographicCamera::SetWidth(int width)
 {
     this->width = static_cast<float>(width);
+}
+
+void OrthographicCamera::ImGuiDraw()
+{
+    if (ImGui::TreeNodeEx("Orthographic Camera Settings",ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (ImGui::BeginPopupContextItem("OrthographicCameraContext"))
+        {
+            if (ImGui::MenuItem("Reset Near"))
+            {
+                nearZ = DEFAULT_NEAR;
+            }
+            if (ImGui::MenuItem("Reset Far"))
+            {
+                farZ = DEFAULT_FAR;
+            }
+            ImGui::EndPopup();
+        }
+        ImGui::DragFloat("Width", &width);
+        ImGui::DragFloat("Height", &height);
+        ImGui::DragFloat("Near Plane", &nearZ);
+        ImGui::DragFloat("Far Plane", &farZ);
+
+        ImGui::TreePop();
+    }
 }

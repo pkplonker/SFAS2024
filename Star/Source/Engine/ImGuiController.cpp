@@ -43,7 +43,7 @@ void ImGuiController::Update()
         else
         {
             if (renderable.second.second)
-                renderable.second.first->Render(renderable.first);
+                renderable.second.first->ImGuiRender(renderable.first);
         }
     }
 

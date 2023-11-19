@@ -20,7 +20,7 @@ public:
     void DrawScene();
     void DrawInspector();
     void DrawCamera();
-    void Render(std::string window) override;
+    void ImGuiRender(std::string window) override;
 private:
     std::unique_ptr<std::set<std::shared_ptr<GameObject>>> objects = std::make_unique<std::set<std::shared_ptr<
         GameObject>>>();

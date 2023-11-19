@@ -86,10 +86,6 @@ void Scene::DrawInspector()
     {
         ImGui::Text(gameobject->Name.c_str());
         gameobject->ImGuiDraw();
-        for (auto component : gameobject->GetComponents())
-        {
-            component->ImGuiDraw();
-        }
     }
     else
     {
@@ -106,7 +102,7 @@ void Scene::DrawCamera()
     ImGui::End();
 }
 
-void Scene::Render(std::string window)
+void Scene::ImGuiRender(std::string window)
 {
     if (window == SCENE)
     {

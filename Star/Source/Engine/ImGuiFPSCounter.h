@@ -10,7 +10,7 @@ public:
         ImGui->RegisterWindow(this, FPS_COUNTER);
     }
 
-    void Render(std::string window) override;
+    void ImGuiRender(std::string window) override;
 };
 
 
