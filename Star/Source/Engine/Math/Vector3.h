@@ -15,6 +15,9 @@ struct Vec3
     Vec3(float x, float y) : Vec3(x, y, 0)
     {
     }
+    Vec3(float x) : Vec3(x, x, x)
+    {
+    }
 
     Vec3(Vec2 val) : Vec3(val.X(), val.Y(), 0)
     {
@@ -31,17 +34,17 @@ struct Vec3
     }
 
 
-    [[nodiscard]] float X() const
+    [[nodiscard]] float& X()
     {
         return vec.x;
     }
 
-    [[nodiscard]] float Y() const
+    [[nodiscard]] float& Y()
     {
         return vec.y;
     }
 
-    [[nodiscard]] float Z() const
+    [[nodiscard]] float& Z()
     {
         return vec.z;
     }
@@ -74,6 +77,9 @@ struct Vec3
     void Z(int val)
     {
         vec.z = static_cast<float>(val);
+    }
+    float* Data() {
+        return reinterpret_cast<float*>(&vec);
     }
 
 private:

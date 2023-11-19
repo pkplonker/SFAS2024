@@ -9,6 +9,7 @@
 #include <DDSTextureLoader.h>
 #include <memory>
 
+#include "DirectX11Mesh.h"
 #include "Engine/Debug.h"
 
 DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
@@ -89,12 +90,28 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
             MessageBox(nullptr, "Graphics Failed to create MVP Buffer", "Error!", MB_ICONEXCLAMATION | MB_OK);
         }
 
-        float halfWidth = static_cast<float>(width) / 2.0f;
-        float halfHeight = static_cast<float>(height) / 2.0f;
-        DirectX::XMMATRIX view = DirectX::XMMatrixIdentity();
-        DirectX::XMMATRIX projection = DirectX::XMMatrixOrthographicOffCenterLH(
-            -halfWidth, halfWidth, -halfHeight, halfHeight, 0.1f, 10.1f);
-        vpMatrix = DirectX::XMMatrixMultiply(view, projection);
+        if (camera == nullptr)
+        {
+            DirectX::XMVECTOR EyePosition = DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f);
+            DirectX::XMVECTOR FocusPoint = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+            DirectX::XMVECTOR UpDirection = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+            DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(EyePosition, FocusPoint, UpDirection);
+            float fovAngleY = DirectX::XM_PIDIV4;
+            float aspectRatio = static_cast<float>(width) / height;
+            float nearZ = 0.1f;
+            float farZ = 2000.0f;
+            DirectX::XMMATRIX projection = DirectX::XMMatrixPerspectiveFovLH(
+                fovAngleY,
+                aspectRatio,
+                nearZ,
+                farZ
+            );
+            vpMatrix = XMMatrixMultiply(view, projection);
+        }
+        else
+        {
+            vpMatrix = camera->GetViewProjectionMatrix();
+        }
 
         D3D11_BLEND_DESC Desc;
         ZeroMemory(&Desc, sizeof(D3D11_BLEND_DESC));
@@ -107,6 +124,35 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         Desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
         Desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
         Device->CreateBlendState(&Desc, &BlendState);
+
+        D3D11_DEPTH_STENCIL_DESC depthStencildesc = {};
+        depthStencildesc.DepthEnable = true;
+        depthStencildesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+        depthStencildesc.DepthFunc = D3D11_COMPARISON_LESS;
+        ID3D11DepthStencilState* depthState;
+        Device->CreateDepthStencilState(&depthStencildesc, &depthState);
+        Context->OMSetDepthStencilState(depthState, 1u);
+
+        ID3D11Texture2D* depthStencil;
+        D3D11_TEXTURE2D_DESC depthDesc = {};
+        depthDesc.Width = width;
+        depthDesc.Height = height;
+        depthDesc.MipLevels = 1;
+        depthDesc.ArraySize = 1;
+        depthDesc.Format = DXGI_FORMAT_D32_FLOAT;
+        depthDesc.SampleDesc.Count = 1;
+        depthDesc.SampleDesc.Quality = 0;
+        depthDesc.Usage = D3D11_USAGE_DEFAULT;
+        depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+        Device->CreateTexture2D(&depthDesc, nullptr, &depthStencil);
+
+        D3D11_DEPTH_STENCIL_VIEW_DESC depthViewDesc = {};
+        depthViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
+        depthViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+        depthViewDesc.Texture2D.MipSlice = 0;
+        Device->CreateDepthStencilView(depthStencil, &depthViewDesc, &DepthStencilView);
+        
+        Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
     }
 }
 
@@ -142,19 +188,24 @@ void DirectX11Graphics::Update()
 {
     if (Context && SwapChain)
     {
+        if (camera != nullptr)
+        {
+            vpMatrix = camera->GetViewProjectionMatrix();
+        }
+
         float clearColour[4] = {1.0f, 1.0f, 1.0f, 1.0f};
         Context->ClearRenderTargetView(BackbufferView, clearColour);
+        Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH,1,0);
 
         D3D11_VIEWPORT viewport;
         viewport.Width = static_cast<float>(width);
         viewport.Height = static_cast<float>(height);
         viewport.MinDepth = 0.0f;
-        viewport.MaxDepth = 0.0f;
+        viewport.MaxDepth = 1.0f;
         viewport.TopLeftX = 0.0f;
         viewport.TopLeftY = 0.0f;
         Context->RSSetViewports(1, &viewport);
 
-        Context->OMSetRenderTargets(1, &BackbufferView, nullptr);
 
         for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
         {
@@ -168,9 +219,34 @@ void DirectX11Graphics::Update()
                 (*renderable)->Update();
             }
         }
-
-        SwapChain->Present(0, 0);
+        
     }
+}
+
+
+void DirectX11Graphics::RemoveRenderable(const std::shared_ptr<IRenderable>& shared)
+{
+    for (auto& kvp : Renderables)
+    {
+        std::list<std::shared_ptr<IRenderable>>& renderablesList = kvp.second;
+
+        if (auto it = std::find(renderablesList.begin(), renderablesList.end(), shared); it != renderablesList.end())
+        {
+            renderablesList.erase(it);
+
+            if (renderablesList.empty())
+            {
+                IShader* shader = kvp.first;
+                Renderables.erase(shader);
+            }
+            break;
+        }
+    }
+}
+
+void DirectX11Graphics::PostUpdate()
+{
+    SwapChain->Present(0, 0);
 }
 
 bool DirectX11Graphics::IsValid()
@@ -257,7 +333,7 @@ IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vs
                 vsBuffer->Release();
             }
         }
-
+        bool error = false;
         if (SUCCEEDED(hr))
         {
             ID3DBlob* psBuffer = 0;
@@ -268,12 +344,28 @@ IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vs
                                                &PixelShader);
                 psBuffer->Release();
             }
+            else
+            {
+                error = true;
+            }
         }
-
+        else
+        {
+            error = true;
+        }
         if (SUCCEEDED(hr))
         {
             Result = new DirectX11Shader(Context, VertexShader, PixelShader, InputLayout, TextureIn);
             Renderables.insert(std::pair(Result, std::list<std::shared_ptr<IRenderable>>()));
+        }
+        else
+        {
+            error = true;
+        }
+        if (error)
+        {
+            MessageBox(nullptr, "Failed to make shader", "Error!",
+                       MB_ICONEXCLAMATION | MB_OK);
         }
     }
 
@@ -327,6 +419,97 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IShader* ShaderI
     return Result;
 }
 
+std::shared_ptr<IRenderable> DirectX11Graphics::CreateMeshRenderable(IShader* ShaderIn)
+{
+    std::shared_ptr<IRenderable> Result = nullptr;
+
+    if (IsValid())
+    {
+        float halfWidth = .5f;
+        float halfHeight = .5f;
+        float halfDepth = .5f;
+
+        float vertex_data_array[] = {
+            // Front face
+            -halfWidth, -halfHeight, halfDepth, 0.0f, 0.0f,
+            halfWidth, -halfHeight, halfDepth, 1.0f, 0.0f,
+            halfWidth, halfHeight, halfDepth, 1.0f, 1.0f,
+            -halfWidth, -halfHeight, halfDepth, 0.0f, 0.0f,
+            halfWidth, halfHeight, halfDepth, 1.0f, 1.0f,
+            -halfWidth, halfHeight, halfDepth, 0.0f, 1.0f,
+
+            // Back face
+            -halfWidth, -halfHeight, -halfDepth, 1.0f, 0.0f,
+            -halfWidth, halfHeight, -halfDepth, 1.0f, 1.0f,
+            halfWidth, halfHeight, -halfDepth, 0.0f, 1.0f,
+            -halfWidth, -halfHeight, -halfDepth, 1.0f, 0.0f,
+            halfWidth, halfHeight, -halfDepth, 0.0f, 1.0f,
+            halfWidth, -halfHeight, -halfDepth, 0.0f, 0.0f,
+
+            // Left face
+            -halfWidth, halfHeight, halfDepth, 1.0f, 0.0f,
+            -halfWidth, halfHeight, -halfDepth, 1.0f, 1.0f,
+            -halfWidth, -halfHeight, -halfDepth, 0.0f, 1.0f,
+            -halfWidth, -halfHeight, -halfDepth, 0.0f, 1.0f,
+            -halfWidth, -halfHeight, halfDepth, 0.0f, 0.0f,
+            -halfWidth, halfHeight, halfDepth, 1.0f, 0.0f,
+
+            // Right face
+            halfWidth, halfHeight, halfDepth, 1.0f, 1.0f,
+            halfWidth, -halfHeight, -halfDepth, 0.0f, 0.0f,
+            halfWidth, halfHeight, -halfDepth, 0.0f, 1.0f,
+            halfWidth, -halfHeight, -halfDepth, 0.0f, 0.0f,
+            halfWidth, halfHeight, halfDepth, 1.0f, 1.0f,
+            halfWidth, -halfHeight, halfDepth, 1.0f, 0.0f,
+
+            // Top face
+            -halfWidth, halfHeight, -halfDepth, 0.0f, 1.0f,
+            -halfWidth, halfHeight, halfDepth, 0.0f, 0.0f,
+            halfWidth, halfHeight, halfDepth, 1.0f, 0.0f,
+            -halfWidth, halfHeight, -halfDepth, 0.0f, 1.0f,
+            halfWidth, halfHeight, halfDepth, 1.0f, 0.0f,
+            halfWidth, halfHeight, -halfDepth, 1.0f, 1.0f,
+
+            // Bottom face
+            -halfWidth, -halfHeight, -halfDepth, 1.0f, 1.0f,
+            halfWidth, -halfHeight, -halfDepth, 0.0f, 0.0f,
+            halfWidth, -halfHeight, halfDepth, 0.0f, 1.0f,
+            -halfWidth, -halfHeight, -halfDepth, 1.0f, 1.0f,
+            halfWidth, -halfHeight, halfDepth, 0.0f, 1.0f,
+            -halfWidth, -halfHeight, halfDepth, 1.0f, 0.0f,
+        };
+
+        ID3D11Buffer* VertexBuffer;
+        unsigned int vertexStride = 5 * sizeof(float);
+        unsigned int vertexOffset = 0;
+        unsigned int vertexCount = 36;
+
+        D3D11_BUFFER_DESC vertexDescription;
+        ZeroMemory(&vertexDescription, sizeof(vertexDescription));
+        vertexDescription.Usage = D3D11_USAGE_DEFAULT;
+        vertexDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+        vertexDescription.ByteWidth = sizeof(vertex_data_array);
+
+        D3D11_SUBRESOURCE_DATA resourceData;
+        ZeroMemory(&resourceData, sizeof(resourceData));
+        resourceData.pSysMem = vertex_data_array;
+
+        if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)))
+        {
+            Result = std::make_shared<DirectX11Mesh>(Context, VertexBuffer, vertexStride, vertexOffset,
+                                                     vertexCount);
+            Renderables[ShaderIn].push_back(Result);
+        }
+    }
+
+    return Result;
+}
+
+void DirectX11Graphics::SetActiveCamera(std::shared_ptr<ICamera> camera)
+{
+    this->camera = camera;
+}
+
 void DirectX11Graphics::SetWorldMatrix(const std::weak_ptr<Transform3D> transform)
 {
     if (std::shared_ptr<Transform3D> trans = transform.lock())
@@ -337,7 +520,7 @@ void DirectX11Graphics::SetWorldMatrix(const std::weak_ptr<Transform3D> transfor
             trans->Rotation.X(), trans->Rotation.Y(),
             trans->Rotation.Z());
         DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(trans->Scale.X(), trans->Scale.Y(),
-                                                           trans->Scale.Y());
+                                                           trans->Scale.Z());
         DirectX::XMMATRIX world = scale * rotation * translation;
         DirectX::XMMATRIX mvp = DirectX::XMMatrixMultiply(world, vpMatrix);
         mvp = DirectX::XMMatrixTranspose(mvp);

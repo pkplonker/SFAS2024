@@ -6,17 +6,19 @@
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 #include "Engine/Implementation/XInput/DirectXInput.h"
 #include "Engine/IRenderable.h"
-#include "Engine/ITexture.h"
-#include "Engine/IShader.h"
 #include "Engine/IApplication.h"
+#include "imgui.h"
+#include "Engine/ImGuiController.h"
+#include "Engine/ImGuiFPSCounter.h"
 
 const char WindowClassName[] = "Star";
-const char WindowTitle[] = "Search for a Star 2024";
+const char WindowTitle[] = "Stuart Heath SFAS24 - WIP";
 const int WindowWidth = 1920;
 const int WindowHeight = 1080;
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-IApplication* GetApplication(IGraphics* Graphics, IInput* Input);
+IApplication* GetApplication(IGraphics* Graphics, IInput* Input, ImGuiController* ImGui);
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -59,43 +61,45 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     msg.wParam = -1;
     IGraphics* Graphics = new DirectX11Graphics(hwnd);
     IInput* Input = new DirectXInput();
-    IApplication* Application = GetApplication(Graphics, Input);
-
+    ImGuiController* ImGui = new ImGuiController();
+    IApplication* Application = GetApplication(Graphics, Input, ImGui);
+    ImGui->Init(static_cast<DirectX11Graphics*>(Graphics), Input);
+    ImGuiFPSCounter* fpsCounter = new ImGuiFPSCounter(ImGui);
     if (Graphics && Graphics->IsValid() && Application)
     {
         Application->Load();
 
         while (msg.message != WM_QUIT && Application->IsValid())
         {
-            if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+            if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
             {
                 TranslateMessage(&msg);
                 DispatchMessage(&msg);
             }
-
             Input->Update();
             Application->Update();
             Graphics->Update();
+            ImGui->PreUpdate();
+            ImGui->Update();
+            ImGui->PostUpdate();
+            Graphics->PostUpdate();
         }
 
         Application->Cleanup();
     }
 
-    if (Application)
-    {
-        delete Application;
-    }
-
-    if (Graphics)
-    {
-        delete Graphics;
-    }
-
+    delete Application;
+    delete Graphics;
+    delete ImGui;
+    delete fpsCounter;
+    
     return static_cast<int>(msg.wParam);
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+    if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wParam, lParam))
+        return true;
     switch (msg)
     {
     case WM_CLOSE:
