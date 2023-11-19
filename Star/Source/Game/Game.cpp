@@ -19,12 +19,12 @@ constexpr float DeltaTime = 0.016f;
 constexpr float SpinSpeed = 0.1f;
 constexpr float WinTolerance = PieVal / 10.0f;
 
-IApplication* GetApplication(IGraphics* Graphics, IInput* Input, ImGuiController* ImGui)
+IApplication* GetApplication(IGraphics* Graphics, IInput* Input)
 {
-	return new Game(Graphics, Input, ImGui);
+	return new Game(Graphics, Input);
 }
 
-Game::Game(IGraphics* GraphicsIn, IInput* InputIn, ImGuiController* ImGui) : IApplication(GraphicsIn, InputIn, ImGui),
+Game::Game(IGraphics* GraphicsIn, IInput* InputIn) : IApplication(GraphicsIn, InputIn),
 Rings(), Arrow(nullptr),
 SelectedRing(), State()
 {
@@ -160,6 +160,10 @@ void Game::Update()
 }
 
 void Game::Cleanup()
+{
+}
+
+void Game::PostGraphics()
 {
 }
 

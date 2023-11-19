@@ -30,28 +30,28 @@ void ImGuiController::PreUpdate()
 
 void ImGuiController::Update()
 {
-	//ImGui::ShowDemoWindow();
+	////ImGui::ShowDemoWindow();
 
-	std::vector<std::string> identifiersToRemove;
+	//std::vector<std::string> identifiersToRemove;
 
-	for (const auto& renderable : renderables)
-	{
-		if (renderable.second.first == nullptr)
-		{
-			identifiersToRemove.push_back(renderable.first);
-		}
-		else
-		{
-			if (renderable.second.second)
-				renderable.second.first->ImGuiRender(renderable.first);
-		}
-	}
+	//for (const auto& renderable : renderables)
+	//{
+	//	if (renderable.second.first == nullptr)
+	//	{
+	//		identifiersToRemove.push_back(renderable.first);
+	//	}
+	//	else
+	//	{
+	//		if (renderable.second.second)
+	//			renderable.second.first->ImGuiRender(renderable.first);
+	//	}
+	//}
 
-	for (const auto& identifier : identifiersToRemove)
-	{
-		renderables.erase(identifier);
-	}
-	DrawMenu();
+	//for (const auto& identifier : identifiersToRemove)
+	//{
+	//	renderables.erase(identifier);
+	//}
+	//DrawMenu();
 }
 
 void ImGuiController::PostUpdate()
@@ -69,7 +69,7 @@ void ImGuiController::ShutDown()
 
 void ImGuiController::DrawMenu()
 {
-	if (ImGui::BeginMainMenuBar())
+	/*if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
@@ -86,10 +86,10 @@ void ImGuiController::DrawMenu()
 		}
 
 		ImGui::EndMainMenuBar();
-	}
+	}*/
 }
 
 void ImGuiController::RegisterWindow(IImGuiRenderable* renderable, std::string identifier)
 {
-	renderables.try_emplace(identifier, std::make_pair(renderable, true));
+	//renderables.try_emplace(identifier, std::make_pair(renderable, true));
 }

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{2FD0DB70-4016-457B-9D68-A68EDD018FF9}</ProjectGuid>
+    <RootNamespace>Editor</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui;$(SolutionDir)Source\</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui;$(SolutionDir)Source\</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Star\Source\Game;$(SolutionDir)\Engine\Source;$(ProjectDir)Packages\ImGui\backends;$(ProjectDir)Packages\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>Engine.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir);$(SolutionDir)x64\Debug;$(SolutionDir)Engine;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Star\Source\Game;$(SolutionDir)\Engine\Source;$(ProjectDir)Packages\ImGui\backends;$(ProjectDir)Packages\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <AdditionalDependencies>Engine.lib;d3d11.lib;d3dcompiler.lib;Xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir);$(SolutionDir)x64\Debug;$(SolutionDir)Engine;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Star\Source\Game;$(SolutionDir)\Engine\Source;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui\backends;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Engine.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir);$(SolutionDir)x64\Release;$(SolutionDir)Engine;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Star\Source\Game;$(SolutionDir)\Engine\Source;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui\backends;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Engine.lib;d3d11.lib;d3dcompiler.lib;Xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir);$(SolutionDir)x64\Release;$(SolutionDir)Engine;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\EntryPoints\WindowsMain.cpp" />
+    <ClCompile Include="Source\Editor\Editor.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\Audio.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\BufferHelpers.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\CommonStates.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\DDSTextureLoader.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\DirectXHelpers.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\Effects.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\GamePad.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\GeometricPrimitive.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\GraphicsMemory.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\Keyboard.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\Model.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\Mouse.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\PostProcess.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\PrimitiveBatch.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\ScreenGrab.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\SimpleMath.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\SpriteBatch.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\SpriteFont.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\VertexTypes.h" />
+    <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\WICTextureLoader.h" />
+    <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\x3daudio.h" />
+    <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\x3daudioRedist.h" />
+    <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xapo.h" />
+    <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xapobase.h" />
+    <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xapobaseRedist.h" />
+    <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xapofx.h" />
+    <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xapofxRedist.h" />
+    <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xapoRedist.h" />
+    <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xaudio2.h" />
+    <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xaudio2fx.h" />
+    <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xaudio2fxRedist.h" />
+    <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xaudio2Redist.h" />
+    <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xdsp.h" />
+    <ClInclude Include="Source\Editor\Editor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\SimpleMath.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Star\Star.vcxproj">
+      <Project>{a5827ab4-4626-47d8-82f2-598dfc535976}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\Microsoft.XAudio2.Redist.1.2.11\build\native\Microsoft.XAudio2.Redist.targets" Condition="Exists('packages\Microsoft.XAudio2.Redist.1.2.11\build\native\Microsoft.XAudio2.Redist.targets')" />
+    <Import Project="packages\directxtk_desktop_2019.2023.9.6.1\build\native\directxtk_desktop_2019.targets" Condition="Exists('packages\directxtk_desktop_2019.2023.9.6.1\build\native\directxtk_desktop_2019.targets')" />
+    <Import Project="..\packages\directxtk_desktop_2019.2023.10.31.1\build\native\directxtk_desktop_2019.targets" Condition="Exists('..\packages\directxtk_desktop_2019.2023.10.31.1\build\native\directxtk_desktop_2019.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.XAudio2.Redist.1.2.11\build\native\Microsoft.XAudio2.Redist.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.XAudio2.Redist.1.2.11\build\native\Microsoft.XAudio2.Redist.targets'))" />
+    <Error Condition="!Exists('packages\directxtk_desktop_2019.2023.9.6.1\build\native\directxtk_desktop_2019.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk_desktop_2019.2023.9.6.1\build\native\directxtk_desktop_2019.targets'))" />
+    <Error Condition="!Exists('..\packages\directxtk_desktop_2019.2023.10.31.1\build\native\directxtk_desktop_2019.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtk_desktop_2019.2023.10.31.1\build\native\directxtk_desktop_2019.targets'))" />
+  </Target>
+</Project>

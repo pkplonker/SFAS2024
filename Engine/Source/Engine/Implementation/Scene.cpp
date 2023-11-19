@@ -20,9 +20,9 @@ Scene::Scene(IGraphics* graphics, ImGuiController* ImGui)
 		IRenderable>>>();
 	this->ImGui = ImGui;
 	this->graphics = graphics;
-	ImGui->RegisterWindow(this, SCENE);
-	ImGui->RegisterWindow(this, INSPECTOR);
-	ImGui->RegisterWindow(this, CAMERA);
+	//ImGui->RegisterWindow(this, SCENE);
+	//ImGui->RegisterWindow(this, INSPECTOR);
+	//ImGui->RegisterWindow(this, CAMERA);
 }
 
 void Scene::AddObject(std::shared_ptr<GameObject> object)

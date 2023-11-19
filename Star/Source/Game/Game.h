@@ -20,13 +20,14 @@ class Game : public IApplication
 {
 public:
 
-	Game(IGraphics* Graphics, IInput* InputIn, ImGuiController* ImGui);
+	Game(IGraphics* Graphics, IInput* InputIn);
 	virtual ~Game();
 
 	virtual bool IsValid();
 	virtual bool Load();
 	virtual void Update();
 	virtual void Cleanup();
+	virtual void PostGraphics();
 
 private:
 
