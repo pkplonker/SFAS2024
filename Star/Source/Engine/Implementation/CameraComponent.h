@@ -6,7 +6,8 @@
 
 struct Transform3D;
 
-class CameraComponent : public IComponent, public ICamera
+class CameraComponent : public IComponent, public ICamera, public std::enable_shared_from_this<CameraComponent>
+
 {
 public:
     CameraComponent(std::weak_ptr<GameObject> object);
