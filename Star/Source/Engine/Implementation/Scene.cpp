@@ -1,5 +1,6 @@
 ﻿#include "Scene.h"
 
+#include "CameraComponent.h"
 #include "imgui.h"
 #include "MeshRenderable.h"
 #include "SpriteRenderable.h"
@@ -42,7 +43,7 @@ void Scene::Update()
     }
 }
 
-void Scene::AddRenderable(std::shared_ptr<GameObject> object) const
+void Scene::AddRenderable(const std::shared_ptr<GameObject>& object) const
 {
     std::shared_ptr<IRenderableComponent> renderableComponent = object->GetComponent<IRenderableComponent>();
     if (renderableComponent != nullptr)
@@ -51,7 +52,7 @@ void Scene::AddRenderable(std::shared_ptr<GameObject> object) const
     }
 }
 
-void Scene::SetActiveCamera(std::shared_ptr<ICamera> camera)
+void Scene::SetActiveCamera(const std::shared_ptr<ICamera>& camera)
 {
     this->camera = camera;
     camera->SetWidth(graphics->GetWidth());
@@ -98,7 +99,20 @@ void Scene::DrawInspector()
 void Scene::DrawCamera()
 {
     ImGui::Begin(CAMERA.c_str());
-    ImGui::Text("Todo");
+    if (camera)
+    {
+        auto cameraComponent = std::dynamic_pointer_cast<CameraComponent>(camera);
+        if (cameraComponent)
+        {
+            cameraComponent->ImGuiDraw();
+        }
+        
+    
+    }
+    else
+    {
+        ImGui::Text("No camera attached");
+    }
     ImGui::End();
 }
 

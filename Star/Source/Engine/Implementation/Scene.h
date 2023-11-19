@@ -15,8 +15,8 @@ public:
     void AddObject(std::shared_ptr<GameObject> object);
     void AddRenderable(std::shared_ptr<IRenderable> object) const;
     void Update() override;
-    void AddRenderable(std::shared_ptr<GameObject> object) const;
-    void SetActiveCamera(std::shared_ptr<ICamera> camera);
+    void AddRenderable(const std::shared_ptr<GameObject>& object) const;
+    void SetActiveCamera(const std::shared_ptr<ICamera>& camera);
     void DrawScene();
     void DrawInspector();
     void DrawCamera();
