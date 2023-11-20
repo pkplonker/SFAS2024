@@ -13,12 +13,13 @@ class IGraphics;
 class ITexture;
 class IShader;
 class IRenderable;
-
+struct HWND__;
+typedef struct HWND__* HWND;
 class Editor : public IApplication
 {
 public:
 
-	Editor(IGraphics* Graphics, IInput* InputIn);
+	Editor(IGraphics* Graphics, IInput* InputIn, HWND hwnd);
 	virtual ~Editor();
 
 	virtual bool IsValid();
@@ -30,4 +31,7 @@ private:
 
 	std::shared_ptr<GameObject> camera;
 	DirectX11Graphics* dx11Graphics;
+	Game* game;
+	HWND hwnd;
+	DirectX11Graphics* gameGraphics;
 };

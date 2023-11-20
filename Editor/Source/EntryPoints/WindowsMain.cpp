@@ -1,7 +1,5 @@
 // The main Windows / DirectX Graphics / XInput entry point for Star Applications
 
-#define WIN32_LEAN_AND_MEAN
-
 #include <Windows.h>
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 #include "Engine/Implementation/XInput/DirectXInput.h"
@@ -18,7 +16,8 @@ const int WindowWidth = 1920;
 const int WindowHeight = 1080;
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-IApplication* GetApplication(IGraphics* Graphics, IInput* Input);
+IApplication* GetEditorApplication(IGraphics* Graphics, IInput* Input, HWND hwnd);
+
 //extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -62,7 +61,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	msg.wParam = -1;
 	IGraphics* Graphics = new DirectX11Graphics(hwnd);
 	IInput* Input = new DirectXInput();
-	IApplication* Application = GetApplication(Graphics, Input);
+	IApplication* Application = GetEditorApplication(Graphics, Input, hwnd);
 	if (Graphics && Graphics->IsValid() && Application)
 	{
 		Application->Load();

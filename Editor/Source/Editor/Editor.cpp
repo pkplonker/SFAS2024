@@ -22,14 +22,16 @@ constexpr float DeltaTime = 0.016f;
 constexpr float SpinSpeed = 0.1f;
 constexpr float WinTolerance = PieVal / 10.0f;
 
-IApplication* GetApplication(IGraphics* Graphics, IInput* Input)
+IApplication* GetEditorApplication(IGraphics* Graphics, IInput* Input, HWND hwnd)
 {
-	return new Editor(Graphics, Input);
+	return new Editor(Graphics, Input, hwnd);
 }
 
-Editor::Editor(IGraphics* GraphicsIn, IInput* InputIn) : IApplication(GraphicsIn, InputIn)
+Editor::Editor(IGraphics* GraphicsIn, IInput* InputIn, HWND hwnd) : IApplication(GraphicsIn, InputIn), hwnd(hwnd)
 {
 	dx11Graphics = dynamic_cast<DirectX11Graphics*>(Graphics);
+	gameGraphics = new DirectX11Graphics(hwnd);
+	game = new Game(gameGraphics, InputIn);
 }
 
 Editor::~Editor()
@@ -52,11 +54,14 @@ bool Editor::Load()
 	ImGui_ImplWin32_Init(dx11Graphics->GetHWND());
 	ImGui_ImplDX11_Init(dx11Graphics->GetDevice(), dx11Graphics->GetContext());
 
+	game->Load();
+
 	return true;
 }
 
 void Editor::Update()
 {
+	game->Update();
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
@@ -66,6 +71,7 @@ void Editor::Update()
 
 void Editor::Cleanup()
 {
+	game->Cleanup();
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
