@@ -4,7 +4,7 @@ Star/x86/
 Star/x64/
 Star/Star.vcxproj.filters
 Star/Star.vcxproj.user
-
+Star/Engine/Debug/Editor/Engine.tlog
 # Log files
 *.log
 
@@ -24,6 +24,7 @@ Thumbs.db
 *.app
 *.exe
 *.war
+*.obj
 
 # Large media files
 *.mp4
@@ -32,7 +33,17 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+*.ipch
 
 /.vs
 /Star/packages
 !/Star/packages/imgui
+Engine/Debug/Editor/
+
+x64/Debug/
+
+GameBase/Debug/
+
+Star/Debug/
+
+Editor/x64/

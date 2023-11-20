@@ -197,6 +197,11 @@
     <None Include="packages.config" />
     <None Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\SimpleMath.inl" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Engine\Engine.vcxproj">
+      <Project>{d03d4ce4-d770-4a2c-9bb1-c3da8276afaf}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="packages\Microsoft.XAudio2.Redist.1.2.11\build\native\Microsoft.XAudio2.Redist.targets" Condition="Exists('packages\Microsoft.XAudio2.Redist.1.2.11\build\native\Microsoft.XAudio2.Redist.targets')" />

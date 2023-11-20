@@ -196,6 +196,9 @@
     <None Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\SimpleMath.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Engine\Engine.vcxproj">
+      <Project>{d03d4ce4-d770-4a2c-9bb1-c3da8276afaf}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Star\Star.vcxproj">
       <Project>{a5827ab4-4626-47d8-82f2-598dfc535976}</Project>
     </ProjectReference>
