@@ -192,8 +192,9 @@ void DirectX11Graphics::Update()
 	if (Context && SwapChain)
 	{
 		ID3D11RenderTargetView* activeRenderTarget = renderToTexture ? renderTargetView : BackbufferView;
+		ID3D11DepthStencilView* activedepthView = renderToTexture ? textureTargetDepthStencilView : DepthStencilView;
 
-		Context->OMSetRenderTargets(1, &activeRenderTarget, DepthStencilView);
+		Context->OMSetRenderTargets(1, &activeRenderTarget, activedepthView);
 
 		if (camera != nullptr)
 		{
@@ -221,7 +222,7 @@ void DirectX11Graphics::Update()
 			viewport.TopLeftY = 0.0f;
 			Context->RSSetViewports(1, &viewport);
 		}
-		Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH, 1, 0);
+		Context->ClearDepthStencilView(activedepthView, D3D11_CLEAR_DEPTH, 1, 0);
 
 		for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
 		{
@@ -235,13 +236,9 @@ void DirectX11Graphics::Update()
 				(*renderable)->Update();
 			}
 		}
-		/*if (renderToTexture)
-		{
-			ID3D11RenderTargetView* nullViews[] = { nullptr };
-			Context->OMSetRenderTargets(ARRAYSIZE(nullViews), nullViews, nullptr);
-		}*/
-		Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH, 1, 0);
 
+		//clear depth stencil for main frame regardless of target
+		Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH, 1, 0);
 		Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
 	}
 }
@@ -543,8 +540,8 @@ void DirectX11Graphics::SetRenderToTexture(bool state, float width, float height
 		if (renderTargetView) renderTargetView->Release();
 		if (shaderResourceView) shaderResourceView->Release();
 
-		if (renderTargetDepthStencilBuffer) renderTargetDepthStencilBuffer->Release();
-		if (renderTargetDepthStencilView) renderTargetDepthStencilView->Release();
+		if (textureTargetDepthStencilBuffer) textureTargetDepthStencilBuffer->Release();
+		if (textureTargetDepthStencilView) textureTargetDepthStencilView->Release();
 
 		D3D11_VIEWPORT textureViewport;
 		textureViewport.TopLeftX = 0;
@@ -579,11 +576,11 @@ void DirectX11Graphics::SetRenderToTexture(bool state, float width, float height
 		depthDesc.SampleDesc.Count = 1;
 		depthDesc.Usage = D3D11_USAGE_DEFAULT;
 		depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		Device->CreateTexture2D(&depthDesc, nullptr, &renderTargetDepthStencilBuffer);
+		Device->CreateTexture2D(&depthDesc, nullptr, &textureTargetDepthStencilBuffer);
 
-		Device->CreateDepthStencilView(renderTargetDepthStencilBuffer, nullptr, &renderTargetDepthStencilView);
+		Device->CreateDepthStencilView(textureTargetDepthStencilBuffer, nullptr, &textureTargetDepthStencilView);
 
-		Context->OMSetRenderTargets(1, &renderTargetView, renderTargetDepthStencilView);
+		Context->OMSetRenderTargets(1, &renderTargetView, textureTargetDepthStencilView);
 		if (camera != nullptr)
 		{
 			camera->SetWidth(texWidth);

@@ -39,7 +39,7 @@ bool Editor::Load()
 {
 	game->Load();
 
-	dx11Graphics->SetRenderToTexture(true, 900, 600);
+	dx11Graphics->SetRenderToTexture(true, 1, 1);
 
 	return true;
 }

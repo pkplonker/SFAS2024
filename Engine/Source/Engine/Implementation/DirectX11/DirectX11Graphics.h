@@ -75,7 +75,7 @@ private:
 	ID3D11Texture2D* renderTargetTexture = nullptr;
 	ID3D11RenderTargetView* renderTargetView = nullptr;
 	ID3D11ShaderResourceView* shaderResourceView = nullptr;
-	ID3D11Texture2D* renderTargetDepthStencilBuffer = nullptr;
-	ID3D11DepthStencilView* renderTargetDepthStencilView = nullptr;
+	ID3D11Texture2D* textureTargetDepthStencilBuffer = nullptr;
+	ID3D11DepthStencilView* textureTargetDepthStencilView = nullptr;
 	bool renderToTexture;
 };
