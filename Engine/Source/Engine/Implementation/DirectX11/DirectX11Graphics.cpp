@@ -191,21 +191,28 @@ void DirectX11Graphics::Update()
 {
 	if (Context && SwapChain)
 	{
-		if (renderToTexture)
-		{
-			Context->OMSetRenderTargets(1, &renderTargetView, DepthStencilView);
-		}
-		else
-		{
-			Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
-		}
+		ID3D11RenderTargetView* activeRenderTarget = renderToTexture ? renderTargetView : BackbufferView;
+
+		Context->OMSetRenderTargets(1, &activeRenderTarget, DepthStencilView);
+
 		if (camera != nullptr)
 		{
 			vpMatrix = camera->GetViewProjectionMatrix();
 		}
 
-		float clearColour[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		Context->ClearRenderTargetView(BackbufferView, clearColour);
+		if (renderToTexture)
+		{
+			float color = 32.0f / 255;
+			float clearColour[4] = { color,color,color, 1.0f };
+			float textureClearColour[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+			Context->ClearRenderTargetView(renderTargetView, textureClearColour);
+			Context->ClearRenderTargetView(BackbufferView, clearColour);
+		}
+		else
+		{
+			float clearColour[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+			Context->ClearRenderTargetView(BackbufferView, clearColour);
+		}
 		Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH, 1, 0);
 
 		D3D11_VIEWPORT viewport;
@@ -229,11 +236,13 @@ void DirectX11Graphics::Update()
 				(*renderable)->Update();
 			}
 		}
-		if (renderToTexture)
+		/*if (renderToTexture)
 		{
 			ID3D11RenderTargetView* nullViews[] = { nullptr };
 			Context->OMSetRenderTargets(ARRAYSIZE(nullViews), nullViews, nullptr);
-		}
+		}*/
+		Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH, 1, 0);
+
 		Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
 	}
 }
