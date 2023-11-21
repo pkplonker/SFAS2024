@@ -36,8 +36,9 @@ bool Editor::IsValid()
 
 bool Editor::Load()
 {
+	game->Load();
 	dx11Graphics = dynamic_cast<DirectX11Graphics*>(Graphics);
-	dx11Graphics->SetRenderToTexture(true);
+	dx11Graphics->SetRenderToTexture(true, 900, 600);
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -45,14 +46,12 @@ bool Editor::Load()
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
 	io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleFonts;
 
 	ImGui_ImplWin32_Init(dx11Graphics->GetHWND());
 	ImGui_ImplDX11_Init(dx11Graphics->GetDevice(), dx11Graphics->GetContext());
-
-	game->Load();
 
 	return true;
 }
@@ -67,29 +66,17 @@ void Editor::Update()
 	ImGui::DockSpaceOverViewport();
 
 	ImGui::ShowDemoWindow();
-
 	dx11Graphics->GetContext()->Flush();
-
 	ImTextureID tex_id = (ImTextureID)dx11Graphics->GetTextureView();
 
 	ImGui::Begin("GameView");
 	auto w = dx11Graphics->GetWidth();
 	auto h = dx11Graphics->GetHeight();
-	ImGui::Image(tex_id, ImVec2(dx11Graphics->GetWidth(), dx11Graphics->GetHeight()));
-
-	//ImGuiIO& io = ImGui::GetIO();
-
-	//ImTextureID my_tex_id = io.Fonts->TexID;
-	//ImVec2 pos = ImGui::GetCursorScreenPos();
-	//ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
-	//ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
-	//ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-	//ImVec4 border_col = ImGui::GetStyleColorVec4(ImGuiCol_Border);
-	//float my_tex_w = (float)io.Fonts->TexWidth;
-	//float my_tex_h = (float)io.Fonts->TexHeight;
-	//ImGui::Image(my_tex_id, ImVec2(my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col);
+	ImGui::Image(tex_id, ImVec2(dx11Graphics->GetTextureWidth(), dx11Graphics->GetTextureHeight()));
+	ImVec2 windowSize = ImGui::GetWindowSize();
 
 	ImGui::End();
+	//dx11Graphics->SetRenderToTexture(true, windowSize.x, windowSize.y);
 }
 
 void Editor::Cleanup()

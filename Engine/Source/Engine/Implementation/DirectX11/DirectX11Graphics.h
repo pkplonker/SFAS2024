@@ -41,12 +41,13 @@ public:
 	ID3D11Device* GetDevice() const { return Device; }
 	HWND GetHWND() const { return hwnd; }
 	ID3D11DeviceContext* GetContext() const { return Context; }
-	void SetRenderToTexture(bool state) override;
+	void SetRenderToTexture(bool state, int width, int height) override;
 	int GetWidth()override { return width; }
 	int GetHeight()override { return height; }
 	ID3D11ShaderResourceView* GetTextureView() const;
 	ID3D11Texture2D* GetTexture() const;
-	
+	float GetTextureWidth() { return texWidth; }
+	float GetTextureHeight() { return texHeight; }
 
 protected:
 
@@ -55,22 +56,26 @@ protected:
 
 private:
 
-	ID3D11Device* Device;
-	ID3D11DeviceContext* Context;
-	IDXGISwapChain* SwapChain;
-	ID3D11RenderTargetView* BackbufferView;
-	ID3D11Texture2D* BackbufferTexture;
-	ID3D11DepthStencilView* DepthStencilView;
-	ID3D11BlendState* BlendState;
-	ID3D11Buffer* Mvp;
+	ID3D11Device* Device = nullptr;
+	ID3D11DeviceContext* Context = nullptr;
+	IDXGISwapChain* SwapChain = nullptr;
+	ID3D11RenderTargetView* BackbufferView = nullptr;
+	ID3D11Texture2D* BackbufferTexture = nullptr;
+	ID3D11DepthStencilView* DepthStencilView = nullptr;
+	ID3D11BlendState* BlendState = nullptr;
+	ID3D11Buffer* Mvp = nullptr;
 	DirectX::XMMATRIX vpMatrix;
 	D3D_FEATURE_LEVEL FeatureLevel;
 	HWND hwnd;
 	int width;
 	int height;
+	int texWidth;
+	int texHeight;
 	std::shared_ptr<ICamera> camera;
-	ID3D11Texture2D* renderTargetTexture;
-	ID3D11RenderTargetView* renderTargetView;
-	ID3D11ShaderResourceView* shaderResourceView;
+	ID3D11Texture2D* renderTargetTexture = nullptr;
+	ID3D11RenderTargetView* renderTargetView = nullptr;
+	ID3D11ShaderResourceView* shaderResourceView = nullptr;
+	ID3D11Texture2D* renderTargetDepthStencilBuffer = nullptr;
+	ID3D11DepthStencilView* renderTargetDepthStencilView = nullptr;
 	bool renderToTexture;
 };
