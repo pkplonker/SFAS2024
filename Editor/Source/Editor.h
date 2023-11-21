@@ -38,4 +38,5 @@ private:
 	Game* game;
 	HWND hwnd;
 	ImVec2 gameViewportSize;
+	std::unique_ptr<ImGuiController> imguiController;
 };

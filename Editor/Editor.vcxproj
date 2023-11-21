@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\ImGuiController.cpp" />
     <ClCompile Include="Packages\ImGui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="Packages\ImGui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="Packages\ImGui\imgui.cpp" />
@@ -162,9 +163,10 @@
     <ClCompile Include="Packages\ImGui\misc\cpp\imgui_stdlib.cpp" />
     <ClCompile Include="Packages\ImGui\misc\fonts\binary_to_compressed_c.cpp" />
     <ClCompile Include="Source\EntryPoints\WindowsMain.cpp" />
-    <ClCompile Include="Source\Editor\Editor.cpp" />
+    <ClCompile Include="Source\Editor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\ImGuiController.h" />
     <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\Audio.h" />
     <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\BufferHelpers.h" />
     <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\CommonStates.h" />
@@ -208,7 +210,7 @@
     <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xaudio2fxRedist.h" />
     <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xaudio2Redist.h" />
     <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xdsp.h" />
-    <ClInclude Include="Source\Editor\Editor.h" />
+    <ClInclude Include="Source\Editor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
