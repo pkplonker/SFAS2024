@@ -36,6 +36,4 @@ private:
 	DirectX11Graphics* dx11Graphics;
 	Game* game;
 	HWND hwnd;
-	DirectX11Graphics* gameGraphics;
-	HANDLE gameRenderTextureHandle;
 };

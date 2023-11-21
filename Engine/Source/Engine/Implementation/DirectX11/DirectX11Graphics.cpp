@@ -234,6 +234,7 @@ void DirectX11Graphics::Update()
 			ID3D11RenderTargetView* nullViews[] = { nullptr };
 			Context->OMSetRenderTargets(ARRAYSIZE(nullViews), nullViews, nullptr);
 		}
+		Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
 	}
 }
 
@@ -259,12 +260,7 @@ void DirectX11Graphics::RemoveRenderable(const std::shared_ptr<IRenderable>& sha
 
 void DirectX11Graphics::PostUpdate()
 {
-	if (!renderToTexture)
-	{
-		Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
-
-		SwapChain->Present(0, 0);
-	}
+	SwapChain->Present(0, 0);
 }
 
 bool DirectX11Graphics::IsValid()
