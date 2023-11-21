@@ -73,10 +73,9 @@ void Editor::Update()
 	auto w = dx11Graphics->GetWidth();
 	auto h = dx11Graphics->GetHeight();
 	ImGui::Image(tex_id, ImVec2(dx11Graphics->GetTextureWidth(), dx11Graphics->GetTextureHeight()));
-	ImVec2 windowSize = ImGui::GetWindowSize();
+	gameViewportSize = ImGui::GetWindowSize();
 
 	ImGui::End();
-	//dx11Graphics->SetRenderToTexture(true, windowSize.x, windowSize.y);
 }
 
 void Editor::Cleanup()
@@ -93,4 +92,5 @@ void Editor::PostGraphics()
 	ImGui::UpdatePlatformWindows();
 	ImGui::RenderPlatformWindowsDefault();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	dx11Graphics->SetRenderToTexture(true, gameViewportSize.x, gameViewportSize.y);
 }

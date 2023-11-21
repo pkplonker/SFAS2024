@@ -532,7 +532,7 @@ void DirectX11Graphics::SetActiveCamera(std::shared_ptr<ICamera> camera)
 	this->camera = camera;
 }
 
-void DirectX11Graphics::SetRenderToTexture(bool state, int width, int height)
+void DirectX11Graphics::SetRenderToTexture(bool state, float width, float height)
 {
 	if (state)
 	{
@@ -584,7 +584,7 @@ void DirectX11Graphics::SetRenderToTexture(bool state, int width, int height)
 		Device->CreateDepthStencilView(renderTargetDepthStencilBuffer, nullptr, &renderTargetDepthStencilView);
 
 		Context->OMSetRenderTargets(1, &renderTargetView, renderTargetDepthStencilView);
-		//if(camera!=nullptr)
+		if (camera != nullptr)
 		{
 			camera->SetWidth(texWidth);
 			camera->SetHeight(texHeight);

@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "Game.h"
+#include "imgui.h"
 #include "Engine/IApplication.h"
 #include "Engine/Implementation/Scene.h"
 
@@ -36,4 +37,5 @@ private:
 	DirectX11Graphics* dx11Graphics;
 	Game* game;
 	HWND hwnd;
+	ImVec2 gameViewportSize;
 };

@@ -27,7 +27,7 @@ public:
 	virtual int GetWidth() = 0;
 	virtual int GetHeight() = 0;
 	virtual void RemoveRenderable(const std::shared_ptr<IRenderable>& shared) = 0;
-	virtual void SetRenderToTexture(bool state, int width, int height) = 0;
+	virtual void SetRenderToTexture(bool state, float width, float height) = 0;
 protected:
 	std::map<IShader*, std::list<std::shared_ptr<IRenderable>>> Renderables;
 	std::list<ITexture*> Textures;

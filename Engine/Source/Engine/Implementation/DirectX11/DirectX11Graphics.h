@@ -41,7 +41,7 @@ public:
 	ID3D11Device* GetDevice() const { return Device; }
 	HWND GetHWND() const { return hwnd; }
 	ID3D11DeviceContext* GetContext() const { return Context; }
-	void SetRenderToTexture(bool state, int width, int height) override;
+	void SetRenderToTexture(bool state, float width, float height) override;
 	int GetWidth()override { return width; }
 	int GetHeight()override { return height; }
 	ID3D11ShaderResourceView* GetTextureView() const;
