@@ -182,12 +182,23 @@ DirectX11Graphics::~DirectX11Graphics()
 	{
 		Device->Release();
 	}
+	if (renderTargetTexture) renderTargetTexture->Release();
+	if (renderTargetView) renderTargetView->Release();
+	if (shaderResourceView) shaderResourceView->Release();
 }
 
 void DirectX11Graphics::Update()
 {
 	if (Context && SwapChain)
 	{
+		if (renderToTexture)
+		{
+			Context->OMSetRenderTargets(1, &renderTargetView, DepthStencilView);
+		}
+		else
+		{
+			Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
+		}
 		if (camera != nullptr)
 		{
 			vpMatrix = camera->GetViewProjectionMatrix();
@@ -218,6 +229,11 @@ void DirectX11Graphics::Update()
 				(*renderable)->Update();
 			}
 		}
+		if (renderToTexture)
+		{
+			ID3D11RenderTargetView* nullViews[] = { nullptr };
+			Context->OMSetRenderTargets(ARRAYSIZE(nullViews), nullViews, nullptr);
+		}
 	}
 }
 
@@ -243,7 +259,12 @@ void DirectX11Graphics::RemoveRenderable(const std::shared_ptr<IRenderable>& sha
 
 void DirectX11Graphics::PostUpdate()
 {
-	SwapChain->Present(0, 0);
+	if (!renderToTexture)
+	{
+		Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
+
+		SwapChain->Present(0, 0);
+	}
 }
 
 bool DirectX11Graphics::IsValid()
@@ -505,6 +526,48 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateMeshRenderable(IShader* Sh
 void DirectX11Graphics::SetActiveCamera(std::shared_ptr<ICamera> camera)
 {
 	this->camera = camera;
+}
+
+void DirectX11Graphics::SetRenderToTexture(bool state)
+{
+	if (state)
+	{
+		D3D11_TEXTURE2D_DESC textureDesc;
+		ZeroMemory(&textureDesc, sizeof(textureDesc));
+		textureDesc.Width = width;
+		textureDesc.Height = height;
+		textureDesc.MipLevels = 1;
+		textureDesc.ArraySize = 1;
+		textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		textureDesc.SampleDesc.Count = 1;
+		textureDesc.Usage = D3D11_USAGE_DEFAULT;
+		textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+		textureDesc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
+
+		Device->CreateTexture2D(&textureDesc, nullptr, &renderTargetTexture);
+
+		Device->CreateRenderTargetView(renderTargetTexture, nullptr, &renderTargetView);
+		Device->CreateShaderResourceView(renderTargetTexture, nullptr, &shaderResourceView);
+
+		Context->OMSetRenderTargets(1, &renderTargetView, DepthStencilView);
+	}
+	renderToTexture = state;
+}
+
+ID3D11ShaderResourceView* DirectX11Graphics::GetTextureView() const
+{
+	if (shaderResourceView != nullptr) {
+		Debug("ok")
+	}
+	else {
+		Debug("nok")
+	}
+	return shaderResourceView;
+}
+
+ID3D11Texture2D* DirectX11Graphics::GetTexture() const
+{
+	return renderTargetTexture;
 }
 
 void DirectX11Graphics::SetWorldMatrix(const std::weak_ptr<Transform3D> transform)

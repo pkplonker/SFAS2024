@@ -15,6 +15,8 @@ class IShader;
 class IRenderable;
 struct HWND__;
 typedef struct HWND__* HWND;
+typedef void* HANDLE;
+
 class Editor : public IApplication
 {
 public:
@@ -27,6 +29,7 @@ public:
 	virtual void Update();
 	virtual void Cleanup();
 	virtual void PostGraphics();
+
 private:
 
 	std::shared_ptr<GameObject> camera;
@@ -34,4 +37,5 @@ private:
 	Game* game;
 	HWND hwnd;
 	DirectX11Graphics* gameGraphics;
+	HANDLE gameRenderTextureHandle;
 };

@@ -31,6 +31,7 @@ Editor::Editor(IGraphics* GraphicsIn, IInput* InputIn, HWND hwnd) : IApplication
 {
 	dx11Graphics = dynamic_cast<DirectX11Graphics*>(Graphics);
 	gameGraphics = new DirectX11Graphics(hwnd);
+
 	game = new Game(gameGraphics, InputIn);
 }
 
@@ -55,6 +56,16 @@ bool Editor::Load()
 	ImGui_ImplDX11_Init(dx11Graphics->GetDevice(), dx11Graphics->GetContext());
 
 	game->Load();
+	gameGraphics->SetRenderToTexture(true);
+	gameGraphics->GetContext()->Flush();
+	IDXGIResource* dxgiResource = nullptr;
+	auto hr = gameGraphics->GetTexture()->QueryInterface(__uuidof(IDXGIResource), (void**)&dxgiResource);
+	if (FAILED(hr)) {
+		Debug("failed")
+	}
+
+	dxgiResource->GetSharedHandle(&gameRenderTextureHandle);
+	dxgiResource->Release();
 
 	return true;
 }
@@ -67,6 +78,37 @@ void Editor::Update()
 	ImGui::NewFrame();
 
 	ImGui::ShowDemoWindow();
+
+	gameGraphics->Update();
+	gameGraphics->PostUpdate();
+	dx11Graphics->GetContext()->Flush();
+	gameGraphics->GetContext()->Flush();
+
+	ID3D11Texture2D* openedTexture = nullptr;
+	auto hr = dx11Graphics->GetDevice()->OpenSharedResource(gameRenderTextureHandle, __uuidof(ID3D11Texture2D), (void**)&openedTexture);
+	if (FAILED(hr)) {
+		Debug("failed")
+	}
+	ImTextureID tex_id = (ImTextureID)gameGraphics->GetTextureView();
+
+	ImGui::Begin("GameView");
+	auto w = gameGraphics->GetWidth();
+	auto h = gameGraphics->GetHeight();
+	ImGui::Image(tex_id, ImVec2(gameGraphics->GetWidth(), gameGraphics->GetHeight()));
+
+	//ImGuiIO& io = ImGui::GetIO();
+
+	//ImTextureID my_tex_id = io.Fonts->TexID;
+	//ImVec2 pos = ImGui::GetCursorScreenPos();
+	//ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
+	//ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
+	//ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+	//ImVec4 border_col = ImGui::GetStyleColorVec4(ImGuiCol_Border);
+	//float my_tex_w = (float)io.Fonts->TexWidth;
+	//float my_tex_h = (float)io.Fonts->TexHeight;
+	//ImGui::Image(my_tex_id, ImVec2(my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col);
+
+	ImGui::End();
 }
 
 void Editor::Cleanup()

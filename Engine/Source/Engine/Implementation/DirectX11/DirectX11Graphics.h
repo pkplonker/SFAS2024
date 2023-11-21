@@ -41,9 +41,12 @@ public:
 	ID3D11Device* GetDevice() const { return Device; }
 	HWND GetHWND() const { return hwnd; }
 	ID3D11DeviceContext* GetContext() const { return Context; }
-
+	void SetRenderToTexture(bool state) override;
 	int GetWidth()override { return width; }
 	int GetHeight()override { return height; }
+	ID3D11ShaderResourceView* GetTextureView() const;
+	ID3D11Texture2D* GetTexture() const;
+	
 
 protected:
 
@@ -66,4 +69,8 @@ private:
 	int width;
 	int height;
 	std::shared_ptr<ICamera> camera;
+	ID3D11Texture2D* renderTargetTexture;
+	ID3D11RenderTargetView* renderTargetView;
+	ID3D11ShaderResourceView* shaderResourceView;
+	bool renderToTexture;
 };
