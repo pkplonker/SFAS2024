@@ -29,10 +29,7 @@ IApplication* GetEditorApplication(IGraphics* Graphics, IInput* Input, HWND hwnd
 
 Editor::Editor(IGraphics* GraphicsIn, IInput* InputIn, HWND hwnd) : IApplication(GraphicsIn, InputIn), hwnd(hwnd)
 {
-	dx11Graphics = dynamic_cast<DirectX11Graphics*>(Graphics);
-	gameGraphics = new DirectX11Graphics(hwnd);
-
-	game = new Game(gameGraphics, InputIn);
+	game = new Game(Graphics, InputIn);
 }
 
 Editor::~Editor()
@@ -46,7 +43,9 @@ bool Editor::IsValid()
 
 bool Editor::Load()
 {
-	DirectX11Graphics* dx11Graphics = dynamic_cast<DirectX11Graphics*>(Graphics);
+	dx11Graphics = dynamic_cast<DirectX11Graphics*>(Graphics);
+	dx11Graphics->SetRenderToTexture(true);
+
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
@@ -56,16 +55,6 @@ bool Editor::Load()
 	ImGui_ImplDX11_Init(dx11Graphics->GetDevice(), dx11Graphics->GetContext());
 
 	game->Load();
-	gameGraphics->SetRenderToTexture(true);
-	gameGraphics->GetContext()->Flush();
-	IDXGIResource* dxgiResource = nullptr;
-	auto hr = gameGraphics->GetTexture()->QueryInterface(__uuidof(IDXGIResource), (void**)&dxgiResource);
-	if (FAILED(hr)) {
-		Debug("failed")
-	}
-
-	dxgiResource->GetSharedHandle(&gameRenderTextureHandle);
-	dxgiResource->Release();
 
 	return true;
 }
@@ -73,28 +62,21 @@ bool Editor::Load()
 void Editor::Update()
 {
 	game->Update();
+
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
 	ImGui::ShowDemoWindow();
 
-	gameGraphics->Update();
-	gameGraphics->PostUpdate();
 	dx11Graphics->GetContext()->Flush();
-	gameGraphics->GetContext()->Flush();
 
-	ID3D11Texture2D* openedTexture = nullptr;
-	auto hr = dx11Graphics->GetDevice()->OpenSharedResource(gameRenderTextureHandle, __uuidof(ID3D11Texture2D), (void**)&openedTexture);
-	if (FAILED(hr)) {
-		Debug("failed")
-	}
-	ImTextureID tex_id = (ImTextureID)gameGraphics->GetTextureView();
+	ImTextureID tex_id = (ImTextureID)dx11Graphics->GetTextureView();
 
 	ImGui::Begin("GameView");
-	auto w = gameGraphics->GetWidth();
-	auto h = gameGraphics->GetHeight();
-	ImGui::Image(tex_id, ImVec2(gameGraphics->GetWidth(), gameGraphics->GetHeight()));
+	auto w = dx11Graphics->GetWidth();
+	auto h = dx11Graphics->GetHeight();
+	ImGui::Image(tex_id, ImVec2(dx11Graphics->GetWidth(), dx11Graphics->GetHeight()));
 
 	//ImGuiIO& io = ImGui::GetIO();
 
