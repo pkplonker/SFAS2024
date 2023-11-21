@@ -1,6 +1,5 @@
 ﻿#include "PerspectiveCamera.h"
 
-#include "imgui.h"
 #include "Engine/Implementation/Transform3D.h"
 
 PerspectiveCamera::PerspectiveCamera(std::shared_ptr<Transform3D> transform, float width, float height, float near,
@@ -58,7 +57,7 @@ DirectX::XMVECTOR PerspectiveCamera::GetUpDirection()
 
 void PerspectiveCamera::ImGuiDraw()
 {
-	if (ImGui::TreeNodeEx("Perspective Camera Settings", ImGuiTreeNodeFlags_DefaultOpen))
+	/*if (ImGui::TreeNodeEx("Perspective Camera Settings", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (ImGui::BeginPopupContextItem("PerspectiveCameraContext"))
 		{
@@ -81,8 +80,8 @@ void PerspectiveCamera::ImGuiDraw()
 		ImGui::DragFloat("Height", &height, 1, 1);
 		ImGui::DragFloat("Near Plane", &near, 1, 0.1f);
 		ImGui::DragFloat("Far Plane", &far, 1, 0.1f);
-		ImGui::TreePop();
-	}
+		ImGui::TreePop();*/
+		//}
 }
 
 void PerspectiveCamera::SetHeight(int height)

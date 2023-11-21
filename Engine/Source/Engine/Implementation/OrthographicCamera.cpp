@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "imgui.h"
 #include "DirectX11/DirectX11Billboard.h"
 
 OrthographicCamera::OrthographicCamera(std::shared_ptr<Transform3D> transform, float width, float height, float nearZ,
@@ -41,7 +40,7 @@ void OrthographicCamera::SetWidth(int width)
 
 void OrthographicCamera::ImGuiDraw()
 {
-	if (ImGui::TreeNodeEx("Orthographic Camera Settings", ImGuiTreeNodeFlags_DefaultOpen))
+	/*if (ImGui::TreeNodeEx("Orthographic Camera Settings", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (ImGui::BeginPopupContextItem("OrthographicCameraContext"))
 		{
@@ -60,8 +59,8 @@ void OrthographicCamera::ImGuiDraw()
 		ImGui::DragFloat("Near Plane", &nearZ);
 		ImGui::DragFloat("Far Plane", &farZ);
 
-		ImGui::TreePop();
-	}
+		ImGui::TreePop();*/
+		//}
 }
 
 std::shared_ptr<Transform3D> OrthographicCamera::GetTransform()

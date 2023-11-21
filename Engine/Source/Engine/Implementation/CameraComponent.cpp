@@ -1,6 +1,5 @@
 ﻿#include "CameraComponent.h"
 
-#include "imgui.h"
 #include "Engine/Implementation/GameObject.h"
 #include "Engine/Implementation/Transform3D.h"
 
@@ -50,7 +49,7 @@ void CameraComponent::SetWidth(int width)
 
 void CameraComponent::ImGuiDraw()
 {
-	if (ImGui::CollapsingHeader("Camera Component", ImGuiTreeNodeFlags_DefaultOpen))
+	/*if (ImGui::CollapsingHeader("Camera Component", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (ImGui::BeginPopupContextItem("CameraComponentContext"))
 		{
@@ -81,7 +80,7 @@ void CameraComponent::ImGuiDraw()
 		{
 			ImGui::Text("No camera attached");
 		}
-	}
+	}*/
 }
 
 std::shared_ptr<Transform3D> CameraComponent::GetTransform()

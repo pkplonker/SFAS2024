@@ -152,6 +152,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Packages\ImGui\backends\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Packages\ImGui\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="Packages\ImGui\imgui.cpp" />
+    <ClCompile Include="Packages\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Packages\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Packages\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Packages\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Packages\ImGui\misc\cpp\imgui_stdlib.cpp" />
+    <ClCompile Include="Packages\ImGui\misc\fonts\binary_to_compressed_c.cpp" />
     <ClCompile Include="Source\EntryPoints\WindowsMain.cpp" />
     <ClCompile Include="Source\Editor\Editor.cpp" />
   </ItemGroup>
@@ -176,6 +185,16 @@
     <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\SpriteFont.h" />
     <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\VertexTypes.h" />
     <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\WICTextureLoader.h" />
+    <ClInclude Include="Packages\ImGui\backends\imgui_impl_dx11.h" />
+    <ClInclude Include="Packages\ImGui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="Packages\ImGui\imconfig.h" />
+    <ClInclude Include="Packages\ImGui\imgui.h" />
+    <ClInclude Include="Packages\ImGui\imgui_internal.h" />
+    <ClInclude Include="Packages\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Packages\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Packages\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Packages\ImGui\misc\cpp\imgui_stdlib.h" />
+    <ClInclude Include="Packages\ImGui\misc\single_file\imgui_single_file.h" />
     <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\x3daudio.h" />
     <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\x3daudioRedist.h" />
     <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xapo.h" />

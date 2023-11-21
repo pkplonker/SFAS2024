@@ -70,19 +70,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\GameBase\packages\ImGui;$(SolutionDir)Source\</IncludePath>
+    <IncludePath>$(SolutionDir)Source\</IncludePath>
     <IntDir>$(Configuration)\Game\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\GameBase\packages\ImGui;$(SolutionDir)Source\</IncludePath>
+    <IncludePath>$(SolutionDir)Source\</IncludePath>
     <IntDir>$(Configuration)\Game\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\GameBase\packages\ImGui;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <IntDir>$(Configuration)\Game\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\GameBase\packages\ImGui;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <IntDir>$(Configuration)\Game\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

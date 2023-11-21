@@ -1,19 +1,12 @@
 #include "Editor.h"
-
 #include "Engine/IGraphics.h"
-#include "Engine/IRenderable.h"
 #include "Engine/IInput.h"
-#include <ctime>
-
 #include "Engine/Implementation/Debug.h"
-#include "Engine/Implementation/GameObject.h"
-#include "Engine/Implementation/GameObjectFactory.h"
 #include "Engine/ResourceManager.h"
-#include "Engine/Implementation/CameraComponent.h"
-#include "Engine/ImGuiController.h"
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
+#include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 #define CLAMP(v, x, y) fmin(fmax(v, x), y)
 
 constexpr float PieVal = 3.14159265359f;
@@ -49,8 +42,13 @@ bool Editor::Load()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
+	io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleFonts;
+
 	ImGui_ImplWin32_Init(dx11Graphics->GetHWND());
 	ImGui_ImplDX11_Init(dx11Graphics->GetDevice(), dx11Graphics->GetContext());
 
@@ -66,6 +64,7 @@ void Editor::Update()
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+	ImGui::DockSpaceOverViewport();
 
 	ImGui::ShowDemoWindow();
 
@@ -104,5 +103,7 @@ void Editor::Cleanup()
 void Editor::PostGraphics()
 {
 	ImGui::Render();
+	ImGui::UpdatePlatformWindows();
+	ImGui::RenderPlatformWindowsDefault();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }

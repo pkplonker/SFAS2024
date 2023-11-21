@@ -6,10 +6,7 @@
 #include "Engine/IRenderable.h"
 #include "Engine/IApplication.h"
 #include "imgui.h"
-#include "Engine/ImGuiController.h"
-#include "Engine/ImGuiFPSCounter.h"
 #include "imgui_impl_dx11.h"
-#include "imgui_impl_win32.cpp"
 const char WindowClassName[] = "Star";
 const char WindowTitle[] = "Stuart Heath SFAS24 - WIP";
 const int WindowWidth = 1920;
@@ -18,7 +15,7 @@ const int WindowHeight = 1080;
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 IApplication* GetEditorApplication(IGraphics* Graphics, IInput* Input, HWND hwnd);
 
-//extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
