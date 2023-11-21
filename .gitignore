@@ -1,10 +1,15 @@
 
 Star/.vs
+Editor/.vs
+GameBase/.vs
+Engine/.vs
+.vs
 Star/x86/
 Star/x64/
 Star/Star.vcxproj.filters
 Star/Star.vcxproj.user
 Star/Engine/Debug/Editor/Engine.tlog
+x64
 # Log files
 *.log
 
