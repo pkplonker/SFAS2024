@@ -24,7 +24,6 @@ void DirectX11Billboard::Update()
         Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         Context->IASetVertexBuffers(0, 1, &VertexBuffer, &vertexStride, &vertexOffset);
         Context->IASetIndexBuffer(IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-        Context->Draw(vertexCount, 0);
         Context->DrawIndexed(indexCount, 0, 0);
     }
 }
