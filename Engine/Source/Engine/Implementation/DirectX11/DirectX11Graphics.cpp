@@ -408,15 +408,12 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IShader* ShaderI
 			halfWidth, -halfHeight, 0.0f, 1.0f, 0.0f,
 			-halfWidth, -halfHeight, 0.0f, 0.0f, 0.0f,
 
-			-halfWidth, -halfHeight, 0.0f, 0.0f, 0.0f,
 			-halfWidth, halfHeight, 0.0f, 0.0f, 1.0f,
-			halfWidth, halfHeight, 0.0f, 1.0f, 1.0f,
 		};
-
 		ID3D11Buffer* VertexBuffer;
 		unsigned int vertexStride = 5 * sizeof(float);
 		unsigned int vertexOffset = 0;
-		unsigned int vertexCount = 6;
+		unsigned int vertexCount = 4;
 
 		D3D11_BUFFER_DESC vertexDescription;
 		ZeroMemory(&vertexDescription, sizeof(vertexDescription));
@@ -428,10 +425,26 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IShader* ShaderI
 		ZeroMemory(&resourceData, sizeof(resourceData));
 		resourceData.pSysMem = vertex_data_array;
 
-		if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)))
+		unsigned int indexBufferData[] =
 		{
-			Result = std::make_shared<DirectX11Billboard>(Context, VertexBuffer, vertexStride, vertexOffset,
-				vertexCount);
+			0,1,2,2,3,0
+		};
+
+		ID3D11Buffer* IndexBuffer;
+		D3D11_BUFFER_DESC indexDescription;
+		ZeroMemory(&indexDescription, sizeof(indexDescription));
+		indexDescription.Usage = D3D11_USAGE_DEFAULT;
+		indexDescription.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		indexDescription.ByteWidth = sizeof(indexBufferData);
+		
+		D3D11_SUBRESOURCE_DATA indexResourceData;
+		ZeroMemory(&indexResourceData, sizeof(indexResourceData));
+		indexResourceData.pSysMem = indexBufferData;
+		
+		if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) && SUCCEEDED(Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
+		{
+			Result = std::make_shared<DirectX11Billboard>(Context, VertexBuffer,IndexBuffer, vertexStride, vertexOffset,
+				vertexCount,sizeof(indexBufferData));
 			Renderables[ShaderIn].push_back(Result);
 		}
 	}
