@@ -53,6 +53,10 @@ struct Vec2
     {
         vec.y = static_cast<float>(val);
     }
+    bool operator==(const Vec2& vec2) const
+    {
+        return X() == vec2.X() && Y() == vec2.Y();
+    }
 
 private:
     dx::XMFLOAT2 vec{};

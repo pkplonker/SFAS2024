@@ -82,6 +82,10 @@ struct Vec3
         return reinterpret_cast<float*>(&vec);
     }
 
+    bool operator==(const Vec3& vec3) const
+    {
+        return vec.x == vec3.vec.x && vec.y == vec3.vec.y && vec.z == vec3.vec.z;
+    }
 private:
     dx::XMFLOAT3 vec{};
 };

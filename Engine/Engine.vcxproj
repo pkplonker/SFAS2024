@@ -219,6 +219,7 @@
     <ClInclude Include="Source\Engine\Implementation\Scene.h" />
     <ClInclude Include="Source\Engine\Implementation\SpriteRenderable.h" />
     <ClInclude Include="Source\Engine\Implementation\TestComponent.h" />
+    <ClInclude Include="Source\Engine\Implementation\Vertex.h" />
     <ClInclude Include="Source\Engine\Implementation\XInput\DirectXInput.h" />
     <ClInclude Include="Source\Engine\IRenderable.h" />
     <ClInclude Include="Source\Engine\IRenderableComponent.h" />
@@ -253,6 +254,7 @@
     <ClCompile Include="Source\Engine\Implementation\Scene.cpp" />
     <ClCompile Include="Source\Engine\Implementation\SpriteRenderable.cpp" />
     <ClCompile Include="Source\Engine\Implementation\TestComponent.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\Vertex.cpp" />
     <ClCompile Include="Source\Engine\Implementation\XInput\DirectXInput.cpp" />
     <ClCompile Include="Source\Engine\IRenderable.cpp" />
     <ClCompile Include="Source\Engine\IRenderableComponent.cpp" />
@@ -263,6 +265,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages\directxtk_desktop_2019.2023.9.6.1\include\SimpleMath.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Engine\Math\Vector4.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
