@@ -2,11 +2,10 @@
 #include <DirectXMath.h>
 
 #include "Engine/ICamera.h"
-#include "Engine/IimGuiDraw.h"
 
 class GameObject;
 
-class OrthographicCamera : public ICamera, public IimGuiDraw
+class OrthographicCamera : public ICamera
 {
 public:
 	OrthographicCamera(std::shared_ptr<Transform3D> transform, float width, float height, float nearZ = DEFAULT_NEAR, float farZ = DEFAULT_FAR);
@@ -15,7 +14,6 @@ public:
 	DirectX::XMMATRIX GetViewProjectionMatrix() override;
 	void SetHeight(int height) override;
 	void SetWidth(int width) override;
-	void ImGuiDraw() override;
 	std::shared_ptr<Transform3D> GetTransform() override;
 
 protected:

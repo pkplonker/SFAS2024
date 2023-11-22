@@ -47,42 +47,6 @@ void CameraComponent::SetWidth(int width)
 	camera->SetWidth(width);;
 }
 
-void CameraComponent::ImGuiDraw()
-{
-	/*if (ImGui::CollapsingHeader("Camera Component", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		if (ImGui::BeginPopupContextItem("CameraComponentContext"))
-		{
-			if (ImGui::MenuItem("Delete component"))
-			{
-				if (auto obj = gameObject.lock())
-				{
-					obj->RemoveComponent(shared_from_this());
-				}
-			}
-			ImGui::EndPopup();
-		}
-
-		if (camera)
-		{
-			if (auto cam = std::dynamic_pointer_cast<IimGuiDraw>(camera))
-			{
-				ImGui::Columns(2, nullptr, false);
-				ImGui::Text("Camera Settings");
-				cam->ImGuiDraw();
-				ImGui::NextColumn();
-				ImGui::Text("Transform Settings");
-				camera->GetTransform()->ImGuiDraw();
-				ImGui::Columns(1);
-			}
-		}
-		else
-		{
-			ImGui::Text("No camera attached");
-		}
-	}*/
-}
-
 std::shared_ptr<Transform3D> CameraComponent::GetTransform()
 {
 	if (auto object = gameObject.lock())

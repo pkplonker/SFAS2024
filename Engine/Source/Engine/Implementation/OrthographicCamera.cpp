@@ -38,31 +38,6 @@ void OrthographicCamera::SetWidth(int width)
 	this->width = static_cast<float>(width);
 }
 
-void OrthographicCamera::ImGuiDraw()
-{
-	/*if (ImGui::TreeNodeEx("Orthographic Camera Settings", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		if (ImGui::BeginPopupContextItem("OrthographicCameraContext"))
-		{
-			if (ImGui::MenuItem("Reset Near"))
-			{
-				nearZ = DEFAULT_NEAR;
-			}
-			if (ImGui::MenuItem("Reset Far"))
-			{
-				farZ = DEFAULT_FAR;
-			}
-			ImGui::EndPopup();
-		}
-		ImGui::DragFloat("Width", &width);
-		ImGui::DragFloat("Height", &height);
-		ImGui::DragFloat("Near Plane", &nearZ);
-		ImGui::DragFloat("Far Plane", &farZ);
-
-		ImGui::TreePop();*/
-		//}
-}
-
 std::shared_ptr<Transform3D> OrthographicCamera::GetTransform()
 {
 	return transform;

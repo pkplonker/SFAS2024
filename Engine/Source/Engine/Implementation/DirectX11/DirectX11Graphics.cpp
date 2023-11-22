@@ -15,7 +15,8 @@
 DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
 BackbufferView(nullptr), BackbufferTexture(nullptr), Mvp(nullptr),
 vpMatrix(), FeatureLevel(D3D_FEATURE_LEVEL_11_0), hwnd(hwndIn),
-width(0), height(0)
+width(0), height(0), texWidth(0), texHeight(0),
+renderToTexture(false)
 {
 	RECT dimensions;
 	GetClientRect(hwnd, &dimensions);
@@ -529,7 +530,7 @@ void DirectX11Graphics::SetActiveCamera(std::shared_ptr<ICamera> camera)
 	this->camera = camera;
 }
 
-void DirectX11Graphics::SetRenderToTexture(bool state, float width, float height)
+void DirectX11Graphics::SetRenderToTexture(bool state, int width, int height)
 {
 	if (state)
 	{
@@ -544,10 +545,10 @@ void DirectX11Graphics::SetRenderToTexture(bool state, float width, float height
 		if (textureTargetDepthStencilView) textureTargetDepthStencilView->Release();
 
 		D3D11_VIEWPORT textureViewport;
-		textureViewport.TopLeftX = 0;
-		textureViewport.TopLeftY = 0;
-		textureViewport.Width = texWidth;
-		textureViewport.Height = texHeight;
+		textureViewport.TopLeftX = 0.0f;
+		textureViewport.TopLeftY = 0.0f;
+		textureViewport.Width = static_cast<float>(texWidth);
+		textureViewport.Height = static_cast<float>(texHeight);
 		textureViewport.MinDepth = 0.0f;
 		textureViewport.MaxDepth = 1.0f;
 		Context->RSSetViewports(1, &textureViewport);

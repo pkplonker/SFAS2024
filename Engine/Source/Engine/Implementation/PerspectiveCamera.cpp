@@ -55,35 +55,6 @@ DirectX::XMVECTOR PerspectiveCamera::GetUpDirection()
 	return DirectX::XMVector3TransformNormal(upBase, rotationMatrix);
 }
 
-void PerspectiveCamera::ImGuiDraw()
-{
-	/*if (ImGui::TreeNodeEx("Perspective Camera Settings", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		if (ImGui::BeginPopupContextItem("PerspectiveCameraContext"))
-		{
-			if (ImGui::MenuItem("Reset Near"))
-			{
-				near = DEFAULT_NEAR;
-			}
-			if (ImGui::MenuItem("Reset Far"))
-			{
-				far = DEFAULT_FAR;
-			}
-			if (ImGui::MenuItem("Reset FOV"))
-			{
-				FOV = DEFAULT_FOV;
-			}
-			ImGui::EndPopup();
-		}
-		ImGui::SliderFloat("Field of View", &FOV, 0.01f, 3.141f);
-		ImGui::DragFloat("Width", &width, 1, 1);
-		ImGui::DragFloat("Height", &height, 1, 1);
-		ImGui::DragFloat("Near Plane", &near, 1, 0.1f);
-		ImGui::DragFloat("Far Plane", &far, 1, 0.1f);
-		ImGui::TreePop();*/
-		//}
-}
-
 void PerspectiveCamera::SetHeight(int height)
 {
 	this->height = static_cast<float>(height);

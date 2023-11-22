@@ -166,6 +166,11 @@ void Game::PostGraphics()
 {
 }
 
+std::weak_ptr<Scene> Game::GetScene()
+{
+	return scene;
+}
+
 void Game::SetupEachRing()
 {
 	for (unsigned int Ring = 0; Ring < NumberOfRings; ++Ring)

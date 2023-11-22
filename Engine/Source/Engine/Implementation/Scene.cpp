@@ -159,21 +159,7 @@ void Scene::DrawCamera()
 	ImGui::End();*/
 }
 
-void Scene::ImGuiRender(std::string window)
+std::set<std::shared_ptr<GameObject>>& Scene::GetObjects() const
 {
-	if (window == SCENE)
-	{
-		DrawScene();
-		return;
-	}
-	if (window == INSPECTOR)
-	{
-		DrawInspector();
-		return;
-	}
-	if (window == CAMERA)
-	{
-		DrawCamera();
-		return;
-	}
+	return *objects;
 }

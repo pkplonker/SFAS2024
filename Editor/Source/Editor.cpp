@@ -23,7 +23,6 @@ Editor::Editor(IGraphics* GraphicsIn, IInput* InputIn, HWND hwnd) : IApplication
 {
 	game = new Game(Graphics, InputIn);
 	dx11Graphics = dynamic_cast<DirectX11Graphics*>(Graphics);
-	imguiController = std::make_unique<ImGuiController>(dx11Graphics);
 }
 
 Editor::~Editor()
@@ -38,6 +37,7 @@ bool Editor::IsValid()
 bool Editor::Load()
 {
 	game->Load();
+	imguiController = std::make_unique<ImGuiController>(dx11Graphics, game);
 
 	dx11Graphics->SetRenderToTexture(true, 1, 1);
 
@@ -50,7 +50,7 @@ void Editor::Update()
 
 	imguiController->ImGuiPreFrame();
 
-	imguiController->ImGuiDrawViewport();
+	imguiController->Draw();
 }
 
 void Editor::Cleanup()

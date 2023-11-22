@@ -1,10 +1,8 @@
 #pragma once
-#include "Engine/IimGuiDraw.h"
-//#include "imgui.h"
 #include "Engine/Math/Vector3.h"
 #include <string>
 
-struct Transform3D : IimGuiDraw
+struct Transform3D
 {
 	Transform3D() : Transform3D(Vec3::Zero(), Vec3::Zero(), Vec3::One())
 	{
@@ -29,7 +27,7 @@ struct Transform3D : IimGuiDraw
 	Vec3 Rotation = { 0 };
 	Vec3 Scale = { 1 };
 
-	void ImGuiDraw() override
+	void ImGuiDraw()
 	{
 		/* if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 		 {

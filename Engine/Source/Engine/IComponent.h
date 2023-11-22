@@ -1,17 +1,14 @@
 ﻿#pragma once
 #include <memory>
 
-#include "IimGuiDraw.h"
-
 class GameObject;
 
-class IComponent : public IimGuiDraw
+class IComponent
 {
 public:
-    
-    IComponent(std::weak_ptr<GameObject> object);
-    virtual ~IComponent() = default;
-    void ImGuiDraw() override {}
 
-    std::weak_ptr<GameObject> gameObject;
+	IComponent(std::weak_ptr<GameObject> object);
+	virtual ~IComponent() = default;
+
+	std::weak_ptr<GameObject> gameObject;
 };

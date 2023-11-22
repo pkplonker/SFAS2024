@@ -19,7 +19,6 @@ public:
 	DirectX::XMMATRIX GetViewProjectionMatrix() override;
 	void SetHeight(int height);
 	void SetWidth(int width);
-	void ImGuiDraw() override;
 	std::shared_ptr<Transform3D> GetTransform() override;
 
 private:

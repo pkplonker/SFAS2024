@@ -1,10 +1,9 @@
 ﻿#pragma once
 #include "Engine/ICamera.h"
-#include "Engine/IimGuiDraw.h"
 
 struct Transform3D;
 
-class PerspectiveCamera : public ICamera, public IimGuiDraw
+class PerspectiveCamera : public ICamera
 {
 public:
 	PerspectiveCamera(std::shared_ptr<Transform3D> transform, float width, float height, float near = DEFAULT_NEAR,
@@ -23,7 +22,6 @@ public:
 	DirectX::XMVECTOR GetFocusPoint();
 	DirectX::XMVECTOR GetEyePosition();
 	DirectX::XMVECTOR GetUpDirection();
-	void ImGuiDraw() override;
 
 protected:
 	DirectX::XMMATRIX view{};
