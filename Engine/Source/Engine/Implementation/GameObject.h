@@ -67,7 +67,6 @@ public:
 
 	void Update() override;
 	const std::vector<std::shared_ptr<IComponent>>& GetComponents() const;
-	void ImGuiDraw();
 	std::string Name = GAMEOBJECT_DEFAULT_NAME;
 
 private:
