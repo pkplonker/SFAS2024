@@ -1,12 +1,10 @@
 ﻿#include "Scene.h"
 
 #include "CameraComponent.h"
-#include "imgui.h"
 #include "MeshRenderable.h"
 #include "SpriteRenderable.h"
 #include "Engine/Implementation/Debug.h"
 #include "Engine/ICamera.h"
-#include "Engine/ImGuiController.h"
 class SpriteRenderable;
 const std::string SCENE = "Scene Hierarchy";
 const std::string INSPECTOR = "Inspector";
@@ -95,7 +93,7 @@ void Scene::SetActiveCamera(const std::shared_ptr<ICamera>& camera)
 
 void Scene::DrawScene()
 {
-	ImGui::Begin(SCENE.c_str());
+	/*ImGui::Begin(SCENE.c_str());
 	std::vector<std::shared_ptr<GameObject>> objectsToRemove;
 	for (const auto& object : *objects)
 	{
@@ -122,12 +120,12 @@ void Scene::DrawScene()
 		RemoveObject(object);
 	}
 
-	ImGui::End();
+	ImGui::End();*/
 }
 
 void Scene::DrawInspector()
 {
-	ImGui::Begin(INSPECTOR.c_str());
+	/*ImGui::Begin(INSPECTOR.c_str());
 
 	auto gameobject = selectedObject.lock();
 	if (gameobject)
@@ -140,12 +138,12 @@ void Scene::DrawInspector()
 		ImGui::Text("Select an object to inspect.");
 	}
 
-	ImGui::End();
+	ImGui::End();*/
 }
 
 void Scene::DrawCamera()
 {
-	ImGui::Begin(CAMERA.c_str());
+	/*ImGui::Begin(CAMERA.c_str());
 	if (camera)
 	{
 		auto cameraComponent = std::dynamic_pointer_cast<CameraComponent>(camera);
@@ -158,24 +156,10 @@ void Scene::DrawCamera()
 	{
 		ImGui::Text("No camera attached");
 	}
-	ImGui::End();
+	ImGui::End();*/
 }
 
-void Scene::ImGuiRender(std::string window)
+std::set<std::shared_ptr<GameObject>>& Scene::GetObjects() const
 {
-	if (window == SCENE)
-	{
-		DrawScene();
-		return;
-	}
-	if (window == INSPECTOR)
-	{
-		DrawInspector();
-		return;
-	}
-	if (window == CAMERA)
-	{
-		DrawCamera();
-		return;
-	}
+	return *objects;
 }

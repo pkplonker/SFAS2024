@@ -51,12 +51,3 @@ const std::vector<std::shared_ptr<IComponent>>& GameObject::GetComponents() cons
 {
 	return *components;
 }
-
-void GameObject::ImGuiDraw()
-{
-	transform->ImGuiDraw();
-	for (auto component : *components)
-	{
-		component->ImGuiDraw();
-	}
-}

@@ -28,6 +28,7 @@ public:
 	virtual void Update();
 	virtual void Cleanup();
 	virtual void PostGraphics();
+	std::weak_ptr<Scene> GetScene();
 
 private:
 

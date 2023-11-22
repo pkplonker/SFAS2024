@@ -1,11 +1,10 @@
 ﻿#include "PerspectiveCamera.h"
 
-#include "imgui.h"
 #include "Engine/Implementation/Transform3D.h"
 
 PerspectiveCamera::PerspectiveCamera(std::shared_ptr<Transform3D> transform, float width, float height, float near,
-	float far, float FOV) : transform(transform), near(near),
-	far(far), width(width), height(height), FOV(FOV),
+	float far, float FOV) : transform(transform), nearZ(near),
+	farZ(far), width(width), height(height), FOV(FOV),
 	view(DirectX::XMMatrixIdentity()),
 	projection(DirectX::XMMatrixIdentity()),
 	vpMatrix(DirectX::XMMatrixIdentity())
@@ -14,7 +13,7 @@ PerspectiveCamera::PerspectiveCamera(std::shared_ptr<Transform3D> transform, flo
 
 DirectX::XMMATRIX PerspectiveCamera::GetProjectionMatrix()
 {
-	projection = DirectX::XMMatrixPerspectiveFovLH(FOV, width / height, near, far);
+	projection = DirectX::XMMatrixPerspectiveFovLH(FOV, width / height, nearZ, farZ);
 	return projection;
 }
 
@@ -56,58 +55,54 @@ DirectX::XMVECTOR PerspectiveCamera::GetUpDirection()
 	return DirectX::XMVector3TransformNormal(upBase, rotationMatrix);
 }
 
-void PerspectiveCamera::ImGuiDraw()
+void PerspectiveCamera::SetHeight(float height)
 {
-	if (ImGui::TreeNodeEx("Perspective Camera Settings", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		if (ImGui::BeginPopupContextItem("PerspectiveCameraContext"))
-		{
-			if (ImGui::MenuItem("Reset Near"))
-			{
-				near = DEFAULT_NEAR;
-			}
-			if (ImGui::MenuItem("Reset Far"))
-			{
-				far = DEFAULT_FAR;
-			}
-			if (ImGui::MenuItem("Reset FOV"))
-			{
-				FOV = DEFAULT_FOV;
-			}
-			ImGui::EndPopup();
-		}
-		ImGui::SliderFloat("Field of View", &FOV, 0.01f, 3.141f);
-		ImGui::DragFloat("Width", &width, 1, 1);
-		ImGui::DragFloat("Height", &height, 1, 1);
-		ImGui::DragFloat("Near Plane", &near, 1, 0.1f);
-		ImGui::DragFloat("Far Plane", &far, 1, 0.1f);
-		ImGui::TreePop();
-	}
+	this->height = height;
 }
 
-void PerspectiveCamera::SetHeight(int height)
+void PerspectiveCamera::SetWidth(float width)
 {
-	this->height = static_cast<float>(height);
-}
-
-void PerspectiveCamera::SetWidth(int width)
-{
-	this->width = static_cast<float>(width);
+	this->width = width;
 }
 
 void PerspectiveCamera::SetNear(float near)
 {
-	this->near = near;
+	this->nearZ = near;
 }
 
 void PerspectiveCamera::SetFar(float far)
 {
-	this->far = far;
+	this->farZ = far;
 }
 
 void PerspectiveCamera::SetFOV(float fov)
 {
 	this->FOV = fov;
+}
+
+float PerspectiveCamera::GetNear() const
+{
+	return nearZ;
+}
+
+float PerspectiveCamera::GetFar() const
+{
+	return farZ;
+}
+
+float PerspectiveCamera::GetFOV() const
+{
+	return FOV;
+}
+
+float PerspectiveCamera::GetWidth() const
+{
+	return width;
+}
+
+float PerspectiveCamera::GetHeight() const
+{
+	return height;
 }
 
 std::shared_ptr<Transform3D> PerspectiveCamera::GetTransform()

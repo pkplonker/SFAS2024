@@ -94,7 +94,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Packages\ImGui;$(ProjectDir)\Packages\directxtk_dekstop_2019.2023.9.6.1;$(ProjectDir)\Packages\Microsoft.XAudio.Redist.1.2.11;$(ProjectDir)\Packages;$(ProjectDir)\Source\Implementation;$(ProjectDir)\Source\Engine;$(ProjectDir)\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Packages\directxtk_dekstop_2019.2023.9.6.1;$(ProjectDir)\Packages\Microsoft.XAudio.Redist.1.2.11;$(ProjectDir)\Packages;$(ProjectDir)\Source\Implementation;$(ProjectDir)\Source\Engine;$(ProjectDir)\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalUsingDirectories>$(ProjectDir)\Source</AdditionalUsingDirectories>
     </ClCompile>
@@ -114,7 +114,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Packages\ImGui;$(ProjectDir)\Packages\directxtk_dekstop_2019.2023.9.6.1;$(ProjectDir)\Packages\Microsoft.XAudio.Redist.1.2.11;$(ProjectDir)\Packages;$(ProjectDir)\Source\Implementation;$(ProjectDir)\Source\Engine;$(ProjectDir)\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Packages\directxtk_dekstop_2019.2023.9.6.1;$(ProjectDir)\Packages\Microsoft.XAudio.Redist.1.2.11;$(ProjectDir)\Packages;$(ProjectDir)\Source\Implementation;$(ProjectDir)\Source\Engine;$(ProjectDir)\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalUsingDirectories>$(ProjectDir)\Source</AdditionalUsingDirectories>
     </ClCompile>
@@ -134,7 +134,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Packages\ImGui;$(ProjectDir)\Packages\directxtk_dekstop_2019.2023.9.6.1;$(ProjectDir)\Packages\Microsoft.XAudio.Redist.1.2.11;$(ProjectDir)\Packages;$(ProjectDir)\Source\Implementation;$(ProjectDir)\Source\Engine;$(ProjectDir)\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Packages\directxtk_dekstop_2019.2023.9.6.1;$(ProjectDir)\Packages\Microsoft.XAudio.Redist.1.2.11;$(ProjectDir)\Packages;$(ProjectDir)\Source\Implementation;$(ProjectDir)\Source\Engine;$(ProjectDir)\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalUsingDirectories>$(ProjectDir)\Source</AdditionalUsingDirectories>
     </ClCompile>
@@ -154,7 +154,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Packages\ImGui;$(ProjectDir)\Packages\directxtk_dekstop_2019.2023.9.6.1;$(ProjectDir)\Packages\Microsoft.XAudio.Redist.1.2.11;$(ProjectDir)\Packages;$(ProjectDir)\Source\Implementation;$(ProjectDir)\Source\Engine;$(ProjectDir)\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Packages\directxtk_dekstop_2019.2023.9.6.1;$(ProjectDir)\Packages\Microsoft.XAudio.Redist.1.2.11;$(ProjectDir)\Packages;$(ProjectDir)\Source\Implementation;$(ProjectDir)\Source\Engine;$(ProjectDir)\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalUsingDirectories>$(ProjectDir)\Source</AdditionalUsingDirectories>
     </ClCompile>
@@ -188,21 +188,6 @@
     <ClInclude Include="packages\directxtk_desktop_2019.2023.9.6.1\include\SpriteFont.h" />
     <ClInclude Include="packages\directxtk_desktop_2019.2023.9.6.1\include\VertexTypes.h" />
     <ClInclude Include="packages\directxtk_desktop_2019.2023.9.6.1\include\WICTextureLoader.h" />
-    <ClInclude Include="packages\ImGui\backends\imgui_impl_dx11.h" />
-    <ClInclude Include="packages\ImGui\backends\imgui_impl_win32.h" />
-    <ClInclude Include="packages\ImGui\examples\libs\emscripten\emscripten_mainloop_stub.h" />
-    <ClInclude Include="packages\ImGui\examples\libs\glfw\include\GLFW\glfw3.h" />
-    <ClInclude Include="packages\ImGui\examples\libs\glfw\include\GLFW\glfw3native.h" />
-    <ClInclude Include="packages\ImGui\examples\libs\usynergy\uSynergy.h" />
-    <ClInclude Include="packages\ImGui\imconfig.h" />
-    <ClInclude Include="packages\ImGui\imgui.h" />
-    <ClInclude Include="packages\ImGui\imgui_internal.h" />
-    <ClInclude Include="packages\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="packages\ImGui\imstb_textedit.h" />
-    <ClInclude Include="packages\ImGui\imstb_truetype.h" />
-    <ClInclude Include="packages\ImGui\misc\cpp\imgui_stdlib.h" />
-    <ClInclude Include="packages\ImGui\misc\freetype\imgui_freetype.h" />
-    <ClInclude Include="packages\ImGui\misc\single_file\imgui_single_file.h" />
     <ClInclude Include="packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\x3daudio.h" />
     <ClInclude Include="packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\x3daudioRedist.h" />
     <ClInclude Include="packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xapo.h" />
@@ -223,11 +208,7 @@
     <ClInclude Include="Source\Engine\ICamera.h" />
     <ClInclude Include="Source\Engine\IComponent.h" />
     <ClInclude Include="Source\Engine\IGraphics.h" />
-    <ClInclude Include="Source\Engine\IimGuiDraw.h" />
-    <ClInclude Include="Source\Engine\IImGuiRenderable.h" />
     <ClInclude Include="Source\Engine\IInput.h" />
-    <ClInclude Include="Source\Engine\ImGuiController.h" />
-    <ClInclude Include="Source\Engine\ImGuiFPSCounter.h" />
     <ClInclude Include="Source\Engine\Implementation\CameraComponent.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Billboard.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Graphics.h" />
@@ -255,43 +236,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="packages\ImGui\backends\imgui_impl_dx11.cpp" />
-    <ClCompile Include="packages\ImGui\backends\imgui_impl_win32.cpp" />
-    <ClCompile Include="packages\ImGui\examples\example_win32_directx11\main.cpp" />
-    <ClCompile Include="packages\ImGui\examples\libs\usynergy\uSynergy.c" />
-    <ClCompile Include="packages\ImGui\imgui.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="packages\ImGui\imgui_demo.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="packages\ImGui\imgui_draw.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="packages\ImGui\imgui_tables.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="packages\ImGui\imgui_widgets.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="packages\ImGui\misc\cpp\imgui_stdlib.cpp" />
-    <ClCompile Include="packages\ImGui\misc\fonts\binary_to_compressed_c.cpp" />
-    <ClCompile Include="packages\ImGui\misc\freetype\imgui_freetype.cpp" />
     <ClCompile Include="Source\Engine\Implementation\Debug.cpp" />
     <ClCompile Include="Source\Engine\Implementation\GameObject.cpp" />
     <ClCompile Include="Source\Engine\Implementation\GameObjectFactory.cpp" />
@@ -299,8 +243,6 @@
     <ClCompile Include="Source\Engine\IComponent.cpp" />
     <ClCompile Include="Source\Engine\IGraphics.cpp" />
     <ClCompile Include="Source\Engine\IInput.cpp" />
-    <ClCompile Include="Source\Engine\ImGuiController.cpp" />
-    <ClCompile Include="Source\Engine\ImGuiFPSCounter.cpp" />
     <ClCompile Include="Source\Engine\Implementation\CameraComponent.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Billboard.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Graphics.cpp" />
@@ -321,7 +263,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages\directxtk_desktop_2019.2023.9.6.1\include\SimpleMath.inl" />
-    <None Include="packages\ImGui\examples\libs\emscripten\shell_minimal.html" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
