@@ -593,12 +593,6 @@ void DirectX11Graphics::SetRenderToTexture(bool state, int width, int height)
 
 ID3D11ShaderResourceView* DirectX11Graphics::GetTextureView() const
 {
-	if (shaderResourceView != nullptr) {
-		Debug("ok")
-	}
-	else {
-		Debug("nok")
-	}
 	return shaderResourceView;
 }
 

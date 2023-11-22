@@ -37,12 +37,12 @@ DirectX::XMMATRIX CameraComponent::GetViewProjectionMatrix()
 	return camera->GetViewProjectionMatrix();
 }
 
-void CameraComponent::SetHeight(int height)
+void CameraComponent::SetHeight(float height)
 {
 	camera->SetHeight(height);
 }
 
-void CameraComponent::SetWidth(int width)
+void CameraComponent::SetWidth(float width)
 {
 	camera->SetWidth(width);;
 }
