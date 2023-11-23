@@ -215,6 +215,7 @@
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Mesh.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Shader.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.h" />
+    <ClInclude Include="Source\Engine\Implementation\Mesh.h" />
     <ClInclude Include="Source\Engine\Implementation\MeshRenderable.h" />
     <ClInclude Include="Source\Engine\Implementation\Scene.h" />
     <ClInclude Include="Source\Engine\Implementation\SpriteRenderable.h" />
@@ -250,6 +251,7 @@
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Mesh.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Shader.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Implementation\MeshRenderable.cpp" />
     <ClCompile Include="Source\Engine\Implementation\Scene.cpp" />
     <ClCompile Include="Source\Engine\Implementation\SpriteRenderable.cpp" />

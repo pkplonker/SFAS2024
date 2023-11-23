@@ -40,7 +40,7 @@ bool Editor::Load()
 	imguiController = std::make_unique<ImGuiController>(dx11Graphics, game);
 
 	dx11Graphics->SetRenderToTexture(true, 1, 1);
-
+	
 	return true;
 }
 
