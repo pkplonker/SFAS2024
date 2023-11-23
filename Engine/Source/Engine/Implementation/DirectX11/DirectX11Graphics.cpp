@@ -11,6 +11,8 @@
 
 #include "DirectX11Mesh.h"
 #include "Engine/Implementation/Debug.h"
+#include "Implementation/Mesh.h"
+#include "Implementation/Vertex.h"
 
 DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
                                                     BackbufferView(nullptr), BackbufferTexture(nullptr), Mvp(nullptr),
@@ -239,7 +241,6 @@ void DirectX11Graphics::Update()
             }
         }
 
-        
 
         Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
     }
@@ -327,71 +328,80 @@ IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vs
     ID3D11PixelShader* PixelShader = nullptr;
     ID3D11InputLayout* InputLayout = nullptr;
     HRESULT hr = S_FALSE;
-    ID3DBlob* vsBuffer = 0;
+    ID3DBlob* vsBuffer = nullptr;
+    ID3DBlob* psBuffer = nullptr;
 
     if (IsValid())
     {
+        // Compile the vertex shader
         if (CompileShader(filepath, vsentry, vsshader, &vsBuffer))
         {
-            hr = Device->CreateVertexShader(vsBuffer->GetBufferPointer(), vsBuffer->GetBufferSize(), 0, &VertexShader);
-
-            if (FAILED(hr) && VertexShader)
+            hr = Device->CreateVertexShader(vsBuffer->GetBufferPointer(), vsBuffer->GetBufferSize(), nullptr,
+                                            &VertexShader);
+            if (FAILED(hr))
             {
-                VertexShader->Release();
-            }
-            else
-            {
-                D3D11_INPUT_ELEMENT_DESC layout[] =
-                {
-                    {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-                    {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}
-                };
-
-                unsigned int totalLayoutElements = ARRAYSIZE(layout);
-
-                hr = Device->CreateInputLayout(layout, totalLayoutElements, vsBuffer->GetBufferPointer(),
-                                               vsBuffer->GetBufferSize(), &InputLayout);
+                MessageBox(nullptr, "Failed to create vertex shader", "Error!", MB_ICONEXCLAMATION | MB_OK);
                 vsBuffer->Release();
+                return nullptr;
             }
-        }
-        bool error = false;
-        if (SUCCEEDED(hr))
-        {
-            ID3DBlob* psBuffer = 0;
-            hr = S_FALSE;
-            if (CompileShader(filepath, psentry, psshader, &psBuffer))
+
+            D3D11_INPUT_ELEMENT_DESC layout[] =
             {
-                hr = Device->CreatePixelShader(psBuffer->GetBufferPointer(), psBuffer->GetBufferSize(), 0,
-                                               &PixelShader);
-                psBuffer->Release();
-            }
-            else
+                {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+                {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+                {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0},
+                {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0},
+            };
+            unsigned int totalLayoutElements = ARRAYSIZE(layout);
+
+            hr = Device->CreateInputLayout(layout, totalLayoutElements, vsBuffer->GetBufferPointer(),
+                                           vsBuffer->GetBufferSize(), &InputLayout);
+            vsBuffer->Release();
+            if (FAILED(hr))
             {
-                error = true;
+                MessageBox(nullptr, "Failed to create input layout", "Error!", MB_ICONEXCLAMATION | MB_OK);
+                VertexShader->Release();
+                return nullptr;
             }
         }
         else
         {
-            error = true;
+            MessageBox(nullptr, "Failed to compile vertex shader", "Error!", MB_ICONEXCLAMATION | MB_OK);
+            return nullptr;
         }
-        if (SUCCEEDED(hr))
+
+        if (CompileShader(filepath, psentry, psshader, &psBuffer))
         {
-            Result = new DirectX11Shader(Context, VertexShader, PixelShader, InputLayout, TextureIn);
-            Renderables.insert(std::pair(Result, std::list<std::shared_ptr<IRenderable>>()));
+            hr = Device->CreatePixelShader(psBuffer->GetBufferPointer(), psBuffer->GetBufferSize(), nullptr,
+                                           &PixelShader);
+            psBuffer->Release();
+            if (FAILED(hr))
+            {
+                MessageBox(nullptr, "Failed to create pixel shader", "Error!", MB_ICONEXCLAMATION | MB_OK);
+                VertexShader->Release();
+                InputLayout->Release();
+                return nullptr;
+            }
         }
         else
         {
-            error = true;
+            MessageBox(nullptr, "Failed to compile pixel shader", "Error!", MB_ICONEXCLAMATION | MB_OK);
+            VertexShader->Release();
+            InputLayout->Release();
+            return nullptr;
         }
-        if (error)
-        {
-            MessageBox(nullptr, "Failed to make shader", "Error!",
-                       MB_ICONEXCLAMATION | MB_OK);
-        }
+
+        Result = new DirectX11Shader(Context, VertexShader, PixelShader, InputLayout, TextureIn);
+        Renderables.insert(std::pair(Result, std::list<std::shared_ptr<IRenderable>>()));
+    }
+    else
+    {
+        MessageBox(nullptr, "Invalid DirectX11Graphics", "Error!", MB_ICONEXCLAMATION | MB_OK);
     }
 
     return Result;
 }
+
 
 std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IShader* ShaderIn)
 {
@@ -463,7 +473,7 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateMeshRenderable(IShader* Sh
     if (IsValid())
     {
         float size = .5f;
-        
+
 
         float vertex_data_array[] = {
             -size, -size, -size, 0.0f, 0.0f,
@@ -492,26 +502,26 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateMeshRenderable(IShader* Sh
         ZeroMemory(&resourceData, sizeof(resourceData));
         resourceData.pSysMem = vertex_data_array;
 
-        unsigned int indices[] = 
-{
+        unsigned int indices[] =
+        {
             // Front face
-            0,1,2,
-            0,2,3,
+            0, 1, 2,
+            0, 2, 3,
             // Back face
-            4,6,5,
-            4,7,6,
+            4, 6, 5,
+            4, 7, 6,
             // Left face
-            4,5,1,
-            4,1,0,
+            4, 5, 1,
+            4, 1, 0,
             // Right face
-            3,2,6,
-            3,6,7,
+            3, 2, 6,
+            3, 6, 7,
             // Top face
-            1,5,6,
-            1,6,2,
+            1, 5, 6,
+            1, 6, 2,
             // Bottom face
-            4,0,3,
-            4,3,7,
+            4, 0, 3,
+            4, 3, 7,
         };
         unsigned int indexCount = 36;
 
@@ -531,14 +541,61 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateMeshRenderable(IShader* Sh
             Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
         {
             Result = std::make_shared<DirectX11Mesh>(Context, VertexBuffer, IndexBuffer, vertexStride,
-                                                          vertexOffset,
-                                                          vertexCount, indexCount);
+                                                     vertexOffset,
+                                                     vertexCount, indexCount);
             Renderables[ShaderIn].push_back(Result);
         }
     }
 
     return Result;
 }
+
+std::shared_ptr<IRenderable> DirectX11Graphics::CreateMeshRenderable(IShader* ShaderIn, Mesh* mesh)
+{
+    std::shared_ptr<IRenderable> Result = nullptr;
+
+    if (IsValid() && mesh)
+    {
+        ID3D11Buffer* VertexBuffer;
+        unsigned int vertexStride = sizeof(Vertex);
+        unsigned int vertexOffset = 0;
+        unsigned int vertexCount = static_cast<unsigned int>(mesh->Vertices.size());
+
+        D3D11_BUFFER_DESC vertexDescription;
+        ZeroMemory(&vertexDescription, sizeof(vertexDescription));
+        vertexDescription.Usage = D3D11_USAGE_DEFAULT;
+        vertexDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+        vertexDescription.ByteWidth = static_cast<UINT>(vertexCount * sizeof(Vertex));
+
+        D3D11_SUBRESOURCE_DATA resourceData;
+        ZeroMemory(&resourceData, sizeof(resourceData));
+        resourceData.pSysMem = mesh->Vertices.data();
+
+        unsigned int indexCount = static_cast<unsigned int>(mesh->Indices.size());
+
+        ID3D11Buffer* IndexBuffer;
+        D3D11_BUFFER_DESC indexDescription;
+        ZeroMemory(&indexDescription, sizeof(indexDescription));
+        indexDescription.Usage = D3D11_USAGE_DEFAULT;
+        indexDescription.BindFlags = D3D11_BIND_INDEX_BUFFER;
+        indexDescription.ByteWidth = static_cast<UINT>(indexCount * sizeof(unsigned int));
+
+        D3D11_SUBRESOURCE_DATA indexResourceData;
+        ZeroMemory(&indexResourceData, sizeof(indexResourceData));
+        indexResourceData.pSysMem = mesh->Indices.data();
+
+        if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) &&
+            SUCCEEDED(Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
+        {
+            Result = std::make_shared<DirectX11Mesh>(Context, VertexBuffer, IndexBuffer, vertexStride,
+                                                     vertexOffset, vertexCount, indexCount);
+            Renderables[ShaderIn].push_back(Result);
+        }
+    }
+
+    return Result;
+}
+
 
 void DirectX11Graphics::SetActiveCamera(std::shared_ptr<ICamera> camera)
 {

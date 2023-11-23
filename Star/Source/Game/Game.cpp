@@ -5,6 +5,7 @@
 #include "Engine/IInput.h"
 #include <ctime>
 
+#include "Engine/MeshSerializer.h"
 #include "Engine/Implementation/Debug.h"
 #include "Engine/Implementation/GameObject.h"
 #include "Engine/Implementation/GameObjectFactory.h"
@@ -113,13 +114,14 @@ bool Game::Load()
 			L"Resource/Textures/Cat.dds",
 			L"Resource/Shaders/UnlitColor6.fx")))
 		.Build();
-	GameObjectFactory(scene, "Cyan")
+	auto mesh = MeshSerializer::Deserialize("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh");
+	GameObjectFactory(scene, "TestCube")
 		.AddPosition(Vec3(3.5, 1.5f, 2.0f))
 		.AddRandomRotation()
-		.AddScale(Vec3(1, 1, 1))
+		.AddScale(Vec3(0.1f, 0.1f, 0.1f))
 		.AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
 			L"Resource/Textures/Cat.dds",
-			L"Resource/Shaders/UnlitColor7.fx")))
+			L"Resource/Shaders/UnlitColorMesh.fx"),mesh))
 		.Build();
 	GameObjectFactory(scene, "Ground")
 		.AddPosition(Vec3(0, -2.6f, 0.0f))

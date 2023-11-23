@@ -3,7 +3,6 @@
 #include <d3d11.h>
 
 #include "Engine/IGraphics.h"
-#include "Engine/Implementation/Transform2D.h"
 #include <Windows.h>
 #include <d3dcommon.h>
 #include <DirectXMath.h>
@@ -37,6 +36,7 @@ public:
 	IShader* CreateShader(const wchar_t* filepath, const char* vsentry, const char* vsshader, const char* psentry, const char* psshader, ITexture* TextureIn) override;
 	std::shared_ptr<IRenderable> CreateBillboard(IShader* ShaderIn) override;
 	std::shared_ptr<IRenderable> CreateMeshRenderable(IShader* ShaderIn) override;
+	std::shared_ptr<IRenderable> CreateMeshRenderable(IShader* ShaderIn, Mesh* mesh);
 	void SetActiveCamera(std::shared_ptr<ICamera> camera) override;
 	ID3D11Device* GetDevice() const { return Device; }
 	HWND GetHWND() const { return hwnd; }
