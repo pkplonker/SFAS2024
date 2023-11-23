@@ -118,7 +118,7 @@ bool Game::Load()
 	GameObjectFactory(scene, "TestCube")
 		.AddPosition(Vec3(3.5, 1.5f, 2.0f))
 		.AddRandomRotation()
-		.AddScale(Vec3(0.1f, 0.1f, 0.1f))
+		.AddScale(Vec3(1))
 		.AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
 			L"Resource/Textures/Cat.dds",
 			L"Resource/Shaders/UnlitColorMesh.fx"),mesh))
