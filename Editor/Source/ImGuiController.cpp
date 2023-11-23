@@ -43,26 +43,7 @@ void ImGuiController::ImGuiPreFrame()
 	ImGui::DockSpaceOverViewport();
 	ImGui::ShowDemoWindow();
 }
-void ImGuiController::DrawMenu() const
-{
-	if (ImGui::BeginMainMenuBar())
-	{
-		if (ImGui::BeginMenu("File"))
-		{
-			ImGui::EndMenu();
-		}
-		if (ImGui::BeginMenu("Windows"))
-		{
-			for (auto& item : renderables) {
-				if (ImGui::MenuItem(item.first->GetName().c_str(), "", item.second)) {
-				}
-			}
-			ImGui::EndMenu();
-		}
 
-		ImGui::EndMainMenuBar();
-	}
-}
 
 void ImGuiController::DrawViewport()
 {
@@ -73,7 +54,31 @@ void ImGuiController::DrawViewport()
 	gameViewportSize = ImGui::GetWindowSize();
 	ImGui::End();
 }
+void ImGuiController::DrawMenu()
+{
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Windows"))
+		{
+			for (auto& item : renderables)
+			{
+				bool& isVisible = item.second;
 
+				if (ImGui::MenuItem(item.first->GetName().c_str(), nullptr, isVisible))
+				{
+					isVisible = !isVisible;
+				}
+			}
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMainMenuBar();
+	}
+}
 void ImGuiController::DrawWindows()
 {
 	std::vector<std::shared_ptr<EditorWindow>> identifiersToRemove;
