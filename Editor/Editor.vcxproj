@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\FileDialog.cpp" />
     <ClCompile Include="Source\MeshImporter.cpp" />
     <ClCompile Include="Source\Windows\CameraComponentDrawer.cpp" />
     <ClCompile Include="Source\Windows\ComponentDrawer.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="Source\EntryPoints\WindowsMain.cpp" />
     <ClCompile Include="Source\Editor.cpp" />
     <ClCompile Include="Source\Windows\ImGuiFPSCounter.cpp" />
+    <ClCompile Include="Source\Windows\MeshImporterWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Packages\assimp\aabb.h" />
@@ -257,6 +259,7 @@
     <ClInclude Include="Packages\assimp\XmlParser.h" />
     <ClInclude Include="Packages\assimp\XMLTools.h" />
     <ClInclude Include="Packages\assimp\ZipArchiveIOSystem.h" />
+    <ClInclude Include="Source\FileDialog.h" />
     <ClInclude Include="Source\ImGuiTheme.h" />
     <ClInclude Include="Source\MeshImporter.h" />
     <ClInclude Include="Source\Windows\CameraComponentDrawer.h" />
@@ -311,6 +314,7 @@
     <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xaudio2Redist.h" />
     <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xdsp.h" />
     <ClInclude Include="Source\Editor.h" />
+    <ClInclude Include="Source\Windows\MeshImporterWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -331,6 +335,9 @@
     <ProjectReference Include="..\Star\Star.vcxproj">
       <Project>{a5827ab4-4626-47d8-82f2-598dfc535976}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Source\Windows\MeshImporterWindow" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

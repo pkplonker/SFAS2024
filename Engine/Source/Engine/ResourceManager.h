@@ -26,7 +26,7 @@ public:
     {
     }
 
-    Mesh* GetMesh(const std::wstring path)
+    Mesh* GetMesh(const std::string path)
     {
         auto it = meshes.find(path);
         if (it != meshes.end())
@@ -113,6 +113,6 @@ private:
     IGraphics* graphics;
     std::unordered_map<std::wstring, std::unique_ptr<ITexture>> textures;
     std::unordered_map<std::wstring, std::unique_ptr<IShader>> shaders;
-    std::unordered_map<std::wstring, std::unique_ptr<Mesh>> meshes;
+    std::unordered_map<std::string, std::unique_ptr<Mesh>> meshes;
 
 };

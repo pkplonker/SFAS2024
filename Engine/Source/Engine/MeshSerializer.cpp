@@ -6,7 +6,7 @@
 #include "Engine/Implementation/Debug.h"
 
 
-void MeshSerializer::Serialize(Mesh* mesh, std::wstring fullFilePath)
+void MeshSerializer::Serialize(Mesh* mesh, std::string fullFilePath)
 {
     std::ofstream file(fullFilePath, std::ios::binary);
 
@@ -28,7 +28,7 @@ void MeshSerializer::Serialize(Mesh* mesh, std::wstring fullFilePath)
     Debug(error)
 }
 
-Mesh* MeshSerializer::Deserialize(std::wstring fullFilePath)
+Mesh* MeshSerializer::Deserialize(std::string fullFilePath)
 {
     std::ifstream file(fullFilePath, std::ios::binary);
 

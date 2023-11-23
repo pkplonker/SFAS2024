@@ -6,7 +6,7 @@
 class MeshSerializer
 {
 public:
-    inline static const std::wstring MESH_EXTENSION = L"smesh";
-    static void Serialize(Mesh* mesh, std::wstring path);
-    static Mesh* Deserialize(std::wstring path);
+    inline static const std::string MESH_EXTENSION = "smesh";
+    static void Serialize(Mesh* mesh, std::string path);
+    static Mesh* Deserialize(std::string path);
 };

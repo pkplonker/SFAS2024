@@ -12,6 +12,7 @@
 #include "Windows/ImGuiFPSCounter.h"
 #include "Windows/Hierarchy.h"
 #include "Windows/Inspector.h"
+#include "Windows/MeshImporterWindow.h"
 
 ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) :dx11Graphics(dx11Graphics), game(game)
 {
@@ -32,6 +33,8 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) :d
 	renderables.try_emplace(hierarchy, true);
 	const std::shared_ptr<Inspector> inspector = std::make_shared<Inspector>(hierarchy);
 	renderables.try_emplace(inspector, true);
+	const std::shared_ptr<MeshImporterWindow> meshImporterWindow = std::make_shared<MeshImporterWindow>();
+	renderables.try_emplace(meshImporterWindow, true);
 	ImGuiTheme::ApplyTheme(0);
 }
 
