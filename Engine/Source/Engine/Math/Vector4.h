@@ -102,6 +102,7 @@ struct Vec4
     {
         return reinterpret_cast<float*>(&vec);
     }
+
     bool operator==(const Vec4& vec4) const
     {
         return vec.x == vec4.vec.x && vec.y == vec4.vec.y && vec.z == vec4.vec.z && vec.w == vec4.vec.w;

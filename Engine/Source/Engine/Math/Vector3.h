@@ -15,6 +15,7 @@ struct Vec3
     Vec3(float x, float y) : Vec3(x, y, 0)
     {
     }
+
     Vec3(float x) : Vec3(x, x, x)
     {
     }
@@ -25,12 +26,12 @@ struct Vec3
 
     static Vec3 Zero()
     {
-        return {0,0,0};
+        return {0, 0, 0};
     }
 
     static Vec3 One()
     {
-        return {1,1,1};
+        return {1, 1, 1};
     }
 
 
@@ -63,7 +64,7 @@ struct Vec3
     {
         vec.z = val;
     }
-    
+
     void X(int val)
     {
         vec.x = static_cast<float>(val);
@@ -78,7 +79,9 @@ struct Vec3
     {
         vec.z = static_cast<float>(val);
     }
-    float* Data() {
+
+    float* Data()
+    {
         return reinterpret_cast<float*>(&vec);
     }
 
@@ -86,6 +89,7 @@ struct Vec3
     {
         return vec.x == vec3.vec.x && vec.y == vec3.vec.y && vec.z == vec3.vec.z;
     }
+
 private:
     dx::XMFLOAT3 vec{};
 };
