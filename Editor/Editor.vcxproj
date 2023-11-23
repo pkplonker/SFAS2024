@@ -257,6 +257,7 @@
     <ClInclude Include="Packages\assimp\XmlParser.h" />
     <ClInclude Include="Packages\assimp\XMLTools.h" />
     <ClInclude Include="Packages\assimp\ZipArchiveIOSystem.h" />
+    <ClInclude Include="Source\ImGuiTheme.h" />
     <ClInclude Include="Source\MeshImporter.h" />
     <ClInclude Include="Source\Windows\CameraComponentDrawer.h" />
     <ClInclude Include="Source\Windows\ComponentDrawer.h" />

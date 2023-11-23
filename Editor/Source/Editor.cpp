@@ -43,8 +43,8 @@ bool Editor::Load()
 
 	dx11Graphics->SetRenderToTexture(true, 1, 1);
 	Mesh* mesh = MeshImporter::LoadMesh("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.fbx");
-	MeshSerializer::Serialize(mesh,"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh", "testCube");
-	Mesh* mesh2 = MeshSerializer::Deserialize("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh");
+	MeshSerializer::Serialize(mesh,L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/testcube."+ MeshSerializer::MESH_EXTENSION);
+	Mesh* mesh2 = MeshSerializer::Deserialize(L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh");
 
 	delete mesh;
 	delete mesh2;

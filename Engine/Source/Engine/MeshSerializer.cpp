@@ -6,15 +6,8 @@
 #include "Engine/Implementation/Debug.h"
 
 
-void MeshSerializer::Serialize(Mesh* mesh, std::string path, std::string filename)
+void MeshSerializer::Serialize(Mesh* mesh, std::wstring fullFilePath)
 {
-    if (!path.empty() && path.back() != '/' && path.back() != '\\')
-    {
-        path += '/';
-    }
-    
-    std::string fullFilePath = path + filename + "." + MESH_EXTENSION;
-
     std::ofstream file(fullFilePath, std::ios::binary);
 
     if (file.is_open())
@@ -31,11 +24,11 @@ void MeshSerializer::Serialize(Mesh* mesh, std::string path, std::string filenam
         return;
     }
 
-    std::string error = "Failed to open file for writing: " + fullFilePath;
+    std::string error = "Failed to open file for writing";
     Debug(error)
 }
 
-Mesh* MeshSerializer::Deserialize(std::string fullFilePath)
+Mesh* MeshSerializer::Deserialize(std::wstring fullFilePath)
 {
     std::ifstream file(fullFilePath, std::ios::binary);
 
@@ -58,7 +51,7 @@ Mesh* MeshSerializer::Deserialize(std::string fullFilePath)
         return mesh;
     }
 
-    std::string error = "Failed to open file for reading: " + fullFilePath;
+    std::string error = "Failed to open file for reading";
     Debug(error)
     return nullptr;
 }

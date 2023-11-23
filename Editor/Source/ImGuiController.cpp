@@ -3,6 +3,7 @@
 
 #include "Game.h"
 #include "imgui.h"
+#include "ImGuiTheme.h"
 
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
@@ -31,6 +32,7 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) :d
 	renderables.try_emplace(hierarchy, true);
 	const std::shared_ptr<Inspector> inspector = std::make_shared<Inspector>(hierarchy);
 	renderables.try_emplace(inspector, true);
+	ImGuiTheme::ApplyTheme(0);
 }
 
 void ImGuiController::ImGuiPreFrame()

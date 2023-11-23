@@ -114,7 +114,7 @@ bool Game::Load()
 			L"Resource/Textures/Cat.dds",
 			L"Resource/Shaders/UnlitColor6.fx")))
 		.Build();
-	auto mesh = MeshSerializer::Deserialize("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh");
+	auto mesh = MeshSerializer::Deserialize(L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh");
 	GameObjectFactory(scene, "TestCube")
 		.AddPosition(Vec3(3.5, 1.5f, 2.0f))
 		.AddRandomRotation()
