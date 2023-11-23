@@ -7,9 +7,6 @@
 
 #include "Importer.hpp"
 
-MeshImporter::MeshImporter()
-{
-}
 
 Mesh* MeshImporter::LoadMesh(std::string path)
 {

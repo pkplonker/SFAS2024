@@ -5,6 +5,7 @@
 #include "Engine/ResourceManager.h"
 #include "ImGuiController.h"
 #include "MeshImporter.h"
+#include "MeshSerializer.h"
 #include "Engine/Implementation/Mesh.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 
@@ -42,9 +43,12 @@ bool Editor::Load()
 	imguiController = std::make_unique<ImGuiController>(dx11Graphics, game);
 
 	dx11Graphics->SetRenderToTexture(true, 1, 1);
-	Mesh* mesh = MeshImporter().LoadMesh("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.fbx");
-
+	Mesh* mesh = MeshImporter::LoadMesh("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.fbx");
+	MeshSerializer::Serialize(mesh,"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh", "testCube");
+	Mesh* mesh2 = MeshSerializer::Deserialize("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh");
+	
 	delete mesh;
+	delete mesh2;
 	return true;
 }
 
