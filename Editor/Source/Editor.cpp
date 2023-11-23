@@ -4,6 +4,8 @@
 #include "Engine/Implementation/Debug.h"
 #include "Engine/ResourceManager.h"
 #include "ImGuiController.h"
+#include "MeshImporter.h"
+#include "Engine/Implementation/Mesh.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 
 #define CLAMP(v, x, y) fmin(fmax(v, x), y)
@@ -40,7 +42,9 @@ bool Editor::Load()
 	imguiController = std::make_unique<ImGuiController>(dx11Graphics, game);
 
 	dx11Graphics->SetRenderToTexture(true, 1, 1);
-	
+	Mesh* mesh = MeshImporter().LoadMesh("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.fbx");
+
+	delete mesh;
 	return true;
 }
 
