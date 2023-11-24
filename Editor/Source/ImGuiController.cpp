@@ -3,14 +3,16 @@
 
 #include "Game.h"
 #include "imgui.h"
+#include "ImGuiTheme.h"
 
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
+#include "SceneSerializer.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 #include "Windows/Hierarchy.h"
 #include "Windows/ImGuiFPSCounter.h"
-#include "Windows/Hierarchy.h"
 #include "Windows/Inspector.h"
+#include "Windows/MeshImporterWindow.h"
 
 ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) :dx11Graphics(dx11Graphics), game(game)
 {
@@ -31,6 +33,9 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) :d
 	renderables.try_emplace(hierarchy, true);
 	const std::shared_ptr<Inspector> inspector = std::make_shared<Inspector>(hierarchy);
 	renderables.try_emplace(inspector, true);
+	const std::shared_ptr<MeshImporterWindow> meshImporterWindow = std::make_shared<MeshImporterWindow>();
+	renderables.try_emplace(meshImporterWindow, true);
+	ImGuiTheme::ApplyTheme(0);
 }
 
 void ImGuiController::ImGuiPreFrame()
@@ -41,26 +46,7 @@ void ImGuiController::ImGuiPreFrame()
 	ImGui::DockSpaceOverViewport();
 	ImGui::ShowDemoWindow();
 }
-void ImGuiController::DrawMenu() const
-{
-	if (ImGui::BeginMainMenuBar())
-	{
-		if (ImGui::BeginMenu("File"))
-		{
-			ImGui::EndMenu();
-		}
-		if (ImGui::BeginMenu("Windows"))
-		{
-			for (auto& item : renderables) {
-				if (ImGui::MenuItem(item.first->GetName().c_str(), "", item.second)) {
-				}
-			}
-			ImGui::EndMenu();
-		}
 
-		ImGui::EndMainMenuBar();
-	}
-}
 
 void ImGuiController::DrawViewport()
 {
@@ -71,7 +57,35 @@ void ImGuiController::DrawViewport()
 	gameViewportSize = ImGui::GetWindowSize();
 	ImGui::End();
 }
+void ImGuiController::DrawMenu()
+{
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if(ImGui::MenuItem("Save"))
+			{
+				SceneSerializer::Serialize();
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Windows"))
+		{
+			for (auto& item : renderables)
+			{
+				bool& isVisible = item.second;
 
+				if (ImGui::MenuItem(item.first->GetName().c_str(), nullptr, isVisible))
+				{
+					isVisible = !isVisible;
+				}
+			}
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMainMenuBar();
+	}
+}
 void ImGuiController::DrawWindows()
 {
 	std::vector<std::shared_ptr<EditorWindow>> identifiersToRemove;

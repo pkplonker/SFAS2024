@@ -67,6 +67,7 @@ GameObjectFactory& GameObjectFactory::AddMeshRenderable(std::shared_ptr<IRendera
 	return *this;
 }
 
+
 GameObjectFactory& GameObjectFactory::AddRandomRotation()
 {
 	gameObject->Transform()->Rotation = Vec3(static_cast<float>(std::rand() % 361),

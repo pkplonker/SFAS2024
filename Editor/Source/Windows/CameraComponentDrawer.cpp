@@ -43,7 +43,10 @@ void CameraComponentDrawer::DrawPerspective(std::shared_ptr<PerspectiveCamera> c
         float newNear = cam->GetNear();
         if (ImGui::DragFloat("Near Plane", &newNear, 1, 0.1f))
         {
-            cam->SetNear(newNear);
+            if (newNear > 0)
+            {
+                cam->SetNear(newNear);
+            }
         }
 
         float newFar = cam->GetFar();
@@ -102,15 +105,21 @@ void CameraComponentDrawer::Draw()
                                 ImGui::EndPopup();
                             }
                             float newNearZ = cam->GetNear();
-                            if (ImGui::DragFloat("Near Plane", &newNearZ))
+                            if (ImGui::DragFloat("Near Plane", &newNearZ, 1.0f, 1))
                             {
-                                cam->SetNear(newNearZ);
+                                if (newNearZ > 0)
+                                {
+                                    cam->SetNear(newNearZ);
+                                }
                             }
 
                             float newFarZ = cam->GetFar();
-                            if (ImGui::DragFloat("Far Plane", &newFarZ))
+                            if (ImGui::DragFloat("Far Plane", &newFarZ, 1.0f, 1))
                             {
-                                cam->SetFar(newFarZ);
+                                if (newFarZ > newNearZ)
+                                {
+                                    cam->SetFar(newFarZ);
+                                }
                             }
 
                             ImGui::TreePop();

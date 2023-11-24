@@ -7,6 +7,7 @@
 #include "IGraphics.h"
 #include "IShader.h"
 #include "ITexture.h"
+#include "MeshSerializer.h"
 
 
 const std::wstring DEFAULT_UNLIT_SHADER = L"Resource/Shaders/UnlitColor.fx";
@@ -25,6 +26,18 @@ public:
     {
     }
 
+    Mesh* GetMesh(const std::string path)
+    {
+        auto it = meshes.find(path);
+        if (it != meshes.end())
+        {
+            return it->second.get();
+        }
+        Mesh* mesh = MeshSerializer::Deserialize(path);
+        meshes[path] = std::unique_ptr<Mesh>(mesh);
+        return mesh;
+    }
+    
     ITexture* GetTexture(const std::wstring path)
     {
         auto it = textures.find(path);
@@ -53,6 +66,7 @@ public:
         shaders[key] = std::unique_ptr<IShader>(shader);
         return shader;
     }
+
     IShader* GetShader(const std::wstring texturePath, std::wstring shaderPath = DEFAULT_UNLIT_SHADER,
                        std::string vsentry = DEFAULT_VS_ENRTY, std::string vsshader = DEFAULT_VS_SHADER,
                        std::string psentry = DEFAULT_PS_ENRTY, std::string psshader = DEFAULT_PS_SHADER)
@@ -99,4 +113,6 @@ private:
     IGraphics* graphics;
     std::unordered_map<std::wstring, std::unique_ptr<ITexture>> textures;
     std::unordered_map<std::wstring, std::unique_ptr<IShader>> shaders;
+    std::unordered_map<std::string, std::unique_ptr<Mesh>> meshes;
+
 };

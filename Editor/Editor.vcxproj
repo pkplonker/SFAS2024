@@ -70,7 +70,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui;$(SolutionDir)Source\</IncludePath>
+    <IncludePath>$(SolutionDir)Editor\packages\ImGui;$(SolutionDir)Source\;$(SolutionDir)Editor\packages\assimp</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui;$(SolutionDir)Source\</IncludePath>
@@ -103,13 +103,13 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Star\Source\Game;$(SolutionDir)\Engine\Source;$(ProjectDir)Packages\ImGui\backends;$(ProjectDir)Packages\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Star\Source\Game;$(SolutionDir)\Engine\Source;$(ProjectDir)Packages\ImGui\backends;$(ProjectDir)Packages\ImGui;$(ProjectDir)Packages\assimp;$(ProjectDir)Packages\nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <AdditionalDependencies>Engine.lib;d3d11.lib;d3dcompiler.lib;Xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;d3d11.lib;d3dcompiler.lib;Xinput.lib;%(AdditionalDependencies);assimp-vc143-mtd.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir);$(SolutionDir)x64\Debug;$(SolutionDir)Engine;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -152,6 +152,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\FileDialog.cpp" />
+    <ClCompile Include="Source\MeshImporter.cpp" />
+    <ClCompile Include="Source\SceneSerializer.cpp" />
     <ClCompile Include="Source\Windows\CameraComponentDrawer.cpp" />
     <ClCompile Include="Source\Windows\ComponentDrawer.cpp" />
     <ClCompile Include="Source\Windows\ComponentDrawerFactory.cpp" />
@@ -171,8 +174,96 @@
     <ClCompile Include="Source\EntryPoints\WindowsMain.cpp" />
     <ClCompile Include="Source\Editor.cpp" />
     <ClCompile Include="Source\Windows\ImGuiFPSCounter.cpp" />
+    <ClCompile Include="Source\Windows\MeshImporterWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Packages\assimp\aabb.h" />
+    <ClInclude Include="Packages\assimp\ai_assert.h" />
+    <ClInclude Include="Packages\assimp\anim.h" />
+    <ClInclude Include="Packages\assimp\AssertHandler.h" />
+    <ClInclude Include="Packages\assimp\Base64.hpp" />
+    <ClInclude Include="Packages\assimp\BaseImporter.h" />
+    <ClInclude Include="Packages\assimp\Bitmap.h" />
+    <ClInclude Include="Packages\assimp\BlobIOSystem.h" />
+    <ClInclude Include="Packages\assimp\ByteSwapper.h" />
+    <ClInclude Include="Packages\assimp\camera.h" />
+    <ClInclude Include="Packages\assimp\cexport.h" />
+    <ClInclude Include="Packages\assimp\cfileio.h" />
+    <ClInclude Include="Packages\assimp\cimport.h" />
+    <ClInclude Include="Packages\assimp\ColladaMetaData.h" />
+    <ClInclude Include="Packages\assimp\color4.h" />
+    <ClInclude Include="Packages\assimp\commonMetaData.h" />
+    <ClInclude Include="Packages\assimp\Compiler\poppack1.h" />
+    <ClInclude Include="Packages\assimp\Compiler\pstdint.h" />
+    <ClInclude Include="Packages\assimp\Compiler\pushpack1.h" />
+    <ClInclude Include="Packages\assimp\config.h" />
+    <ClInclude Include="Packages\assimp\CreateAnimMesh.h" />
+    <ClInclude Include="Packages\assimp\DefaultIOStream.h" />
+    <ClInclude Include="Packages\assimp\DefaultIOSystem.h" />
+    <ClInclude Include="Packages\assimp\DefaultLogger.hpp" />
+    <ClInclude Include="Packages\assimp\defs.h" />
+    <ClInclude Include="Packages\assimp\Exceptional.h" />
+    <ClInclude Include="Packages\assimp\Exporter.hpp" />
+    <ClInclude Include="Packages\assimp\fast_atof.h" />
+    <ClInclude Include="Packages\assimp\GenericProperty.h" />
+    <ClInclude Include="Packages\assimp\GltfMaterial.h" />
+    <ClInclude Include="Packages\assimp\Hash.h" />
+    <ClInclude Include="Packages\assimp\Importer.hpp" />
+    <ClInclude Include="Packages\assimp\importerdesc.h" />
+    <ClInclude Include="Packages\assimp\IOStream.hpp" />
+    <ClInclude Include="Packages\assimp\IOStreamBuffer.h" />
+    <ClInclude Include="Packages\assimp\IOSystem.hpp" />
+    <ClInclude Include="Packages\assimp\light.h" />
+    <ClInclude Include="Packages\assimp\LineSplitter.h" />
+    <ClInclude Include="Packages\assimp\LogAux.h" />
+    <ClInclude Include="Packages\assimp\Logger.hpp" />
+    <ClInclude Include="Packages\assimp\LogStream.hpp" />
+    <ClInclude Include="Packages\assimp\material.h" />
+    <ClInclude Include="Packages\assimp\MathFunctions.h" />
+    <ClInclude Include="Packages\assimp\matrix3x3.h" />
+    <ClInclude Include="Packages\assimp\matrix4x4.h" />
+    <ClInclude Include="Packages\assimp\MemoryIOWrapper.h" />
+    <ClInclude Include="Packages\assimp\mesh.h" />
+    <ClInclude Include="Packages\assimp\metadata.h" />
+    <ClInclude Include="Packages\assimp\NullLogger.hpp" />
+    <ClInclude Include="Packages\assimp\ObjMaterial.h" />
+    <ClInclude Include="Packages\assimp\ParsingUtils.h" />
+    <ClInclude Include="Packages\assimp\pbrmaterial.h" />
+    <ClInclude Include="Packages\assimp\port\AndroidJNI\AndroidJNIIOSystem.h" />
+    <ClInclude Include="Packages\assimp\port\AndroidJNI\BundledAssetIOSystem.h" />
+    <ClInclude Include="Packages\assimp\postprocess.h" />
+    <ClInclude Include="Packages\assimp\Profiler.h" />
+    <ClInclude Include="Packages\assimp\ProgressHandler.hpp" />
+    <ClInclude Include="Packages\assimp\qnan.h" />
+    <ClInclude Include="Packages\assimp\quaternion.h" />
+    <ClInclude Include="Packages\assimp\RemoveComments.h" />
+    <ClInclude Include="Packages\assimp\scene.h" />
+    <ClInclude Include="Packages\assimp\SceneCombiner.h" />
+    <ClInclude Include="Packages\assimp\SGSpatialSort.h" />
+    <ClInclude Include="Packages\assimp\SkeletonMeshBuilder.h" />
+    <ClInclude Include="Packages\assimp\SmallVector.h" />
+    <ClInclude Include="Packages\assimp\SmoothingGroups.h" />
+    <ClInclude Include="Packages\assimp\SpatialSort.h" />
+    <ClInclude Include="Packages\assimp\StandardShapes.h" />
+    <ClInclude Include="Packages\assimp\StreamReader.h" />
+    <ClInclude Include="Packages\assimp\StreamWriter.h" />
+    <ClInclude Include="Packages\assimp\StringComparison.h" />
+    <ClInclude Include="Packages\assimp\StringUtils.h" />
+    <ClInclude Include="Packages\assimp\Subdivision.h" />
+    <ClInclude Include="Packages\assimp\texture.h" />
+    <ClInclude Include="Packages\assimp\TinyFormatter.h" />
+    <ClInclude Include="Packages\assimp\types.h" />
+    <ClInclude Include="Packages\assimp\vector2.h" />
+    <ClInclude Include="Packages\assimp\vector3.h" />
+    <ClInclude Include="Packages\assimp\version.h" />
+    <ClInclude Include="Packages\assimp\Vertex.h" />
+    <ClInclude Include="Packages\assimp\XmlParser.h" />
+    <ClInclude Include="Packages\assimp\XMLTools.h" />
+    <ClInclude Include="Packages\assimp\ZipArchiveIOSystem.h" />
+    <ClInclude Include="Source\FileDialog.h" />
+    <ClInclude Include="Source\ImGuiTheme.h" />
+    <ClInclude Include="Source\MeshImporter.h" />
+    <ClInclude Include="Source\SceneSerializer.h" />
     <ClInclude Include="Source\Windows\CameraComponentDrawer.h" />
     <ClInclude Include="Source\Windows\ComponentDrawer.h" />
     <ClInclude Include="Source\Windows\ComponentDrawerFactory.h" />
@@ -225,9 +316,18 @@
     <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xaudio2Redist.h" />
     <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xdsp.h" />
     <ClInclude Include="Source\Editor.h" />
+    <ClInclude Include="Source\Windows\MeshImporterWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Packages\assimp\color4.inl" />
+    <None Include="Packages\assimp\material.inl" />
+    <None Include="Packages\assimp\matrix3x3.inl" />
+    <None Include="Packages\assimp\matrix4x4.inl" />
+    <None Include="Packages\assimp\quaternion.inl" />
+    <None Include="Packages\assimp\SmoothingGroups.inl" />
+    <None Include="Packages\assimp\vector2.inl" />
+    <None Include="Packages\assimp\vector3.inl" />
     <None Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\SimpleMath.inl" />
   </ItemGroup>
   <ItemGroup>
