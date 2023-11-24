@@ -41,7 +41,7 @@ bool Game::IsValid()
 
 bool Game::Load()
 {
-	scene = std::make_shared<Scene>(Graphics, ImGui);
+	scene = std::make_shared<Scene>(Graphics);
 	resourceManager = std::make_unique<ResourceManager>(Graphics);;
 
 	//
