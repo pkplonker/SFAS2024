@@ -10,7 +10,9 @@ class ImGuiController;
 class Scene : public IUpdateable
 {
 public:
+	Scene();
 	Scene(IGraphics* graphics);
+	void SetScene(IGraphics* graphics){this->graphics = graphics;}
 	void AddObject(std::shared_ptr<GameObject> object);
 	void RemoveObject(std::shared_ptr<GameObject> object);
 	void AddRenderable(std::shared_ptr<IRenderable> object) const;
@@ -28,7 +30,7 @@ private:
 		GameObject>>>();
 	std::unique_ptr<std::set<std::shared_ptr<IRenderable>>> renderables = std::make_unique<std::set<std::shared_ptr<
 		IRenderable>>>();
-	IGraphics* graphics;
-	std::shared_ptr<ICamera> camera;
-	std::weak_ptr<GameObject> selectedObject;
+	IGraphics* graphics={};
+	std::shared_ptr<ICamera> camera={};
+	std::weak_ptr<GameObject> selectedObject={};
 };

@@ -3,7 +3,10 @@
 #include <fstream>
 #include <string>
 #include "json.hpp"
+#include "Engine/Implementation/CameraComponent.h"
 #include "Engine/Implementation/Debug.h"
+#include "Engine/Implementation/OrthographicCamera.h"
+#include "Engine/Implementation/PerspectiveCamera.h"
 #include "Engine/Implementation/Scene.h"
 using json = nlohmann::json;
 
@@ -42,7 +45,6 @@ bool SceneSerializer::Serialize()
     {
         for (const auto& object : sharedScene->GetObjects())
         {
-
             objectsData.push_back(SerializeGameObject(object));
         }
 
@@ -64,6 +66,11 @@ nlohmann::json SceneSerializer::SerializeGameObject(const std::shared_ptr<GameOb
     serializedData["name"] = object->Name;
     serializedData["transform"] = SerializeTransform(object->Transform());
 
+    if (auto cameraComponent = object->GetComponent<CameraComponent>())
+    {
+        serializedData["cameraComponent"] = SerializeCameraComponent(cameraComponent);
+    }
+
     return std::make_pair(object->Name, serializedData);
 }
 
@@ -81,4 +88,217 @@ json SceneSerializer::SerializeTransform(std::shared_ptr<Transform3D> transform)
     serializedData["scale"]["y"] = transform->Scale.Y();
     serializedData["scale"]["z"] = transform->Scale.Z();
     return serializedData;
+}
+
+nlohmann::json SceneSerializer::SerializeCameraComponent(std::shared_ptr<CameraComponent> camera)
+{
+    nlohmann::json serializedData;
+
+    if (auto orthoCamera = std::dynamic_pointer_cast<OrthographicCamera>(camera->GetCamera()))
+    {
+        nlohmann::json cameraData = SerializeOrthographicCamera(orthoCamera);
+        serializedData["camera"] = cameraData;
+    }
+    else if (auto perspCamera = std::dynamic_pointer_cast<PerspectiveCamera>(camera->GetCamera()))
+    {
+        nlohmann::json cameraData = SerializePerspectiveCamera(perspCamera);
+        serializedData["camera"] = cameraData;
+    }
+
+    return serializedData;
+}
+
+nlohmann::json SceneSerializer::SerializeOrthographicCamera(std::shared_ptr<OrthographicCamera> camera)
+{
+    nlohmann::json serializedData;
+
+    serializedData["type"] = "OrthographicCamera";
+    serializedData["width"] = camera->GetWidth();
+    serializedData["height"] = camera->GetHeight();
+    serializedData["near"] = camera->GetNear();
+    serializedData["far"] = camera->GetFar();
+
+    return serializedData;
+}
+
+nlohmann::json SceneSerializer::SerializePerspectiveCamera(std::shared_ptr<PerspectiveCamera> camera)
+{
+    nlohmann::json serializedData;
+
+    serializedData["type"] = "PerspectiveCamera";
+    serializedData["width"] = camera->GetWidth();
+    serializedData["height"] = camera->GetHeight();
+    serializedData["near"] = camera->GetNear();
+    serializedData["far"] = camera->GetFar();
+    serializedData["fov"] = camera->GetFOV();
+
+    return serializedData;
+}
+
+std::shared_ptr<Scene> SceneSerializer::Deserialize()
+{
+    std::string path = "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/TestScene.scene";
+    json sceneData;
+
+    std::ifstream inputFile(path);
+    if (inputFile.is_open())
+    {
+        try
+        {
+            inputFile >> sceneData;
+            inputFile.close();
+        }
+        catch (const std::exception& e)
+        {
+            Debug("Failed to parse scene data: " + std::string(e.what()));
+            return nullptr;
+        }
+    }
+    else
+    {
+        Debug("Failed to open scene file for reading");
+        return nullptr;
+    }
+
+    std::shared_ptr<Scene> scene = std::make_shared<Scene>();
+
+    if (sceneData.contains("objects"))
+    {
+        const json& objectsData = sceneData["objects"];
+
+        if (objectsData.is_array())
+        {
+            for (const json& objectData : objectsData)
+            {
+                std::shared_ptr<GameObject> gameObject = DeserializeGameObject(objectData);
+                if (gameObject)
+                {
+                    scene->AddObject(gameObject);
+                }
+                else
+                {
+                    Debug("Failed to deserialize GameObject in scene file");
+                }
+            }
+        }
+        else
+        {
+            Debug("Invalid data format for 'objects' field in scene file");
+            return nullptr;
+        }
+    }
+    else
+    {
+        Debug("Missing 'objects' field in scene file");
+        return nullptr;
+    }
+
+    Debug("Scene deserialization succeded");
+    return scene;
+}
+
+
+std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohmann::json& data)
+{
+    if (data.is_array() && data.size() == 2)
+    {
+        std::string name = data[0];
+
+        const nlohmann::json& objectProperties = data[1];
+
+        if (objectProperties.contains("name") && objectProperties.contains("transform"))
+        {
+            // Deserialize the transform
+            std::shared_ptr<Transform3D> transform = DeserializeTransform(objectProperties["transform"]);
+
+            std::shared_ptr<GameObject> newObject = std::make_shared<GameObject>(name);
+            newObject->SetTransform(transform);
+
+
+            return newObject;
+        }
+
+        Debug("Invalid data for GameObject in scene file");
+    }
+    else
+    {
+        Debug("Invalid data format for GameObject in scene file");
+    }
+
+    return nullptr;
+}
+
+
+std::shared_ptr<Transform3D> SceneSerializer::DeserializeTransform(const nlohmann::json& data)
+{
+    std::shared_ptr<Transform3D> transform = std::make_shared<Transform3D>();
+
+    transform->Position.X(static_cast<float>(data["position"]["x"]));
+    transform->Position.Y(static_cast<float>(data["position"]["y"]));
+    transform->Position.Z(static_cast<float>(data["position"]["z"]));
+    transform->Rotation.X(static_cast<float>(data["rotation"]["x"]));
+    transform->Rotation.Y(static_cast<float>(data["rotation"]["y"]));
+    transform->Rotation.Z(static_cast<float>(data["rotation"]["z"]));
+    transform->Scale.X(static_cast<float>(data["scale"]["x"]));
+    transform->Scale.Y(static_cast<float>(data["scale"]["y"]));
+    transform->Scale.Z(static_cast<float>(data["scale"]["z"]));
+
+
+    return transform;
+}
+
+std::shared_ptr<CameraComponent> SceneSerializer::DeserializeCameraComponent(
+    std::shared_ptr<GameObject> gameObject, const json& cameraComponentData)
+{
+    std::string cameraType = cameraComponentData["camera"]["type"];
+
+    if (cameraType == "OrthographicCamera")
+    {
+        std::shared_ptr<OrthographicCamera> orthoCamera = DeserializeOrthographicCamera(cameraComponentData["camera"]);
+        if (orthoCamera)
+        {
+            std::shared_ptr<CameraComponent> cameraComponent = std::make_shared<CameraComponent>(gameObject);
+            cameraComponent->SetCamera(orthoCamera);
+            return cameraComponent;
+        }
+    }
+    else if (cameraType == "PerspectiveCamera")
+    {
+        std::shared_ptr<PerspectiveCamera> perspCamera = DeserializePerspectiveCamera(cameraComponentData["camera"]);
+        if (perspCamera)
+        {
+            std::shared_ptr<CameraComponent> cameraComponent = std::make_shared<CameraComponent>(gameObject);
+            cameraComponent->SetCamera(perspCamera);
+            return cameraComponent;
+        }
+    }
+
+    return nullptr;
+}
+
+std::shared_ptr<OrthographicCamera> SceneSerializer::DeserializeOrthographicCamera(const nlohmann::json& data)
+{
+    float width = data["width"];
+    float height = data["height"];
+    float nearZ = data["near"];
+    float farZ = data["far"];
+
+    std::shared_ptr<OrthographicCamera> orthoCamera =
+        std::make_shared<OrthographicCamera>(width, height, nearZ, farZ);
+
+    return orthoCamera;
+}
+
+std::shared_ptr<PerspectiveCamera> SceneSerializer::DeserializePerspectiveCamera(const nlohmann::json& data)
+{
+    float width = data["width"];
+    float height = data["height"];
+    float nearZ = data["near"];
+    float farZ = data["far"];
+    float fov = data["fov"];
+
+    std::shared_ptr<PerspectiveCamera> perspCamera =
+        std::make_shared<PerspectiveCamera>(width, height, nearZ, farZ, fov);
+
+    return perspCamera;
 }

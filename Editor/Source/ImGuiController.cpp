@@ -67,6 +67,10 @@ void ImGuiController::DrawMenu()
 			{
 				SceneSerializer::Serialize();
 			}
+			if(ImGui::MenuItem("Load"))
+			{
+				auto scene = SceneSerializer::Deserialize();
+			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Windows"))

@@ -9,6 +9,11 @@ OrthographicCamera::OrthographicCamera(std::shared_ptr<Transform3D> transform, f
                                                      height(height), nearZ(nearZ), farZ(farZ)
 {
 }
+OrthographicCamera::OrthographicCamera(float width, float height, float nearZ,
+                                       float farZ) : width(width),
+                                                     height(height), nearZ(nearZ), farZ(farZ)
+{
+}
 
 DirectX::XMMATRIX OrthographicCamera::GetProjectionMatrix()
 {

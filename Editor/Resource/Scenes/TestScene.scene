@@ -1,29 +1,6 @@
 {
     "objects": [
         [
-            "Camera",
-            {
-                "name": "Camera",
-                "transform": {
-                    "position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": -12.0
-                    },
-                    "rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            }
-        ],
-        [
             "TestShape",
             {
                 "name": "TestShape",
@@ -34,32 +11,9 @@
                         "z": 2.0
                     },
                     "rotation": {
-                        "x": 340.0,
-                        "y": 91.0,
-                        "z": 44.0
-                    },
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            }
-        ],
-        [
-            "Yellow",
-            {
-                "name": "Yellow",
-                "transform": {
-                    "position": {
-                        "x": -3.5,
-                        "y": 1.5,
-                        "z": 2.0
-                    },
-                    "rotation": {
-                        "x": 22.0,
-                        "y": 78.0,
-                        "z": 78.0
+                        "x": 39.0,
+                        "y": 177.0,
+                        "z": 241.0
                     },
                     "scale": {
                         "x": 1.0,
@@ -103,32 +57,9 @@
                         "z": 2.0
                     },
                     "rotation": {
-                        "x": 11.0,
-                        "y": 56.0,
-                        "z": 45.0
-                    },
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            }
-        ],
-        [
-            "Magenta",
-            {
-                "name": "Magenta",
-                "transform": {
-                    "position": {
-                        "x": -2.0,
-                        "y": 0.5,
-                        "z": 2.0
-                    },
-                    "rotation": {
-                        "x": 338.0,
-                        "y": 110.0,
-                        "z": 211.0
+                        "x": 210.0,
+                        "y": 144.0,
+                        "z": 123.0
                     },
                     "scale": {
                         "x": 1.0,
@@ -149,9 +80,9 @@
                         "z": 2.0
                     },
                     "rotation": {
-                        "x": 279.0,
-                        "y": 277.0,
-                        "z": 342.0
+                        "x": 66.0,
+                        "y": 112.0,
+                        "z": 295.0
                     },
                     "scale": {
                         "x": 1.0,
@@ -172,9 +103,9 @@
                         "z": 2.0
                     },
                     "rotation": {
-                        "x": 253.0,
-                        "y": 262.0,
-                        "z": 233.0
+                        "x": 73.0,
+                        "y": 103.0,
+                        "z": 270.0
                     },
                     "scale": {
                         "x": 1.0,
@@ -185,14 +116,24 @@
             }
         ],
         [
-            "New GameObject",
+            "Camera",
             {
-                "name": "New GameObject",
+                "cameraComponent": {
+                    "camera": {
+                        "far": 200.0,
+                        "fov": 0.7853981852531433,
+                        "height": 1018.0,
+                        "near": 0.10000000149011612,
+                        "type": "PerspectiveCamera",
+                        "width": 1155.0
+                    }
+                },
+                "name": "Camera",
                 "transform": {
                     "position": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 0.0
+                        "z": -12.0
                     },
                     "rotation": {
                         "x": 0.0,
@@ -208,19 +149,42 @@
             }
         ],
         [
-            "New GameObject",
+            "Magenta",
             {
-                "name": "New GameObject",
+                "name": "Magenta",
                 "transform": {
                     "position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "x": -2.0,
+                        "y": 0.5,
+                        "z": 2.0
                     },
                     "rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "x": 161.0,
+                        "y": 299.0,
+                        "z": 37.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Yellow",
+            {
+                "name": "Yellow",
+                "transform": {
+                    "position": {
+                        "x": -3.5,
+                        "y": 1.5,
+                        "z": 2.0
+                    },
+                    "rotation": {
+                        "x": 195.0,
+                        "y": 38.0,
+                        "z": 33.0
                     },
                     "scale": {
                         "x": 1.0,

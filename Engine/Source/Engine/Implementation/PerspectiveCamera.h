@@ -12,15 +12,17 @@ public:
 	PerspectiveCamera(std::shared_ptr<Transform3D> transform, float width, float height, float near = PERS_DEFAULT_NEAR,
 		float far = PERS_DEFAULT_FAR,
 		float FOV = DEFAULT_FOV);
+	PerspectiveCamera(float width, float height, float near, float far, float FOV);
 	DirectX::XMMATRIX GetProjectionMatrix() override;
 	DirectX::XMMATRIX GetViewMatrix() override;
 	DirectX::XMMATRIX GetViewProjectionMatrix() override;
+	void SetTransform(std::shared_ptr<Transform3D> transform) override {this->transform= transform;}
+
 	void SetHeight(float height) override;
 	void SetWidth(float width) override;
 	void SetNear(float near = PERS_DEFAULT_NEAR);
 	void SetFar(float far = PERS_DEFAULT_FAR);
 	void SetFOV(float fov = DEFAULT_FOV);
-
 	float GetNear() const;
 	float GetFar() const;
 	float GetFOV() const;
@@ -43,5 +45,5 @@ protected:
 	float height;
 	float FOV;
 
-	std::shared_ptr<Transform3D> transform;
+	std::shared_ptr<Transform3D> transform={};
 };
