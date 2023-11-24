@@ -7,10 +7,10 @@
 
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
+#include "SceneSerializer.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 #include "Windows/Hierarchy.h"
 #include "Windows/ImGuiFPSCounter.h"
-#include "Windows/Hierarchy.h"
 #include "Windows/Inspector.h"
 #include "Windows/MeshImporterWindow.h"
 
@@ -63,6 +63,10 @@ void ImGuiController::DrawMenu()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
+			if(ImGui::MenuItem("Save"))
+			{
+				SceneSerializer::Serialize();
+			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Windows"))

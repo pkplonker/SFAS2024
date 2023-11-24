@@ -5,6 +5,7 @@
 #include "Engine/ResourceManager.h"
 #include "ImGuiController.h"
 #include "MeshImporter.h"
+#include "SceneSerializer.h"
 #include "Engine/MeshSerializer.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 
@@ -40,7 +41,7 @@ bool Editor::Load()
 {
 	game->Load();
 	imguiController = std::make_unique<ImGuiController>(dx11Graphics, game);
-
+	sceneSerializer = std::make_unique<SceneSerializer>(game->GetScene());
 	dx11Graphics->SetRenderToTexture(true, 1, 1);
 	Mesh* mesh = MeshImporter::LoadMesh("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/testshape.fbx");
 	MeshSerializer::Serialize(mesh,"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/testshape.smesh");
