@@ -19,11 +19,11 @@ void Hierarchy::Draw()
     ImGui::Begin(HIERARCHY.c_str());
     if (auto sharedScene = scene.lock())
     {
-        if (ImGui::IsMouseReleased(ImGuiMouseButton_Right))
+        if (ImGui::IsMouseReleased(ImGuiMouseButton_Right) && ImGui::IsWindowHovered(ImGuiHoveredFlags_None))
         {
             ImGui::OpenPopup("ContextMenuWindow");
         }
-        if (ImGui::BeginPopup("ContextMenuWindow"))
+        if ( ImGui::BeginPopup("ContextMenuWindow"))
         {
             if (ImGui::BeginMenu("Add"))
             {
