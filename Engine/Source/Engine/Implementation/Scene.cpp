@@ -5,22 +5,16 @@
 #include "SpriteRenderable.h"
 #include "Engine/Implementation/Debug.h"
 #include "Engine/ICamera.h"
-class SpriteRenderable;
-const std::string SCENE = "Scene Hierarchy";
-const std::string INSPECTOR = "Inspector";
-const std::string CAMERA = "Camera";
 
-Scene::Scene(IGraphics* graphics, ImGuiController* ImGui)
+class SpriteRenderable;
+
+Scene::Scene(IGraphics* graphics)
 {
 	objects = std::make_unique<std::set<std::shared_ptr<
 		GameObject>>>();
 	renderables = std::make_unique<std::set<std::shared_ptr<
 		IRenderable>>>();
-	this->ImGui = ImGui;
 	this->graphics = graphics;
-	//ImGui->RegisterWindow(this, SCENE);
-	//ImGui->RegisterWindow(this, INSPECTOR);
-	//ImGui->RegisterWindow(this, CAMERA);
 }
 
 void Scene::AddObject(std::shared_ptr<GameObject> object)

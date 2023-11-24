@@ -3,7 +3,7 @@
 
 struct Transform3D;
 constexpr  float PERS_DEFAULT_NEAR = 0.1f;
-constexpr float PERS_DEFAULT_FAR = 1000.0f;
+constexpr float PERS_DEFAULT_FAR = 200.0f;
 constexpr float DEFAULT_FOV = DirectX::XM_PIDIV4;
 
 class PerspectiveCamera : public ICamera

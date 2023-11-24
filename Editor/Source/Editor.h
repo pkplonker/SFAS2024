@@ -7,6 +7,7 @@
 #include "Engine/IApplication.h"
 #include "Engine/Implementation/Scene.h"
 
+class SceneSerializer;
 class DirectX11Graphics;
 class ResourceManager;
 class GameObject;
@@ -39,4 +40,5 @@ private:
 	HWND hwnd;
 	ImVec2 gameViewportSize;
 	std::unique_ptr<ImGuiController> imguiController;
+	std::unique_ptr<SceneSerializer> sceneSerializer;
 };

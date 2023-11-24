@@ -5,6 +5,7 @@
 #include "Engine/IInput.h"
 #include <ctime>
 
+#include "Engine/MeshSerializer.h"
 #include "Engine/Implementation/Debug.h"
 #include "Engine/Implementation/GameObject.h"
 #include "Engine/Implementation/GameObjectFactory.h"
@@ -40,7 +41,7 @@ bool Game::IsValid()
 
 bool Game::Load()
 {
-	scene = std::make_shared<Scene>(Graphics, ImGui);
+	scene = std::make_shared<Scene>(Graphics);
 	resourceManager = std::make_unique<ResourceManager>(Graphics);;
 
 	//
@@ -113,13 +114,24 @@ bool Game::Load()
 			L"Resource/Textures/Cat.dds",
 			L"Resource/Shaders/UnlitColor6.fx")))
 		.Build();
-	GameObjectFactory(scene, "Cyan")
+	auto mesh = MeshSerializer::Deserialize("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh");
+	GameObjectFactory(scene, "TestCube")
 		.AddPosition(Vec3(3.5, 1.5f, 2.0f))
 		.AddRandomRotation()
-		.AddScale(Vec3(1, 1, 1))
+		.AddScale(Vec3(1))
 		.AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
 			L"Resource/Textures/Cat.dds",
-			L"Resource/Shaders/UnlitColor7.fx")))
+			L"Resource/Shaders/UnlitColorMesh.fx"),mesh))
+		.Build();
+
+	auto mesh2 = MeshSerializer::Deserialize("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/testshape.smesh");
+	GameObjectFactory(scene, "TestShape")
+		.AddPosition(Vec3(2.5, 2.5f, 2.0f))
+		.AddRandomRotation()
+		.AddScale(Vec3(1))
+		.AddMeshRenderable(Graphics->CreateMeshRenderable(resourceManager->GetShader(
+			L"Resource/Textures/Cat.dds",
+			L"Resource/Shaders/UnlitColorMesh.fx"),mesh2))
 		.Build();
 	GameObjectFactory(scene, "Ground")
 		.AddPosition(Vec3(0, -2.6f, 0.0f))

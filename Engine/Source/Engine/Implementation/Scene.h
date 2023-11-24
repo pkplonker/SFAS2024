@@ -10,7 +10,7 @@ class ImGuiController;
 class Scene : public IUpdateable
 {
 public:
-	Scene(IGraphics* graphics, ImGuiController* ImGui);
+	Scene(IGraphics* graphics);
 	void AddObject(std::shared_ptr<GameObject> object);
 	void RemoveObject(std::shared_ptr<GameObject> object);
 	void AddRenderable(std::shared_ptr<IRenderable> object) const;
@@ -30,6 +30,5 @@ private:
 		IRenderable>>>();
 	IGraphics* graphics;
 	std::shared_ptr<ICamera> camera;
-	ImGuiController* ImGui;
 	std::weak_ptr<GameObject> selectedObject;
 };
