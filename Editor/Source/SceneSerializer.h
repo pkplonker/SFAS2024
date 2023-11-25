@@ -20,7 +20,7 @@ public:
     static nlohmann::json SerializeOrthographicCamera(std::shared_ptr<OrthographicCamera> camera);
     static nlohmann::json SerializePerspectiveCamera(std::shared_ptr<PerspectiveCamera> camera);
 
-    static std::shared_ptr<Scene> Deserialize();
+    static std::shared_ptr<Scene> Deserialize(std::string path);
 
     static std::shared_ptr<GameObject> DeserializeGameObject(const nlohmann::json& data);
     static std::shared_ptr<Transform3D> DeserializeTransform(const nlohmann::json& data);
@@ -28,7 +28,7 @@ public:
                                                                        const nlohmann::json& data);
     static std::shared_ptr<OrthographicCamera> DeserializeOrthographicCamera(const nlohmann::json& data);
     static std::shared_ptr<PerspectiveCamera> DeserializePerspectiveCamera(const nlohmann::json& data);
-    static bool Serialize();
+    static bool Serialize(std::string path = "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/TestScene.scene");
 
 private:
     inline static std::weak_ptr<Scene> scene;

@@ -34,9 +34,8 @@ void SceneSerializer::WriteToFile(json sceneData, std::string path)
     }
 }
 
-bool SceneSerializer::Serialize()
+bool SceneSerializer::Serialize(std::string path)
 {
-    std::string path = "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/TestScene.scene";
     json sceneData;
     json objectsData;
     Debug("Saving")
@@ -135,9 +134,8 @@ nlohmann::json SceneSerializer::SerializePerspectiveCamera(std::shared_ptr<Persp
     return serializedData;
 }
 
-std::shared_ptr<Scene> SceneSerializer::Deserialize()
+std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
 {
-    std::string path = "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/TestScene.scene";
     json sceneData;
 
     std::ifstream inputFile(path);
