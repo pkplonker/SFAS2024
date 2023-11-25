@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "IMeshRenderable.h"
+#include "Engine/IMeshRenderable.h"
 #include "Engine/Implementation/GameObject.h"
 #include "Engine/IComponent.h"
 #include "Engine/IRenderableComponent.h"

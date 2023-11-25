@@ -351,6 +351,9 @@
   <ItemGroup>
     <ClInclude Include="Source\Engine\Math\Vector4.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Source\Engine\Helpers" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="packages\Microsoft.XAudio2.Redist.1.2.11\build\native\Microsoft.XAudio2.Redist.targets" Condition="Exists('packages\Microsoft.XAudio2.Redist.1.2.11\build\native\Microsoft.XAudio2.Redist.targets')" />

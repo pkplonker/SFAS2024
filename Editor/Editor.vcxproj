@@ -175,6 +175,7 @@
     <ClCompile Include="Source\Editor.cpp" />
     <ClCompile Include="Source\Windows\ImGuiFPSCounter.cpp" />
     <ClCompile Include="Source\Windows\MeshImporterWindow.cpp" />
+    <ClCompile Include="Source\Windows\MeshComponentDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Packages\assimp\aabb.h" />
@@ -317,6 +318,7 @@
     <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xdsp.h" />
     <ClInclude Include="Source\Editor.h" />
     <ClInclude Include="Source\Windows\MeshImporterWindow.h" />
+    <ClInclude Include="Source\Windows\MeshComponentDrawer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
