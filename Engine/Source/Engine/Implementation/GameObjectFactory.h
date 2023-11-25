@@ -1,16 +1,15 @@
 ﻿#pragma once
 #include <memory>
+#include <string>
 
 #include "GameObject.h"
+#include "Engine/Math/Vector3.h"
 #include "Engine/IComponent.h"
-#include "Engine/IRenderable.h"
-#include "OrthographicCamera.h"
-#include "Engine/Implementation/CameraComponent.h"
-#include "Engine/Implementation/MeshRenderable.h"
-#include "PerspectiveCamera.h"
-#include "Engine/Implementation/Scene.h"
-#include "Engine/Implementation/SpriteRenderable.h"
 
+
+class IRenderable;
+class IMaterial;
+class Scene;
 class CameraComponent;
 class GameObject;
 
@@ -40,11 +39,7 @@ public:
 
     GameObjectFactory& AddRotation(Vec3 vec);
 
-    GameObjectFactory& AddScale(Vec3 vec)
-    {
-        gameObject->Transform()->Scale = vec;
-        return *this;
-    }
+    GameObjectFactory& AddScale(Vec3 vec);
 
     GameObjectFactory& AddName(std::string name);
 
@@ -53,9 +48,9 @@ public:
     // TODO: change to variadic arguments if possible?
 
 #pragma region Component specific
-    GameObjectFactory& AddSpriteRenderable(std::shared_ptr<IRenderable> renderable, IShader* shader);
+    GameObjectFactory& AddSpriteRenderable(std::shared_ptr<IMaterial> material, std::shared_ptr<IRenderable> renderable);
 
-    GameObjectFactory& AddMeshRenderable(std::shared_ptr<IRenderable> renderable, IShader* shader);
+    GameObjectFactory& AddMeshRenderable(std::shared_ptr<IMaterial> material,std::shared_ptr<IRenderable> renderable);
 
     GameObjectFactory& AddRandomRotation();
 

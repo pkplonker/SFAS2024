@@ -1,20 +1,10 @@
 #pragma once
-
 #include <memory>
-
 #include "Engine/IApplication.h"
-#include "Engine/Implementation/Scene.h"
+#include "Engine/ResourceManager.h"
 
-class ResourceManager;
 class GameObject;
-class IGraphics;
-class ITexture;
-class IShader;
-class IRenderable;
-
-enum RingLayer { Outer, Middle, Inner, NumRings };
-enum GameState { Setup, Playing, Test, NumModes };
-static const unsigned int NumberOfRings = static_cast<int>(NumRings);
+class Scene;
 
 class Game : public IApplication
 {
@@ -31,17 +21,7 @@ public:
 	std::weak_ptr<Scene> GetScene();
 
 private:
-
-	void SetupEachRing();
-	void UpdateRingSelection();
-	void UpdateSelectedRingRotation();
-	void UpdateRingTestSelection();
-	void TestRingSolution();
-
-	std::shared_ptr<GameObject> Rings[NumberOfRings];
-	std::shared_ptr<GameObject> Arrow;
-	RingLayer SelectedRing;
-	GameState State;
+	
 	std::shared_ptr<Scene> scene;
 	std::unique_ptr<ResourceManager> resourceManager;
 	std::shared_ptr<GameObject> camera;

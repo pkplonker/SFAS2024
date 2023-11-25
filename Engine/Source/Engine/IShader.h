@@ -1,20 +1,15 @@
 
 #pragma once
 
-class ITexture;
-
 class IShader
 {
 public:
+	virtual ~IShader() = default;
 
-	IShader(ITexture* TextureIn);
+	IShader() = default;
 	virtual void Update() = 0;
 
-	const ITexture* GetTexture() const;
-
 protected: 
-
-	ITexture* Texture;
-
+	
 };
 

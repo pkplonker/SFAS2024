@@ -201,7 +201,9 @@
     <ClInclude Include="packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xaudio2fxRedist.h" />
     <ClInclude Include="packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xaudio2Redist.h" />
     <ClInclude Include="packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xdsp.h" />
+    <ClInclude Include="Source\Engine\IMaterial.h" />
     <ClInclude Include="Source\Engine\Implementation\Debug.h" />
+    <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Material.h" />
     <ClInclude Include="Source\Engine\Implementation\GameObject.h" />
     <ClInclude Include="Source\Engine\Implementation\GameObjectFactory.h" />
     <ClInclude Include="Source\Engine\IApplication.h" />
@@ -239,7 +241,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Source\Engine\IMaterial.cpp" />
     <ClCompile Include="Source\Engine\Implementation\Debug.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Material.cpp" />
     <ClCompile Include="Source\Engine\Implementation\GameObject.cpp" />
     <ClCompile Include="Source\Engine\Implementation\GameObjectFactory.cpp" />
     <ClCompile Include="Source\Engine\IApplication.cpp" />
@@ -261,8 +265,6 @@
     <ClCompile Include="Source\Engine\Implementation\XInput\DirectXInput.cpp" />
     <ClCompile Include="Source\Engine\IRenderable.cpp" />
     <ClCompile Include="Source\Engine\IRenderableComponent.cpp" />
-    <ClCompile Include="Source\Engine\IShader.cpp" />
-    <ClCompile Include="Source\Engine\ITexture.cpp" />
     <ClCompile Include="Source\Engine\Implementation\OrthographicCamera.cpp" />
     <ClCompile Include="Source\Engine\Implementation\PerspectiveCamera.cpp" />
     <ClCompile Include="Source\Engine\MeshSerializer.cpp">
@@ -339,6 +341,7 @@
       <AdditionalIncludeDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\packages\directxtk_desktop_2019.2023.10.31.1\build\native\..\..\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\directxtk_desktop_2019.2023.9.6.1\build\native\..\..\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\\Star\Source\Game;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\\Engine\Source;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\Packages\ImGui\backends;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\Packages\ImGui;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\Packages\assimp;;S:\Users\pkplo\Downloads\vcpkg\installed\x64-windows\include</AdditionalIncludeDirectories>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Source\Engine\ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages\directxtk_desktop_2019.2023.9.6.1\include\SimpleMath.inl" />

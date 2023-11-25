@@ -1,5 +1,12 @@
 ﻿#include "GameObjectFactory.h"
-
+#include "IMaterial.h"
+#include "MeshRenderable.h"
+#include "OrthographicCamera.h"
+#include "PerspectiveCamera.h"
+#include "SpriteRenderable.h"
+#include "Engine/IRenderable.h"
+#include "Engine/Implementation/CameraComponent.h"
+#include "Engine/Implementation/Scene.h"
 GameObjectFactory::GameObjectFactory(std::shared_ptr<Scene> scene) : scene(scene)
 {
 	gameObject = std::make_shared<GameObject>();
@@ -33,6 +40,12 @@ GameObjectFactory& GameObjectFactory::AddRotation(Vec3 vec)
 	return *this;
 }
 
+GameObjectFactory& GameObjectFactory::AddScale(Vec3 vec)
+{
+	gameObject->Transform()->Scale = vec;
+	return *this;
+}
+
 GameObjectFactory& GameObjectFactory::AddName(std::string name)
 {
 	gameObject->Name = name;
@@ -45,9 +58,9 @@ std::shared_ptr<GameObject> GameObjectFactory::Build()
 	return gameObject;
 }
 
-GameObjectFactory& GameObjectFactory::AddSpriteRenderable(std::shared_ptr<IRenderable> renderable, IShader* shader)
+GameObjectFactory& GameObjectFactory::AddSpriteRenderable(std::shared_ptr<IMaterial> material ,std::shared_ptr<IRenderable> renderable)
 {
-	auto component = std::make_shared<SpriteRenderable>(gameObject, renderable,shader);
+	auto component = std::make_shared<SpriteRenderable>(gameObject, renderable,material);
 	if (component != nullptr)
 	{
 		gameObject->AddComponent(std::move(component));
@@ -56,10 +69,10 @@ GameObjectFactory& GameObjectFactory::AddSpriteRenderable(std::shared_ptr<IRende
 	return *this;
 }
 
-GameObjectFactory& GameObjectFactory::AddMeshRenderable(std::shared_ptr<IRenderable> renderable, IShader* shader)
+GameObjectFactory& GameObjectFactory::AddMeshRenderable(std::shared_ptr<IMaterial> material ,std::shared_ptr<IRenderable> renderable)
 {
 	
-	auto component = std::make_shared<MeshRenderable>(gameObject, renderable, shader);
+	auto component = std::make_shared<MeshRenderable>(gameObject, renderable, material);
 	if (component != nullptr)
 	{
 		gameObject->AddComponent(std::move(component));
