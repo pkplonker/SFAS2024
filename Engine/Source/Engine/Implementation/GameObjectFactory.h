@@ -53,9 +53,9 @@ public:
     // TODO: change to variadic arguments if possible?
 
 #pragma region Component specific
-    GameObjectFactory& AddSpriteRenderable(std::shared_ptr<IRenderable> renderable);
+    GameObjectFactory& AddSpriteRenderable(std::shared_ptr<IRenderable> renderable, IShader* shader);
 
-    GameObjectFactory& AddMeshRenderable(std::shared_ptr<IRenderable> renderable);
+    GameObjectFactory& AddMeshRenderable(std::shared_ptr<IRenderable> renderable, IShader* shader);
 
     GameObjectFactory& AddRandomRotation();
 

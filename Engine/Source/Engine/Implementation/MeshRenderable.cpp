@@ -4,6 +4,6 @@ MeshRenderable::MeshRenderable(std::weak_ptr<GameObject> object) : IRenderableCo
 {
 }
 
-MeshRenderable::MeshRenderable(std::weak_ptr<GameObject> object, std::shared_ptr<IRenderable> renderable) : IRenderableComponent(object, renderable)
+MeshRenderable::MeshRenderable(std::weak_ptr<GameObject> object, std::shared_ptr<IRenderable> renderable, IShader* shader) : IRenderableComponent(object, renderable,shader)
 {
 }

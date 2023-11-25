@@ -45,9 +45,9 @@ std::shared_ptr<GameObject> GameObjectFactory::Build()
 	return gameObject;
 }
 
-GameObjectFactory& GameObjectFactory::AddSpriteRenderable(std::shared_ptr<IRenderable> renderable)
+GameObjectFactory& GameObjectFactory::AddSpriteRenderable(std::shared_ptr<IRenderable> renderable, IShader* shader)
 {
-	auto component = std::make_shared<SpriteRenderable>(gameObject, renderable);
+	auto component = std::make_shared<SpriteRenderable>(gameObject, renderable,shader);
 	if (component != nullptr)
 	{
 		gameObject->AddComponent(std::move(component));
@@ -56,9 +56,10 @@ GameObjectFactory& GameObjectFactory::AddSpriteRenderable(std::shared_ptr<IRende
 	return *this;
 }
 
-GameObjectFactory& GameObjectFactory::AddMeshRenderable(std::shared_ptr<IRenderable> renderable)
+GameObjectFactory& GameObjectFactory::AddMeshRenderable(std::shared_ptr<IRenderable> renderable, IShader* shader)
 {
-	auto component = std::make_shared<MeshRenderable>(gameObject, renderable);
+	
+	auto component = std::make_shared<MeshRenderable>(gameObject, renderable, shader);
 	if (component != nullptr)
 	{
 		gameObject->AddComponent(std::move(component));

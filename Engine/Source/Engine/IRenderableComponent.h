@@ -7,7 +7,7 @@ class IRenderableComponent : public IComponent
 public:
 	IRenderableComponent(std::weak_ptr<GameObject> object);
 
-	IRenderableComponent(std::weak_ptr<GameObject> object, std::shared_ptr<IRenderable> renderable);
+	IRenderableComponent(std::weak_ptr<GameObject> object, std::shared_ptr<IRenderable> renderable, IShader* shader);
 
 	void SetRenderable(std::shared_ptr<IRenderable> renderable);
 
@@ -16,6 +16,13 @@ public:
 		return renderable;
 	}
 
+	virtual IShader* GetShader()
+	{
+		return shader;
+	}
+
 protected:
 	std::shared_ptr<IRenderable> renderable = nullptr;
+	IShader* shader = shader;
+
 };

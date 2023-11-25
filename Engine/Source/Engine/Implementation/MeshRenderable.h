@@ -9,5 +9,5 @@ class MeshRenderable : public IRenderableComponent
 public:
 	MeshRenderable(std::weak_ptr<GameObject> object);
 
-	MeshRenderable(std::weak_ptr<GameObject> object, std::shared_ptr<IRenderable> renderable);
+	MeshRenderable(std::weak_ptr<GameObject> object, std::shared_ptr<IRenderable> renderable, IShader* shader);
 };
