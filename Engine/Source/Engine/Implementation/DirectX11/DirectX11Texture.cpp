@@ -1,6 +1,6 @@
 #include "DirectX11Texture.h"
 
-DirectX11Texture::DirectX11Texture(ID3D11DeviceContext* ContextIn, ID3D11ShaderResourceView* TextureIn, ID3D11SamplerState* SamplerIn, const D3D11_TEXTURE2D_DESC& DescriptionIn) : Context(ContextIn), Texture(TextureIn), Sampler(SamplerIn), Description(DescriptionIn)
+DirectX11Texture::DirectX11Texture(std::wstring path, ID3D11DeviceContext* ContextIn, ID3D11ShaderResourceView* TextureIn, ID3D11SamplerState* SamplerIn, const D3D11_TEXTURE2D_DESC& DescriptionIn) : ITexture(path), Context(ContextIn), Texture(TextureIn), Sampler(SamplerIn), Description(DescriptionIn)
 {
 }
 

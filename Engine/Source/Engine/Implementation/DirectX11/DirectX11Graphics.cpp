@@ -312,7 +312,7 @@ ITexture* DirectX11Graphics::CreateTexture(const wchar_t* filepath)
 
         if (SUCCEEDED(hr))
         {
-            Result = new DirectX11Texture(Context, Texture, Sampler, Description);
+            Result = new DirectX11Texture(filepath, Context, Texture, Sampler, Description);
             Textures.push_back(Result);
         }
     }
@@ -391,7 +391,7 @@ IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vs
             return nullptr;
         }
 
-        Result = new DirectX11Shader(Context, VertexShader, PixelShader, InputLayout);
+        Result = new DirectX11Shader(filepath,Context, VertexShader, PixelShader, InputLayout);
     }
     else
     {

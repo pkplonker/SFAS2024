@@ -2,7 +2,7 @@
 #include "DirectX11Texture.h"
 
 
-DirectX11Shader::DirectX11Shader(ID3D11DeviceContext* ContextIn, ID3D11VertexShader* VertexShaderIn, ID3D11PixelShader* PixelShaderIn, ID3D11InputLayout* InputLayoutIn) : Context(ContextIn), VertexShader(VertexShaderIn), PixelShader(PixelShaderIn), InputLayout(InputLayoutIn) 
+DirectX11Shader::DirectX11Shader(std::wstring path, ID3D11DeviceContext* ContextIn, ID3D11VertexShader* VertexShaderIn, ID3D11PixelShader* PixelShaderIn, ID3D11InputLayout* InputLayoutIn) : IShader(path), Context(ContextIn), VertexShader(VertexShaderIn), PixelShader(PixelShaderIn), InputLayout(InputLayoutIn) 
 {
 }
 
