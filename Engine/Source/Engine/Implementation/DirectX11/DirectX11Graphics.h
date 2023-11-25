@@ -35,9 +35,8 @@ public:
 	ITexture* CreateTexture(const wchar_t* filepath) override;
 	IShader* CreateShader(const wchar_t* filepath, const char* vsentry, const char* vsshader, const char* psentry, const char* psshader) override;
 	std::shared_ptr<IRenderable> CreateBillboard(IMaterial* material) override;
-	std::shared_ptr<IRenderable> CreateMeshRenderable(IMaterial* material) override;
 	void AddRenderable(IMaterial* material, std::shared_ptr<IRenderable> Result);
-	std::shared_ptr<IRenderable> CreateMeshRenderable(IMaterial* material, Mesh* mesh) override;
+	std::shared_ptr<IMeshRenderable> CreateMeshRenderable(IMaterial* material, Mesh* mesh) override;
 	void SetActiveCamera(std::shared_ptr<ICamera> camera) override;
 	ID3D11Device* GetDevice() const { return Device; }
 	HWND GetHWND() const { return hwnd; }

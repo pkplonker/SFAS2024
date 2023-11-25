@@ -23,7 +23,7 @@ Mesh* MeshImporter::LoadMesh(std::string path)
         return nullptr;
     }
 
-    Mesh* mesh = new Mesh();
+    Mesh* mesh = new Mesh(path);
 
     ProcessNode(scene->mRootNode, scene, mesh);
 

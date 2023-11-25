@@ -4,6 +4,7 @@
 #include <list>
 #include <memory>
 
+class IMeshRenderable;
 class MeshComponent;
 class Mesh;
 class ICamera;
@@ -25,8 +26,7 @@ public:
     virtual IShader* CreateShader(const wchar_t* filepath, const char* vsentry, const char* vsshader,
                                   const char* psentry, const char* psshader) = 0;
     virtual std::shared_ptr<IRenderable> CreateBillboard(IMaterial* material) = 0;
-    virtual std::shared_ptr<IRenderable> CreateMeshRenderable(IMaterial* material) = 0;
-    virtual std::shared_ptr<IRenderable> CreateMeshRenderable(IMaterial* material, Mesh* mesh) =0;
+    virtual std::shared_ptr<IMeshRenderable> CreateMeshRenderable(IMaterial* material, Mesh* mesh) =0;
     virtual void SetActiveCamera(std::shared_ptr<ICamera> camera) = 0;
     virtual int GetWidth() = 0;
     virtual int GetHeight() = 0;

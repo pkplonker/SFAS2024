@@ -202,6 +202,7 @@
     <ClInclude Include="packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xaudio2Redist.h" />
     <ClInclude Include="packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xdsp.h" />
     <ClInclude Include="Source\Engine\IMaterial.h" />
+    <ClInclude Include="Source\Engine\IMeshRenderable.h" />
     <ClInclude Include="Source\Engine\Implementation\Debug.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Material.h" />
     <ClInclude Include="Source\Engine\Implementation\GameObject.h" />
@@ -242,6 +243,7 @@
   <ItemGroup>
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Source\Engine\IMaterial.cpp" />
+    <ClCompile Include="Source\Engine\IMeshRenderable.cpp" />
     <ClCompile Include="Source\Engine\Implementation\Debug.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Material.cpp" />
     <ClCompile Include="Source\Engine\Implementation\GameObject.cpp" />

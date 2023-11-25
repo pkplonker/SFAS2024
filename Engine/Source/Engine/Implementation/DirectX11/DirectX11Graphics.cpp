@@ -465,90 +465,6 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IMaterial* mater
     return Result;
 }
 
-std::shared_ptr<IRenderable> DirectX11Graphics::CreateMeshRenderable(IMaterial* material)
-{
-    std::shared_ptr<IRenderable> Result = nullptr;
-
-    if (IsValid())
-    {
-        float size = .5f;
-
-
-        float vertex_data_array[] = {
-            -size, -size, -size, 0.0f, 0.0f,
-            -size, size, -size, 0.0f, 0.0f,
-            size, size, -size, 0.0f, 0.0f,
-            size, -size, -size, 0.0f, 0.0f,
-
-            -size, -size, size, 0.0f, 0.0f,
-            -size, size, size, 0.0f, 0.0f,
-            size, size, size, 0.0f, 0.0f,
-            +size, -size, size, 0.0f, 0.0f,
-        };
-
-        ID3D11Buffer* VertexBuffer;
-        unsigned int vertexStride = 5 * sizeof(float);
-        unsigned int vertexOffset = 0;
-        unsigned int vertexCount = 8;
-
-        D3D11_BUFFER_DESC vertexDescription;
-        ZeroMemory(&vertexDescription, sizeof(vertexDescription));
-        vertexDescription.Usage = D3D11_USAGE_DEFAULT;
-        vertexDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-        vertexDescription.ByteWidth = sizeof(vertex_data_array);
-
-        D3D11_SUBRESOURCE_DATA resourceData;
-        ZeroMemory(&resourceData, sizeof(resourceData));
-        resourceData.pSysMem = vertex_data_array;
-
-        unsigned int indices[] =
-        {
-            // Front face
-            0, 1, 2,
-            0, 2, 3,
-            // Back face
-            4, 6, 5,
-            4, 7, 6,
-            // Left face
-            4, 5, 1,
-            4, 1, 0,
-            // Right face
-            3, 2, 6,
-            3, 6, 7,
-            // Top face
-            1, 5, 6,
-            1, 6, 2,
-            // Bottom face
-            4, 0, 3,
-            4, 3, 7,
-        };
-        unsigned int indexCount = 36;
-
-
-        ID3D11Buffer* IndexBuffer;
-        D3D11_BUFFER_DESC indexDescription;
-        ZeroMemory(&indexDescription, sizeof(indexDescription));
-        indexDescription.Usage = D3D11_USAGE_DEFAULT;
-        indexDescription.BindFlags = D3D11_BIND_INDEX_BUFFER;
-        indexDescription.ByteWidth = sizeof(indices);
-
-        D3D11_SUBRESOURCE_DATA indexResourceData;
-        ZeroMemory(&indexResourceData, sizeof(indexResourceData));
-        indexResourceData.pSysMem = indices;
-
-        if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) && SUCCEEDED(
-            Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
-        {
-            Result = std::make_shared<DirectX11Mesh>(Context, VertexBuffer, IndexBuffer, vertexStride,
-                                                     vertexOffset,
-                                                     vertexCount, indexCount);
-            AddRenderable(material, Result);
-        }
-    }
-
-    return Result;
-}
-
 void DirectX11Graphics::AddRenderable(IMaterial* material, std::shared_ptr<IRenderable> Result)
 {
     if (!Renderables.contains(material))
@@ -558,9 +474,9 @@ void DirectX11Graphics::AddRenderable(IMaterial* material, std::shared_ptr<IRend
     Renderables[material].push_back(Result);
 }
 
-std::shared_ptr<IRenderable> DirectX11Graphics::CreateMeshRenderable(IMaterial* material, Mesh* mesh)
+std::shared_ptr<IMeshRenderable> DirectX11Graphics::CreateMeshRenderable(IMaterial* material, Mesh* mesh)
 {
-    std::shared_ptr<IRenderable> Result = nullptr;
+    std::shared_ptr<IMeshRenderable> Result = nullptr;
 
     if (IsValid() && mesh)
     {
@@ -595,7 +511,7 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateMeshRenderable(IMaterial* 
         if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) &&
             SUCCEEDED(Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
         {
-            Result = std::make_shared<DirectX11Mesh>(Context, VertexBuffer, IndexBuffer, vertexStride,
+            Result = std::make_shared<DirectX11Mesh>(mesh->GetPath(), Context, VertexBuffer, IndexBuffer, vertexStride,
                                                      vertexOffset, vertexCount, indexCount);
             AddRenderable(material, Result);
         }

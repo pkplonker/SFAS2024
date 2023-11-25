@@ -7,6 +7,7 @@
 class IRenderable
 {
 public:
+	virtual ~IRenderable() = default;
 	virtual void Update() = 0;
 	virtual std::weak_ptr<Transform3D> GetTransform();
 
