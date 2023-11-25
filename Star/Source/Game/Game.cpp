@@ -38,6 +38,7 @@ bool Game::Load()
 {
     scene = std::make_shared<Scene>(Graphics);
     resourceManager = std::make_unique<ResourceManager>(Graphics);;
+    GameObjectFactory::Init(Graphics, resourceManager.get());
 
     camera = GameObjectFactory(scene, "Camera")
              .AddPerspectiveCamera()
@@ -46,42 +47,42 @@ bool Game::Load()
     scene->SetActiveCamera(camera->GetComponent<CameraComponent>());
 
 
-    IMaterial* material = resourceManager->GetMaterial(L"Resource/Shaders/UnlitColor5.fx");
-    GameObjectFactory(scene, "Red")
-        .AddPosition(Vec3(0, 1.5f, 2.0f))
-        .AddRandomRotation()
-        .AddScale(Vec3(1, 1, 1))
-        .AddMeshRenderable(std::shared_ptr<IMaterial>(material), Graphics->CreateMeshRenderable(material))
-        .Build();
-
-
-    material = resourceManager->GetMaterial(L"Resource/Shaders/UnlitColorMesh.fx");
-
-    Mesh* mesh = MeshSerializer::Deserialize(
-        "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh");
-
-    GameObjectFactory(scene, "TestCube")
-        .AddPosition(Vec3(3.5, 1.5f, 2.0f))
-        .AddRandomRotation()
-        .AddScale(Vec3(1))
-        .AddMeshRenderable(std::shared_ptr<IMaterial>(material), Graphics->CreateMeshRenderable(material, mesh))
-        .Build();
-
-    auto mesh2 = MeshSerializer::Deserialize(
-        "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/testshape.smesh");
-    GameObjectFactory(scene, "TestShape")
+    GameObjectFactory(scene, "Cube")
         .AddPosition(Vec3(2.5, 2.5f, 2.0f))
         .AddRandomRotation()
         .AddScale(Vec3(1))
-        .AddMeshRenderable(std::shared_ptr<IMaterial>(material), Graphics->CreateMeshRenderable(material, mesh2))
+        .AddMeshRenderable("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh",
+                           L"Resource/Shaders/UnlitColorMesh.fx")
         .Build();
 
-    material = resourceManager->GetMaterial(L"Resource/Shaders/UnlitColor3.fx");
+    GameObjectFactory(scene, "Cube2")
+        .AddPosition(Vec3(-2.5, 2.5f, 2.0f))
+        .AddRandomRotation()
+        .AddScale(Vec3(1))
+        .AddMeshRenderable("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh",
+                           L"Resource/Shaders/UnlitColorMesh.fx")
+        .Build();
+    GameObjectFactory(scene, "Sphere")
+        .AddPosition(Vec3(-1, 3.5f, 2.0f))
+        .AddRandomRotation()
+        .AddScale(Vec3(1))
+        .AddMeshRenderable("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/sphere.smesh",
+                           L"Resource/Shaders/UnlitColorMesh.fx")
+        .Build();
+
+    GameObjectFactory(scene, "TestShape")
+        .AddPosition(Vec3(0, 2.5f, 2.0f))
+        .AddRandomRotation()
+        .AddScale(Vec3(1))
+        .AddMeshRenderable("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/testshape.smesh",
+                           L"Resource/Shaders/UnlitColor5.fx")
+        .Build();
+
     GameObjectFactory(scene, "Ground")
         .AddPosition(Vec3(0, -2.6f, 0.0f))
         .AddRotation(Vec3(45, 0, 0))
         .AddScale(Vec3(15.0f, 15.0f, .055f))
-        .AddSpriteRenderable(std::shared_ptr<IMaterial>(material), Graphics->CreateBillboard(material))
+        .AddSpriteRenderable(L"Resource/Shaders/UnlitColor3.fx")
         .Build();
 
     return true;

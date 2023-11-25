@@ -4,6 +4,7 @@
 #include <list>
 #include <memory>
 
+class MeshComponent;
 class Mesh;
 class ICamera;
 class IRenderable;

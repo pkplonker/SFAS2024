@@ -6,7 +6,8 @@
 #include "Engine/Math/Vector3.h"
 #include "Engine/IComponent.h"
 
-
+class ResourceManager;
+class IGraphics;
 class IRenderable;
 class IMaterial;
 class Scene;
@@ -48,15 +49,19 @@ public:
     // TODO: change to variadic arguments if possible?
 
 #pragma region Component specific
-    GameObjectFactory& AddSpriteRenderable(std::shared_ptr<IMaterial> material, std::shared_ptr<IRenderable> renderable);
+    GameObjectFactory& AddSpriteRenderable(std::wstring shaderPath, std::wstring texturePath
+    );
+    GameObjectFactory& AddSpriteRenderable(std::wstring shaderPath);
 
-    GameObjectFactory& AddMeshRenderable(std::shared_ptr<IMaterial> material,std::shared_ptr<IRenderable> renderable);
+    GameObjectFactory& AddMeshRenderable(std::string meshPath, std::wstring shaderPath, std::wstring texturePath);
+    GameObjectFactory& AddMeshRenderable(std::string meshPath, std::wstring shaderPath);
 
     GameObjectFactory& AddRandomRotation();
 
     GameObjectFactory& AddPerspectiveCamera();
 
     GameObjectFactory& AddOrthoCamera();
+    static void Init(IGraphics* graphics, ResourceManager* resourceManager);
 
 #pragma endregion
 
@@ -64,4 +69,6 @@ private:
     std::shared_ptr<GameObject> gameObject;
     std::shared_ptr<Scene> scene;
     inline static bool random = false;
+    inline static IGraphics* graphics = nullptr;
+    inline static ResourceManager* resourceManager = nullptr;
 };

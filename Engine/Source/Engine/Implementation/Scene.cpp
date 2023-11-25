@@ -1,7 +1,7 @@
 ﻿#include "Scene.h"
 
 #include "CameraComponent.h"
-#include "MeshRenderable.h"
+#include "MeshComponent.h"
 #include "SpriteRenderable.h"
 #include "Engine/Implementation/Debug.h"
 #include "Engine/ICamera.h"
