@@ -2,6 +2,8 @@
 #include <json.hpp>
 #include <memory>
 
+#include "Engine/Implementation/MeshComponent.h"
+
 class CameraComponent;
 class OrthographicCamera;
 class PerspectiveCamera;
@@ -12,8 +14,9 @@ class Scene;
 class SceneSerializer
 {
 public:
-    SceneSerializer(std::weak_ptr<Scene> scene);
+    SceneSerializer(std::weak_ptr<Scene> scene, IGraphics* graphics);
     static void WriteToFile(nlohmann::json sceneData, std::string path);
+    static nlohmann::json SerializeMeshComponent(const std::shared_ptr<MeshComponent>& shared);
     static nlohmann::json SerializeGameObject(const std::shared_ptr<GameObject>& object);
     static nlohmann::json SerializeTransform(std::shared_ptr<Transform3D> transform);
     static nlohmann::json SerializeCameraComponent(std::shared_ptr<CameraComponent> camera);
@@ -22,6 +25,7 @@ public:
 
     static std::shared_ptr<Scene> Deserialize(std::string path);
 
+    static void DeserializeMeshComponent(const std::shared_ptr<GameObject>& shared, const nlohmann::json& value);
     static std::shared_ptr<GameObject> DeserializeGameObject(const nlohmann::json& data);
     static std::shared_ptr<Transform3D> DeserializeTransform(const nlohmann::json& data);
     static std::shared_ptr<CameraComponent> DeserializeCameraComponent(std::shared_ptr<GameObject> gameObject,
@@ -32,4 +36,5 @@ public:
 
 private:
     inline static std::weak_ptr<Scene> scene;
+    inline static IGraphics* graphics;
 };

@@ -71,6 +71,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)Editor\packages\ImGui;$(SolutionDir)Source\;$(SolutionDir)Editor\packages\assimp</IncludePath>
+    <IntDir>$(Configuration)\Editor\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui;$(SolutionDir)Source\</IncludePath>

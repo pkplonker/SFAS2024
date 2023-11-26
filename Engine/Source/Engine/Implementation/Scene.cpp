@@ -8,17 +8,14 @@
 
 class SpriteRenderable;
 
-Scene::Scene()
-{
-    objects = std::make_unique<std::set<std::shared_ptr<
-        GameObject>>>();
-    renderables = std::make_unique<std::set<std::shared_ptr<
-        IRenderable>>>();
-}
 
-Scene::Scene(IGraphics* graphics) : Scene()
+Scene::Scene(IGraphics* graphics)
 {
     this->graphics = graphics;
+    objects = std::make_unique<std::set<std::shared_ptr<
+       GameObject>>>();
+    renderables = std::make_unique<std::set<std::shared_ptr<
+        IRenderable>>>();
 }
 
 void Scene::AddObject(std::shared_ptr<GameObject> object)

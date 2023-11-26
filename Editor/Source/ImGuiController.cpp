@@ -72,10 +72,10 @@ void ImGuiController::DrawMenu()
             }
             if (ImGui::MenuItem("Load"))
             {
-                auto path = FileDialog::OpenFileDialog("Scene Files (*.scene)\0*.scene\0");
+                auto path = FileDialog::OpenFileDialog();
                 if (path != "")
                 {
-                    auto scene = SceneSerializer::Deserialize(path);
+                   SceneSerializer::Deserialize(path);
                 }
             }
             ImGui::EndMenu();

@@ -13,7 +13,7 @@
 
 GameObjectFactory::GameObjectFactory(std::shared_ptr<Scene> scene) : scene(scene)
 {
-    if (scene == nullptr || resourceManager == nullptr || graphics == nullptr)
+    if (scene == nullptr || graphics == nullptr)
     {
         Debug("Invalid init of GameObjectResourceManager")
         return;
@@ -24,7 +24,7 @@ GameObjectFactory::GameObjectFactory(std::shared_ptr<Scene> scene) : scene(scene
 
 GameObjectFactory::GameObjectFactory(std::shared_ptr<Scene> scene, std::string name) : scene(scene)
 {
-    if (scene == nullptr || resourceManager == nullptr || graphics == nullptr)
+    if (scene == nullptr || graphics == nullptr)
     {
         Debug("Invalid init of GameObjectResourceManager")
         return;
@@ -74,7 +74,7 @@ std::shared_ptr<GameObject> GameObjectFactory::Build()
 
 GameObjectFactory& GameObjectFactory::AddSpriteRenderable(std::wstring shaderPath, std::wstring texturePath)
 {
-    auto material = resourceManager->GetMaterial(shaderPath, texturePath);
+    auto material = ResourceManager::GetMaterial(shaderPath, texturePath);
     auto component = std::make_shared<SpriteRenderable>(gameObject, graphics->CreateBillboard(material),
                                                         std::shared_ptr<IMaterial>(material));
     if (component != nullptr)
@@ -93,8 +93,8 @@ GameObjectFactory& GameObjectFactory::AddSpriteRenderable(std::wstring shaderPat
 GameObjectFactory& GameObjectFactory::AddMeshRenderable(std::string meshPath, std::wstring shaderPath,
                                                         std::wstring texturePath)
 {
-    auto material = resourceManager->GetMaterial(shaderPath, texturePath);
-    auto mesh = resourceManager->GetMesh(meshPath);
+    auto material = ResourceManager::GetMaterial(shaderPath, texturePath);
+    auto mesh = ResourceManager::GetMesh(meshPath);
 
     auto component = std::make_shared<MeshComponent>(gameObject, graphics->CreateMeshRenderable(material, mesh),
                                                      std::shared_ptr<IMaterial>(material));
@@ -145,8 +145,7 @@ GameObjectFactory& GameObjectFactory::AddOrthoCamera()
     return *this;
 }
 
-void GameObjectFactory::Init(IGraphics* graphics, ResourceManager* resourceManager)
+void GameObjectFactory::Init(IGraphics* graphics)
 {
     GameObjectFactory::graphics = graphics;
-    GameObjectFactory::resourceManager = resourceManager;
 }

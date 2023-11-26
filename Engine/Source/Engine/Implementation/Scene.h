@@ -10,7 +10,6 @@ class ImGuiController;
 class Scene : public IUpdateable
 {
 public:
-	Scene();
 	Scene(IGraphics* graphics);
 	void SetScene(IGraphics* graphics){this->graphics = graphics;}
 	void AddObject(std::shared_ptr<GameObject> object);

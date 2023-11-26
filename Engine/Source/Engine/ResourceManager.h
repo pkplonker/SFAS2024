@@ -7,10 +7,11 @@
 #include "IShader.h"
 #include "ITexture.h"
 #include "Implementation/Mesh.h"
+#include "Implementation/DirectX11/DirectX11Graphics.h"
 
 class IGraphics;
 
-const std::wstring DEFAULT_UNLIT_SHADER = L"Resource/Shaders/UnlitColor.fx";
+const std::wstring DEFAULT_UNLIT_SHADER = L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColor.fx";
 const std::string DEFAULT_VS_SHADER = "vs_4_0";
 const std::string DEFAULT_PS_SHADER = "ps_4_0";
 const std::string DEFAULT_VS_ENRTY = "VS_Main";
@@ -19,31 +20,31 @@ const std::string DEFAULT_PS_ENRTY = "PS_Main";
 class ResourceManager
 {
 public:
-	ResourceManager(IGraphics* Graphics);
 
-	Mesh* GetMesh(std::string path);
+	static Mesh* GetMesh(std::string path);
 
-	ITexture* GetTexture(std::wstring path);
+	static ITexture* GetTexture(std::wstring path);
 
-	IShader* GetShader(std::wstring shaderPath = DEFAULT_UNLIT_SHADER,
+	static IShader* GetShader(std::wstring shaderPath = DEFAULT_UNLIT_SHADER,
 		std::string vsentry = DEFAULT_VS_ENRTY, std::string vsshader = DEFAULT_VS_SHADER,
 		std::string psentry = DEFAULT_PS_ENRTY, std::string psshader = DEFAULT_PS_SHADER);
 
-	IMaterial* GetMaterial(std::wstring shaderPath = DEFAULT_UNLIT_SHADER, std::wstring texturePath = L"");
+	static IMaterial* GetMaterial(std::wstring shaderPath = DEFAULT_UNLIT_SHADER, std::wstring texturePath = L"");
 
-	std::wstring GenerateShaderKey(const std::wstring& shaderPath,
+	static std::wstring GenerateShaderKey(const std::wstring& shaderPath,
 		const std::string& vsEntry,
 		const std::string& vsShader,
 		const std::string& psEntry,
 		const std::string& psShader);
 
-	std::wstring GenerateMaterialKey(const std::wstring& shaderPath,
+	static std::wstring GenerateMaterialKey(const std::wstring& shaderPath,
 		const std::wstring& texturePath);
+	static void Init(IGraphics* graphics);
 
 private:
-	IGraphics* graphics;
-	std::unordered_map<std::wstring, std::unique_ptr<ITexture>> textures;
-	std::unordered_map<std::wstring, std::unique_ptr<IShader>> shaders;
-	std::unordered_map<std::string, std::unique_ptr<Mesh>> meshes;
-	std::unordered_map<std::wstring, std::unique_ptr<IMaterial>> materials;
+	inline static IGraphics* graphics;
+	inline static std::unordered_map<std::wstring, std::unique_ptr<ITexture>> textures;
+	inline static std::unordered_map<std::wstring, std::unique_ptr<IShader>> shaders;
+	inline static std::unordered_map<std::string, std::unique_ptr<Mesh>> meshes;
+	inline static  std::unordered_map<std::wstring, std::unique_ptr<IMaterial>> materials;
 };

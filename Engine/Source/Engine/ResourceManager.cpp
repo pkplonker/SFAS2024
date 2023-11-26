@@ -8,14 +8,9 @@
 #include "MeshSerializer.h"
 #include "IMaterial.h"
 
-ResourceManager::ResourceManager(IGraphics* Graphics): graphics(Graphics)
-{
-}
-
 Mesh* ResourceManager::GetMesh(const std::string path)
 {
-    auto it = meshes.find(path);
-    if (it != meshes.end())
+	if (const auto it = meshes.find(path); it != meshes.end())
     {
         return it->second.get();
     }
@@ -26,8 +21,7 @@ Mesh* ResourceManager::GetMesh(const std::string path)
 
 ITexture* ResourceManager::GetTexture(const std::wstring path)
 {
-    auto it = textures.find(path);
-    if (it != textures.end())
+	if (const auto it = textures.find(path); it != textures.end())
     {
         return it->second.get();
     }
@@ -39,9 +33,8 @@ ITexture* ResourceManager::GetTexture(const std::wstring path)
 IShader* ResourceManager::GetShader(std::wstring shaderPath, std::string vsentry, std::string vsshader,
                                     std::string psentry, std::string psshader)
 {
-    auto key = GenerateShaderKey(shaderPath, vsentry, vsshader, psentry, psshader);
-    auto it = shaders.find(key);
-    if (it != shaders.end())
+	const auto key = GenerateShaderKey(shaderPath, vsentry, vsshader, psentry, psshader);
+	if (const auto it = shaders.find(key); it != shaders.end())
     {
         return it->second.get();
     }
@@ -54,9 +47,8 @@ IShader* ResourceManager::GetShader(std::wstring shaderPath, std::string vsentry
 
 IMaterial* ResourceManager::GetMaterial(std::wstring shaderPath, std::wstring texturePath)
 {
-    auto key = GenerateMaterialKey(shaderPath, texturePath);
-    auto it = materials.find(key);
-    if (it != materials.end())
+	const auto key = GenerateMaterialKey(shaderPath, texturePath);
+	if (const auto it = materials.find(key); it != materials.end())
     {
         return it->second.get();
     }
@@ -71,10 +63,10 @@ std::wstring ResourceManager::GenerateShaderKey(const std::wstring& shaderPath, 
 {
     std::wstringstream keyStream;
 
-    std::wstring wVsEntry(vsEntry.begin(), vsEntry.end());
-    std::wstring wVsShader(vsShader.begin(), vsShader.end());
-    std::wstring wPsEntry(psEntry.begin(), psEntry.end());
-    std::wstring wPsShader(psShader.begin(), psShader.end());
+    const std::wstring wVsEntry(vsEntry.begin(), vsEntry.end());
+    const std::wstring wVsShader(vsShader.begin(), vsShader.end());
+    const std::wstring wPsEntry(psEntry.begin(), psEntry.end());
+    const std::wstring wPsShader(psShader.begin(), psShader.end());
 
     keyStream << shaderPath
         << wVsEntry
@@ -92,4 +84,9 @@ std::wstring ResourceManager::GenerateMaterialKey(const std::wstring& shaderPath
     keyStream << shaderPath << texturePath;
 
     return keyStream.str();
+}
+
+void ResourceManager::Init(IGraphics* gfx)
+{
+    graphics = gfx;
 }

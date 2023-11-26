@@ -6,7 +6,6 @@
 #include "Engine/Math/Vector3.h"
 #include "Engine/IComponent.h"
 
-class ResourceManager;
 class IGraphics;
 class IRenderable;
 class IMaterial;
@@ -61,7 +60,7 @@ public:
     GameObjectFactory& AddPerspectiveCamera();
 
     GameObjectFactory& AddOrthoCamera();
-    static void Init(IGraphics* graphics, ResourceManager* resourceManager);
+    static void Init(IGraphics* graphics);
 
 #pragma endregion
 
@@ -70,5 +69,4 @@ private:
     std::shared_ptr<Scene> scene;
     inline static bool random = false;
     inline static IGraphics* graphics = nullptr;
-    inline static ResourceManager* resourceManager = nullptr;
 };

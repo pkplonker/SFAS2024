@@ -3,16 +3,23 @@
 #include <fstream>
 #include <string>
 #include "json.hpp"
+#include "Engine/IMaterial.h"
+#include "Engine/IShader.h"
+#include "Engine/ITexture.h"
+#include "Engine/ResourceManager.h"
 #include "Engine/Implementation/CameraComponent.h"
 #include "Engine/Implementation/Debug.h"
+#include "Engine/Implementation/GameObjectFactory.h"
+#include "Engine/Implementation/Helpers.h"
 #include "Engine/Implementation/OrthographicCamera.h"
 #include "Engine/Implementation/PerspectiveCamera.h"
 #include "Engine/Implementation/Scene.h"
 using json = nlohmann::json;
 
-SceneSerializer::SceneSerializer(std::weak_ptr<Scene> scene)
+SceneSerializer::SceneSerializer(std::weak_ptr<Scene> scene, IGraphics* graphics)
 {
     SceneSerializer::scene = scene;
+    SceneSerializer::graphics = graphics;
 }
 
 
@@ -32,6 +39,26 @@ void SceneSerializer::WriteToFile(json sceneData, std::string path)
     {
         Debug("Failed writing to file")
     }
+}
+
+nlohmann::json SceneSerializer::SerializeMeshComponent(const std::shared_ptr<MeshComponent>& meshComponent)
+{
+    nlohmann::json serializedData;
+
+    serializedData["mesh"] = meshComponent->GetMeshPath();
+    if (const auto material = meshComponent->GetMaterial())
+    {
+        if (const auto shader = material->GetShader())
+        {
+            serializedData["shader"] = Helpers::WideStringToString(shader->GetPath());
+        }
+        if (const auto texture = material->GetTexture())
+        {
+            serializedData["texture"] = Helpers::WideStringToString(texture->GetPath());
+        }
+    }
+
+    return serializedData;
 }
 
 bool SceneSerializer::Serialize(std::string path)
@@ -68,6 +95,10 @@ nlohmann::json SceneSerializer::SerializeGameObject(const std::shared_ptr<GameOb
     if (auto cameraComponent = object->GetComponent<CameraComponent>())
     {
         serializedData["cameraComponent"] = SerializeCameraComponent(cameraComponent);
+    }
+    if (auto meshComponent = object->GetComponent<MeshComponent>())
+    {
+        serializedData["meshComponent"] = SerializeMeshComponent(meshComponent);
     }
 
     return std::make_pair(object->Name, serializedData);
@@ -158,7 +189,7 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
         return nullptr;
     }
 
-    std::shared_ptr<Scene> scene = std::make_shared<Scene>();
+    std::shared_ptr<Scene> scene = std::make_shared<Scene>(graphics);
 
     if (sceneData.contains("objects"))
     {
@@ -195,6 +226,54 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
     return scene;
 }
 
+void SceneSerializer::DeserializeMeshComponent(const std::shared_ptr<GameObject>& gameObject,
+                                               const nlohmann::json& data)
+{
+    auto meshComponent = std::make_shared<MeshComponent>(gameObject);
+    std::string texturePath = "";
+    std::string shaderPath = "";
+    std::string meshPath = "";
+    IMaterial* material = nullptr;
+    Mesh* mesh = nullptr;
+    std::shared_ptr<MeshComponent> component = nullptr;
+    if (data.contains("shader"))
+    {
+        shaderPath = data["shader"];
+    }
+    if (data.contains("texture"))
+    {
+        texturePath = data["texture"];
+    }
+    if (shaderPath != "")
+    {
+        if (texturePath != "")
+        {
+            material = ResourceManager::GetMaterial(Helpers::StringToWstring(shaderPath),
+                                                    Helpers::StringToWstring(texturePath));
+        }
+        else
+        {
+            material = ResourceManager::GetMaterial(Helpers::StringToWstring(shaderPath));
+        }
+    }
+
+    if (data.contains("mesh"))
+    {
+        meshPath = data["mesh"];
+        mesh = ResourceManager::GetMesh(meshPath);
+    }
+    if (material != nullptr && mesh != nullptr)
+    {
+        component = std::make_shared<MeshComponent>(gameObject, graphics->CreateMeshRenderable(material, mesh),
+                                                    std::shared_ptr<IMaterial>(material));
+    }
+
+    if (component != nullptr)
+    {
+        gameObject->AddComponent(std::move(component));
+    }
+}
+
 
 std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohmann::json& data)
 {
@@ -211,7 +290,14 @@ std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohman
 
             std::shared_ptr<GameObject> newObject = std::make_shared<GameObject>(name);
             newObject->SetTransform(transform);
-
+            if (objectProperties.contains("cameraComponent"))
+            {
+                DeserializeCameraComponent(newObject, objectProperties["cameraComponent"]);
+            }
+            if (objectProperties.contains("meshComponent"))
+            {
+                DeserializeMeshComponent(newObject, objectProperties["meshComponent"]);
+            }
 
             return newObject;
         }

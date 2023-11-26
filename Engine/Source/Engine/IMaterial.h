@@ -14,6 +14,6 @@ public:
     virtual ITexture* GetTexture() { return texture; }
 
 protected:
-    IShader* shader;
-    ITexture* texture;
+    IShader* shader= {};
+    ITexture* texture= {};
 };

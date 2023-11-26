@@ -37,8 +37,8 @@ bool Game::IsValid()
 bool Game::Load()
 {
     scene = std::make_shared<Scene>(Graphics);
-    resourceManager = std::make_unique<ResourceManager>(Graphics);;
-    GameObjectFactory::Init(Graphics, resourceManager.get());
+    ResourceManager::Init(Graphics);
+    GameObjectFactory::Init(Graphics);
 
     camera = GameObjectFactory(scene, "Camera")
              .AddPerspectiveCamera()
@@ -52,7 +52,7 @@ bool Game::Load()
         .AddRandomRotation()
         .AddScale(Vec3(1))
         .AddMeshRenderable("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh",
-                           L"Resource/Shaders/UnlitColorMesh.fx")
+                           L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx")
         .Build();
 
     GameObjectFactory(scene, "Cube2")
@@ -60,14 +60,14 @@ bool Game::Load()
         .AddRandomRotation()
         .AddScale(Vec3(1))
         .AddMeshRenderable("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh",
-                           L"Resource/Shaders/UnlitColorMesh.fx")
+                           L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx")
         .Build();
     GameObjectFactory(scene, "Sphere")
         .AddPosition(Vec3(-1, 3.5f, 2.0f))
         .AddRandomRotation()
         .AddScale(Vec3(1))
         .AddMeshRenderable("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/sphere.smesh",
-                           L"Resource/Shaders/UnlitColorMesh.fx")
+                           L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx")
         .Build();
 
     GameObjectFactory(scene, "TestShape")
@@ -82,7 +82,7 @@ bool Game::Load()
         .AddPosition(Vec3(0, -2.6f, 0.0f))
         .AddRotation(Vec3(45, 0, 0))
         .AddScale(Vec3(15.0f, 15.0f, .055f))
-        .AddSpriteRenderable(L"Resource/Shaders/UnlitColor3.fx")
+        .AddSpriteRenderable(L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColor3.fx")
         .Build();
 
     return true;
