@@ -9,6 +9,7 @@ Star/x64/
 Star/Star.vcxproj.filters
 Star/Star.vcxproj.user
 Star/Engine/Debug/Editor/Engine.tlog
+/Editor/Debug/Editor/Editor.tlog
 x64
 # Log files
 *.log
@@ -52,3 +53,7 @@ GameBase/Debug/
 Star/Debug/
 
 Editor/x64/
+
+Editor/Debug/Editor/
+
+Engine/Debug/Engine/

@@ -5,6 +5,4 @@
 
 IMaterial::~IMaterial()
 {
-    delete shader;
-    delete texture;
 }
