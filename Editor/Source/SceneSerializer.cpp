@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include "json.hpp"
+#include "SpriteComponent.h"
 #include "Engine/IMaterial.h"
 #include "Engine/IShader.h"
 #include "Engine/ITexture.h"
@@ -40,11 +41,8 @@ void SceneSerializer::WriteToFile(json sceneData, std::string path)
 	}
 }
 
-nlohmann::json SceneSerializer::SerializeMeshComponent(const std::shared_ptr<MeshComponent>& meshComponent)
+nlohmann::json SceneSerializer::SerializeMaterial(const std::shared_ptr<IRenderableComponent>& meshComponent, nlohmann::json serializedData)
 {
-	nlohmann::json serializedData;
-
-	serializedData["mesh"] = meshComponent->GetMeshPath();
 	if (const auto material = meshComponent->GetMaterial())
 	{
 		if (const auto shader = material->GetShader())
@@ -56,6 +54,24 @@ nlohmann::json SceneSerializer::SerializeMeshComponent(const std::shared_ptr<Mes
 			serializedData["texture"] = Helpers::WideStringToString(texture->GetPath());
 		}
 	}
+	return serializedData;
+}
+
+nlohmann::json SceneSerializer::SerializeMeshComponent(const std::shared_ptr<MeshComponent>& meshComponent)
+{
+	nlohmann::json serializedData;
+
+	serializedData["mesh"] = meshComponent->GetMeshPath();
+	SerializeMaterial(meshComponent, serializedData);
+
+	return serializedData;
+}
+
+nlohmann::json SceneSerializer::SerializeSpriteComponent(const std::shared_ptr<SpriteComponent>& component)
+{
+	nlohmann::json serializedData;
+
+	serializedData = SerializeMaterial(component, serializedData);
 
 	return serializedData;
 }
@@ -98,6 +114,10 @@ nlohmann::json SceneSerializer::SerializeGameObject(const std::shared_ptr<GameOb
 	if (auto meshComponent = object->GetComponent<MeshComponent>())
 	{
 		serializedData["meshComponent"] = SerializeMeshComponent(meshComponent);
+	}
+	if (auto spriteComponent = object->GetComponent<SpriteComponent>())
+	{
+		serializedData["spriteComponent"] = SerializeSpriteComponent(spriteComponent);
 	}
 
 	return std::make_pair(object->Name, serializedData);
@@ -225,16 +245,8 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
 	return scene;
 }
 
-void SceneSerializer::DeserializeMeshComponent(const std::shared_ptr<GameObject>& gameObject,
-	const nlohmann::json& data)
+void SceneSerializer::DeserializeMaterial(const nlohmann::json& data, std::string texturePath, std::string shaderPath, IMaterial*& material)
 {
-	auto meshComponent = std::make_shared<MeshComponent>(gameObject);
-	std::string texturePath = "";
-	std::string shaderPath = "";
-	std::string meshPath = "";
-	IMaterial* material = nullptr;
-	Mesh* mesh = nullptr;
-	std::shared_ptr<MeshComponent> component = nullptr;
 	if (data.contains("shader"))
 	{
 		shaderPath = data["shader"];
@@ -255,6 +267,19 @@ void SceneSerializer::DeserializeMeshComponent(const std::shared_ptr<GameObject>
 			material = ResourceManager::GetMaterial(Helpers::StringToWstring(shaderPath));
 		}
 	}
+}
+
+void SceneSerializer::DeserializeMeshComponent(const std::shared_ptr<GameObject>& gameObject,
+	const nlohmann::json& data)
+{
+	auto meshComponent = std::make_shared<MeshComponent>(gameObject);
+	std::string texturePath = "";
+	std::string shaderPath = "";
+	std::string meshPath = "";
+	IMaterial* material = nullptr;
+	Mesh* mesh = nullptr;
+	std::shared_ptr<MeshComponent> component = nullptr;
+	DeserializeMaterial(data, texturePath, shaderPath, material);
 
 	if (data.contains("mesh"))
 	{
@@ -264,6 +289,31 @@ void SceneSerializer::DeserializeMeshComponent(const std::shared_ptr<GameObject>
 	if (material != nullptr && mesh != nullptr)
 	{
 		component = std::make_shared<MeshComponent>(gameObject, graphics->CreateMeshRenderable(material, mesh),
+			material);
+	}else
+	{
+		component = std::make_shared<MeshComponent>(gameObject, graphics->CreateMeshRenderable(mesh),
+			material);
+	}
+
+	if (component != nullptr)
+	{
+		gameObject->AddComponent(std::move(component));
+	}
+}
+
+void SceneSerializer::DeserializeSpriteComponent(const std::shared_ptr<GameObject>& gameObject, const nlohmann::json& data)
+{
+	auto spriteComponent = std::make_shared<SpriteComponent>(gameObject);
+	std::string texturePath = "";
+	std::string shaderPath = "";
+	IMaterial* material = nullptr;
+	std::shared_ptr<SpriteComponent> component = nullptr;
+	DeserializeMaterial(data, texturePath, shaderPath, material);
+
+	if (material != nullptr)
+	{
+		component = std::make_shared<SpriteComponent>(gameObject, graphics->CreateBillboard(material),
 			material);
 	}
 
@@ -295,6 +345,10 @@ std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohman
 			if (objectProperties.contains("meshComponent"))
 			{
 				DeserializeMeshComponent(newObject, objectProperties["meshComponent"]);
+			}
+			if (objectProperties.contains("spriteComponent"))
+			{
+				DeserializeSpriteComponent(newObject, objectProperties["spriteComponent"]);
 			}
 
 			return newObject;

@@ -27,6 +27,8 @@ public:
                                   const char* psentry, const char* psshader) = 0;
     virtual std::shared_ptr<IRenderable> CreateBillboard(IMaterial* material) = 0;
     virtual std::shared_ptr<IMeshRenderable> CreateMeshRenderable(IMaterial* material, Mesh* mesh) =0;
+    virtual std::shared_ptr<IMeshRenderable> CreateMeshRenderable(Mesh* mesh) =0;
+
     virtual void SetActiveCamera(std::shared_ptr<ICamera> camera) = 0;
     virtual int GetWidth() = 0;
     virtual int GetHeight() = 0;

@@ -45,6 +45,7 @@ IShader* ResourceManager::GetShader(std::wstring shaderPath, std::string vsentry
 	return shader;
 }
 
+
 IMaterial* ResourceManager::GetMaterial(std::wstring shaderPath, std::wstring texturePath)
 {
 	const auto key = GenerateMaterialKey(shaderPath, texturePath);

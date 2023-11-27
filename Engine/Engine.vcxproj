@@ -224,7 +224,7 @@
     <ClInclude Include="Source\Engine\Implementation\Mesh.h" />
     <ClInclude Include="Source\Engine\Implementation\MeshComponent.h" />
     <ClInclude Include="Source\Engine\Implementation\Scene.h" />
-    <ClInclude Include="Source\Engine\Implementation\SpriteRenderable.h" />
+    <ClInclude Include="Source\Engine\Implementation\SpriteComponent.h" />
     <ClInclude Include="Source\Engine\Implementation\TestComponent.h" />
     <ClInclude Include="Source\Engine\Implementation\Vertex.h" />
     <ClInclude Include="Source\Engine\Implementation\XInput\DirectXInput.h" />
@@ -264,7 +264,7 @@
     <ClCompile Include="Source\Engine\Implementation\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Implementation\MeshComponent.cpp" />
     <ClCompile Include="Source\Engine\Implementation\Scene.cpp" />
-    <ClCompile Include="Source\Engine\Implementation\SpriteRenderable.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\SpriteComponent.cpp" />
     <ClCompile Include="Source\Engine\Implementation\TestComponent.cpp" />
     <ClCompile Include="Source\Engine\Implementation\Vertex.cpp" />
     <ClCompile Include="Source\Engine\Implementation\XInput\DirectXInput.cpp" />

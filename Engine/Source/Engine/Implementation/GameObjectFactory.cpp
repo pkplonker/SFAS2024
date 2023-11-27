@@ -6,7 +6,7 @@
 #include "OrthographicCamera.h"
 #include "PerspectiveCamera.h"
 #include "ResourceManager.h"
-#include "SpriteRenderable.h"
+#include "SpriteComponent.h"
 #include "Engine/IRenderable.h"
 #include "Engine/Implementation/CameraComponent.h"
 #include "Engine/Implementation/Scene.h"
@@ -75,7 +75,7 @@ std::shared_ptr<GameObject> GameObjectFactory::Build()
 GameObjectFactory& GameObjectFactory::AddSpriteRenderable(std::wstring shaderPath, std::wstring texturePath)
 {
 	auto material = ResourceManager::GetMaterial(shaderPath, texturePath);
-	auto component = std::make_shared<SpriteRenderable>(gameObject, graphics->CreateBillboard(material),
+	auto component = std::make_shared<SpriteComponent>(gameObject, graphics->CreateBillboard(material),
 		material);
 	if (component != nullptr)
 	{

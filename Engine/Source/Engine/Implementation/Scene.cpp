@@ -2,11 +2,11 @@
 
 #include "CameraComponent.h"
 #include "MeshComponent.h"
-#include "SpriteRenderable.h"
+#include "SpriteComponent.h"
 #include "Engine/Implementation/Debug.h"
 #include "Engine/ICamera.h"
 
-class SpriteRenderable;
+class SpriteComponent;
 
 Scene::Scene(IGraphics* graphics)
 {

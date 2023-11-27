@@ -1,61 +1,10 @@
 {
     "objects": [
         [
-            "Cube",
-            {
-                "meshComponent": {
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh",
-                    "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx"
-                },
-                "name": "Cube",
-                "transform": {
-                    "position": {
-                        "x": 2.5,
-                        "y": 2.5,
-                        "z": 2.0
-                    },
-                    "rotation": {
-                        "x": 65.0,
-                        "y": 92.0,
-                        "z": 328.0
-                    },
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            }
-        ],
-        [
-            "Ground",
-            {
-                "name": "Ground",
-                "transform": {
-                    "position": {
-                        "x": 0.0,
-                        "y": -2.5999999046325684,
-                        "z": 0.0
-                    },
-                    "rotation": {
-                        "x": 45.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "scale": {
-                        "x": 15.0,
-                        "y": 15.0,
-                        "z": 0.054999999701976776
-                    }
-                }
-            }
-        ],
-        [
             "TestShape",
             {
                 "meshComponent": {
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/testshape.smesh",
-                    "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColor5.fx"
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/testshape.smesh"
                 },
                 "name": "TestShape",
                 "transform": {
@@ -65,63 +14,9 @@
                         "z": 2.0
                     },
                     "rotation": {
-                        "x": 45.0,
-                        "y": 32.0,
-                        "z": 338.0
-                    },
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            }
-        ],
-        [
-            "Cube2",
-            {
-                "meshComponent": {
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh",
-                    "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx"
-                },
-                "name": "Cube2",
-                "transform": {
-                    "position": {
-                        "x": -2.5,
-                        "y": 2.5,
-                        "z": 2.0
-                    },
-                    "rotation": {
-                        "x": 223.0,
-                        "y": 206.0,
-                        "z": 178.0
-                    },
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            }
-        ],
-        [
-            "Sphere",
-            {
-                "meshComponent": {
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/sphere.smesh",
-                    "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx"
-                },
-                "name": "Sphere",
-                "transform": {
-                    "position": {
-                        "x": -1.0,
-                        "y": 3.5,
-                        "z": 2.0
-                    },
-                    "rotation": {
-                        "x": 29.0,
-                        "y": 173.0,
-                        "z": 93.0
+                        "x": 279.0,
+                        "y": 140.0,
+                        "z": 197.0
                     },
                     "scale": {
                         "x": 1.0,
@@ -155,6 +50,110 @@
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Ground",
+            {
+                "name": "Ground",
+                "spriteComponent": {
+                    "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColor3.fx"
+                },
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": -2.5999999046325684,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 45.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 15.0,
+                        "y": 15.0,
+                        "z": 0.054999999701976776
+                    }
+                }
+            }
+        ],
+        [
+            "Cube",
+            {
+                "meshComponent": {
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh"
+                },
+                "name": "Cube",
+                "transform": {
+                    "position": {
+                        "x": 2.5,
+                        "y": 2.5,
+                        "z": 2.0
+                    },
+                    "rotation": {
+                        "x": 211.0,
+                        "y": 78.0,
+                        "z": 309.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Cube2",
+            {
+                "meshComponent": {
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh"
+                },
+                "name": "Cube2",
+                "transform": {
+                    "position": {
+                        "x": -2.5,
+                        "y": 2.5,
+                        "z": 2.0
+                    },
+                    "rotation": {
+                        "x": 87.0,
+                        "y": 216.0,
+                        "z": 169.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Sphere",
+            {
+                "meshComponent": {
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/sphere.smesh"
+                },
+                "name": "Sphere",
+                "transform": {
+                    "position": {
+                        "x": -1.0,
+                        "y": 3.5,
+                        "z": 2.0
+                    },
+                    "rotation": {
+                        "x": 305.0,
+                        "y": 353.0,
+                        "z": 90.0
                     },
                     "scale": {
                         "x": 1.0,

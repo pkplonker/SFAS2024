@@ -75,7 +75,7 @@ void ImGuiController::DrawMenu()
                 auto path = FileDialog::OpenFileDialog();
                 if (path != "")
                 {
-                auto scene =                    SceneSerializer::Deserialize(path);
+                    auto scene = SceneSerializer::Deserialize(path);
                 }
             }
             ImGui::EndMenu();

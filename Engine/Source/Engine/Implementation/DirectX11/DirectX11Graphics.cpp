@@ -11,6 +11,7 @@
 
 #include "DirectX11Material.h"
 #include "DirectX11Mesh.h"
+#include "ResourceManager.h"
 #include "Engine/Implementation/Debug.h"
 #include "Implementation/Mesh.h"
 #include "Implementation/Vertex.h"
@@ -514,6 +515,52 @@ std::shared_ptr<IMeshRenderable> DirectX11Graphics::CreateMeshRenderable(IMateri
             Result = std::make_shared<DirectX11Mesh>(mesh->GetPath(), Context, VertexBuffer, IndexBuffer, vertexStride,
                                                      vertexOffset, vertexCount, indexCount);
             AddRenderable(material, Result);
+        }
+    }
+
+    return Result;
+}
+
+std::shared_ptr<IMeshRenderable> DirectX11Graphics::CreateMeshRenderable(Mesh* mesh)
+{
+    std::shared_ptr<IMeshRenderable> Result = nullptr;
+
+    if (IsValid() && mesh)
+    {
+        ID3D11Buffer* VertexBuffer;
+        unsigned int vertexStride = sizeof(Vertex);
+        unsigned int vertexOffset = 0;
+        unsigned int vertexCount = static_cast<unsigned int>(mesh->Vertices.size());
+
+        D3D11_BUFFER_DESC vertexDescription;
+        ZeroMemory(&vertexDescription, sizeof(vertexDescription));
+        vertexDescription.Usage = D3D11_USAGE_DEFAULT;
+        vertexDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+        vertexDescription.ByteWidth = static_cast<UINT>(vertexCount * sizeof(Vertex));
+
+        D3D11_SUBRESOURCE_DATA resourceData;
+        ZeroMemory(&resourceData, sizeof(resourceData));
+        resourceData.pSysMem = mesh->Vertices.data();
+
+        unsigned int indexCount = static_cast<unsigned int>(mesh->Indices.size());
+
+        ID3D11Buffer* IndexBuffer;
+        D3D11_BUFFER_DESC indexDescription;
+        ZeroMemory(&indexDescription, sizeof(indexDescription));
+        indexDescription.Usage = D3D11_USAGE_DEFAULT;
+        indexDescription.BindFlags = D3D11_BIND_INDEX_BUFFER;
+        indexDescription.ByteWidth = static_cast<UINT>(indexCount * sizeof(unsigned int));
+
+        D3D11_SUBRESOURCE_DATA indexResourceData;
+        ZeroMemory(&indexResourceData, sizeof(indexResourceData));
+        indexResourceData.pSysMem = mesh->Indices.data();
+
+        if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) &&
+            SUCCEEDED(Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
+        {
+            Result = std::make_shared<DirectX11Mesh>(mesh->GetPath(), Context, VertexBuffer, IndexBuffer, vertexStride,
+                                                     vertexOffset, vertexCount, indexCount);
+            AddRenderable(ResourceManager::GetMaterial(), Result);
         }
     }
 

@@ -42,7 +42,7 @@
     <ClInclude Include="Source\Engine\Implementation\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Implementation\SpriteRenderable.h">
+    <ClInclude Include="Source\Engine\Implementation\SpriteComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Implementation\TestComponent.h">
@@ -266,7 +266,7 @@
     <ClCompile Include="Source\Engine\Implementation\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\Implementation\SpriteRenderable.cpp">
+    <ClCompile Include="Source\Engine\Implementation\SpriteComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Implementation\TestComponent.cpp">

@@ -37,6 +37,7 @@ public:
 	std::shared_ptr<IRenderable> CreateBillboard(IMaterial* material) override;
 	void AddRenderable(IMaterial* material, std::shared_ptr<IRenderable> Result);
 	std::shared_ptr<IMeshRenderable> CreateMeshRenderable(IMaterial* material, Mesh* mesh) override;
+	std::shared_ptr<IMeshRenderable> CreateMeshRenderable(Mesh* mesh) override;
 	void SetActiveCamera(std::shared_ptr<ICamera> camera) override;
 	ID3D11Device* GetDevice() const { return Device; }
 	HWND GetHWND() const { return hwnd; }
