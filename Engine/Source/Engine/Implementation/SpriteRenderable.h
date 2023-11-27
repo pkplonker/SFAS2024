@@ -8,6 +8,5 @@ class SpriteRenderable : public IRenderableComponent
 {
 public:
 	SpriteRenderable(std::weak_ptr<GameObject> object);
-	SpriteRenderable(std::weak_ptr<GameObject> object, std::shared_ptr<IRenderable> renderable, std::shared_ptr<IMaterial> material);
-
+	SpriteRenderable(std::weak_ptr<GameObject> object, std::shared_ptr<IRenderable> renderable, IMaterial* material);
 };

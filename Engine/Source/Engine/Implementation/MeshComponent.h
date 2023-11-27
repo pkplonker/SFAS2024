@@ -13,11 +13,11 @@ class MeshComponent : public IRenderableComponent
 public:
     MeshComponent(std::weak_ptr<GameObject> object);
     MeshComponent(std::weak_ptr<GameObject> object, std::shared_ptr<IMeshRenderable> renderable,
-                  std::shared_ptr<IMaterial> material);
+        IMaterial* material);
 
     std::string GetMeshPath();
 
-    std::shared_ptr<IMaterial> GetMaterial() { return material; }
+    IMaterial* GetMaterial() { return material; }
 
 private:
 };

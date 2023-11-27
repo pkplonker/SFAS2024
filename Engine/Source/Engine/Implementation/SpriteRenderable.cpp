@@ -4,6 +4,6 @@ SpriteRenderable::SpriteRenderable(std::weak_ptr<GameObject> object) : IRenderab
 {
 }
 
-SpriteRenderable::SpriteRenderable(std::weak_ptr<GameObject> object, std::shared_ptr<IRenderable> renderable, std::shared_ptr<IMaterial> material) : IRenderableComponent(object, renderable,material)
+SpriteRenderable::SpriteRenderable(std::weak_ptr<GameObject> object, std::shared_ptr<IRenderable> renderable, IMaterial* material) : IRenderableComponent(object, renderable, material)
 {
 }

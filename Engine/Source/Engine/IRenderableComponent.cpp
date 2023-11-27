@@ -8,7 +8,7 @@ IRenderableComponent::IRenderableComponent(std::weak_ptr<GameObject> object) : I
 
 
 IRenderableComponent::IRenderableComponent(std::weak_ptr<GameObject> object, std::shared_ptr<::IRenderable> renderable,
-                                           std::shared_ptr<IMaterial> material) : IComponent(object)
+    IMaterial* material) : IComponent(object)
 {
     this->material = material;
     SetRenderable(renderable);

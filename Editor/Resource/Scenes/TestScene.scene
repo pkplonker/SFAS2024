@@ -15,9 +15,146 @@
                         "z": 2.0
                     },
                     "rotation": {
-                        "x": 196.0,
-                        "y": 14.0,
-                        "z": 292.0
+                        "x": 65.0,
+                        "y": 92.0,
+                        "z": 328.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Ground",
+            {
+                "name": "Ground",
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": -2.5999999046325684,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 45.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 15.0,
+                        "y": 15.0,
+                        "z": 0.054999999701976776
+                    }
+                }
+            }
+        ],
+        [
+            "TestShape",
+            {
+                "meshComponent": {
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/testshape.smesh",
+                    "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColor5.fx"
+                },
+                "name": "TestShape",
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 2.5,
+                        "z": 2.0
+                    },
+                    "rotation": {
+                        "x": 45.0,
+                        "y": 32.0,
+                        "z": 338.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Cube2",
+            {
+                "meshComponent": {
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh",
+                    "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx"
+                },
+                "name": "Cube2",
+                "transform": {
+                    "position": {
+                        "x": -2.5,
+                        "y": 2.5,
+                        "z": 2.0
+                    },
+                    "rotation": {
+                        "x": 223.0,
+                        "y": 206.0,
+                        "z": 178.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Sphere",
+            {
+                "meshComponent": {
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/sphere.smesh",
+                    "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx"
+                },
+                "name": "Sphere",
+                "transform": {
+                    "position": {
+                        "x": -1.0,
+                        "y": 3.5,
+                        "z": 2.0
+                    },
+                    "rotation": {
+                        "x": 29.0,
+                        "y": 173.0,
+                        "z": 93.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Camera",
+            {
+                "cameraComponent": {
+                    "camera": {
+                        "far": 200.0,
+                        "fov": 0.7853981852531433,
+                        "height": 1018.0,
+                        "near": 0.10000000149011612,
+                        "type": "PerspectiveCamera",
+                        "width": 1084.0
+                    }
+                },
+                "name": "Camera",
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": -12.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
                     },
                     "scale": {
                         "x": 1.0,
@@ -27,6 +164,5 @@
                 }
             }
         ]
-       
     ]
 }
