@@ -76,7 +76,7 @@ bool Game::Load()
         .AddRandomRotation()
         .AddScale(Vec3(1))
         .AddMeshRenderable("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/testshape.smesh",
-                           L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColor5.fx")
+                           L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx")
         .Build();
     
     GameObjectFactory(scene, "Ground")
