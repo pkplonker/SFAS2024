@@ -11,6 +11,7 @@ class Scene : public IUpdateable
 {
 public:
 	Scene(IGraphics* graphics);
+	~Scene() override;
 	void SetScene(IGraphics* graphics){this->graphics = graphics;}
 	void AddObject(std::shared_ptr<GameObject> object);
 	void RemoveObject(std::shared_ptr<GameObject> object);

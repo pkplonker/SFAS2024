@@ -296,7 +296,7 @@ std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohman
             }
             if (objectProperties.contains("meshComponent"))
             {
-                //DeserializeMeshComponent(newObject, objectProperties["meshComponent"]);
+                DeserializeMeshComponent(newObject, objectProperties["meshComponent"]);
             }
 
             return newObject;

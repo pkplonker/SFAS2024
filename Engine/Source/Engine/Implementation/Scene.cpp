@@ -18,6 +18,18 @@ Scene::Scene(IGraphics* graphics)
         IRenderable>>>();
 }
 
+Scene::~Scene()
+{
+    for (const auto object : *objects)
+    {
+        auto renderable = object->GetComponent<IRenderableComponent>();
+        if (renderable != nullptr)
+        {
+            RemoveRenderable(renderable->GetRenderable());
+        }
+    }
+}
+
 void Scene::AddObject(std::shared_ptr<GameObject> object)
 {
     objects->emplace(object);
