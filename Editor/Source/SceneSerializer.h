@@ -28,8 +28,7 @@ public:
 	static nlohmann::json SerializePerspectiveCamera(std::shared_ptr<PerspectiveCamera> camera);
 
 	static std::shared_ptr<Scene> Deserialize(std::string path);
-	static void DeserializeMaterial(const nlohmann::json& data, std::string texturePath, std::string shaderPath,
-		IMaterial*& material);
+	static IMaterial* DeserializeMaterial(const nlohmann::json& data, std::string texturePath, std::string shaderPath);
 
 	static void DeserializeMeshComponent(const std::shared_ptr<GameObject>& shared, const nlohmann::json& value);
 	static void DeserializeSpriteComponent(const std::shared_ptr<GameObject>& shared, const nlohmann::json& value);

@@ -212,9 +212,9 @@ void DirectX11Graphics::Update()
         {
             float color = 32.0f / 255;
             float clearColour[4] = {color, color, color, 1.0f};
-            float textureClearColour[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+            float textureClearColour[4] = {color, color, color, 1.0f};//{1.0f, 1.0f, 1.0f, 1.0f};
             Context->ClearRenderTargetView(renderTargetView, clearColour);
-            Context->ClearRenderTargetView(BackbufferView, clearColour);
+            Context->ClearRenderTargetView(BackbufferView, textureClearColour);
         }
         else
         {

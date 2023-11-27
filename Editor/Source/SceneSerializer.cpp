@@ -63,7 +63,7 @@ nlohmann::json SceneSerializer::SerializeMeshComponent(const std::shared_ptr<Mes
     nlohmann::json serializedData;
 
     serializedData["mesh"] = meshComponent->GetMeshPath();
-    SerializeMaterial(meshComponent, serializedData);
+    serializedData["material"] = SerializeMaterial(meshComponent, serializedData);
 
     return serializedData;
 }
@@ -72,7 +72,7 @@ nlohmann::json SceneSerializer::SerializeSpriteComponent(const std::shared_ptr<S
 {
     nlohmann::json serializedData;
 
-    serializedData = SerializeMaterial(component, serializedData);
+    serializedData["material"] = SerializeMaterial(component, serializedData);
 
     return serializedData;
 }
@@ -247,9 +247,10 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
     return scene;
 }
 
-void SceneSerializer::DeserializeMaterial(const nlohmann::json& data, std::string texturePath, std::string shaderPath,
-                                          IMaterial*& material)
+IMaterial* SceneSerializer::DeserializeMaterial(const nlohmann::json& data, std::string texturePath,
+                                                std::string shaderPath)
 {
+    IMaterial* material = nullptr;
     if (data.contains("shader"))
     {
         shaderPath = data["shader"];
@@ -270,6 +271,7 @@ void SceneSerializer::DeserializeMaterial(const nlohmann::json& data, std::strin
             material = ResourceManager::GetMaterial(Helpers::StringToWstring(shaderPath));
         }
     }
+    return material;
 }
 
 void SceneSerializer::DeserializeMeshComponent(const std::shared_ptr<GameObject>& gameObject,
@@ -282,8 +284,11 @@ void SceneSerializer::DeserializeMeshComponent(const std::shared_ptr<GameObject>
     IMaterial* material = nullptr;
     Mesh* mesh = nullptr;
     std::shared_ptr<MeshComponent> component = nullptr;
-    DeserializeMaterial(data, texturePath, shaderPath, material);
-
+    material = DeserializeMaterial(data, texturePath, shaderPath);
+    if(data.contains("material"))
+    {
+        material = DeserializeMaterial(data["material"], texturePath, shaderPath);
+    }
     if (data.contains("mesh"))
     {
         meshPath = data["mesh"];
@@ -314,7 +319,10 @@ void SceneSerializer::DeserializeSpriteComponent(const std::shared_ptr<GameObjec
     std::string shaderPath = "";
     IMaterial* material = nullptr;
     std::shared_ptr<SpriteComponent> component = nullptr;
-    DeserializeMaterial(data, texturePath, shaderPath, material);
+    if(data.contains("material"))
+    {
+        material = DeserializeMaterial(data["material"], texturePath, shaderPath);
+    }
 
     if (material != nullptr)
     {
