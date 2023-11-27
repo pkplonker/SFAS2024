@@ -7,6 +7,7 @@
 #include "Engine/Implementation/GameObjectFactory.h"
 #include "Engine/Implementation/Scene.h"
 #include "Engine/Implementation/CameraComponent.h"
+#include "Engine/Implementation/Debug.h"
 
 #define CLAMP(v, x, y) fmin(fmax(v, x), y)
 
@@ -40,50 +41,50 @@ bool Game::Load()
     ResourceManager::Init(Graphics);
     GameObjectFactory::Init(Graphics);
 
-    camera = GameObjectFactory(scene, "Camera")
-             .AddPerspectiveCamera()
-             .AddPosition(Vec3(0, 0, -12.0f))
-             .Build();
-    scene->SetActiveCamera(camera->GetComponent<CameraComponent>());
-
-
-    GameObjectFactory(scene, "Cube")
-        .AddPosition(Vec3(2.5, 2.5f, 2.0f))
-        .AddRandomRotation()
-        .AddScale(Vec3(1))
-        .AddMeshRenderable("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh",
-                           L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx")
-        .Build();
-
-    GameObjectFactory(scene, "Cube2")
-        .AddPosition(Vec3(-2.5, 2.5f, 2.0f))
-        .AddRandomRotation()
-        .AddScale(Vec3(1))
-        .AddMeshRenderable("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh",
-                           L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx")
-        .Build();
-    GameObjectFactory(scene, "Sphere")
-        .AddPosition(Vec3(-1, 3.5f, 2.0f))
-        .AddRandomRotation()
-        .AddScale(Vec3(1))
-        .AddMeshRenderable("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/sphere.smesh",
-                           L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx")
-        .Build();
-
-    GameObjectFactory(scene, "TestShape")
-        .AddPosition(Vec3(0, 2.5f, 2.0f))
-        .AddRandomRotation()
-        .AddScale(Vec3(1))
-        .AddMeshRenderable("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/testshape.smesh",
-                           L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColor5.fx")
-        .Build();
-
-    GameObjectFactory(scene, "Ground")
-        .AddPosition(Vec3(0, -2.6f, 0.0f))
-        .AddRotation(Vec3(45, 0, 0))
-        .AddScale(Vec3(15.0f, 15.0f, .055f))
-        .AddSpriteRenderable(L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColor3.fx")
-        .Build();
+    // camera = GameObjectFactory(scene, "Camera")
+    //          .AddPerspectiveCamera()
+    //          .AddPosition(Vec3(0, 0, -12.0f))
+    //          .Build();
+    // scene->SetActiveCamera(camera->GetComponent<CameraComponent>());
+    //
+    //
+    // GameObjectFactory(scene, "Cube")
+    //     .AddPosition(Vec3(2.5, 2.5f, 2.0f))
+    //     .AddRandomRotation()
+    //     .AddScale(Vec3(1))
+    //     .AddMeshRenderable("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh",
+    //                        L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx")
+    //     .Build();
+    //
+    // GameObjectFactory(scene, "Cube2")
+    //     .AddPosition(Vec3(-2.5, 2.5f, 2.0f))
+    //     .AddRandomRotation()
+    //     .AddScale(Vec3(1))
+    //     .AddMeshRenderable("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh",
+    //                        L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx")
+    //     .Build();
+    // GameObjectFactory(scene, "Sphere")
+    //     .AddPosition(Vec3(-1, 3.5f, 2.0f))
+    //     .AddRandomRotation()
+    //     .AddScale(Vec3(1))
+    //     .AddMeshRenderable("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/sphere.smesh",
+    //                        L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx")
+    //     .Build();
+    //
+    // GameObjectFactory(scene, "TestShape")
+    //     .AddPosition(Vec3(0, 2.5f, 2.0f))
+    //     .AddRandomRotation()
+    //     .AddScale(Vec3(1))
+    //     .AddMeshRenderable("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/testshape.smesh",
+    //                        L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColor5.fx")
+    //     .Build();
+    //
+    // GameObjectFactory(scene, "Ground")
+    //     .AddPosition(Vec3(0, -2.6f, 0.0f))
+    //     .AddRotation(Vec3(45, 0, 0))
+    //     .AddScale(Vec3(15.0f, 15.0f, .055f))
+    //     .AddSpriteRenderable(L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColor3.fx")
+    //     .Build();
 
     return true;
 }
@@ -103,4 +104,13 @@ void Game::PostGraphics()
 std::weak_ptr<Scene> Game::GetScene()
 {
     return scene;
+}
+
+void Game::SetScene(const std::shared_ptr<Scene>& scene)
+{
+    Debug("Deleting scene")
+    this->scene.reset();
+    this->scene = scene;
+    Debug("Loaded scene into game")
+
 }

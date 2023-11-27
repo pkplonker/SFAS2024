@@ -19,10 +19,10 @@ public:
 	virtual void Cleanup();
 	virtual void PostGraphics();
 	std::weak_ptr<Scene> GetScene();
+	void SetScene(const std::shared_ptr<Scene>& scene);
 
 private:
 	
 	std::shared_ptr<Scene> scene;
-	std::unique_ptr<ResourceManager> resourceManager;
 	std::shared_ptr<GameObject> camera;
 };

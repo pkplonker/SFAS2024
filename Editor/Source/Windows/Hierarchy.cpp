@@ -23,7 +23,7 @@ void Hierarchy::Draw()
         {
             ImGui::OpenPopup("ContextMenuWindow");
         }
-        if ( ImGui::BeginPopup("ContextMenuWindow"))
+        if (ImGui::BeginPopup("ContextMenuWindow"))
         {
             if (ImGui::BeginMenu("Add"))
             {
@@ -86,4 +86,9 @@ void Hierarchy::Draw()
 std::weak_ptr<GameObject> Hierarchy::GetSelectedObject()
 {
     return selectedObject;
+}
+
+void Hierarchy::SetScene(std::weak_ptr<Scene> value)
+{
+    this->scene = value;
 }

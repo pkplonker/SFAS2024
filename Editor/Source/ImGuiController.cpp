@@ -59,24 +59,40 @@ void ImGuiController::DrawViewport()
     gameViewportSize = ImGui::GetWindowSize();
     ImGui::End();
 }
-
-void ImGuiController::DrawMenu()
+void ImGuiController::Save()
 {
+    SceneSerializer::Serialize();
+}
+void ImGuiController::Load() const
+{
+    auto path = FileDialog::OpenFileDialog();
+    if (path != "")
+    {
+        game->SetScene(SceneSerializer::Deserialize(path));
+        for (auto renderable : renderables) 
+        {
+            std::shared_ptr<Hierarchy> hierarchyRenderable = std::dynamic_pointer_cast<Hierarchy>(renderable.first);
+
+            if (hierarchyRenderable != nullptr)
+            {
+                hierarchyRenderable->SetScene(game->GetScene());
+            }
+        }
+    }
+}
+void ImGuiController::DrawMenu()
+{    
     if (ImGui::BeginMainMenuBar())
     {
         if (ImGui::BeginMenu("File"))
         {
-            if (ImGui::MenuItem("Save"))
+            if (ImGui::MenuItem("Save","Ctrl+S"))
             {
-                SceneSerializer::Serialize();
+                Save();
             }
-            if (ImGui::MenuItem("Load"))
+            if (ImGui::MenuItem("Load","Ctrl+O"))
             {
-                auto path = FileDialog::OpenFileDialog();
-                if (path != "")
-                {
-                    auto scene = SceneSerializer::Deserialize(path);
-                }
+                Load();
             }
             ImGui::EndMenu();
         }
