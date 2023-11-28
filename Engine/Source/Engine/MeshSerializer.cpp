@@ -6,7 +6,7 @@
 #include "Engine/Implementation/Debug.h"
 
 
-void MeshSerializer::Serialize(Mesh* mesh, std::string fullFilePath)
+bool MeshSerializer::Serialize(Mesh* mesh, std::string fullFilePath)
 {
     std::ofstream file(fullFilePath, std::ios::binary);
 
@@ -21,11 +21,11 @@ void MeshSerializer::Serialize(Mesh* mesh, std::string fullFilePath)
         file.write(reinterpret_cast<char*>(mesh->Indices.data()), numIndices * sizeof(unsigned int));
 
         file.close();
-        return;
+        return true;
     }
 
-    std::string error = "Failed to open file for writing";
-    Debug(error)
+    Debug("Failed to open file for writing")
+    return false;
 }
 
 Mesh* MeshSerializer::Deserialize(std::string fullFilePath)
