@@ -8,3 +8,8 @@ IMaterial::IMaterial(Vec4 color)
 IMaterial::~IMaterial()
 {
 }
+
+void IMaterial::UpdateMaterialBuffer(MaterialBufferObject* data)
+{
+    data->color = color;
+}

@@ -81,4 +81,6 @@ private:
 	ID3D11Texture2D* textureTargetDepthStencilBuffer = nullptr;
 	ID3D11DepthStencilView* textureTargetDepthStencilView = nullptr;
 	bool renderToTexture;
+	ID3D11Buffer* materialBuffer;
+	D3D11_BUFFER_DESC materialBufferDesc;
 };

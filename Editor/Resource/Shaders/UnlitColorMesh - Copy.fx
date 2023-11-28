@@ -3,11 +3,6 @@ cbuffer cbChangedPerFrame : register(b0)
     matrix mvp;
 };
 
-cbuffer MaterialBuffer : register(b1)
-{
-    float4 materialColor;
-};
-
 struct VS_Input
 {
     float4 position : POSITION;
@@ -36,10 +31,5 @@ PS_Input VS_Main(VS_Input vertex)
 
 float4 PS_Main(PS_Input frag) : SV_TARGET
 {
-	float4 finalColor = frag.color;  // Corrected this line
-    if(materialColor.x != 1.0f || materialColor.y != 1.0f || materialColor.z != 1.0f || materialColor.w != 1.0f )
-    {
-        finalColor = materialColor;
-    }
-    return finalColor;
+    return frag.color;
 }

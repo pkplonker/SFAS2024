@@ -158,6 +158,14 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         Device->CreateDepthStencilView(depthStencil, &depthViewDesc, &DepthStencilView);
 
         Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
+
+        ZeroMemory(&materialBufferDesc, sizeof(D3D11_BUFFER_DESC));
+        materialBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+        materialBufferDesc.ByteWidth = sizeof(MaterialBufferObject);
+        materialBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        materialBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+        Device->CreateBuffer(&materialBufferDesc, nullptr, &materialBuffer);
+
     }
 }
 
@@ -233,6 +241,17 @@ void DirectX11Graphics::Update()
         for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
         {
             bucket->first->Update();
+           
+            D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+            Context->Map(materialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+            MaterialBufferObject* data = static_cast<MaterialBufferObject*>(mappedResource.pData);
+            bucket->first->UpdateMaterialBuffer(data);
+
+            Context->Unmap(materialBuffer, 0);
+            Context->PSSetConstantBuffers(1, 1, &materialBuffer);
+            Context->VSSetConstantBuffers(1, 1, &materialBuffer);
 
             for (auto renderable = bucket->second.begin(); renderable != bucket->second.end(); ++renderable)
             {

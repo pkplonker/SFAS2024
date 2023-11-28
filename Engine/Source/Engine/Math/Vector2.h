@@ -5,6 +5,11 @@ namespace dx = DirectX;
 
 struct Vec2
 {
+    Vec2()
+    {
+        vec = dx::XMFLOAT2(0);
+    }
+    
     Vec2(float x, float y)
     {
         vec = dx::XMFLOAT2(x, y);

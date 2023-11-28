@@ -5,6 +5,10 @@ class IShader;
 
 const float MATERIAL_DEFAULT_COLOR = 1.0f;
 
+struct MaterialBufferObject {
+    Vec4 color;
+};
+
 class IMaterial
 {
 
@@ -18,6 +22,7 @@ public:
     virtual ITexture* GetTexture() { return texture; }
     virtual Vec4 GetColor() { return color; }
     virtual void SetColor(Vec4 value) { color = value; }
+    void UpdateMaterialBuffer(MaterialBufferObject* data);
 
 protected:
     IShader* shader = {};
