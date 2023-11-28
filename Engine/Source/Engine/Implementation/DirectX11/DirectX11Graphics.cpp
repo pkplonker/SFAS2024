@@ -242,19 +242,19 @@ void DirectX11Graphics::Update()
         {
             bucket->first->Update();
            
-            D3D11_MAPPED_SUBRESOURCE mappedResource;
-
-            Context->Map(materialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-
-            MaterialBufferObject* data = static_cast<MaterialBufferObject*>(mappedResource.pData);
-            bucket->first->UpdateMaterialBuffer(data);
-
-            Context->Unmap(materialBuffer, 0);
-            Context->PSSetConstantBuffers(1, 1, &materialBuffer);
-            Context->VSSetConstantBuffers(1, 1, &materialBuffer);
+            
 
             for (auto renderable = bucket->second.begin(); renderable != bucket->second.end(); ++renderable)
             {
+                { // Currently setting the material buffer per object, which is inefficient. This likely needs splitting to be grouped, shader->texture->material values?
+                    D3D11_MAPPED_SUBRESOURCE mappedResource;
+                    Context->Map(materialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+                    MaterialBufferObject* data = static_cast<MaterialBufferObject*>(mappedResource.pData);
+                    bucket->first->UpdateMaterialBuffer(data);
+                    Context->Unmap(materialBuffer, 0);
+                    Context->PSSetConstantBuffers(1, 1, &materialBuffer);
+                    Context->VSSetConstantBuffers(1, 1, &materialBuffer);
+                }
                 std::weak_ptr<Transform3D> transform = (*renderable)->GetTransform();
                 SetWorldMatrix(transform);
                 Context->OMSetBlendState(BlendState, nullptr, ~0U);

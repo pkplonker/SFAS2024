@@ -48,14 +48,16 @@ IShader* ResourceManager::GetShader(std::wstring shaderPath, std::string vsentry
 
 IMaterial* ResourceManager::GetMaterial(std::wstring shaderPath, std::wstring texturePath)
 {
-	const auto key = GenerateMaterialKey(shaderPath, texturePath);
-	if (const auto it = materials.find(key); it != materials.end())
-	{
-		return it->second.get();
-	}
+	//removing this for now to allow for individual materials
+	
+	// const auto key = GenerateMaterialKey(shaderPath, texturePath);
+	// if (const auto it = materials.find(key); it != materials.end())
+	// {
+	// 	return it->second.get();
+	// }
 
 	IMaterial* material = graphics->CreateMaterial(GetShader(shaderPath), GetTexture(texturePath));
-	materials[key] = std::unique_ptr<IMaterial>(material);
+	//materials[key] = std::unique_ptr<IMaterial>(material);
 	return material;
 }
 
