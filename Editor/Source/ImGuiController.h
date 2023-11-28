@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <memory>
+#include <xstring>
 
 #include "imgui.h"
 
@@ -13,7 +14,8 @@ class ImGuiController
 public:
 	ImGuiController(DirectX11Graphics* dx11Graphics, Game* game);
 	static void ImGuiPreFrame();
-	void Load() const;
+	void LoadScene() const;
+	void LoadScene(std::string path) const;
 	void DrawMenu();
 	void DrawViewport();
 	static void Save();

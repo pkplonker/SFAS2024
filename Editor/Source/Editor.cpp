@@ -19,13 +19,13 @@ constexpr float WinTolerance = PieVal / 10.0f;
 
 IApplication* GetEditorApplication(IGraphics* Graphics, IInput* Input, HWND hwnd)
 {
-	return new Editor(Graphics, Input, hwnd);
+    return new Editor(Graphics, Input, hwnd);
 }
 
 Editor::Editor(IGraphics* GraphicsIn, IInput* InputIn, HWND hwnd) : IApplication(GraphicsIn, InputIn), hwnd(hwnd)
 {
-	game = new Game(Graphics, InputIn);
-	dx11Graphics = dynamic_cast<DirectX11Graphics*>(Graphics);
+    game = new Game(Graphics, InputIn);
+    dx11Graphics = dynamic_cast<DirectX11Graphics*>(Graphics);
 }
 
 Editor::~Editor()
@@ -34,35 +34,39 @@ Editor::~Editor()
 
 bool Editor::IsValid()
 {
-	return true;
+    return true;
 }
 
 bool Editor::Load()
 {
-	game->Load();
-	imguiController = std::make_unique<ImGuiController>(dx11Graphics, game);
-	sceneSerializer = std::make_unique<SceneSerializer>(game->GetScene(),dx11Graphics);
-	dx11Graphics->SetRenderToTexture(true, 1, 1);
-	ResourceManager::Init(dx11Graphics);
-	return true;
+    game->Load();
+
+    imguiController = std::make_unique<ImGuiController>(dx11Graphics, game);
+    sceneSerializer = std::make_unique<SceneSerializer>(game->GetScene(), dx11Graphics);
+    dx11Graphics->SetRenderToTexture(true, 1, 1);
+    ResourceManager::Init(dx11Graphics);
+    imguiController->LoadScene("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/testscene.scene"); // this logic needs moving
+    
+
+    return true;
 }
 
 void Editor::Update()
 {
-	game->Update();
+    game->Update();
 
-	imguiController->ImGuiPreFrame();
+    imguiController->ImGuiPreFrame();
 
-	imguiController->Draw();
+    imguiController->Draw();
 }
 
 void Editor::Cleanup()
 {
-	game->Cleanup();
-	imguiController->ShutDown();
+    game->Cleanup();
+    imguiController->ShutDown();
 }
 
 void Editor::PostGraphics()
 {
-	imguiController->ImGuiPostUpdate();
+    imguiController->ImGuiPostUpdate();
 }
