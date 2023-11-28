@@ -7,6 +7,8 @@ const float MATERIAL_DEFAULT_COLOR = 1.0f;
 
 struct MaterialBufferObject {
     Vec4 color;
+    bool useTex = false;
+    float padding[3]{0,0,0};
 };
 
 class IMaterial

@@ -83,7 +83,7 @@ bool Game::Load()
         .AddPosition(Vec3(0, -2.6f, 0.0f))
         .AddRotation(Vec3(45, 0, 0))
         .AddScale(Vec3(15.0f, 15.0f, .055f))
-        .AddSpriteRenderable(L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColor3.fx")
+        .AddSpriteRenderable(L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorBillboard.fx")
         .Build();
 
     return true;

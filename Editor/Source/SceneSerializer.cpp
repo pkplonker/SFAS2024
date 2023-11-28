@@ -54,6 +54,11 @@ nlohmann::json SceneSerializer::SerializeMaterial(const std::shared_ptr<IRendera
         {
             serializedData["texture"] = Helpers::WideStringToString(texture->GetPath());
         }
+        auto color = material->GetColor();
+        serializedData["color"]["r"] = color.X();
+        serializedData["color"]["g"] = color.Y();
+        serializedData["color"]["b"] = color.Z();
+        serializedData["color"]["a"] = color.W();
     }
     return serializedData;
 }
@@ -271,6 +276,14 @@ IMaterial* SceneSerializer::DeserializeMaterial(const nlohmann::json& data, std:
             material = ResourceManager::GetMaterial(Helpers::StringToWstring(shaderPath));
         }
     }
+    if (data.contains("color"))
+    {
+        material->SetColor(Vec4(static_cast<float>(data["color"]["r"]),
+                                static_cast<float>(data["color"]["g"]),
+                                static_cast<float>(data["color"]["b"]),
+                                static_cast<float>(data["color"]["a"]))
+        );
+    }
     return material;
 }
 
@@ -285,7 +298,7 @@ void SceneSerializer::DeserializeMeshComponent(const std::shared_ptr<GameObject>
     Mesh* mesh = nullptr;
     std::shared_ptr<MeshComponent> component = nullptr;
     material = DeserializeMaterial(data, texturePath, shaderPath);
-    if(data.contains("material"))
+    if (data.contains("material"))
     {
         material = DeserializeMaterial(data["material"], texturePath, shaderPath);
     }
@@ -319,7 +332,7 @@ void SceneSerializer::DeserializeSpriteComponent(const std::shared_ptr<GameObjec
     std::string shaderPath = "";
     IMaterial* material = nullptr;
     std::shared_ptr<SpriteComponent> component = nullptr;
-    if(data.contains("material"))
+    if (data.contains("material"))
     {
         material = DeserializeMaterial(data["material"], texturePath, shaderPath);
     }

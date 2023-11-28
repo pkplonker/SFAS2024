@@ -12,4 +12,5 @@ IMaterial::~IMaterial()
 void IMaterial::UpdateMaterialBuffer(MaterialBufferObject* data)
 {
     data->color = color;
+    data->useTex = texture != nullptr;
 }

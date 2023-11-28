@@ -63,7 +63,7 @@ void Inspector::Draw()
 
 void Inspector::DrawVector(const char* vectorName, Vec3& vector)
 {
-     float labelWidth = ImGui::CalcTextSize("Rotation").x + 12.0f;
+     float labelWidth = ImGui::CalcTextSize("Rotation").x + 20.0f;
      float totalWidth = ImGui::GetContentRegionAvail().x - labelWidth;
      float fieldWidth = totalWidth / 3.0f - ImGui::GetStyle().ItemInnerSpacing.x;
 
