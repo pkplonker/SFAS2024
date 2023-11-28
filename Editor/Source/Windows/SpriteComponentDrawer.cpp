@@ -6,6 +6,7 @@
 #include "IShader.h"
 #include "ITexture.h"
 #include "SpriteComponent.h"
+#include "../ImGuiHelpers.h"
 
 SpriteComponentDrawer::~SpriteComponentDrawer()
 {
@@ -44,9 +45,7 @@ void SpriteComponentDrawer::Draw()
                     const auto shaderPath = shader->GetPath();
                     if (shaderPath != L"")
                     {
-                        ImGui::Text("Shader Path:");
-                        ImGui::SameLine();
-                        ImGui::Text(Helpers::WideStringToString(shaderPath).c_str());
+                        ImGuiHelpers::WrappedText("Shader Path:",shaderPath);
                     }
                 }
                 if (const auto tex = mat->GetTexture())
@@ -54,9 +53,7 @@ void SpriteComponentDrawer::Draw()
                     const auto texturePath = tex->GetPath();
                     if (texturePath != L"")
                     {
-                        ImGui::Text("Texture Path:");
-                        ImGui::SameLine();
-                        ImGui::Text(Helpers::WideStringToString(texturePath).c_str());
+                        ImGuiHelpers::WrappedText("Texture Path:",texturePath);
                     }
                 }
                 auto color = mat->GetColor();

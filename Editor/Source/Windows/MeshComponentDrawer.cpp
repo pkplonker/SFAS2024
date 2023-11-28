@@ -1,6 +1,7 @@
 ﻿#include "MeshComponentDrawer.h"
 
 #include "imgui.h"
+#include "../ImGuiHelpers.h"
 #include "Engine/Implementation/Helpers.h"
 #include "Engine/IMaterial.h"
 #include "Engine/IShader.h"
@@ -36,9 +37,9 @@ void MeshComponentDrawer::Draw()
                     ImGui::EndPopup();
                 }
             }
-            ImGui::Text("Mesh Path:");
-            ImGui::SameLine();
-            ImGui::Text(meshComponent->GetMeshPath().c_str());
+            
+            ImGuiHelpers::WrappedText("Mesh Path:",meshComponent->GetMeshPath());
+            
             if (const auto mat = meshComponent->GetMaterial())
             {
                 if (const auto shader = mat->GetShader())
@@ -46,9 +47,7 @@ void MeshComponentDrawer::Draw()
                     const auto shaderPath = shader->GetPath();
                     if (shaderPath != L"")
                     {
-                        ImGui::Text("Shader Path:");
-                        ImGui::SameLine();
-                        ImGui::Text(Helpers::WideStringToString(shaderPath).c_str());
+                        ImGuiHelpers::WrappedText("Shader Path:",shaderPath);
                     }
                 }
                 if (const auto tex = mat->GetTexture())
@@ -56,9 +55,7 @@ void MeshComponentDrawer::Draw()
                     const auto texturePath = tex->GetPath();
                     if (texturePath != L"")
                     {
-                        ImGui::Text("Texture Path:");
-                        ImGui::SameLine();
-                        ImGui::Text(Helpers::WideStringToString(texturePath).c_str());
+                        ImGuiHelpers::WrappedText("Texture Path:",texturePath);
                     }
                 }
                 auto color = mat->GetColor();

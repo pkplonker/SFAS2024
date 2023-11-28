@@ -266,6 +266,7 @@
     <ClInclude Include="Packages\assimp\XMLTools.h" />
     <ClInclude Include="Packages\assimp\ZipArchiveIOSystem.h" />
     <ClInclude Include="Source\FileDialog.h" />
+    <ClInclude Include="Source\ImGuiHelpers.h" />
     <ClInclude Include="Source\ImGuiTheme.h" />
     <ClInclude Include="Source\MeshImporter.h" />
     <ClInclude Include="Source\SceneSerializer.h" />
