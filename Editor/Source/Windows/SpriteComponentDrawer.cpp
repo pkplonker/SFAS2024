@@ -1,26 +1,26 @@
-﻿#include "MeshComponentDrawer.h"
+﻿#include "SpriteComponentDrawer.h"
 
+#include "Helpers.h"
+#include "IMaterial.h"
 #include "imgui.h"
-#include "Engine/Implementation/Helpers.h"
-#include "Engine/IMaterial.h"
-#include "Engine/IShader.h"
-#include "Engine/ITexture.h"
-#include "Engine/Implementation/MeshComponent.h"
+#include "IShader.h"
+#include "ITexture.h"
+#include "SpriteComponent.h"
 
-MeshComponentDrawer::~MeshComponentDrawer()
+SpriteComponentDrawer::~SpriteComponentDrawer()
 {
 }
 
-MeshComponentDrawer::MeshComponentDrawer(std::weak_ptr<IComponent> component) : ComponentDrawer(
+SpriteComponentDrawer::SpriteComponentDrawer(std::weak_ptr<IComponent> component) : ComponentDrawer(
     std::move(component))
 {
 }
 
-void MeshComponentDrawer::Draw()
+void SpriteComponentDrawer::Draw()
 {
     if (std::shared_ptr<IComponent> sharedComponent = component.lock())
     {
-        if (auto meshComponent = std::dynamic_pointer_cast<MeshComponent>(sharedComponent))
+        if (auto meshComponent = std::dynamic_pointer_cast<SpriteComponent>(sharedComponent))
         {
             if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
             {
@@ -36,9 +36,7 @@ void MeshComponentDrawer::Draw()
                     ImGui::EndPopup();
                 }
             }
-            ImGui::Text("Mesh Path:");
-            ImGui::SameLine();
-            ImGui::Text(meshComponent->GetMeshPath().c_str());
+            
             if (const auto mat = meshComponent->GetMaterial())
             {
                 if (const auto shader = mat->GetShader())

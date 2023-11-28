@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "ComponentDrawer.h"
 
-class MeshComponentDrawer: public ComponentDrawer
+class MeshComponentDrawer : public ComponentDrawer
 {
 public:
     ~MeshComponentDrawer() override;

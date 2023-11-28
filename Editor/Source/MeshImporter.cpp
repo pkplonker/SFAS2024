@@ -63,7 +63,7 @@ void MeshImporter::ProcessMesh(aiMesh* aiMesh, const aiScene* scene, Mesh* mesh)
                                 aiMesh->mColors[0]->a);
         }else
         {
-            vertex.color = Vec4(DEFAULT_COLOR);
+            vertex.color = Vec4(MESH_DEFAULT_COLOR);
         }
         mesh->Vertices.push_back(vertex);
     }

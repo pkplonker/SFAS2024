@@ -3,6 +3,8 @@
 
 #include "CameraComponentDrawer.h"
 #include "MeshComponentDrawer.h"
+#include "SpriteComponent.h"
+#include "SpriteComponentDrawer.h"
 #include "Engine/Implementation/CameraComponent.h"
 #include "Engine/Implementation/MeshComponent.h"
 
@@ -20,6 +22,9 @@ public:
 			}
 			if (dynamic_cast<MeshComponent*>(sharedComponent.get())) {
 				return std::make_unique<MeshComponentDrawer>(sharedComponent);
+			}
+			if (dynamic_cast<SpriteComponent*>(sharedComponent.get())) {
+				return std::make_unique<SpriteComponentDrawer>(sharedComponent);
 			}
 		}
 
