@@ -10,6 +10,14 @@ PerspectiveCamera::PerspectiveCamera(std::shared_ptr<Transform3D> transform, flo
 	vpMatrix(DirectX::XMMatrixIdentity())
 {
 }
+PerspectiveCamera::PerspectiveCamera( float width, float height, float near,
+	float far, float FOV) : nearZ(near),
+	farZ(far), width(width), height(height), FOV(FOV),
+	view(DirectX::XMMatrixIdentity()),
+	projection(DirectX::XMMatrixIdentity()),
+	vpMatrix(DirectX::XMMatrixIdentity())
+{
+}
 
 DirectX::XMMATRIX PerspectiveCamera::GetProjectionMatrix()
 {

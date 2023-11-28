@@ -7,7 +7,7 @@
 GameObject::GameObject()
 {
 	components = std::make_unique<std::vector<std::shared_ptr<IComponent>>>();
-	transform = std::make_unique<Transform3D>();
+	transform = std::make_shared<Transform3D>();
 	this->Name = GAMEOBJECT_DEFAULT_NAME;
 }
 

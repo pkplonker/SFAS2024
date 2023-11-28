@@ -23,7 +23,7 @@ Mesh* MeshImporter::LoadMesh(std::string path)
         return nullptr;
     }
 
-    Mesh* mesh = new Mesh();
+    Mesh* mesh = new Mesh(path);
 
     ProcessNode(scene->mRootNode, scene, mesh);
 
@@ -44,6 +44,7 @@ void MeshImporter::ProcessNode(aiNode* node, const aiScene* scene, Mesh* mesh)
     }
 }
 
+
 void MeshImporter::ProcessMesh(aiMesh* aiMesh, const aiScene* scene, Mesh* mesh)
 {
     for (unsigned int i = 0; i < aiMesh->mNumVertices; i++)
@@ -60,6 +61,9 @@ void MeshImporter::ProcessMesh(aiMesh* aiMesh, const aiScene* scene, Mesh* mesh)
         {
             vertex.color = Vec4(aiMesh->mColors[0]->r, aiMesh->mColors[0]->g, aiMesh->mColors[0]->b,
                                 aiMesh->mColors[0]->a);
+        }else
+        {
+            vertex.color = Vec4(DEFAULT_COLOR);
         }
         mesh->Vertices.push_back(vertex);
     }

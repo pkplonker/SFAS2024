@@ -34,7 +34,7 @@ Mesh* MeshSerializer::Deserialize(std::string fullFilePath)
 
     if (file.is_open())
     {
-        Mesh* mesh = new Mesh();
+        Mesh* mesh = new Mesh(fullFilePath);
 
         unsigned int numVertices, numIndices;
         file.read(reinterpret_cast<char*>(&numVertices), sizeof(unsigned int));

@@ -3,9 +3,11 @@
 #include <assimp/scene.h>
 
 class Mesh;
+const float DEFAULT_COLOR =1.0f;
 
 class MeshImporter
 {
+
 public:
     static Mesh* LoadMesh(std::string path);
     static  void ProcessNode(aiNode* node, const aiScene* scene, Mesh* mesh);

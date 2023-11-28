@@ -70,10 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Editor\packages\ImGui;$(SolutionDir)Source\;$(SolutionDir)Editor\packages\assimp</IncludePath>
+    <IncludePath>$(SolutionDir)Editor\packages\ImGui;$(SolutionDir)Engine\Source\Engine;$(SolutionDir)Editor\packages\assimp;$(SolutionDir)Engine\Source\Engine\implementation</IncludePath>
+    <IntDir>$(Configuration)\Editor\</IntDir>
+    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui;$(SolutionDir)Source\</IncludePath>
+    <IncludePath>$(SolutionDir)\Editor\packages\ImGui;$(SolutionDir)Engine\Source\Engine;$(SolutionDir)Source\;$(SolutionDir)Engine\Source\Engine\implementation;$(SolutionDir)Engine\Source\Engine\implementation\directx11</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
@@ -104,12 +106,13 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)\Star\Source\Game;$(SolutionDir)\Engine\Source;$(ProjectDir)Packages\ImGui\backends;$(ProjectDir)Packages\ImGui;$(ProjectDir)Packages\assimp;$(ProjectDir)Packages\nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <AdditionalDependencies>Engine.lib;d3d11.lib;d3dcompiler.lib;Xinput.lib;%(AdditionalDependencies);assimp-vc143-mtd.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;Xinput.lib;%(AdditionalDependencies);assimp-vc143-mtd.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir);$(SolutionDir)x64\Debug;$(SolutionDir)Engine;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -128,7 +131,7 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Engine.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir);$(SolutionDir)x64\Release;$(SolutionDir)Engine;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -147,7 +150,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Engine.lib;d3d11.lib;d3dcompiler.lib;Xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;Xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir);$(SolutionDir)x64\Release;$(SolutionDir)Engine;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -175,6 +178,7 @@
     <ClCompile Include="Source\Editor.cpp" />
     <ClCompile Include="Source\Windows\ImGuiFPSCounter.cpp" />
     <ClCompile Include="Source\Windows\MeshImporterWindow.cpp" />
+    <ClCompile Include="Source\Windows\MeshComponentDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Packages\assimp\aabb.h" />
@@ -317,6 +321,7 @@
     <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xdsp.h" />
     <ClInclude Include="Source\Editor.h" />
     <ClInclude Include="Source\Windows\MeshImporterWindow.h" />
+    <ClInclude Include="Source\Windows\MeshComponentDrawer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

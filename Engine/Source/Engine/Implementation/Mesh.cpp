@@ -1,5 +1,6 @@
 ﻿#include "Mesh.h"
 
-Mesh::Mesh()
+Mesh::Mesh(std::string path)
 {
+    this->path=path;
 }

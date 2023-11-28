@@ -33,10 +33,11 @@ public:
 	bool IsValid() override;
 
 	ITexture* CreateTexture(const wchar_t* filepath) override;
-	IShader* CreateShader(const wchar_t* filepath, const char* vsentry, const char* vsshader, const char* psentry, const char* psshader, ITexture* TextureIn) override;
-	std::shared_ptr<IRenderable> CreateBillboard(IShader* ShaderIn) override;
-	std::shared_ptr<IRenderable> CreateMeshRenderable(IShader* ShaderIn) override;
-	std::shared_ptr<IRenderable> CreateMeshRenderable(IShader* ShaderIn, Mesh* mesh);
+	IShader* CreateShader(const wchar_t* filepath, const char* vsentry, const char* vsshader, const char* psentry, const char* psshader) override;
+	std::shared_ptr<IRenderable> CreateBillboard(IMaterial* material) override;
+	void AddRenderable(IMaterial* material, std::shared_ptr<IRenderable> Result);
+	std::shared_ptr<IMeshRenderable> CreateMeshRenderable(IMaterial* material, Mesh* mesh) override;
+	std::shared_ptr<IMeshRenderable> CreateMeshRenderable(Mesh* mesh) override;
 	void SetActiveCamera(std::shared_ptr<ICamera> camera) override;
 	ID3D11Device* GetDevice() const { return Device; }
 	HWND GetHWND() const { return hwnd; }
@@ -48,11 +49,13 @@ public:
 	ID3D11Texture2D* GetTexture() const;
 	int GetTextureWidth() { return texWidth; }
 	int GetTextureHeight() { return texHeight; }
+	IMaterial* CreateMaterial(IShader* shader,ITexture* texture) override;
 
 protected:
 
 	virtual void SetWorldMatrix(std::weak_ptr<Transform3D> transform);
 	virtual bool CompileShader(LPCWSTR filepath, LPCSTR entry, LPCSTR shader, ID3DBlob** buffer);
+
 
 private:
 

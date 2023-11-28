@@ -1,13 +1,34 @@
 ﻿#include "GameObjectFactory.h"
 
+#include "Debug.h"
+#include "IMaterial.h"
+#include "MeshComponent.h"
+#include "OrthographicCamera.h"
+#include "PerspectiveCamera.h"
+#include "ResourceManager.h"
+#include "SpriteComponent.h"
+#include "Engine/IRenderable.h"
+#include "Engine/Implementation/CameraComponent.h"
+#include "Engine/Implementation/Scene.h"
+
 GameObjectFactory::GameObjectFactory(std::shared_ptr<Scene> scene) : scene(scene)
 {
+	if (scene == nullptr || graphics == nullptr)
+	{
+		Debug("Invalid init of GameObjectResourceManager")
+			return;
+	}
 	gameObject = std::make_shared<GameObject>();
 	SetupRandom();
 }
 
 GameObjectFactory::GameObjectFactory(std::shared_ptr<Scene> scene, std::string name) : scene(scene)
 {
+	if (scene == nullptr || graphics == nullptr)
+	{
+		Debug("Invalid init of GameObjectResourceManager")
+			return;
+	}
 	gameObject = std::make_shared<GameObject>(name);
 	SetupRandom();
 }
@@ -33,6 +54,12 @@ GameObjectFactory& GameObjectFactory::AddRotation(Vec3 vec)
 	return *this;
 }
 
+GameObjectFactory& GameObjectFactory::AddScale(Vec3 vec)
+{
+	gameObject->Transform()->Scale = vec;
+	return *this;
+}
+
 GameObjectFactory& GameObjectFactory::AddName(std::string name)
 {
 	gameObject->Name = name;
@@ -45,9 +72,11 @@ std::shared_ptr<GameObject> GameObjectFactory::Build()
 	return gameObject;
 }
 
-GameObjectFactory& GameObjectFactory::AddSpriteRenderable(std::shared_ptr<IRenderable> renderable)
+GameObjectFactory& GameObjectFactory::AddSpriteRenderable(std::wstring shaderPath, std::wstring texturePath)
 {
-	auto component = std::make_shared<SpriteRenderable>(gameObject, renderable);
+	auto material = ResourceManager::GetMaterial(shaderPath, texturePath);
+	auto component = std::make_shared<SpriteComponent>(gameObject, graphics->CreateBillboard(material),
+		material);
 	if (component != nullptr)
 	{
 		gameObject->AddComponent(std::move(component));
@@ -56,9 +85,19 @@ GameObjectFactory& GameObjectFactory::AddSpriteRenderable(std::shared_ptr<IRende
 	return *this;
 }
 
-GameObjectFactory& GameObjectFactory::AddMeshRenderable(std::shared_ptr<IRenderable> renderable)
+GameObjectFactory& GameObjectFactory::AddSpriteRenderable(std::wstring shaderPath)
 {
-	auto component = std::make_shared<MeshRenderable>(gameObject, renderable);
+	return AddSpriteRenderable(shaderPath, L"");
+}
+
+GameObjectFactory& GameObjectFactory::AddMeshRenderable(std::string meshPath, std::wstring shaderPath,
+	std::wstring texturePath)
+{
+	auto material = ResourceManager::GetMaterial(shaderPath, texturePath);
+	auto mesh = ResourceManager::GetMesh(meshPath);
+
+	auto component = std::make_shared<MeshComponent>(gameObject, graphics->CreateMeshRenderable(material, mesh),
+		material);
 	if (component != nullptr)
 	{
 		gameObject->AddComponent(std::move(component));
@@ -67,6 +106,10 @@ GameObjectFactory& GameObjectFactory::AddMeshRenderable(std::shared_ptr<IRendera
 	return *this;
 }
 
+GameObjectFactory& GameObjectFactory::AddMeshRenderable(std::string meshPath, std::wstring shaderPath)
+{
+	return AddMeshRenderable(meshPath, shaderPath, L"");
+}
 
 GameObjectFactory& GameObjectFactory::AddRandomRotation()
 {
@@ -99,4 +142,9 @@ GameObjectFactory& GameObjectFactory::AddOrthoCamera()
 		return *this;
 	}
 	return *this;
+}
+
+void GameObjectFactory::Init(IGraphics* graphics)
+{
+	GameObjectFactory::graphics = graphics;
 }

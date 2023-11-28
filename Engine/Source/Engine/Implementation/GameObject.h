@@ -67,6 +67,7 @@ public:
 
 	void Update() override;
 	const std::vector<std::shared_ptr<IComponent>>& GetComponents() const;
+	void SetTransform(const std::shared_ptr<Transform3D> transform){this->transform = transform;}
 	std::string Name = GAMEOBJECT_DEFAULT_NAME;
 
 private:
