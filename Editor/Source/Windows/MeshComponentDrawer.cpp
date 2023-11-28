@@ -1,6 +1,10 @@
 ﻿#include "MeshComponentDrawer.h"
 
+#include <functional>
+
+#include "Debug.h"
 #include "imgui.h"
+#include "MeshImporterWindow.h"
 #include "../ImGuiHelpers.h"
 #include "Engine/Implementation/Helpers.h"
 #include "Engine/IMaterial.h"
@@ -16,7 +20,10 @@ MeshComponentDrawer::MeshComponentDrawer(std::weak_ptr<IComponent> component) : 
     std::move(component))
 {
 }
-
+void MeshComponentDrawer::ChangeMesh()
+{
+    auto path = MeshImporterWindow::
+}
 void MeshComponentDrawer::Draw()
 {
     if (std::shared_ptr<IComponent> sharedComponent = component.lock())
@@ -38,7 +45,7 @@ void MeshComponentDrawer::Draw()
                 }
             }
             
-            ImGuiHelpers::WrappedText("Mesh Path:",meshComponent->GetMeshPath());
+            ImGuiHelpers::WrappedText("Mesh Path:",meshComponent->GetMeshPath(),std::bind(&MeshComponentDrawer::ChangeMesh, this));
             
             if (const auto mat = meshComponent->GetMaterial())
             {
