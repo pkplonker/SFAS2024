@@ -9,8 +9,7 @@
 #include "Engine/Implementation/PerspectiveCamera.h"
 CameraComponentDrawer::~CameraComponentDrawer() = default;
 
-CameraComponentDrawer::CameraComponentDrawer(std::weak_ptr<IComponent> component) : ComponentDrawer(
-    std::move(component))
+CameraComponentDrawer::CameraComponentDrawer(std::weak_ptr<CameraComponent> component) : component(component)
 {
 }
 

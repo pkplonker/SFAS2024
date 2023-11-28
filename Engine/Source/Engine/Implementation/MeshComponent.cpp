@@ -19,3 +19,8 @@ std::string MeshComponent::GetMeshPath()
 	}
 	return "";
 }
+
+void MeshComponent::SetMesh(std::shared_ptr<IMeshRenderable> mesh)
+{
+	this->renderable = mesh;
+}

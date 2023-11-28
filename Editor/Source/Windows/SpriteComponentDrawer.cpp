@@ -12,8 +12,7 @@ SpriteComponentDrawer::~SpriteComponentDrawer()
 {
 }
 
-SpriteComponentDrawer::SpriteComponentDrawer(std::weak_ptr<IComponent> component) : ComponentDrawer(
-    std::move(component))
+SpriteComponentDrawer::SpriteComponentDrawer(std::weak_ptr<SpriteComponent> component) : component(component)
 {
 }
 

@@ -1,5 +1,4 @@
 #pragma once
-#include <memory>
 
 class ImGuiController;
 class IGraphics;
@@ -8,19 +7,18 @@ class IInput;
 class IApplication
 {
 public:
+    IApplication(IGraphics* GraphicsIn, IInput* InputIn);
+    virtual ~IApplication();
 
-	IApplication(IGraphics* GraphicsIn, IInput* InputIn);
-	virtual ~IApplication();
-
-	virtual bool IsValid() = 0;
-	virtual bool Load() = 0;
-	virtual void Update() = 0;
-	virtual void Cleanup() = 0;
-	virtual void PostGraphics() = 0;
+    virtual bool IsValid() = 0;
+    virtual bool Load() = 0;
+    virtual void Update() = 0;
+    virtual void Cleanup() = 0;
+    virtual void PostGraphics() = 0;
+    static IGraphics* GetGraphics() { return Graphics; }
 
 protected:
-
-	IGraphics* Graphics;
-	IInput* Input;
-	ImGuiController* ImGui;
+    inline static IGraphics* Graphics;
+    inline static IInput* Input;
+    inline static ImGuiController* ImGui;
 };

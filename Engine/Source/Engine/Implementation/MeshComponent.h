@@ -17,7 +17,10 @@ public:
 
     std::string GetMeshPath();
 
-    IMaterial* GetMaterial() { return material; }
+    IMaterial* GetMaterial() { return IRenderableComponent::GetMaterial(); }
+    std::shared_ptr<IRenderable> GetRenderable() { return IRenderableComponent::GetRenderable(); }
+
+    void SetMesh(std::shared_ptr<IMeshRenderable> mesh);
 
 private:
 };

@@ -22,8 +22,9 @@ IApplication* GetEditorApplication(IGraphics* Graphics, IInput* Input, HWND hwnd
     return new Editor(Graphics, Input, hwnd);
 }
 
-Editor::Editor(IGraphics* GraphicsIn, IInput* InputIn, HWND hwnd) : IApplication(GraphicsIn, InputIn), hwnd(hwnd)
+Editor::Editor(IGraphics* GraphicsIn, IInput* InputIn, HWND hwnd) : IApplication(GraphicsIn, InputIn)
 {
+    Editor::hwnd = hwnd;
     game = new Game(Graphics, InputIn);
     dx11Graphics = dynamic_cast<DirectX11Graphics*>(Graphics);
 }
@@ -45,8 +46,9 @@ bool Editor::Load()
     sceneSerializer = std::make_unique<SceneSerializer>(game->GetScene(), dx11Graphics);
     dx11Graphics->SetRenderToTexture(true, 1, 1);
     ResourceManager::Init(dx11Graphics);
-    imguiController->LoadScene("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/testscene.scene"); // this logic needs moving
-    
+    imguiController->LoadScene("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/testscene.scene");
+    // this logic needs moving
+
 
     return true;
 }
@@ -69,4 +71,9 @@ void Editor::Cleanup()
 void Editor::PostGraphics()
 {
     imguiController->ImGuiPostUpdate();
+}
+
+IGraphics* Editor::GetGraphics()
+{
+    return Editor::dx11Graphics;
 }
