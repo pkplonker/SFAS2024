@@ -9,7 +9,9 @@
 #include <DDSTextureLoader.h>
 #include <memory>
 
+#include "DirectX11Material.h"
 #include "DirectX11Mesh.h"
+#include "ResourceManager.h"
 #include "Engine/Implementation/Debug.h"
 #include "Implementation/Mesh.h"
 #include "Implementation/Vertex.h"
@@ -210,9 +212,9 @@ void DirectX11Graphics::Update()
         {
             float color = 32.0f / 255;
             float clearColour[4] = {color, color, color, 1.0f};
-            float textureClearColour[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-            Context->ClearRenderTargetView(renderTargetView, textureClearColour);
-            Context->ClearRenderTargetView(BackbufferView, clearColour);
+            float textureClearColour[4] = {color, color, color, 1.0f};//{1.0f, 1.0f, 1.0f, 1.0f};
+            Context->ClearRenderTargetView(renderTargetView, clearColour);
+            Context->ClearRenderTargetView(BackbufferView, textureClearColour);
         }
         else
         {
@@ -258,8 +260,7 @@ void DirectX11Graphics::RemoveRenderable(const std::shared_ptr<IRenderable>& sha
 
             if (renderablesList.empty())
             {
-                IShader* shader = kvp.first;
-                Renderables.erase(shader);
+                Renderables.erase(kvp.first);
             }
             break;
         }
@@ -312,7 +313,7 @@ ITexture* DirectX11Graphics::CreateTexture(const wchar_t* filepath)
 
         if (SUCCEEDED(hr))
         {
-            Result = new DirectX11Texture(Context, Texture, Sampler, Description);
+            Result = new DirectX11Texture(filepath, Context, Texture, Sampler, Description);
             Textures.push_back(Result);
         }
     }
@@ -321,7 +322,7 @@ ITexture* DirectX11Graphics::CreateTexture(const wchar_t* filepath)
 }
 
 IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vsentry, const char* vsshader,
-                                         const char* psentry, const char* psshader, ITexture* TextureIn)
+                                         const char* psentry, const char* psshader)
 {
     IShader* Result = nullptr;
     ID3D11VertexShader* VertexShader = nullptr;
@@ -391,8 +392,7 @@ IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vs
             return nullptr;
         }
 
-        Result = new DirectX11Shader(Context, VertexShader, PixelShader, InputLayout, TextureIn);
-        Renderables.insert(std::pair(Result, std::list<std::shared_ptr<IRenderable>>()));
+        Result = new DirectX11Shader(filepath,Context, VertexShader, PixelShader, InputLayout);
     }
     else
     {
@@ -403,13 +403,13 @@ IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vs
 }
 
 
-std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IShader* ShaderIn)
+std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IMaterial* material)
 {
     std::shared_ptr<IRenderable> Result = nullptr;
 
     if (IsValid())
     {
-        const ITexture* texture = ShaderIn->GetTexture();
+        const ITexture* texture = material->GetTexture();
         const float halfWidth = texture ? texture->GetWidth() / 2.0f : 0.5f;
         const float halfHeight = texture ? texture->GetHeight() / 2.0f : 0.5f;
 
@@ -459,100 +459,25 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IShader* ShaderI
             Result = std::make_shared<DirectX11Billboard>(Context, VertexBuffer, IndexBuffer, vertexStride,
                                                           vertexOffset,
                                                           vertexCount, indexCount);
-            Renderables[ShaderIn].push_back(Result);
+            AddRenderable(material, Result);
         }
     }
 
     return Result;
 }
 
-std::shared_ptr<IRenderable> DirectX11Graphics::CreateMeshRenderable(IShader* ShaderIn)
+void DirectX11Graphics::AddRenderable(IMaterial* material, std::shared_ptr<IRenderable> Result)
 {
-    std::shared_ptr<IRenderable> Result = nullptr;
-
-    if (IsValid())
+    if (!Renderables.contains(material))
     {
-        float size = .5f;
-
-
-        float vertex_data_array[] = {
-            -size, -size, -size, 0.0f, 0.0f,
-            -size, size, -size, 0.0f, 0.0f,
-            size, size, -size, 0.0f, 0.0f,
-            size, -size, -size, 0.0f, 0.0f,
-
-            -size, -size, size, 0.0f, 0.0f,
-            -size, size, size, 0.0f, 0.0f,
-            size, size, size, 0.0f, 0.0f,
-            +size, -size, size, 0.0f, 0.0f,
-        };
-
-        ID3D11Buffer* VertexBuffer;
-        unsigned int vertexStride = 5 * sizeof(float);
-        unsigned int vertexOffset = 0;
-        unsigned int vertexCount = 8;
-
-        D3D11_BUFFER_DESC vertexDescription;
-        ZeroMemory(&vertexDescription, sizeof(vertexDescription));
-        vertexDescription.Usage = D3D11_USAGE_DEFAULT;
-        vertexDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-        vertexDescription.ByteWidth = sizeof(vertex_data_array);
-
-        D3D11_SUBRESOURCE_DATA resourceData;
-        ZeroMemory(&resourceData, sizeof(resourceData));
-        resourceData.pSysMem = vertex_data_array;
-
-        unsigned int indices[] =
-        {
-            // Front face
-            0, 1, 2,
-            0, 2, 3,
-            // Back face
-            4, 6, 5,
-            4, 7, 6,
-            // Left face
-            4, 5, 1,
-            4, 1, 0,
-            // Right face
-            3, 2, 6,
-            3, 6, 7,
-            // Top face
-            1, 5, 6,
-            1, 6, 2,
-            // Bottom face
-            4, 0, 3,
-            4, 3, 7,
-        };
-        unsigned int indexCount = 36;
-
-
-        ID3D11Buffer* IndexBuffer;
-        D3D11_BUFFER_DESC indexDescription;
-        ZeroMemory(&indexDescription, sizeof(indexDescription));
-        indexDescription.Usage = D3D11_USAGE_DEFAULT;
-        indexDescription.BindFlags = D3D11_BIND_INDEX_BUFFER;
-        indexDescription.ByteWidth = sizeof(indices);
-
-        D3D11_SUBRESOURCE_DATA indexResourceData;
-        ZeroMemory(&indexResourceData, sizeof(indexResourceData));
-        indexResourceData.pSysMem = indices;
-
-        if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) && SUCCEEDED(
-            Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
-        {
-            Result = std::make_shared<DirectX11Mesh>(Context, VertexBuffer, IndexBuffer, vertexStride,
-                                                     vertexOffset,
-                                                     vertexCount, indexCount);
-            Renderables[ShaderIn].push_back(Result);
-        }
+        Renderables.insert(std::pair(material, std::list<std::shared_ptr<IRenderable>>()));
     }
-
-    return Result;
+    Renderables[material].push_back(Result);
 }
 
-std::shared_ptr<IRenderable> DirectX11Graphics::CreateMeshRenderable(IShader* ShaderIn, Mesh* mesh)
+std::shared_ptr<IMeshRenderable> DirectX11Graphics::CreateMeshRenderable(IMaterial* material, Mesh* mesh)
 {
-    std::shared_ptr<IRenderable> Result = nullptr;
+    std::shared_ptr<IMeshRenderable> Result = nullptr;
 
     if (IsValid() && mesh)
     {
@@ -587,9 +512,55 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateMeshRenderable(IShader* Sh
         if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) &&
             SUCCEEDED(Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
         {
-            Result = std::make_shared<DirectX11Mesh>(Context, VertexBuffer, IndexBuffer, vertexStride,
+            Result = std::make_shared<DirectX11Mesh>(mesh->GetPath(), Context, VertexBuffer, IndexBuffer, vertexStride,
                                                      vertexOffset, vertexCount, indexCount);
-            Renderables[ShaderIn].push_back(Result);
+            AddRenderable(material, Result);
+        }
+    }
+
+    return Result;
+}
+
+std::shared_ptr<IMeshRenderable> DirectX11Graphics::CreateMeshRenderable(Mesh* mesh)
+{
+    std::shared_ptr<IMeshRenderable> Result = nullptr;
+
+    if (IsValid() && mesh)
+    {
+        ID3D11Buffer* VertexBuffer;
+        unsigned int vertexStride = sizeof(Vertex);
+        unsigned int vertexOffset = 0;
+        unsigned int vertexCount = static_cast<unsigned int>(mesh->Vertices.size());
+
+        D3D11_BUFFER_DESC vertexDescription;
+        ZeroMemory(&vertexDescription, sizeof(vertexDescription));
+        vertexDescription.Usage = D3D11_USAGE_DEFAULT;
+        vertexDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+        vertexDescription.ByteWidth = static_cast<UINT>(vertexCount * sizeof(Vertex));
+
+        D3D11_SUBRESOURCE_DATA resourceData;
+        ZeroMemory(&resourceData, sizeof(resourceData));
+        resourceData.pSysMem = mesh->Vertices.data();
+
+        unsigned int indexCount = static_cast<unsigned int>(mesh->Indices.size());
+
+        ID3D11Buffer* IndexBuffer;
+        D3D11_BUFFER_DESC indexDescription;
+        ZeroMemory(&indexDescription, sizeof(indexDescription));
+        indexDescription.Usage = D3D11_USAGE_DEFAULT;
+        indexDescription.BindFlags = D3D11_BIND_INDEX_BUFFER;
+        indexDescription.ByteWidth = static_cast<UINT>(indexCount * sizeof(unsigned int));
+
+        D3D11_SUBRESOURCE_DATA indexResourceData;
+        ZeroMemory(&indexResourceData, sizeof(indexResourceData));
+        indexResourceData.pSysMem = mesh->Indices.data();
+
+        if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) &&
+            SUCCEEDED(Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
+        {
+            Result = std::make_shared<DirectX11Mesh>(mesh->GetPath(), Context, VertexBuffer, IndexBuffer, vertexStride,
+                                                     vertexOffset, vertexCount, indexCount);
+            AddRenderable(ResourceManager::GetMaterial(), Result);
         }
     }
 
@@ -671,6 +642,11 @@ ID3D11ShaderResourceView* DirectX11Graphics::GetTextureView() const
 ID3D11Texture2D* DirectX11Graphics::GetTexture() const
 {
     return renderTargetTexture;
+}
+
+IMaterial* DirectX11Graphics::CreateMaterial(IShader* shader, ITexture* texture)
+{
+    return new DirectX11Material(shader, texture);
 }
 
 void DirectX11Graphics::SetWorldMatrix(const std::weak_ptr<Transform3D> transform)

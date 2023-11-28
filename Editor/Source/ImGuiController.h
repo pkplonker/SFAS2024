@@ -13,8 +13,10 @@ class ImGuiController
 public:
 	ImGuiController(DirectX11Graphics* dx11Graphics, Game* game);
 	static void ImGuiPreFrame();
+	void Load() const;
 	void DrawMenu();
 	void DrawViewport();
+	static void Save();
 	void DrawWindows();
 	void Draw();
 	void ImGuiPostUpdate() const;

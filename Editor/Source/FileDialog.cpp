@@ -3,6 +3,29 @@
 #include "Engine/MeshSerializer.h"
 #include <Windows.h>
 
+std::string FileDialog::OpenFileDialog(std::string fileFilter)
+{
+    OPENFILENAME ofn;
+    char szFile[MAX_PATH] = "";
+
+    ZeroMemory(&ofn, sizeof(ofn));
+    ofn.lStructSize = sizeof(ofn);
+    ofn.lpstrFile = szFile;
+    ofn.lpstrFile[0] = '\0';
+    ofn.nMaxFile = sizeof(szFile);
+    ofn.lpstrFilter = fileFilter.c_str();
+    ofn.nFilterIndex = 1;
+    ofn.lpstrInitialDir = nullptr;
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+    if (GetOpenFileName(&ofn))
+    {
+        return ofn.lpstrFile;
+    }
+
+    return "";
+}
+
 std::string FileDialog::OpenFileDialog()
 {
     OPENFILENAME ofn;

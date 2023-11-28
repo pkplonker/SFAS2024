@@ -41,14 +41,9 @@ bool Editor::Load()
 {
 	game->Load();
 	imguiController = std::make_unique<ImGuiController>(dx11Graphics, game);
-	sceneSerializer = std::make_unique<SceneSerializer>(game->GetScene());
+	sceneSerializer = std::make_unique<SceneSerializer>(game->GetScene(),dx11Graphics);
 	dx11Graphics->SetRenderToTexture(true, 1, 1);
-	Mesh* mesh = MeshImporter::LoadMesh("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/testshape.fbx");
-	MeshSerializer::Serialize(mesh,"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/testshape.smesh");
-	Mesh* mesh2 = MeshSerializer::Deserialize("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/testshape.smesh");
-
-	delete mesh;
-	delete mesh2;
+	ResourceManager::Init(dx11Graphics);
 	return true;
 }
 

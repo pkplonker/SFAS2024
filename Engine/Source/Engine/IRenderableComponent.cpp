@@ -6,16 +6,20 @@ IRenderableComponent::IRenderableComponent(std::weak_ptr<GameObject> object) : I
 {
 }
 
-IRenderableComponent::IRenderableComponent(std::weak_ptr<GameObject> object, std::shared_ptr<::IRenderable> renderable) : IComponent(object)
+
+IRenderableComponent::IRenderableComponent(std::weak_ptr<GameObject> object, std::shared_ptr<::IRenderable> renderable,
+    IMaterial* material) : IComponent(object)
 {
-	SetRenderable(renderable);
+    this->material = material;
+    SetRenderable(renderable);
 }
 
 void IRenderableComponent::SetRenderable(std::shared_ptr<::IRenderable> renderable)
 {
-	this->renderable = renderable;
-	if (std::shared_ptr<GameObject> go = gameObject.lock())
-	{
-		this->renderable->SetTransform(go->Transform());
-	}
+    this->renderable = renderable;
+
+    if (std::shared_ptr<GameObject> go = gameObject.lock())
+    {
+        this->renderable->SetTransform(go->Transform());
+    }
 }

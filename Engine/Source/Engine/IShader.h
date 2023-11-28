@@ -1,20 +1,15 @@
-
 #pragma once
-
-class ITexture;
-
+#include <string>
 class IShader
 {
 public:
+	virtual ~IShader() = default;
 
-	IShader(ITexture* TextureIn);
+	IShader(const std::wstring& path) : path(path){}
 	virtual void Update() = 0;
+	virtual std::wstring GetPath(){return path;}
 
-	const ITexture* GetTexture() const;
-
-protected: 
-
-	ITexture* Texture;
-
+protected:
+	std::wstring path;
 };
 
