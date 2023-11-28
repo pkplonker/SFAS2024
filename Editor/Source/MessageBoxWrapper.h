@@ -13,12 +13,13 @@ public:
 
     static void ShowInfo(const std::string& message, const std::string& title)
     {
-        Show(message, title, MB_ICONEXCLAMATION | MB_OK);
+        Show(message, title, MB_ICONASTERISK | MB_OK);
     }
 
 private :
     static void Show(const std::string& message, const std::string& title, UINT type)
     {
-        MessageBox(nullptr, message.c_str(), title.c_str(), MB_ICONEXCLAMATION | MB_OK);
+        MessageBox(nullptr, message.c_str(), title.c_str(), type);
+        Debug(message)
     }
 };
