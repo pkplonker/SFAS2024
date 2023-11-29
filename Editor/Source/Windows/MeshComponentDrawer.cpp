@@ -41,6 +41,7 @@ void MeshComponentDrawer::ChangeMesh()
                 return;
             }
             auto meshRenderable = Editor::GetGraphics()->CreateMeshRenderable(comp->GetMaterial(), mesh);
+            IApplication::GetGraphics()->RemoveRenderable(comp->GetRenderable());
             comp->SetMesh(meshRenderable);
         }
     }

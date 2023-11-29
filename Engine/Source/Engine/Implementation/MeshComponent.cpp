@@ -23,4 +23,9 @@ std::string MeshComponent::GetMeshPath()
 void MeshComponent::SetMesh(std::shared_ptr<IMeshRenderable> mesh)
 {
 	this->renderable = mesh;
+	if(auto obj = gameObject.lock())
+	{
+		this->renderable->SetTransform(obj->Transform());
+
+	}
 }
