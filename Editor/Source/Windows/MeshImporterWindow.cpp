@@ -19,15 +19,14 @@ void MeshImporterWindow::Draw()
     ImGui::End();
 }
 
-void MeshImporterWindow::Load() const
+void MeshImporterWindow::Load()
 {
-    auto inputPath = FileDialog::OpenFileDialog();
-    if (inputPath.size() == 0)
+    const auto inputPath = FileDialog::OpenFileDialog();
+    if (inputPath.empty())
     {
         return;
     }
-    auto outputPath = FileDialog::SaveFileDialog();
-    Load(inputPath, outputPath);
+    Load(inputPath, FileDialog::SaveFileDialog());
 }
 
 std::string MeshImporterWindow::SanitisePath(std::string path)

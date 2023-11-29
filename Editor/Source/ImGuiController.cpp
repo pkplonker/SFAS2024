@@ -116,6 +116,14 @@ void ImGuiController::DrawMenu()
             }
             ImGui::EndMenu();
         }
+        if (ImGui::BeginMenu("Tools"))
+        {
+            if (ImGui::MenuItem("Import Mesh"))
+            {
+                MeshImporterWindow::Load();
+            }
+            ImGui::EndMenu();
+        }
 
         ImGui::EndMainMenuBar();
     }
