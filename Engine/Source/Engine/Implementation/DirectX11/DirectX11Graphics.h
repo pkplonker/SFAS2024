@@ -8,6 +8,7 @@
 #include <DirectXMath.h>
 #include <memory>
 
+#include "RenderingStats.h"
 #include "Engine/ICamera.h"
 
 struct Transform3D;

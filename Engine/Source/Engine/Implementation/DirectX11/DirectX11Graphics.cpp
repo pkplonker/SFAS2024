@@ -11,6 +11,7 @@
 
 #include "DirectX11Material.h"
 #include "DirectX11Mesh.h"
+#include "RenderingStats.h"
 #include "ResourceManager.h"
 #include "Engine/Implementation/Debug.h"
 #include "Implementation/Mesh.h"
@@ -165,7 +166,6 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         materialBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         materialBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
         Device->CreateBuffer(&materialBufferDesc, nullptr, &materialBuffer);
-
     }
 }
 
@@ -220,7 +220,7 @@ void DirectX11Graphics::Update()
         {
             float color = 32.0f / 255;
             float clearColour[4] = {color, color, color, 1.0f};
-            float textureClearColour[4] = {color, color, color, 1.0f};//{1.0f, 1.0f, 1.0f, 1.0f};
+            float textureClearColour[4] = {color, color, color, 1.0f}; //{1.0f, 1.0f, 1.0f, 1.0f};
             Context->ClearRenderTargetView(renderTargetView, clearColour);
             Context->ClearRenderTargetView(BackbufferView, textureClearColour);
         }
@@ -237,14 +237,32 @@ void DirectX11Graphics::Update()
             viewport.TopLeftY = 0.0f;
             Context->RSSetViewports(1, &viewport);
         }
-
+        RenderingStats stats;
+        stats.width = width;
+        stats.height = height;
+        stats.viewportWidth = texWidth;
+        stats.viewportHeight = texHeight;
+        IShader* previousShader = nullptr;
         for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
         {
+            stats.materials++;
             bucket->first->Update();
             
             for (auto renderable = bucket->second.begin(); renderable != bucket->second.end(); ++renderable)
             {
-                { // Currently setting the material buffer per object, which is inefficient. This likely needs splitting to be grouped, shader->texture->material values?
+                auto currentShader = bucket->first->GetShader();
+                if(currentShader != previousShader)
+                {
+                    previousShader = currentShader;
+                    stats.shaders ++;
+                }
+                const auto renderObject = renderable->get();
+
+                stats.tris += renderObject->GetTriangles();
+                stats.verts += renderObject->GetVerts();
+                stats.drawCalls++;
+                {
+                    // Currently setting the material buffer per object, which is inefficient. This likely needs splitting to be grouped, shader->texture->material values?
                     D3D11_MAPPED_SUBRESOURCE mappedResource;
                     Context->Map(materialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
                     auto* data = static_cast<MaterialBufferObject*>(mappedResource.pData);
@@ -252,13 +270,15 @@ void DirectX11Graphics::Update()
                     Context->Unmap(materialBuffer, 0);
                     Context->PSSetConstantBuffers(1, 1, &materialBuffer);
                     Context->VSSetConstantBuffers(1, 1, &materialBuffer);
+                   
                 }
-                std::weak_ptr<Transform3D> transform = (*renderable)->GetTransform();
+                const std::weak_ptr<Transform3D> transform = (*renderable)->GetTransform();
                 SetWorldMatrix(transform);
                 Context->OMSetBlendState(BlendState, nullptr, ~0U);
                 (*renderable)->Update();
             }
         }
+        currentStats = stats;
 
 
         Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
@@ -409,7 +429,7 @@ IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vs
             return nullptr;
         }
 
-        Result = new DirectX11Shader(filepath,Context, VertexShader, PixelShader, InputLayout);
+        Result = new DirectX11Shader(filepath, Context, VertexShader, PixelShader, InputLayout);
     }
     else
     {

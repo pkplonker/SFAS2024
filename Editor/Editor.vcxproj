@@ -179,6 +179,7 @@
     <ClCompile Include="Source\Windows\ImGuiFPSCounter.cpp" />
     <ClCompile Include="Source\Windows\MeshImporterWindow.cpp" />
     <ClCompile Include="Source\Windows\MeshComponentDrawer.cpp" />
+    <ClCompile Include="Source\Windows\RenderStatWindow.cpp" />
     <ClCompile Include="Source\Windows\SpriteComponentDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -324,6 +325,7 @@
     <ClInclude Include="Source\Editor.h" />
     <ClInclude Include="Source\Windows\MeshImporterWindow.h" />
     <ClInclude Include="Source\Windows\MeshComponentDrawer.h" />
+    <ClInclude Include="Source\Windows\RenderStatWindow.h" />
     <ClInclude Include="Source\Windows\SpriteComponentDrawer.h" />
   </ItemGroup>
   <ItemGroup>

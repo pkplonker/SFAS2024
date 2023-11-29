@@ -242,6 +242,7 @@
     <ClInclude Include="Source\Engine\ResourceManager.h" />
     <ClInclude Include="Source\Engine\Implementation\Transform2D.h" />
     <ClInclude Include="Source\Engine\Implementation\Transform3D.h" />
+    <ClInclude Include="Source\RenderingStats.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp" />
@@ -347,6 +348,7 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="Source\Engine\ResourceManager.cpp" />
+    <ClCompile Include="Source\RenderingStats.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages\directxtk_desktop_2019.2023.9.6.1\include\SimpleMath.inl" />

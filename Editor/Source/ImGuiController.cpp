@@ -14,6 +14,7 @@
 #include "Windows/ImGuiFPSCounter.h"
 #include "Windows/Inspector.h"
 #include "Windows/MeshImporterWindow.h"
+#include "Windows/RenderStatWindow.h"
 
 ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) : dx11Graphics(dx11Graphics), game(game)
 {
@@ -36,6 +37,8 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) : 
     renderables.try_emplace(inspector, true);
     const std::shared_ptr<MeshImporterWindow> meshImporterWindow = std::make_shared<MeshImporterWindow>();
     renderables.try_emplace(meshImporterWindow, true);
+    const std::shared_ptr<RenderStatWindow> drawStats = std::make_shared<RenderStatWindow>();
+    renderables.try_emplace(drawStats, true);
     ImGuiTheme::ApplyTheme(0);
 }
 

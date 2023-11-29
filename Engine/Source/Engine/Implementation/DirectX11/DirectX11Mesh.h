@@ -14,7 +14,8 @@ public:
 		unsigned int vertexOffset, unsigned int vertexCountIn, unsigned int indexCountIn);
 	virtual ~DirectX11Mesh();
 	void Update() override;
-
+	unsigned int GetVerts() override { return vertexCount; }
+	unsigned int GetTriangles() override { return indexCount/3; }
 private:
 	ID3D11DeviceContext* Context;
 	ID3D11Buffer* VertexBuffer;
@@ -22,5 +23,5 @@ private:
 	unsigned int vertexOffset;
 	unsigned int vertexCount;
 	ID3D11Buffer* IndexBuffer;
-	unsigned indexCount;
+	unsigned int indexCount;
 };
