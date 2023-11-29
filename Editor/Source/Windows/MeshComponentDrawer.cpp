@@ -26,31 +26,7 @@ MeshComponentDrawer::MeshComponentDrawer(std::weak_ptr<MeshComponent> component)
 {
 }
 
-void MeshComponentDrawer::ChangeMesh()
-{
-    std::filesystem::path path = FileDialog::OpenFileDialog();
-    std::string extension = path.extension().string();
-    if (extension == "." + MeshSerializer::MESH_EXTENSION)
-    {
-        if (auto comp = component.lock())
-        {
-            auto mesh = ResourceManager::GetMesh(path.generic_string());
-            if (mesh == nullptr)
-            {
-                MessageBoxWrapper::ShowWarning("Unable to generate mesh", "Unable to generate mesh");
-                return;
-            }
-            auto meshRenderable = Editor::GetGraphics()->CreateMeshRenderable(comp->GetMaterial(), mesh);
-            IApplication::GetGraphics()->RemoveRenderable(comp->GetRenderable());
-            comp->SetMesh(meshRenderable);
-        }
-    }
-    else
-    {
-        Debug("Incorrect file type")
-        MessageBoxWrapper::ShowWarning("Incorrect file type", "Incorrect file type");
-    }
-}
+
 
 void MeshComponentDrawer::Draw()
 {
@@ -83,7 +59,7 @@ void MeshComponentDrawer::Draw()
                     const auto shaderPath = shader->GetPath();
                     if (shaderPath != L"")
                     {
-                        ImGuiHelpers::WrappedText("Shader Path:", shaderPath);
+                        ImGuiHelpers::WrappedText("Shader Path:", shaderPath,std::bind(&MeshComponentDrawer::ChangeShader, this));
                     }
                 }
                 if (const auto tex = mat->GetTexture())
@@ -91,7 +67,7 @@ void MeshComponentDrawer::Draw()
                     const auto texturePath = tex->GetPath();
                     if (texturePath != L"")
                     {
-                        ImGuiHelpers::WrappedText("Texture Path:", texturePath);
+                        ImGuiHelpers::WrappedText("Texture Path:", texturePath,std::bind(&MeshComponentDrawer::ChangeTexture, this));
                     }
                 }
                 auto color = mat->GetColor();
@@ -103,5 +79,89 @@ void MeshComponentDrawer::Draw()
                 }
             }
         }
+    }
+}
+void MeshComponentDrawer::ChangeMesh()
+{
+    std::filesystem::path path = FileDialog::OpenFileDialog();
+    if(path.empty())
+    {
+        Debug("Closed dialog without selecting path")
+        return;
+    }
+    std::string extension = path.extension().string();
+    if (extension == "." + MeshSerializer::MESH_EXTENSION)
+    {
+        if (auto comp = component.lock())
+        {
+            auto mesh = ResourceManager::GetMesh(path.generic_string());
+            if (mesh == nullptr)
+            {
+                MessageBoxWrapper::ShowWarning("Unable to generate mesh", "Unable to generate mesh");
+                return;
+            }
+            comp->SetMesh(mesh);
+        }
+    }
+    else
+    {
+        MessageBoxWrapper::ShowWarning("Incorrect file type", "Incorrect file type");
+    }
+}
+void MeshComponentDrawer::ChangeShader()
+{
+    std::filesystem::path path = FileDialog::OpenFileDialog();
+    if(path.empty())
+    {
+        Debug("Closed dialog without selecting path")
+        return;
+    }
+    std::string extension = path.extension().string();
+    if (extension == ".fx")
+    {
+        if (auto comp = component.lock())
+        {
+            auto shader = ResourceManager::GetShader(path.wstring());
+            if (shader == nullptr)
+            {
+                MessageBoxWrapper::ShowWarning("Unable to generate shader", "Unable to generate shader");
+                return;
+            }
+            auto material = Editor::GetGraphics()->CreateMaterial(shader, comp->GetMaterial()->GetTexture());
+            comp->SetMaterial(material);
+        }
+    }
+    else
+    {
+        MessageBoxWrapper::ShowWarning("Incorrect file type", "Incorrect file type");
+    }
+}
+
+void MeshComponentDrawer::ChangeTexture()
+{
+    std::filesystem::path path = FileDialog::OpenFileDialog();
+    if(path.empty())
+    {
+        Debug("Closed dialog without selecting path")
+        return;
+    }
+    std::string extension = path.extension().string();
+    if (extension == ".FX")
+    {
+        if (auto comp = component.lock())
+        {
+            auto texture = ResourceManager::GetTexture(path.wstring());
+            if (texture == nullptr)
+            {
+                MessageBoxWrapper::ShowWarning("Unable to generate texture", "Unable to generate texture");
+                return;
+            }
+            auto material = IApplication::GetGraphics()->CreateMaterial(comp->GetMaterial()->GetShader(), texture);
+            comp->SetMaterial(material);
+        }
+    }
+    else
+    {
+        MessageBoxWrapper::ShowWarning("Incorrect file type", "Incorrect file type");
     }
 }

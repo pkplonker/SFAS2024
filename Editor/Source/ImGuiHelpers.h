@@ -5,18 +5,27 @@
 #include "Helpers.h"
 #include "imgui.h"
 #include "functional"
+
 class ImGuiHelpers
 {
 public:
-    static void WrappedText(std::string label, std::string content, std::function<void()> callback = nullptr, std::string buttonText = "...")
+    static void WrappedText(std::string label, std::string content, std::function<void()> callback = nullptr,
+                            std::string buttonText = "...")
     {
         ImGui::Text(label.c_str());
         ImGui::SameLine();
-        if(ImGui::Button(buttonText.c_str()))
+        if (callback != nullptr)
         {
-            callback();
+            std::string buttonId = buttonText + "##" + label + content;
+
+            if (ImGui::Button(buttonId.c_str()))
+            {
+                callback();
+            }
+            ImGui::SameLine();
+
         }
-        ImGui::SameLine();
+
         float fullWidth = ImGui::GetWindowWidth();
         float labelWidth = ImGui::CalcTextSize(label.c_str()).x + ImGui::GetStyle().ItemSpacing.x;
         float availableWidth = fullWidth - labelWidth - (ImGui::GetStyle().WindowPadding.x * 2);
@@ -24,15 +33,22 @@ public:
         ImGui::TextUnformatted(content.c_str());
         ImGui::PopTextWrapPos();
     }
-    
-    static void WrappedText(std::string label, std::wstring content, std::function<void()> callback = nullptr, std::string buttonText = "...")
+
+    static void WrappedText(std::string label, std::wstring content, std::function<void()> callback = nullptr,
+                            std::string buttonText = "...")
     {
         ImGui::Text(label.c_str());
         ImGui::SameLine();
-        if(ImGui::Button(buttonText.c_str()))
+        if (callback != nullptr)
         {
-            callback();
+            std::string buttonId = buttonText + "##" + label + Helpers::WideStringToString(content);
+
+            if (ImGui::Button(buttonId.c_str()))
+            {
+                callback();
+            }
         }
+
         ImGui::SameLine();
         float fullWidth = ImGui::GetWindowWidth();
         float labelWidth = ImGui::CalcTextSize(label.c_str()).x + ImGui::GetStyle().ItemSpacing.x;

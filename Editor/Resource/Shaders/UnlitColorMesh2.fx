@@ -52,5 +52,5 @@ float4 PS_Main(PS_Input frag) : SV_TARGET
     {
         finalColor = materialColor;
     }
-    return finalColor;
+    return float4(1.0f,0.0f,1.0f,1.0f);
 }

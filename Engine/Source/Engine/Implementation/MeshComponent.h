@@ -20,7 +20,9 @@ public:
     IMaterial* GetMaterial() { return IRenderableComponent::GetMaterial(); }
     std::shared_ptr<IRenderable> GetRenderable() { return IRenderableComponent::GetRenderable(); }
 
-    void SetMesh(std::shared_ptr<IMeshRenderable> mesh);
+    void SetMesh(Mesh* mesh);
+    void SetMaterial(IMaterial* material);
+    void UpdateRenderableTransform();
 
 private:
 };

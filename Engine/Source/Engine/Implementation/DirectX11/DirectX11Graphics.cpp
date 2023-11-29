@@ -284,14 +284,18 @@ void DirectX11Graphics::Update()
         Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
     }
 }
-
-void DirectX11Graphics::RemoveRenderable(const std::shared_ptr<IRenderable>& shared)
+void DirectX11Graphics::UpdateRenderable(IMaterial* mat, const std::shared_ptr<IRenderable>& renderable)
+{
+    RemoveRenderable(renderable);
+    AddRenderable(mat, renderable);
+}
+void DirectX11Graphics::RemoveRenderable(const std::shared_ptr<IRenderable>& renderable)
 {
     for (auto& kvp : Renderables)
     {
         std::list<std::shared_ptr<IRenderable>>& renderablesList = kvp.second;
 
-        if (auto it = std::find(renderablesList.begin(), renderablesList.end(), shared); it != renderablesList.end())
+        if (auto it = std::find(renderablesList.begin(), renderablesList.end(), renderable); it != renderablesList.end())
         {
             renderablesList.erase(it);
 

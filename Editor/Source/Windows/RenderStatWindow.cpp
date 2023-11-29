@@ -18,11 +18,7 @@ void RenderStatWindow::Draw()
     ImGui::SameLine();
     ImGui::Text("Vertices: %u", stats.verts);
     ImGui::Separator();
-
-    ImGui::Text("Batches: %u", stats.batches);
-    ImGui::Separator();
-
-    // Displaying size related stats
+    
     ImGui::Text("Screen Size: %u x %u", stats.width, stats.height);
     ImGui::Text("Viewport Size: %u x %u", stats.viewportWidth, stats.viewportHeight);
     ImGui::End();

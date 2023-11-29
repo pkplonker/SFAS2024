@@ -36,7 +36,8 @@ public:
     virtual int GetHeight() = 0;
     virtual void RemoveRenderable(const std::shared_ptr<IRenderable>& shared) = 0;
     virtual void SetRenderToTexture(bool state, int width, int height) = 0;
-    virtual IMaterial* CreateMaterial(IShader* shader,ITexture* texture) =0;
+    virtual IMaterial* CreateMaterial(IShader* shader, ITexture* texture) =0;
+    virtual void UpdateRenderable(IMaterial* mat, const std::shared_ptr<IRenderable>& shared) =0;
     RenderingStats currentStats;
 
 protected:
