@@ -86,7 +86,7 @@ void MeshComponentDrawer::ChangeMesh()
     std::filesystem::path path = FileDialog::OpenFileDialog();
     if(path.empty())
     {
-        Debug("Closed dialog without selecting path")
+        Trace("Closed dialog without selecting path")
         return;
     }
     std::string extension = path.extension().string();
@@ -113,7 +113,7 @@ void MeshComponentDrawer::ChangeShader()
     std::filesystem::path path = FileDialog::OpenFileDialog();
     if(path.empty())
     {
-        Debug("Closed dialog without selecting path")
+        Trace("Closed dialog without selecting path")
         return;
     }
     std::string extension = path.extension().string();
@@ -143,7 +143,7 @@ void MeshComponentDrawer::ChangeTexture()
     std::filesystem::path path = FileDialog::OpenFileDialog();
     if(path.empty())
     {
-        Debug("Closed dialog without selecting path")
+        Trace("Closed dialog without selecting path")
         return;
     }
     std::string extension = path.extension().string();

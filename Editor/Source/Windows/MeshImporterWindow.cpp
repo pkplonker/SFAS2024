@@ -55,17 +55,15 @@ void MeshImporterWindow::Load(std::string input, std::string output)
     {
         if (MeshSerializer::Serialize(mesh, output))
         {
-            Debug("Serialized mesh")
+            Trace("Serialized mesh")
         }
         else
         {
             MessageBoxWrapper::ShowWarning("Failed to serialize mesh", "Failed to serialize mesh");
-            Debug("Serialized mesh failed")
         }
     }
     else
     {
         MessageBoxWrapper::ShowWarning("Failed to load mesh", "Failed to load mesh");
-        Debug("Failed to load mesh")
     }
 }

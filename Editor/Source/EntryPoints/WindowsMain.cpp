@@ -1,6 +1,8 @@
 // The main Windows / DirectX Graphics / XInput entry point for Star Applications
 
 #include <Windows.h>
+
+#include "Debug.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 #include "Engine/Implementation/XInput/DirectXInput.h"
 #include "Engine/IRenderable.h"
@@ -19,6 +21,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	Trace("Creating winman")
 	WNDCLASSEX wc;
 	HWND hwnd;
 
@@ -40,6 +43,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		MessageBox(nullptr, "Window Registration Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return 0;
 	}
+	Trace("Creating window")
+
 
 	hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, WindowClassName, WindowTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT,
 		CW_USEDEFAULT, WindowWidth, WindowHeight, nullptr, nullptr, hInstance, nullptr);
@@ -49,8 +54,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		MessageBox(nullptr, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return 0;
 	}
+	Trace("Creating hwnd")
 
 	ShowWindow(hwnd, nCmdShow);
+	Trace("Showing window")
+
 	UpdateWindow(hwnd);
 
 	MSG msg;
@@ -61,7 +69,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	IApplication* Application = GetEditorApplication(Graphics, Input, hwnd);
 	if (Graphics && Graphics->IsValid() && Application)
 	{
+		Trace("Loading application")
+
 		Application->Load();
+		Trace("Application Loaded")
+		Trace("Starting main loop")
 
 		while (msg.message != WM_QUIT && Application->IsValid())
 		{
@@ -76,6 +88,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			Application->PostGraphics();
 			Graphics->PostUpdate();
 		}
+		Trace("Exiting loop")
 
 		Application->Cleanup();
 	}

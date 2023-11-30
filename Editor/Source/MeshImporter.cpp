@@ -19,7 +19,7 @@ Mesh* MeshImporter::LoadMesh(std::string path)
 
     if (nullptr == scene)
     {
-        Debug(importer.GetErrorString())
+        Warning(importer.GetErrorString())
         return nullptr;
     }
 

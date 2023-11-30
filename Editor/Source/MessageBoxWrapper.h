@@ -20,6 +20,6 @@ private :
     static void Show(const std::string& message, const std::string& title, UINT type)
     {
         MessageBox(nullptr, message.c_str(), title.c_str(), type);
-        Debug(message)
+        Warning("message")
     }
 };

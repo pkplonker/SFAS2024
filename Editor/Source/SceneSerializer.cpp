@@ -25,19 +25,23 @@ SceneSerializer::SceneSerializer(IGraphics* graphics)
 
 void SceneSerializer::WriteToFile(json sceneData, std::string path)
 {
-    Debug("Saving to disk")
+    Trace("Saving to disk")
 
     std::ofstream outputFile(path);
 
     if (outputFile.is_open())
     {
+        Trace("Dumping json to disk")
+
         outputFile << sceneData.dump(4);
 
         outputFile.close();
+        Trace("Closed stream")
+
     }
     else
     {
-        Debug("Failed writing to file")
+        Warning("Failed writing to file")
     }
 }
 
@@ -86,7 +90,7 @@ bool SceneSerializer::Serialize(std::string path)
 {
     json sceneData;
     json objectsData;
-    Debug("Saving")
+    Trace("Saving")
 
     if (auto sharedScene = SceneManager::GetScene().lock())
     {
@@ -98,10 +102,10 @@ bool SceneSerializer::Serialize(std::string path)
         sceneData["objects"] = objectsData;
 
         WriteToFile(sceneData, path);
-        Debug("Saved")
+        Trace("Saved")
         return true;
     }
-    Debug("Saving failed")
+    Trace("Saving failed")
 
     return false;
 }
@@ -204,13 +208,13 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
         }
         catch (const std::exception& e)
         {
-            Debug("Failed to parse scene data: " + std::string(e.what()));
+            Warning("Failed to parse scene data: " + std::string(e.what()));
             return nullptr;
         }
     }
     else
     {
-        Debug("Failed to open scene file for reading");
+        Warning("Failed to open scene file for reading");
         return nullptr;
     }
 
@@ -231,23 +235,23 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
                 }
                 else
                 {
-                    Debug("Failed to deserialize GameObject in scene file");
+                    Warning("Failed to deserialize GameObject in scene file");
                 }
             }
         }
         else
         {
-            Debug("Invalid data format for 'objects' field in scene file");
+            Warning("Invalid data format for 'objects' field in scene file");
             return nullptr;
         }
     }
     else
     {
-        Debug("Missing 'objects' field in scene file");
+        Warning("Missing 'objects' field in scene file");
         return nullptr;
     }
 
-    Debug("Scene deserialization succeded");
+    Trace("Scene deserialization succeded");
     return scene;
 }
 
@@ -384,11 +388,11 @@ std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohman
             return newObject;
         }
 
-        Debug("Invalid data for GameObject in scene file");
+        Warning("Invalid data for GameObject in scene file");
     }
     else
     {
-        Debug("Invalid data format for GameObject in scene file");
+        Warning("Invalid data format for GameObject in scene file");
     }
 
     return nullptr;

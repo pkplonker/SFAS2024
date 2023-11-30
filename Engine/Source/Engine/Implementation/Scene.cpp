@@ -58,7 +58,7 @@ void Scene::RemoveObject(std::shared_ptr<GameObject> object)
     }
     else
     {
-        Debug("Renderable not found to delete");
+        Warning("Renderable not found to delete");
     }
 }
 
@@ -80,7 +80,7 @@ void Scene::RemoveRenderable(std::shared_ptr<IRenderable> object) const
     }
     else
     {
-        Debug("Renderable not found to delete");
+        Warning("Renderable not found to delete");
     }
 }
 

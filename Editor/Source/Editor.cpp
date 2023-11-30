@@ -48,8 +48,6 @@ bool Editor::Load()
     ResourceManager::Init(dx11Graphics);
     imguiController->LoadScene("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/onecomponent.scene");
     // this logic needs moving
-
-
     return true;
 }
 

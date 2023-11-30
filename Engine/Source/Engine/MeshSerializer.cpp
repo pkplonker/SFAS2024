@@ -24,7 +24,7 @@ bool MeshSerializer::Serialize(Mesh* mesh, std::string fullFilePath)
         return true;
     }
 
-    Debug("Failed to open file for writing")
+    Warning("Failed to open file for writing")
     return false;
 }
 
@@ -52,6 +52,6 @@ Mesh* MeshSerializer::Deserialize(std::string fullFilePath)
     }
 
     std::string error = "Failed to open file for reading";
-    Debug(error)
+    Trace(error)
     return nullptr;
 }

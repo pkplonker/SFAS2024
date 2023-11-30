@@ -15,7 +15,7 @@ GameObjectFactory::GameObjectFactory(std::shared_ptr<Scene> scene) : scene(scene
 {
 	if (scene == nullptr || graphics == nullptr)
 	{
-		Debug("Invalid init of GameObjectResourceManager")
+		Warning("Invalid init of GameObjectResourceManager")
 			return;
 	}
 	gameObject = std::make_shared<GameObject>();
@@ -26,7 +26,7 @@ GameObjectFactory::GameObjectFactory(std::shared_ptr<Scene> scene, std::string n
 {
 	if (scene == nullptr || graphics == nullptr)
 	{
-		Debug("Invalid init of GameObjectResourceManager")
+		Warning("Invalid init of GameObjectResourceManager")
 			return;
 	}
 	gameObject = std::make_shared<GameObject>(name);
