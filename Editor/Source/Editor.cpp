@@ -43,10 +43,10 @@ bool Editor::Load()
     game->Load();
 
     imguiController = std::make_unique<ImGuiController>(dx11Graphics, game);
-    sceneSerializer = std::make_unique<SceneSerializer>(game->GetScene(), dx11Graphics);
+    sceneSerializer = std::make_unique<SceneSerializer>(dx11Graphics);
     dx11Graphics->SetRenderToTexture(true, 1, 1);
     ResourceManager::Init(dx11Graphics);
-    imguiController->LoadScene("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/testscene.scene");
+    imguiController->LoadScene("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/onecomponent.scene");
     // this logic needs moving
 
 

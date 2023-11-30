@@ -99,16 +99,4 @@ void Game::PostGraphics()
 {
 }
 
-std::weak_ptr<Scene> Game::GetScene()
-{
-    return scene;
-}
 
-void Game::SetScene(const std::shared_ptr<Scene>& scene)
-{
-    Debug("Deleting scene")
-    this->scene.reset();
-    this->scene = scene;
-    Debug("Loaded scene into game")
-
-}

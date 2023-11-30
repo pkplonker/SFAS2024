@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include "json.hpp"
+#include "SceneManager.h"
 #include "SpriteComponent.h"
 #include "Engine/IMaterial.h"
 #include "Engine/IShader.h"
@@ -17,9 +18,8 @@
 #include "Engine/Implementation/Scene.h"
 using json = nlohmann::json;
 
-SceneSerializer::SceneSerializer(std::weak_ptr<Scene> scene, IGraphics* graphics)
+SceneSerializer::SceneSerializer(IGraphics* graphics)
 {
-    SceneSerializer::scene = scene;
     SceneSerializer::graphics = graphics;
 }
 
@@ -88,7 +88,7 @@ bool SceneSerializer::Serialize(std::string path)
     json objectsData;
     Debug("Saving")
 
-    if (auto sharedScene = scene.lock())
+    if (auto sharedScene = SceneManager::GetScene().lock())
     {
         for (const auto& object : sharedScene->GetObjects())
         {
@@ -248,7 +248,6 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
     }
 
     Debug("Scene deserialization succeded");
-    SceneSerializer::scene = scene;
     return scene;
 }
 

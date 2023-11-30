@@ -1,6 +1,8 @@
 ﻿#include "MeshComponent.h"
 
 #include "IApplication.h"
+#include "Scene.h"
+#include "SceneManager.h"
 
 MeshComponent::MeshComponent(std::weak_ptr<GameObject> object) : IRenderableComponent(object)
 {
@@ -26,16 +28,22 @@ std::string MeshComponent::GetMeshPath()
 
 void MeshComponent::SetMesh(Mesh* mesh)
 {
-    IApplication::GetGraphics()->RemoveRenderable(renderable);
-    renderable = IApplication::GetGraphics()->CreateMeshRenderable(this->material, mesh);
-    UpdateRenderableTransform();
+    if(auto scene = SceneManager::GetScene().lock())
+    {
+        scene->RemoveRenderable(renderable);
+        renderable = IApplication::GetGraphics()->CreateMeshRenderable(this->material, mesh);
+        UpdateRenderableTransform();
+    }
 }
 
 void MeshComponent::SetMaterial(IMaterial* material)
 {
-    this->material = material;
-    IApplication::GetGraphics()->UpdateRenderable(material, renderable);
-    UpdateRenderableTransform();
+    if(auto scene = SceneManager::GetScene().lock())
+    {
+        this->material = material;
+        IApplication::GetGraphics()->UpdateRenderable(material, renderable);
+        UpdateRenderableTransform();
+    }
 }
 
 void MeshComponent::UpdateRenderableTransform()

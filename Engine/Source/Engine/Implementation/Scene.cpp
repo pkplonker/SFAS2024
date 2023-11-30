@@ -19,6 +19,7 @@ Scene::Scene(IGraphics* graphics)
 
 Scene::~Scene()
 {
+    graphics = nullptr;
     for (const auto object : *objects)
     {
         auto renderable = object->GetComponent<IRenderableComponent>();
@@ -69,10 +70,13 @@ void Scene::AddRenderable(std::shared_ptr<IRenderable> object) const
 void Scene::RemoveRenderable(std::shared_ptr<IRenderable> object) const
 {
     auto it = std::find(renderables->begin(), renderables->end(), object);
+    if (graphics != nullptr)
+    {
+        graphics->RemoveRenderable(object);
+    }
     if (it != renderables->end())
     {
         renderables->erase(it);
-        graphics->RemoveRenderable(object);
     }
     else
     {

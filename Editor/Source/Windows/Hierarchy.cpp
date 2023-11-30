@@ -4,20 +4,17 @@
 #include <vector>
 
 #include "imgui.h"
+#include "SceneManager.h"
 #include "Engine/Implementation/GameObject.h"
 #include "Engine/Implementation/GameObjectFactory.h"
 #include "Engine/Implementation/Scene.h"
-
-Hierarchy::Hierarchy(const std::weak_ptr<Scene>& scene) : scene(scene)
-{
-}
 
 void Hierarchy::Draw()
 {
     std::vector<std::shared_ptr<GameObject>> objectsToRemove;
 
     ImGui::Begin(HIERARCHY.c_str());
-    if (auto sharedScene = scene.lock())
+    if (auto sharedScene = SceneManager::GetScene().lock())
     {
         if (ImGui::IsMouseReleased(ImGuiMouseButton_Right) && ImGui::IsWindowHovered(ImGuiHoveredFlags_None))
         {
@@ -86,9 +83,4 @@ void Hierarchy::Draw()
 std::weak_ptr<GameObject> Hierarchy::GetSelectedObject()
 {
     return selectedObject;
-}
-
-void Hierarchy::SetScene(std::weak_ptr<Scene> value)
-{
-    this->scene = value;
 }

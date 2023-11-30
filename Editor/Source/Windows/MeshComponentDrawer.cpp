@@ -128,6 +128,7 @@ void MeshComponentDrawer::ChangeShader()
                 return;
             }
             auto material = Editor::GetGraphics()->CreateMaterial(shader, comp->GetMaterial()->GetTexture());
+            material->SetColor(comp->GetMaterial()->GetColor()); // need to implement updating existing material
             comp->SetMaterial(material);
         }
     }
@@ -157,6 +158,7 @@ void MeshComponentDrawer::ChangeTexture()
                 return;
             }
             auto material = IApplication::GetGraphics()->CreateMaterial(comp->GetMaterial()->GetShader(), texture);
+            material->SetColor(comp->GetMaterial()->GetColor()); // need to implement updating existing material
             comp->SetMaterial(material);
         }
     }

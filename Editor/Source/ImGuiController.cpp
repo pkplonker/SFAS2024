@@ -8,6 +8,7 @@
 
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
+#include "SceneManager.h"
 #include "SceneSerializer.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 #include "Windows/Hierarchy.h"
@@ -31,7 +32,7 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) : 
     ImGui_ImplDX11_Init(dx11Graphics->GetDevice(), dx11Graphics->GetContext());
     const std::shared_ptr<ImGuiFPSCounter> fpsCounter = std::make_shared<ImGuiFPSCounter>();
     renderables.try_emplace(fpsCounter, true);
-    const std::shared_ptr<Hierarchy> hierarchy = std::make_shared<Hierarchy>(game->GetScene());
+    const std::shared_ptr<Hierarchy> hierarchy = std::make_shared<Hierarchy>();
     renderables.try_emplace(hierarchy, true);
     const std::shared_ptr<Inspector> inspector = std::make_shared<Inspector>(hierarchy);
     renderables.try_emplace(inspector, true);
@@ -77,16 +78,7 @@ void ImGuiController::LoadScene(std::string path) const
 {
     if (path != "")
     {
-        game->SetScene(SceneSerializer::Deserialize(path));
-        for (auto renderable : renderables)
-        {
-            std::shared_ptr<Hierarchy> hierarchyRenderable = std::dynamic_pointer_cast<Hierarchy>(renderable.first);
-
-            if (hierarchyRenderable != nullptr)
-            {
-                hierarchyRenderable->SetScene(game->GetScene());
-            }
-        }
+        SceneManager::SetScene(SceneSerializer::Deserialize(path));
     }
 }
 
