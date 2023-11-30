@@ -2,13 +2,15 @@
 
 #include <Windows.h>
 
-#include "Debug.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 #include "Engine/Implementation/XInput/DirectXInput.h"
 #include "Engine/IRenderable.h"
 #include "Engine/IApplication.h"
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
+#include "Logging/ConsoleSink.h"
+#include "Logging/Debug.h"
+#include "Logging/FileSink.h"
 const char WindowClassName[] = "Star";
 const char WindowTitle[] = "Stuart Heath SFAS24 - WIP";
 const int WindowWidth = 1920;
@@ -21,6 +23,9 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	Debug::AddSink(new ConsoleSink());
+	Debug::AddSink(new FileSink("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/log.log"));
+
 	Trace("Creating winman")
 	WNDCLASSEX wc;
 	HWND hwnd;

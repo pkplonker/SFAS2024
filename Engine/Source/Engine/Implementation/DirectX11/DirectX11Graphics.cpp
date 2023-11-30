@@ -13,7 +13,7 @@
 #include "DirectX11Mesh.h"
 #include "RenderingStats.h"
 #include "ResourceManager.h"
-#include "Engine/Implementation/Debug.h"
+#include "Engine/Implementation/Logging/Debug.h"
 #include "Implementation/Mesh.h"
 #include "Implementation/Vertex.h"
 

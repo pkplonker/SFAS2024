@@ -1,6 +1,6 @@
 ﻿#include "GameObjectFactory.h"
 
-#include "Debug.h"
+#include "Engine/Implementation/Logging/Debug.h"
 #include "IMaterial.h"
 #include "MeshComponent.h"
 #include "OrthographicCamera.h"

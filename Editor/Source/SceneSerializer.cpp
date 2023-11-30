@@ -10,12 +10,12 @@
 #include "Engine/ITexture.h"
 #include "Engine/ResourceManager.h"
 #include "Engine/Implementation/CameraComponent.h"
-#include "Engine/Implementation/Debug.h"
 #include "Engine/Implementation/GameObjectFactory.h"
 #include "Engine/Implementation/Helpers.h"
 #include "Engine/Implementation/OrthographicCamera.h"
 #include "Engine/Implementation/PerspectiveCamera.h"
 #include "Engine/Implementation/Scene.h"
+#include "Logging/Debug.h"
 using json = nlohmann::json;
 
 SceneSerializer::SceneSerializer(IGraphics* graphics)

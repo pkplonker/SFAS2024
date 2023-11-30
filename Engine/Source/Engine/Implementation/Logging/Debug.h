@@ -1,10 +1,13 @@
 #pragma once
 #include <string>
+#include <unordered_set>
 
 #define Trace(message) Debug::LogTrace(__FILE__,__LINE__, message);
 #define Info(message) Debug::LogInfo(__FILE__,__LINE__, message);
 #define Warning(message) Debug::LogWarning(__FILE__,__LINE__, message);
 #define Error(message) Debug::LogError(__FILE__,__LINE__, message);
+
+class ISink;
 
 enum LogLevel
 {
@@ -16,8 +19,8 @@ enum LogLevel
 class Debug
 {
 public:
-	static std::string BeautifyLogLevel(LogLevel level);
 	static void Log(LogLevel level, const char* file, int line, const std::string& message);
+	~Debug();
 	static void LogTrace(const char* file, int line, const std::string& message);
 	static void LogInfo(const char* file, int line, const std::string& message);
 	static void LogWarning(const char* file, int line, const std::string& message);
@@ -25,9 +28,10 @@ public:
 
 	static void SetLevel(LogLevel level);
 	static LogLevel GetLevel();
-	static bool GetShowLine();
-	static void SetShowLine(bool value);
+	static void AddSink(ISink* sink);
+	static void RemoveSync(ISink* sink);
+
 private:
-	inline static bool showLineInfo = true;
 	inline static LogLevel logLevel = Trace;
+	inline static std::pmr::unordered_set<ISink*> sinks;
 };

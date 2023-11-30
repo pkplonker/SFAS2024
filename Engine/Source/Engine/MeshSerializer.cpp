@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "Engine/Implementation/Debug.h"
+#include "Engine/Implementation/Logging/Debug.h"
 
 
 bool MeshSerializer::Serialize(Mesh* mesh, std::string fullFilePath)

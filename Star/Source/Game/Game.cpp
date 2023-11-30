@@ -4,8 +4,7 @@
 #include "Engine/IInput.h"
 #include "Engine/Implementation/GameObjectFactory.h"
 #include "Engine/Implementation/Scene.h"
-#include "Engine/Implementation/CameraComponent.h"
-#include "Engine/Implementation/Debug.h"
+#include "Engine/Implementation/Logging/Debug.h"
 
 #define CLAMP(v, x, y) fmin(fmax(v, x), y)
 

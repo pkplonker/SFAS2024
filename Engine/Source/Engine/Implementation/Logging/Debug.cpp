@@ -2,24 +2,25 @@
 
 #include <iostream>
 
-std::string Debug::BeautifyLogLevel(LogLevel level)
-{
-    switch (level)
-    {
-    case Trace: return "[Trace]";
-    case Info: return "[Info]";
-    case Warning: return "[Warning]";
-    case Error: return "[ERROR]";
-    default: return "[]";
-    }
-}
+#include "ISink.h"
+
 
 void Debug::Log(LogLevel level, const char* file, int line, const std::string& message)
 {
     if (level >= Debug::logLevel)
     {
-        if (showLineInfo) std::cout << BeautifyLogLevel(level) << message << ": " << file << ":" << line << std::endl;
-        else std::cout << message << std::endl;
+        for (auto sink : sinks)
+        {
+            sink->Log(level,file, line, message);
+        }
+    }
+}
+
+Debug::~Debug()
+{
+    for (auto sink : sinks)
+    {
+        delete sink;
     }
 }
 
@@ -53,12 +54,16 @@ LogLevel Debug::GetLevel()
     return logLevel;
 }
 
-bool Debug::GetShowLine()
+void Debug::AddSink(ISink* sink)
 {
-    return showLineInfo;
+    sinks.emplace(sink);
 }
 
-void Debug::SetShowLine(bool value)
+void Debug::RemoveSync(ISink* sink)
 {
-    showLineInfo = value;
+    auto it = std::find(sinks.begin(), sinks.end(), sink);
+    if (it != sinks.end())
+    {
+        sinks.erase(it);
+    }
 }

@@ -1,7 +1,7 @@
 #include "Editor.h"
 #include "Engine/IGraphics.h"
 #include "Engine/IInput.h"
-#include "Engine/Implementation/Debug.h"
+#include "Engine/Implementation/Logging/Debug.h"
 #include "Engine/ResourceManager.h"
 #include "ImGuiController.h"
 #include "MeshImporter.h"

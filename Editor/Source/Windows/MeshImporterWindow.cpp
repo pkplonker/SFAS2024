@@ -1,6 +1,6 @@
 ﻿#include "MeshImporterWindow.h"
 
-#include "Debug.h"
+#include "Engine/Implementation/Logging/Debug.h"
 #include "imgui.h"
 #include "Engine/MeshSerializer.h"
 #include "../MeshImporter.h"

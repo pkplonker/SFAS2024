@@ -3,7 +3,7 @@
 #include "CameraComponent.h"
 #include "MeshComponent.h"
 #include "SpriteComponent.h"
-#include "Engine/Implementation/Debug.h"
+#include "Engine/Implementation/Logging/Debug.h"
 #include "Engine/ICamera.h"
 
 class SpriteComponent;

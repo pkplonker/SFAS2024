@@ -205,7 +205,6 @@
     <ClInclude Include="packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xdsp.h" />
     <ClInclude Include="Source\Engine\IMaterial.h" />
     <ClInclude Include="Source\Engine\IMeshRenderable.h" />
-    <ClInclude Include="Source\Engine\Implementation\Debug.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Material.h" />
     <ClInclude Include="Source\Engine\Implementation\GameObject.h" />
     <ClInclude Include="Source\Engine\Implementation\GameObjectFactory.h" />
@@ -221,6 +220,10 @@
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Shader.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.h" />
     <ClInclude Include="Source\Engine\Implementation\Helpers.h" />
+    <ClInclude Include="Source\Engine\Implementation\Logging\ConsoleSink.h" />
+    <ClInclude Include="Source\Engine\Implementation\Logging\Debug.h" />
+    <ClInclude Include="Source\Engine\Implementation\Logging\FileSink.h" />
+    <ClInclude Include="Source\Engine\Implementation\Logging\ISink.h" />
     <ClInclude Include="Source\Engine\Implementation\Mesh.h" />
     <ClInclude Include="Source\Engine\Implementation\MeshComponent.h" />
     <ClInclude Include="Source\Engine\Implementation\Scene.h" />
@@ -249,7 +252,6 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Source\Engine\IMaterial.cpp" />
     <ClCompile Include="Source\Engine\IMeshRenderable.cpp" />
-    <ClCompile Include="Source\Engine\Implementation\Debug.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Material.cpp" />
     <ClCompile Include="Source\Engine\Implementation\GameObject.cpp" />
     <ClCompile Include="Source\Engine\Implementation\GameObjectFactory.cpp" />
@@ -263,6 +265,232 @@
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Mesh.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Shader.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\Logging\ConsoleSink.cpp">
+      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>Debug\Engine\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>Debug\Engine\</BrowseInformationFile>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>true</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFuzzer>false</EnableFuzzer>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>Debug\Engine\</ModuleDependenciesFile>
+      <ModuleOutputFile>Debug\Engine\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ObjectFileName>Debug\Engine\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\x64\Debug\Engine.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>Debug\Engine\Engine.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>Debug\Engine\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TrackerLogDirectory>Debug\Engine\Engine.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <XMLDocumentationFileName>Debug\Engine\</XMLDocumentationFileName>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <PreprocessorDefinitions>HAS_DIRECTXTK;USING_XAUDIO2_REDIST;_DEBUG;_LIB;_MBCS;</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\packages\directxtk_desktop_2019.2023.9.6.1\build\native\..\..\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Packages\directxtk_dekstop_2019.2023.9.6.1;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Packages\Microsoft.XAudio.Redist.1.2.11;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Packages;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Source\Implementation;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Source\Engine;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Source;;S:\Users\pkplo\Downloads\vcpkg\installed\x64-windows\include</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Source</AdditionalUsingDirectories>
+      <LibCompiled>true</LibCompiled>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Implementation\Logging\Debug.cpp">
+      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>Debug\Engine\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>Debug\Engine\</BrowseInformationFile>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>true</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFuzzer>false</EnableFuzzer>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>Debug\Engine\</ModuleDependenciesFile>
+      <ModuleOutputFile>Debug\Engine\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ObjectFileName>Debug\Engine\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\x64\Debug\Engine.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>Debug\Engine\Engine.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>Debug\Engine\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TrackerLogDirectory>Debug\Engine\Engine.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <XMLDocumentationFileName>Debug\Engine\</XMLDocumentationFileName>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <PreprocessorDefinitions>HAS_DIRECTXTK;USING_XAUDIO2_REDIST;_DEBUG;_LIB;_MBCS;</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\packages\directxtk_desktop_2019.2023.9.6.1\build\native\..\..\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Packages\directxtk_dekstop_2019.2023.9.6.1;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Packages\Microsoft.XAudio.Redist.1.2.11;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Packages;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Source\Implementation;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Source\Engine;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Source;;S:\Users\pkplo\Downloads\vcpkg\installed\x64-windows\include</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Source</AdditionalUsingDirectories>
+      <LibCompiled>true</LibCompiled>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Implementation\Logging\FileSink.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\Logging\ISink.cpp">
+      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>Debug\Engine\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>Debug\Engine\</BrowseInformationFile>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>true</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFuzzer>false</EnableFuzzer>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>Debug\Engine\</ModuleDependenciesFile>
+      <ModuleOutputFile>Debug\Engine\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ObjectFileName>Debug\Engine\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\x64\Debug\Engine.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>Debug\Engine\Engine.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>Debug\Engine\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TrackerLogDirectory>Debug\Engine\Engine.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <XMLDocumentationFileName>Debug\Engine\</XMLDocumentationFileName>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <PreprocessorDefinitions>HAS_DIRECTXTK;USING_XAUDIO2_REDIST;_DEBUG;_LIB;_MBCS;</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\packages\directxtk_desktop_2019.2023.9.6.1\build\native\..\..\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Packages\directxtk_dekstop_2019.2023.9.6.1;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Packages\Microsoft.XAudio.Redist.1.2.11;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Packages;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Source\Implementation;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Source\Engine;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Source;;S:\Users\pkplo\Downloads\vcpkg\installed\x64-windows\include</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Engine\\Source</AdditionalUsingDirectories>
+      <LibCompiled>true</LibCompiled>
+    </ClCompile>
     <ClCompile Include="Source\Engine\Implementation\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Implementation\MeshComponent.cpp" />
     <ClCompile Include="Source\Engine\Implementation\Scene.cpp" />

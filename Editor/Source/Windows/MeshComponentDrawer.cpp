@@ -2,7 +2,7 @@
 
 #include <functional>
 
-#include "Debug.h"
+#include "Engine/Implementation/Logging/Debug.h"
 #include "imgui.h"
 #include "MeshSerializer.h"
 #include "../FileDialog.h"

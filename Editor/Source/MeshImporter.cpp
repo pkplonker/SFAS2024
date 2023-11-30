@@ -1,6 +1,6 @@
 ﻿#include "MeshImporter.h"
 
-#include "Engine/Implementation/Debug.h"
+#include "Engine/Implementation/Logging/Debug.h"
 #include "Engine/Implementation/Mesh.h"
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
