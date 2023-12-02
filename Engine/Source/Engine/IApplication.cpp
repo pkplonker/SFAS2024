@@ -10,4 +10,6 @@ IApplication::IApplication(IGraphics* GraphicsIn, IInput* InputIn)
 
 IApplication::~IApplication()
 {
+    Graphics = nullptr;
+    Input = nullptr;
 }

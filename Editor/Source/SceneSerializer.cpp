@@ -218,7 +218,7 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
         return nullptr;
     }
 
-    std::shared_ptr<Scene> scene = std::make_shared<Scene>(graphics);
+    std::shared_ptr<Scene> scene = std::make_shared<Scene>();
 
     if (sceneData.contains("objects"))
     {

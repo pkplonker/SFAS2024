@@ -2,10 +2,6 @@
 
 #include "Implementation/Scene.h"
 
-SceneManager::SceneManager()
-{
-}
-
 std::weak_ptr<Scene> SceneManager::GetScene()
 {
     return activeScene;

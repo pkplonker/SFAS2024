@@ -5,21 +5,17 @@
 #include "SpriteComponent.h"
 #include "Engine/Implementation/Logging/Debug.h"
 #include "Engine/ICamera.h"
-
+#include "Engine/IApplication.h"
 class SpriteComponent;
 
-Scene::Scene(IGraphics* graphics)
+Scene::Scene()
 {
-    this->graphics = graphics;
     objects = std::make_unique<std::set<std::shared_ptr<
         GameObject>>>();
-    renderables = std::make_unique<std::set<std::shared_ptr<
-        IRenderable>>>();
 }
 
 Scene::~Scene()
 {
-    graphics = nullptr;
     for (const auto object : *objects)
     {
         auto renderable = object->GetComponent<IRenderableComponent>();
@@ -41,7 +37,6 @@ void Scene::AddObject(std::shared_ptr<GameObject> object)
         }
     }
     objects->emplace(object);
-    AddRenderable(object);
 }
 
 void Scene::RemoveObject(std::shared_ptr<GameObject> object)
@@ -50,11 +45,11 @@ void Scene::RemoveObject(std::shared_ptr<GameObject> object)
     auto renderable = object->GetComponent<IRenderableComponent>();
     if (it != objects->end())
     {
-        objects->erase(it);
         if (renderable != nullptr)
         {
             RemoveRenderable(renderable->GetRenderable());
         }
+        objects->erase(it);
     }
     else
     {
@@ -62,21 +57,12 @@ void Scene::RemoveObject(std::shared_ptr<GameObject> object)
     }
 }
 
-void Scene::AddRenderable(std::shared_ptr<IRenderable> object) const
-{
-    renderables->emplace(object);
-}
-
 void Scene::RemoveRenderable(std::shared_ptr<IRenderable> object) const
 {
-    auto it = std::find(renderables->begin(), renderables->end(), object);
+    auto graphics = IApplication::GetGraphics();
     if (graphics != nullptr)
     {
-        graphics->RemoveRenderable(object);
-    }
-    if (it != renderables->end())
-    {
-        renderables->erase(it);
+        IApplication::GetGraphics()->RemoveRenderable(object);
     }
     else
     {
@@ -92,21 +78,12 @@ void Scene::Update()
     }
 }
 
-void Scene::AddRenderable(const std::shared_ptr<GameObject>& object) const
-{
-    std::shared_ptr<IRenderableComponent> renderableComponent = object->GetComponent<IRenderableComponent>();
-    if (renderableComponent != nullptr)
-    {
-        AddRenderable(renderableComponent->GetRenderable());
-    }
-}
-
 void Scene::SetActiveCamera(const std::shared_ptr<ICamera>& camera)
 {
     this->camera = camera;
-    camera->SetWidth(graphics->GetWidth());
-    camera->SetHeight(graphics->GetHeight());
-    graphics->SetActiveCamera(camera);
+    camera->SetWidth(IApplication::GetGraphics()->GetWidth());
+    camera->SetHeight(IApplication::GetGraphics()->GetHeight());
+    IApplication::GetGraphics()->SetActiveCamera(camera);
 }
 
 std::set<std::shared_ptr<GameObject>>& Scene::GetObjects() const
