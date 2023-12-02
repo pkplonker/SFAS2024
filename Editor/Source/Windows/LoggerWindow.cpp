@@ -38,13 +38,14 @@ LoggerWindow::~LoggerWindow()
 void LoggerWindow::Draw()
 {
     ImGui::Begin("Console");
-    if (ImGui::Button("Test Log"))
-    {
-    }
     ImGui::SameLine();
-    ImGui::Checkbox("Collapse", &collapse);
+    ImGui::Text("Collapse:");
     ImGui::SameLine();
-    ImGui::Checkbox("Show File/Line", &showLine);
+    ImGui::Checkbox("##Collapse", &collapse);
+    ImGui::SameLine();
+    ImGui::Text("Show File/Line:");
+    ImGui::SameLine();
+    ImGui::Checkbox("##Show File/Line", &showLine);
 
     ImGui::SameLine();
     if (ImGui::Button("Clear Log"))
@@ -52,13 +53,13 @@ void LoggerWindow::Draw()
         sink->Clear();
     }
     ImGui::SameLine();
-    ImGui::Text("Level Filter");
+    ImGui::Text("Level Filter:");
     ImGui::SameLine();
     ImGui::SetNextItemWidth(150.0f);
 
     ImGui::Combo("##combobox", &currentLevel, levels, IM_ARRAYSIZE(levels));
     ImGui::SameLine();
-    ImGui::Text("Text Filter");
+    ImGui::Text("Text Filter:");
     ImGui::SameLine();
     filter.Draw("##Filter", 180.0f);
     ImGui::SameLine();
