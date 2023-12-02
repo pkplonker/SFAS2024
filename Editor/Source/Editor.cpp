@@ -1,4 +1,6 @@
 #include "Editor.h"
+
+#include "EditorSettings.h"
 #include "Engine/IGraphics.h"
 #include "Engine/IInput.h"
 #include "Engine/Implementation/Logging/Debug.h"
@@ -62,6 +64,7 @@ void Editor::Update()
 
 void Editor::Cleanup()
 {
+    EditorSettings::SaveSettings();
     game->Cleanup();
     imguiController->ShutDown();
 }

@@ -1,6 +1,8 @@
 #include "ImGuiController.h"
 #include <vector>
 
+#include "Editor.h"
+#include "EditorSettings.h"
 #include "FileDialog.h"
 #include "Game.h"
 #include "imgui.h"
@@ -19,31 +21,39 @@
 #include "Windows/MeshImporterWindow.h"
 #include "Windows/RenderStatWindow.h"
 
+const std::string IMGUI_SETTING_ID = "IMGUI_WINDOW";
+
 ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) : dx11Graphics(dx11Graphics), game(game)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
+    io.IniFilename = "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/imgui.ini";
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-    io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
-    io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleFonts;
+    //io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
+    //io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleFonts;
 
     ImGui_ImplWin32_Init(dx11Graphics->GetHWND());
     ImGui_ImplDX11_Init(dx11Graphics->GetDevice(), dx11Graphics->GetContext());
-    const std::shared_ptr<TimeWindow> fpsCounter = std::make_shared<TimeWindow>();
-    renderables.try_emplace(fpsCounter, true);
+    const std::shared_ptr<TimeWindow> timeWindow = std::make_shared<TimeWindow>();
+    renderables.try_emplace(timeWindow, EditorSettings::Get(IMGUI_SETTING_ID + timeWindow->GetName(),true));
+    
     const std::shared_ptr<Hierarchy> hierarchy = std::make_shared<Hierarchy>();
-    renderables.try_emplace(hierarchy, true);
+    renderables.try_emplace(hierarchy, EditorSettings::Get(IMGUI_SETTING_ID + hierarchy->GetName(),true));
+    
     const std::shared_ptr<Inspector> inspector = std::make_shared<Inspector>(hierarchy);
-    renderables.try_emplace(inspector, true);
+    renderables.try_emplace(inspector, EditorSettings::Get(IMGUI_SETTING_ID + inspector->GetName(),true));
+    
     const std::shared_ptr<MeshImporterWindow> meshImporterWindow = std::make_shared<MeshImporterWindow>();
-    renderables.try_emplace(meshImporterWindow, true);
+    renderables.try_emplace(meshImporterWindow, EditorSettings::Get(IMGUI_SETTING_ID + meshImporterWindow->GetName(),true));
+    
     const std::shared_ptr<RenderStatWindow> drawStats = std::make_shared<RenderStatWindow>();
-    renderables.try_emplace(drawStats, true);
+    renderables.try_emplace(drawStats, EditorSettings::Get(IMGUI_SETTING_ID + drawStats->GetName(),true));
+    
     const std::shared_ptr<LoggerWindow> logger = std::make_shared<LoggerWindow>(new BufferSink(500));
-    renderables.try_emplace(logger, true);
+    renderables.try_emplace(logger, EditorSettings::Get(IMGUI_SETTING_ID + logger->GetName(),true));
     ImGuiTheme::ApplyTheme(0);
 }
 
@@ -171,6 +181,10 @@ void ImGuiController::ImGuiPostUpdate() const
 
 void ImGuiController::ShutDown()
 {
+    for (auto renderable : renderables)
+    {
+        EditorSettings::Set(IMGUI_SETTING_ID + renderable.first ->GetName(), renderable.second);
+    }
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
@@ -178,5 +192,11 @@ void ImGuiController::ShutDown()
 
 void ImGuiController::Resize(int width, int height)
 {
-    ImGui::GetIO().DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
+    RECT rect;
+    ::GetClientRect(dx11Graphics->GetHWND(), &rect);
+    float x = static_cast<float>(rect.right - rect.left);
+    float y =static_cast<float>(rect.bottom - rect.top);
+    ImGui::GetIO().DisplaySize = ImVec2(x,y );
+    Trace(std::to_string(x) + ":" + std::to_string(y))
+    //ImGui::GetIO().DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
 }

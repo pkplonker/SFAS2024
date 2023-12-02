@@ -3,7 +3,7 @@
 
 #include "ImGuiWindow.h"
 
-const std::string RENDER_STAT = "Fps Counter";
+const std::string RENDER_STAT = "Render Stats";
 
 class RenderStatWindow : public EditorWindow
 {

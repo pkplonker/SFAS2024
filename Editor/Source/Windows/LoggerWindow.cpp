@@ -29,12 +29,7 @@ std::string LoggerWindow::CreateMessageString(const LogMessageData& line) const
     return ISink::BeautifyLogLevel(line.level) + " " + line.message;
 }
 
-LoggerWindow::~LoggerWindow()
-{
-    EditorSettings::Set(CURRENTLEVEL_KEY, currentLevel);
-    EditorSettings::Set(COLLAPSE_KEY, collapse);
-    EditorSettings::Set(SHOWLINE_KEY, showLine);
-}
+
 
 void LoggerWindow::Draw()
 {
@@ -42,11 +37,17 @@ void LoggerWindow::Draw()
     ImGui::SameLine();
     ImGui::Text("Collapse:");
     ImGui::SameLine();
-    ImGui::Checkbox("##Collapse", &collapse);
+    if (ImGui::Checkbox("##Collapse", &collapse))
+    {
+        EditorSettings::Set(COLLAPSE_KEY, collapse);
+    }
     ImGui::SameLine();
     ImGui::Text("Show File/Line:");
     ImGui::SameLine();
-    ImGui::Checkbox("##Show File/Line", &showLine);
+    if (ImGui::Checkbox("##Show File/Line", &showLine))
+    {
+        EditorSettings::Set(SHOWLINE_KEY, showLine);
+    }
 
     ImGui::SameLine();
     if (ImGui::Button("Clear Log"))
@@ -58,7 +59,10 @@ void LoggerWindow::Draw()
     ImGui::SameLine();
     ImGui::SetNextItemWidth(150.0f);
 
-    ImGui::Combo("##combobox", &currentLevel, levels, IM_ARRAYSIZE(levels));
+    if (ImGui::Combo("##combobox", &currentLevel, levels, IM_ARRAYSIZE(levels)))
+    {
+        EditorSettings::Set(CURRENTLEVEL_KEY, currentLevel);
+    }
     ImGui::SameLine();
     ImGui::Text("Text Filter:");
     ImGui::SameLine();
@@ -68,7 +72,8 @@ void LoggerWindow::Draw()
     {
         filter.Clear();
     }
-    ImGui::BeginChild("Scrolling");
+    ImGui::BeginChild("Scrolling", ImVec2(0, 0), true,
+                      ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
     if (collapse)
     {
         std::unordered_map<std::string, int> messageCounts;
@@ -81,7 +86,7 @@ void LoggerWindow::Draw()
                 std::string message = CreateMessageString(line);
                 if (messageCounts.find(message) == messageCounts.end())
                 {
-                    orderedMessages.push_back(std::pair(message,line));
+                    orderedMessages.push_back(std::pair(message, line));
                 }
                 messageCounts[message]++;
             }

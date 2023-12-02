@@ -31,6 +31,7 @@ public:
                 return value;
             }
         }
+        Set(key, defaultValue);
         return defaultValue;
     }
 

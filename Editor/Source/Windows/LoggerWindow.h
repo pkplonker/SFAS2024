@@ -9,16 +9,16 @@ class BufferSink;
 class ISink;
 const std::string LOGGER = "Console";
 
-const std::string CURRENTLEVEL_KEY;
-const std::string COLLAPSE_KEY;
-const std::string SHOWLINE_KEY;
+const std::string CURRENTLEVEL_KEY = "CURRENTLEVEL_KEY";
+const std::string COLLAPSE_KEY = "COLLAPSE_KEY";
+const std::string SHOWLINE_KEY = "SHOWLINE_KEY";
 
 class LoggerWindow : public EditorWindow
 {
 public:
     LoggerWindow(BufferSink* path);
     std::string CreateMessageString(const LogMessageData& line) const;
-    ~LoggerWindow() override;
+    ~LoggerWindow() override = default;
     void Draw() override;
     std::string GetName() override;
 
@@ -29,5 +29,4 @@ private:
     bool collapse;
     bool showLine;
     ImGuiTextFilter filter;
-
 };
