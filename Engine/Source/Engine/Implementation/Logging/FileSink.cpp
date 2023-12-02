@@ -6,7 +6,7 @@
 
 FileSink::FileSink(std::string filePath) : path(filePath)
 {
-    logFile.open(filePath, std::ios::app | std::ofstream::trunc);
+    logFile.open(filePath, std::ofstream::trunc);
     if (!logFile.is_open())
     {
         Error("Failed to open file for File sink")
@@ -16,7 +16,7 @@ FileSink::FileSink(std::string filePath) : path(filePath)
 }
 
 
-void FileSink::Log(LogLevel level, const char* file, int line, const std::string& message)
+void FileSink::Log(LogLevel level, const char* file, int line, const std::string message)
 {
     if (logFile.is_open())
     {

@@ -7,12 +7,9 @@
 
 void Debug::Log(LogLevel level, const char* file, int line, const std::string& message)
 {
-    if (level >= Debug::logLevel)
+    for (auto sink : sinks)
     {
-        for (auto sink : sinks)
-        {
-            sink->Log(level,file, line, message);
-        }
+        sink->Log(level, file, line, message);
     }
 }
 

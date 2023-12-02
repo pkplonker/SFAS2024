@@ -5,6 +5,6 @@ class ConsoleSink : public ISink
 {
 public:
     ConsoleSink();
-    void Log(LogLevel level, const char* file, int line, const std::string& message) override;
+    void Log(LogLevel level, const char* file, int line, const std::string message) override;
     
 };
