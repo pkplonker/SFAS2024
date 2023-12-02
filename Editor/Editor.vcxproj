@@ -177,6 +177,7 @@
     <ClCompile Include="Source\EntryPoints\WindowsMain.cpp" />
     <ClCompile Include="Source\Editor.cpp" />
     <ClCompile Include="Source\Windows\ImGuiFPSCounter.cpp" />
+    <ClCompile Include="Source\Windows\LoggerWindow.cpp" />
     <ClCompile Include="Source\Windows\MeshImporterWindow.cpp" />
     <ClCompile Include="Source\Windows\MeshComponentDrawer.cpp" />
     <ClCompile Include="Source\Windows\RenderStatWindow.cpp" />
@@ -323,6 +324,7 @@
     <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xaudio2Redist.h" />
     <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xdsp.h" />
     <ClInclude Include="Source\Editor.h" />
+    <ClInclude Include="Source\Windows\LoggerWindow.h" />
     <ClInclude Include="Source\Windows\MeshImporterWindow.h" />
     <ClInclude Include="Source\Windows\MeshComponentDrawer.h" />
     <ClInclude Include="Source\Windows\RenderStatWindow.h" />

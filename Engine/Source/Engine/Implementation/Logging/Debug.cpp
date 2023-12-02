@@ -54,12 +54,13 @@ LogLevel Debug::GetLevel()
     return logLevel;
 }
 
-void Debug::AddSink(ISink* sink)
+ISink* Debug::RegisterSink(ISink* sink)
 {
     sinks.emplace(sink);
+    return sink;
 }
 
-void Debug::RemoveSync(ISink* sink)
+void Debug::DeregisterSink(ISink* sink)
 {
     auto it = std::find(sinks.begin(), sinks.end(), sink);
     if (it != sinks.end())

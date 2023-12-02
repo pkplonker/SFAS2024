@@ -11,9 +11,11 @@
 #include "SceneManager.h"
 #include "SceneSerializer.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
+#include "Logging/BufferSink.h"
 #include "Windows/Hierarchy.h"
 #include "Windows/ImGuiFPSCounter.h"
 #include "Windows/Inspector.h"
+#include "Windows/LoggerWindow.h"
 #include "Windows/MeshImporterWindow.h"
 #include "Windows/RenderStatWindow.h"
 
@@ -40,6 +42,8 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) : 
     renderables.try_emplace(meshImporterWindow, true);
     const std::shared_ptr<RenderStatWindow> drawStats = std::make_shared<RenderStatWindow>();
     renderables.try_emplace(drawStats, true);
+    const std::shared_ptr<LoggerWindow> logger = std::make_shared<LoggerWindow>(new BufferSink(500));
+    renderables.try_emplace(logger, true);
     ImGuiTheme::ApplyTheme(0);
 }
 

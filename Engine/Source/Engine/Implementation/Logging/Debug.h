@@ -28,8 +28,8 @@ public:
 
 	static void SetLevel(LogLevel level);
 	static LogLevel GetLevel();
-	static void AddSink(ISink* sink);
-	static void RemoveSync(ISink* sink);
+	static ISink* RegisterSink(ISink* sink);
+	static void DeregisterSink(ISink* sink);
 
 private:
 	inline static LogLevel logLevel = Trace;

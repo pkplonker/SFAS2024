@@ -7,7 +7,6 @@ class FileSink : public ISink
 {
 public:
     FileSink(std::string filePath);
-    ~FileSink();
     void Log(LogLevel level, const char* file, int line, const std::string& message) override;
 private:
     std::string path;

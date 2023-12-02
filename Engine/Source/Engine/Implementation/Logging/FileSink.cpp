@@ -10,16 +10,11 @@ FileSink::FileSink(std::string filePath) : path(filePath)
     if (!logFile.is_open())
     {
         Error("Failed to open file for File sink")
+        return;
     }
+    Debug::RegisterSink(this);
 }
 
-FileSink::~FileSink()
-{
-    if (logFile.is_open())
-    {
-        logFile.close();
-    }
-}
 
 void FileSink::Log(LogLevel level, const char* file, int line, const std::string& message)
 {

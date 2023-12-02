@@ -23,8 +23,8 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	Debug::AddSink(new ConsoleSink());
-	Debug::AddSink(new FileSink("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/log.log"));
+	Debug::RegisterSink(new ConsoleSink());
+	Debug::RegisterSink(new FileSink("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/log.log"));
 
 	Trace("Creating winman")
 	WNDCLASSEX wc;

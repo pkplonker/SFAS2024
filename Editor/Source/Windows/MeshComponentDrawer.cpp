@@ -100,6 +100,7 @@ void MeshComponentDrawer::ChangeMesh()
                 MessageBoxWrapper::ShowWarning("Unable to generate mesh", "Unable to generate mesh");
                 return;
             }
+            Trace("Setting new mesh")
             comp->SetMesh(mesh);
         }
     }
@@ -130,6 +131,8 @@ void MeshComponentDrawer::ChangeShader()
             auto material = Editor::GetGraphics()->CreateMaterial(shader, comp->GetMaterial()->GetTexture());
             material->SetColor(comp->GetMaterial()->GetColor()); // need to implement updating existing material
             comp->SetMaterial(material);
+            Trace("Setting new shader/material")
+
         }
     }
     else
@@ -160,6 +163,8 @@ void MeshComponentDrawer::ChangeTexture()
             auto material = IApplication::GetGraphics()->CreateMaterial(comp->GetMaterial()->GetShader(), texture);
             material->SetColor(comp->GetMaterial()->GetColor()); // need to implement updating existing material
             comp->SetMaterial(material);
+            Trace("Setting new texture/material")
+
         }
     }
     else
