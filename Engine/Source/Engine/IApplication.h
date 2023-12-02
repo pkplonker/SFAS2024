@@ -1,10 +1,11 @@
 #pragma once
+#include "IResizeHandler.h"
 
 class ImGuiController;
 class IGraphics;
 class IInput;
 
-class IApplication
+class IApplication : public IResizeHandler
 {
 public:
     IApplication(IGraphics* GraphicsIn, IInput* InputIn);
@@ -15,6 +16,7 @@ public:
     virtual void Update() = 0;
     virtual void Cleanup() = 0;
     virtual void PostGraphics() = 0;
+    void Resize(int width, int height) override = 0;
 
     static IGraphics* GetGraphics() { return Graphics; }
 

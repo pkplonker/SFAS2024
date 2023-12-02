@@ -15,6 +15,7 @@ void EditorSettings::SaveSettings()
         {
             file << pair.first << "=" << pair.second << std::endl;
         }
+        file.flush();
     }else
     {
         Error("Unable to save editor settings")
@@ -23,9 +24,10 @@ void EditorSettings::SaveSettings()
 
 void EditorSettings::LoadSettings()
 {
-    Trace(std::filesystem::current_path().string())
     if (!init)
     {
+        Trace("Loading settings" + std::filesystem::current_path().string())
+
         std::ifstream file(settingsFile);
         std::string line;
         while (std::getline(file, line))

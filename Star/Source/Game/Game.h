@@ -18,6 +18,8 @@ public:
 	virtual void Update();
 	virtual void Cleanup();
 	virtual void PostGraphics();
+	void Resize(int width, int height) override;
+
 private:
 	
 	std::shared_ptr<GameObject> camera;

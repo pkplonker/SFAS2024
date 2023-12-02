@@ -75,3 +75,9 @@ IGraphics* Editor::GetGraphics()
 {
     return Editor::dx11Graphics;
 }
+
+void Editor::Resize(int width, int height)
+{
+    Graphics->Resize(width,height);
+    imguiController->Resize(width, height);
+}

@@ -4,6 +4,7 @@
 #include <ios>
 
 #include "imgui.h"
+#include "imgui_internal.h"
 #include "../Editor.h"
 #include "../EditorSettings.h"
 #include "../ImGuiHelpers.h"
@@ -71,7 +72,7 @@ void LoggerWindow::Draw()
     if (collapse)
     {
         std::unordered_map<std::string, int> messageCounts;
-        std::vector<std::string> orderedMessages;
+        std::vector<std::pair<std::string, LogMessageData>> orderedMessages;
 
         for (const auto& line : sink->GetBuffer())
         {
@@ -80,7 +81,7 @@ void LoggerWindow::Draw()
                 std::string message = CreateMessageString(line);
                 if (messageCounts.find(message) == messageCounts.end())
                 {
-                    orderedMessages.push_back(message);
+                    orderedMessages.push_back(std::pair(message,line));
                 }
                 messageCounts[message]++;
             }
@@ -88,9 +89,24 @@ void LoggerWindow::Draw()
 
         for (const auto& message : orderedMessages)
         {
-            if (filter.PassFilter(message.c_str()))
+            if (filter.PassFilter(message.first.c_str()))
             {
-                ImGui::Text("%s (%d)", message.c_str(), messageCounts[message]);
+                if (message.second.level == 2)
+                {
+                    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 0, 1));
+                    ImGui::Text("%s (%d)", message.first.c_str(), messageCounts[message.first]);
+                    ImGui::PopStyleColor();
+                }
+                else if (message.second.level == 3)
+                {
+                    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 0, 0, 1));
+                    ImGui::Text("%s (%d)", message.first.c_str(), messageCounts[message.first]);
+                    ImGui::PopStyleColor();
+                }
+                else
+                {
+                    ImGui::Text("%s (%d)", message.first.c_str(), messageCounts[message.first]);
+                }
             }
         }
     }
@@ -103,7 +119,22 @@ void LoggerWindow::Draw()
                 std::string message = CreateMessageString(line);
                 if (filter.PassFilter(message.c_str()))
                 {
-                    ImGui::TextUnformatted(message.c_str());
+                    if (line.level == 2)
+                    {
+                        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 0, 1));
+                        ImGui::Text(message.c_str());
+                        ImGui::PopStyleColor();
+                    }
+                    else if (line.level == 3)
+                    {
+                        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 0, 0, 1));
+                        ImGui::Text(message.c_str());
+                        ImGui::PopStyleColor();
+                    }
+                    else
+                    {
+                        ImGui::Text(message.c_str());
+                    }
                 }
             }
         }

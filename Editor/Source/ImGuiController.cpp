@@ -13,7 +13,7 @@
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 #include "Logging/BufferSink.h"
 #include "Windows/Hierarchy.h"
-#include "Windows/ImGuiFPSCounter.h"
+#include "Windows/TimeWindow.h"
 #include "Windows/Inspector.h"
 #include "Windows/LoggerWindow.h"
 #include "Windows/MeshImporterWindow.h"
@@ -32,7 +32,7 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) : 
 
     ImGui_ImplWin32_Init(dx11Graphics->GetHWND());
     ImGui_ImplDX11_Init(dx11Graphics->GetDevice(), dx11Graphics->GetContext());
-    const std::shared_ptr<ImGuiFPSCounter> fpsCounter = std::make_shared<ImGuiFPSCounter>();
+    const std::shared_ptr<TimeWindow> fpsCounter = std::make_shared<TimeWindow>();
     renderables.try_emplace(fpsCounter, true);
     const std::shared_ptr<Hierarchy> hierarchy = std::make_shared<Hierarchy>();
     renderables.try_emplace(hierarchy, true);
@@ -63,7 +63,8 @@ void ImGuiController::DrawViewport()
     auto w = dx11Graphics->GetWidth();
     auto h = dx11Graphics->GetHeight();
     ImGui::Image((ImTextureID)dx11Graphics->GetTextureView(),
-                 ImVec2(dx11Graphics->GetTextureWidth(), dx11Graphics->GetTextureHeight()));
+                 ImVec2(static_cast<float>(dx11Graphics->GetTextureWidth()),
+                        static_cast<float>(dx11Graphics->GetTextureHeight())));
     gameViewportSize = ImGui::GetWindowSize();
     ImGui::End();
 }
@@ -173,4 +174,9 @@ void ImGuiController::ShutDown()
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
+}
+
+void ImGuiController::Resize(int width, int height)
+{
+    ImGui::GetIO().DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
 }

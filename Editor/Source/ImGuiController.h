@@ -4,12 +4,13 @@
 #include <xstring>
 
 #include "imgui.h"
+#include "IResizeHandler.h"
 
 class Game;
 class EditorWindow;
 class DirectX11Graphics;
 
-class ImGuiController
+class ImGuiController : public IResizeHandler
 {
 public:
 	ImGuiController(DirectX11Graphics* dx11Graphics, Game* game);
@@ -23,6 +24,7 @@ public:
 	void Draw();
 	void ImGuiPostUpdate() const;
 	void ShutDown();
+	void Resize(int width, int height) override;
 
 private:
 	DirectX11Graphics* dx11Graphics;

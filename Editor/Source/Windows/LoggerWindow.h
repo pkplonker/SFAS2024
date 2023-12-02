@@ -18,7 +18,7 @@ class LoggerWindow : public EditorWindow
 public:
     LoggerWindow(BufferSink* path);
     std::string CreateMessageString(const LogMessageData& line) const;
-    ~LoggerWindow();
+    ~LoggerWindow() override;
     void Draw() override;
     std::string GetName() override;
 

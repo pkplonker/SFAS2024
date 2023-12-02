@@ -177,7 +177,7 @@
     <ClCompile Include="Packages\ImGui\misc\fonts\binary_to_compressed_c.cpp" />
     <ClCompile Include="Source\EntryPoints\WindowsMain.cpp" />
     <ClCompile Include="Source\Editor.cpp" />
-    <ClCompile Include="Source\Windows\ImGuiFPSCounter.cpp" />
+    <ClCompile Include="Source\Windows\TimeWindow.cpp" />
     <ClCompile Include="Source\Windows\LoggerWindow.cpp" />
     <ClCompile Include="Source\Windows\MeshImporterWindow.cpp" />
     <ClCompile Include="Source\Windows\MeshComponentDrawer.cpp" />
@@ -279,7 +279,7 @@
     <ClInclude Include="Source\Windows\ComponentDrawerFactory.h" />
     <ClInclude Include="Source\Windows\Inspector.h" />
     <ClInclude Include="Source\Windows\Hierarchy.h" />
-    <ClInclude Include="Source\Windows\ImGuiFPSCounter.h" />
+    <ClInclude Include="Source\Windows\TimeWindow.h" />
     <ClInclude Include="Source\Windows\ImGuiWindow.h" />
     <ClInclude Include="Source\ImGuiController.h" />
     <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\Audio.h" />

@@ -248,6 +248,7 @@
     <ClInclude Include="Source\Engine\Implementation\Transform3D.h" />
     <ClInclude Include="Source\Engine\SceneManager.h" />
     <ClInclude Include="Source\RenderingStats.h" />
+    <ClInclude Include="Source\EngineTime.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp" />
@@ -660,6 +661,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Math\Vector4.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\IResizeHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

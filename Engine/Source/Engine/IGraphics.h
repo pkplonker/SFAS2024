@@ -4,6 +4,7 @@
 #include <list>
 #include <memory>
 
+#include "IResizeHandler.h"
 #include "RenderingStats.h"
 
 class IMeshRenderable;
@@ -15,7 +16,7 @@ class IShader;
 class ITexture;
 class IMaterial;
 
-class IGraphics
+class IGraphics : public IResizeHandler
 {
 public:
     IGraphics();
@@ -38,6 +39,7 @@ public:
     virtual void SetRenderToTexture(bool state, int width, int height) = 0;
     virtual IMaterial* CreateMaterial(IShader* shader, ITexture* texture) =0;
     virtual void UpdateRenderable(IMaterial* mat, const std::shared_ptr<IRenderable>& shared) =0;
+    virtual void Resize(int width, int height) = 0;
     RenderingStats currentStats;
 
 protected:

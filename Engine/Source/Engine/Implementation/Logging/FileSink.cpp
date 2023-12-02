@@ -15,6 +15,11 @@ FileSink::FileSink(std::string filePath) : path(filePath)
     Debug::RegisterSink(this);
 }
 
+FileSink::~FileSink()
+{
+    logFile.flush();
+}
+
 
 void FileSink::Log(LogLevel level, const char* file, int line, const std::string message)
 {

@@ -692,6 +692,11 @@ IMaterial* DirectX11Graphics::CreateMaterial(IShader* shader, ITexture* texture)
     return new DirectX11Material(shader, texture);
 }
 
+void DirectX11Graphics::Resize(int width, int height)
+{
+    
+}
+
 void DirectX11Graphics::SetWorldMatrix(const std::weak_ptr<Transform3D> transform)
 {
     if (std::shared_ptr<Transform3D> trans = transform.lock())
