@@ -36,21 +36,5 @@ void MeshComponent::SetMesh(Mesh* mesh)
     }
 }
 
-void MeshComponent::SetMaterial(IMaterial* material)
-{
-    if (auto scene = SceneManager::GetScene().lock())
-    {
-        this->material = material;
-        IApplication::GetGraphics()->UpdateRenderable(material, renderable);
-        UpdateRenderableTransform();
-    }
-}
 
-void MeshComponent::UpdateRenderableTransform()
-{
-    if (renderable == nullptr)return;
-    if (auto obj = gameObject.lock())
-    {
-        this->renderable->SetTransform(obj->Transform());
-    }
-}
+

@@ -262,13 +262,13 @@ void DirectX11Graphics::Update()
                     stats.shaders ++;
                 }
                 const auto renderObject = renderable->get();
-                
+
                 if (renderObject == nullptr)
                 {
                     Warning("Detected null renderable")
                     continue;
                 }
-                
+
                 stats.tris += renderObject->GetTriangles();
                 stats.verts += renderObject->GetVerts();
                 stats.drawCalls++;
@@ -463,9 +463,19 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IMaterial* mater
 
     if (IsValid())
     {
-        const ITexture* texture = material->GetTexture();
-        const float halfWidth = texture ? texture->GetWidth() / 2.0f : 0.5f;
-        const float halfHeight = texture ? texture->GetHeight() / 2.0f : 0.5f;
+        float halfWidth = 1.0f;
+        float halfHeight = 1.0f;
+
+        if (material != nullptr)
+        {
+            ITexture* texture = material->GetTexture();
+            if (texture != nullptr)
+            {
+                halfWidth = texture ? texture->GetWidth() / 2.0f : 0.5f;
+                halfHeight = texture ? texture->GetHeight() / 2.0f : 0.5f;
+            }
+        }
+
 
         float vertex_data_array[] =
         {

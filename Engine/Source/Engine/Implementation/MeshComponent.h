@@ -17,12 +17,10 @@ public:
 
     std::string GetMeshPath();
 
-    IMaterial* GetMaterial() { return IRenderableComponent::GetMaterial(); }
-    std::shared_ptr<IRenderable> GetRenderable() { return IRenderableComponent::GetRenderable(); }
+    IMaterial* GetMaterial() override { return IRenderableComponent::GetMaterial(); }
+    std::shared_ptr<IRenderable> GetRenderable() override { return IRenderableComponent::GetRenderable(); }
 
     void SetMesh(Mesh* mesh);
-    void SetMaterial(IMaterial* material);
-    void UpdateRenderableTransform();
 
 private:
 };
