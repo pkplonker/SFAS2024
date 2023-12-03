@@ -80,7 +80,7 @@ void ImGuiController::DrawViewport()
 
 void ImGuiController::Save()
 {
-	SceneSerializer::Serialize();
+	SceneSerializer::Serialize(FileDialog::SaveFileDialog());
 }
 
 void ImGuiController::LoadScene() const
