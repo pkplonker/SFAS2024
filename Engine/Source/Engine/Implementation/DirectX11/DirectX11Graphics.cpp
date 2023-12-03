@@ -17,6 +17,11 @@
 #include "Implementation/Mesh.h"
 #include "Implementation/Vertex.h"
 
+struct {
+    DirectX::XMMATRIX mvp;
+    DirectX::XMMATRIX worldMatrix;
+} matrices;
+
 DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
                                                     BackbufferView(nullptr), BackbufferTexture(nullptr), Mvp(nullptr),
                                                     vpMatrix(), FeatureLevel(D3D_FEATURE_LEVEL_11_0), hwnd(hwndIn),
@@ -87,7 +92,7 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         D3D11_BUFFER_DESC constDesc;
         ZeroMemory(&constDesc, sizeof(constDesc));
         constDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-        constDesc.ByteWidth = sizeof(DirectX::XMMATRIX);
+        constDesc.ByteWidth = sizeof(matrices);
         constDesc.Usage = D3D11_USAGE_DEFAULT;
         hr = Device->CreateBuffer(&constDesc, 0, &Mvp);
 
@@ -166,6 +171,7 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         materialBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         materialBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
         Device->CreateBuffer(&materialBufferDesc, nullptr, &materialBuffer);
+        
     }
 }
 
@@ -283,7 +289,7 @@ void DirectX11Graphics::Update()
                     Context->VSSetConstantBuffers(1, 1, &materialBuffer);
                 }
                 const std::weak_ptr<Transform3D> transform = (*renderable)->GetTransform();
-                SetWorldMatrix(transform);
+                SetMatrixBuffers(transform);
                 Context->OMSetBlendState(BlendState, nullptr, ~0U);
                 (*renderable)->Update();
             }
@@ -476,17 +482,17 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IMaterial* mater
             }
         }
 
-
         float vertex_data_array[] =
         {
-            halfWidth, halfHeight, 0.0f, 1.0f, 1.0f,
-            halfWidth, -halfHeight, 0.0f, 1.0f, 0.0f,
-            -halfWidth, -halfHeight, 0.0f, 0.0f, 0.0f,
-
-            -halfWidth, halfHeight, 0.0f, 0.0f, 1.0f,
+            // Positions                    // Colors                // Normals           // UVs
+            halfWidth, halfHeight, 0.0f,   1.0f, 1.0f, 1.0f, 1.0f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
+            halfWidth, -halfHeight, 0.0f,  1.0f, 1.0f, 1.0f, 1.0f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,
+            -halfWidth, -halfHeight, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
+            -halfWidth, halfHeight, 0.0f,  1.0f, 1.0f, 1.0f, 1.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f
         };
+
         ID3D11Buffer* VertexBuffer;
-        unsigned int vertexStride = 5 * sizeof(float);
+        unsigned int vertexStride = 12 * sizeof(float); 
         unsigned int vertexOffset = 0;
         unsigned int vertexCount = 4;
 
@@ -517,18 +523,18 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IMaterial* mater
         ZeroMemory(&indexResourceData, sizeof(indexResourceData));
         indexResourceData.pSysMem = indexBufferData;
 
-        if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) && SUCCEEDED(
-            Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
+        if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) &&
+            SUCCEEDED(Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
         {
             Result = std::make_shared<DirectX11Billboard>(Context, VertexBuffer, IndexBuffer, vertexStride,
-                                                          vertexOffset,
-                                                          vertexCount, indexCount);
+                                                          vertexOffset, vertexCount, indexCount);
             AddRenderable(material, Result);
         }
     }
 
     return Result;
 }
+
 
 void DirectX11Graphics::AddRenderable(IMaterial* material, std::shared_ptr<IRenderable> Result)
 {
@@ -820,24 +826,30 @@ void DirectX11Graphics::UpdateRenderToTextureResources(int newWidth, int newHeig
     }
 }
 
-void DirectX11Graphics::SetWorldMatrix(const std::weak_ptr<Transform3D> transform)
+void DirectX11Graphics::SetMatrixBuffers(const std::weak_ptr<Transform3D> transform)
 {
     if (std::shared_ptr<Transform3D> trans = transform.lock())
     {
-        DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(trans->Position.X(), trans->Position.Y(),
-                                                                     trans->Position.Z());
-        DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationRollPitchYaw(
-            trans->Rotation.X(), trans->Rotation.Y(),
-            trans->Rotation.Z());
-        DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(trans->Scale.X(), trans->Scale.Y(),
-                                                           trans->Scale.Z());
+        DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(trans->Position.X(), trans->Position.Y(), trans->Position.Z());
+        DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationRollPitchYaw(trans->Rotation.X(), trans->Rotation.Y(), trans->Rotation.Z());
+        DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(trans->Scale.X(), trans->Scale.Y(), trans->Scale.Z());
+
         DirectX::XMMATRIX world = scale * rotation * translation;
         DirectX::XMMATRIX mvp = DirectX::XMMatrixMultiply(world, vpMatrix);
+
+        world = DirectX::XMMatrixTranspose(world);
         mvp = DirectX::XMMatrixTranspose(mvp);
-        Context->UpdateSubresource(Mvp, 0, 0, &mvp, 0, 0);
+
+       
+
+        matrices.mvp = mvp;
+        matrices.worldMatrix = world;
+
+        Context->UpdateSubresource(Mvp, 0, 0, &matrices, 0, 0);
         Context->VSSetConstantBuffers(0, 1, &Mvp);
     }
 }
+
 
 bool DirectX11Graphics::CompileShader(LPCWSTR filepath, LPCSTR entry, LPCSTR shader, ID3DBlob** buffer)
 {

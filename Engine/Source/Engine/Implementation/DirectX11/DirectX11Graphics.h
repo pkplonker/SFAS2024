@@ -57,7 +57,7 @@ public:
 
 protected:
 
-	virtual void SetWorldMatrix(std::weak_ptr<Transform3D> transform);
+	virtual void SetMatrixBuffers(std::weak_ptr<Transform3D> transform);
 	virtual bool CompileShader(LPCWSTR filepath, LPCSTR entry, LPCSTR shader, ID3DBlob** buffer);
 
 
