@@ -18,6 +18,12 @@ void Inspector::Draw()
     if (const auto gameobject = hierarchy->GetSelectedObject().lock())
     {
         ImGui::Text(gameobject->Name.c_str());
+        ImGui::SameLine();
+        if(ImGui::Button("...##renamebutton"))
+        {
+            renamingHelper.RequestRename(gameobject);
+        }
+        renamingHelper.DrawRenamePopup();
 
         if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
         {

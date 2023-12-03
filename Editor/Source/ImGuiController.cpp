@@ -63,7 +63,7 @@ void ImGuiController::ImGuiPreFrame()
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	ImGui::DockSpaceOverViewport();
-	//ImGui::ShowDemoWindow();
+	ImGui::ShowDemoWindow();
 }
 
 void ImGuiController::DrawViewport()

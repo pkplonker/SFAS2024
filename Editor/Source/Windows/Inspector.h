@@ -3,6 +3,7 @@
 
 #include "ComponentDrawerFactory.h"
 #include "ImGuiWindow.h"
+#include "RenamingHelper.h"
 #include "Engine/Math/Vector3.h"
 class Hierarchy;
 const std::string INSPECTOR = "Inspector";
@@ -20,4 +21,6 @@ public:
 private:
 	std::shared_ptr<Hierarchy> hierarchy;
 	std::unique_ptr<ComponentDrawerFactory> factory;
+	RenamingHelper renamingHelper;
+
 };

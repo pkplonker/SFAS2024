@@ -279,6 +279,7 @@
     <ClInclude Include="Source\Windows\ComponentDrawerFactory.h" />
     <ClInclude Include="Source\Windows\Inspector.h" />
     <ClInclude Include="Source\Windows\Hierarchy.h" />
+    <ClInclude Include="Source\Windows\RenamingHelper.h" />
     <ClInclude Include="Source\Windows\TimeWindow.h" />
     <ClInclude Include="Source\Windows\ImGuiWindow.h" />
     <ClInclude Include="Source\ImGuiController.h" />

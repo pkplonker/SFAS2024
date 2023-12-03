@@ -11,74 +11,77 @@
 
 void Hierarchy::Draw()
 {
-	std::vector<std::shared_ptr<GameObject>> objectsToRemove;
+    std::vector<std::shared_ptr<GameObject>> objectsToRemove;
 
-	ImGui::Begin(HIERARCHY.c_str());
-	if (auto sharedScene = SceneManager::GetScene().lock())
-	{
-		if (ImGui::IsMouseReleased(ImGuiMouseButton_Right) && ImGui::IsWindowHovered(ImGuiHoveredFlags_None))
-		{
-			ImGui::OpenPopup("ContextMenuWindow");
-		}
-		if (ImGui::BeginPopup("ContextMenuWindow"))
-		{
-			if (ImGui::BeginMenu("Add"))
-			{
-				if (ImGui::MenuItem("Empty"))
-				{
-					GameObjectFactory().Build();
-				}
-				if (ImGui::MenuItem("Camera"))
-				{
-					GameObjectFactory("New Camera").AddPerspectiveCamera().Build();
-				}
-				if (ImGui::MenuItem("Light"))
-				{
-				}
+    ImGui::Begin(HIERARCHY.c_str());
+    if (auto sharedScene = SceneManager::GetScene().lock())
+    {
+        if (ImGui::IsMouseReleased(ImGuiMouseButton_Right) && ImGui::IsWindowHovered(ImGuiHoveredFlags_None))
+        {
+            ImGui::OpenPopup("ContextMenuWindow");
+        }
+        if (ImGui::BeginPopup("ContextMenuWindow"))
+        {
+            if (ImGui::BeginMenu("Add"))
+            {
+                if (ImGui::MenuItem("Empty"))
+                {
+                    GameObjectFactory().Build();
+                }
+                if (ImGui::MenuItem("Camera"))
+                {
+                    GameObjectFactory("New Camera").AddPerspectiveCamera().Build();
+                }
+                if (ImGui::MenuItem("Light"))
+                {
+                }
 
-				ImGui::EndMenu();
-			}
+                ImGui::EndMenu();
+            }
 
-			ImGui::EndPopup();
-		}
+            ImGui::EndPopup();
+        }
 
-		for (const auto& object : sharedScene->GetObjects())
-		{
-			if (object == nullptr) continue;
-			std::string label = object->Name;
-			bool is_selected = (selectedObject.lock() == object);
+        for (const auto& object : sharedScene->GetObjects())
+        {
+            if (object == nullptr) continue;
+            std::string label = object->Name;
+            bool is_selected = (selectedObject.lock() == object);
 
-			if (ImGui::Selectable(label.c_str(), is_selected))
-			{
-				selectedObject = object;
-			}
+            if (ImGui::Selectable(label.c_str(), is_selected))
+            {
+                selectedObject = object;
+            }
 
-			if (ImGui::BeginPopupContextItem(
-				("ObjectContextMenu" + std::to_string(reinterpret_cast<std::uintptr_t>(object.get()))).c_str()))
-				// use the memory address as a unique identifer
-			{
-				selectedObject = object;
-				if (ImGui::MenuItem("Delete"))
-				{
-					objectsToRemove.emplace_back(object);
-				}
-				if (ImGui::MenuItem("Rename"))
-				{
-				}
+            if (ImGui::BeginPopupContextItem(
+                ("ObjectContextMenu" + std::to_string(reinterpret_cast<std::uintptr_t>(object.get()))).c_str()))
+            // use the memory address as a unique identifer
+            {
+                selectedObject = object;
+                if (ImGui::MenuItem("Delete"))
+                {
+                    objectsToRemove.emplace_back(object);
+                }
+                if (ImGui::MenuItem("Rename"))
+                {
+                    renamingHelper.RequestRename(object);
+                }
 
-				ImGui::EndPopup();
-			}
-		}
-		for (const auto object : objectsToRemove)
-		{
-			sharedScene->RemoveObject(object);
-		}
-	}
+                ImGui::EndPopup();
+            }
+        }
+        for (const auto object : objectsToRemove)
+        {
+            sharedScene->RemoveObject(object);
+        }
+        renamingHelper.DrawRenamePopup();
 
-	ImGui::End();
+    }
+
+    ImGui::End();
 }
 
 std::weak_ptr<GameObject> Hierarchy::GetSelectedObject()
 {
-	return selectedObject;
+    return selectedObject;
 }
