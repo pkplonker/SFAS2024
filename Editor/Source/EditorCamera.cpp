@@ -10,6 +10,7 @@ EditorCamera::EditorCamera()
     transform = std::make_shared<Transform3D>();
     transform->Position = Vec3(0,0,-12);
     camera = std::make_shared<PerspectiveCamera>(transform, 1000, 1000);
+    camera-> SetFOV(80);
 }
 
 void EditorCamera::SetActiveCamera()
