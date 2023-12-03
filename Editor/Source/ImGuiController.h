@@ -5,6 +5,7 @@
 
 #include "imgui.h"
 #include "IResizeHandler.h"
+#include "Logging/BufferSink.h"
 
 class Game;
 class EditorWindow;
@@ -31,4 +32,5 @@ private:
 	Game* game;
 	ImVec2 gameViewportSize;
 	std::map<std::shared_ptr<EditorWindow>, bool> renderables;
+	BufferSink* bufferSink;
 };

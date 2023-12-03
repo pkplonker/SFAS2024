@@ -25,8 +25,10 @@ IApplication* Application;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-    Debug::RegisterSink(new ConsoleSink());
-    Debug::RegisterSink(new FileSink("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/log.log"));
+    auto consoleSink = new ConsoleSink();
+    auto fileSink = new FileSink("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/log.log");
+    Debug::RegisterSink(consoleSink);
+    Debug::RegisterSink(fileSink);
 
     Trace("Creating winman")
     WNDCLASSEX wc;
@@ -102,7 +104,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     delete Application;
     delete Graphics;
-
+    Debug::DeregisterSink(consoleSink);
+    Debug::DeregisterSink(fileSink);
+    delete consoleSink;
+    delete fileSink;
     return static_cast<int>(msg.wParam);
 }
 

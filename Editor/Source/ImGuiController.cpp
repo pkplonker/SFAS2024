@@ -52,8 +52,8 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) : 
 
     const std::shared_ptr<RenderStatWindow> drawStats = std::make_shared<RenderStatWindow>();
     renderables.try_emplace(drawStats, EditorSettings::Get(IMGUI_SETTING_ID + drawStats->GetName(), true));
-
-    const std::shared_ptr<LoggerWindow> logger = std::make_shared<LoggerWindow>(new BufferSink(1000));
+    bufferSink = new BufferSink(1000);
+    const std::shared_ptr<LoggerWindow> logger = std::make_shared<LoggerWindow>(bufferSink);
     renderables.try_emplace(logger, EditorSettings::Get(IMGUI_SETTING_ID + logger->GetName(), true));
     ImGuiTheme::ApplyTheme(0);
 }
@@ -199,6 +199,8 @@ void ImGuiController::ShutDown()
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
+    Debug::DeregisterSink(bufferSink);
+    delete bufferSink;
 }
 
 void ImGuiController::Resize(int width, int height)
@@ -209,5 +211,4 @@ void ImGuiController::Resize(int width, int height)
     float y = static_cast<float>(rect.bottom - rect.top);
     ImGui::GetIO().DisplaySize = ImVec2(x, y);
     Trace(std::to_string(x) + ":" + std::to_string(y))
-    //ImGui::GetIO().DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
 }
