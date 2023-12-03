@@ -1,34 +1,26 @@
 ﻿#include "GameObjectFactory.h"
 
+#include "IApplication.h"
 #include "Engine/Implementation/Logging/Debug.h"
 #include "IMaterial.h"
 #include "MeshComponent.h"
 #include "OrthographicCamera.h"
 #include "PerspectiveCamera.h"
 #include "ResourceManager.h"
+#include "SceneManager.h"
 #include "SpriteComponent.h"
 #include "Engine/IRenderable.h"
 #include "Engine/Implementation/CameraComponent.h"
 #include "Engine/Implementation/Scene.h"
 
-GameObjectFactory::GameObjectFactory(std::shared_ptr<Scene> scene) : scene(scene)
+GameObjectFactory::GameObjectFactory()
 {
-	if (scene == nullptr || graphics == nullptr)
-	{
-		Warning("Invalid init of GameObjectResourceManager")
-			return;
-	}
 	gameObject = std::make_shared<GameObject>();
 	SetupRandom();
 }
 
-GameObjectFactory::GameObjectFactory(std::shared_ptr<Scene> scene, std::string name) : scene(scene)
+GameObjectFactory::GameObjectFactory(std::string name)
 {
-	if (scene == nullptr || graphics == nullptr)
-	{
-		Warning("Invalid init of GameObjectResourceManager")
-			return;
-	}
 	gameObject = std::make_shared<GameObject>(name);
 	SetupRandom();
 }
@@ -68,14 +60,18 @@ GameObjectFactory& GameObjectFactory::AddName(std::string name)
 
 std::shared_ptr<GameObject> GameObjectFactory::Build()
 {
-	scene->AddObject(gameObject);
-	return gameObject;
+	if (auto scene = SceneManager::GetScene().lock())
+	{
+		scene->AddObject(gameObject);
+		return gameObject;
+	}
+	return nullptr;
 }
 
 GameObjectFactory& GameObjectFactory::AddSpriteRenderable(std::wstring shaderPath, std::wstring texturePath)
 {
 	auto material = ResourceManager::GetMaterial(shaderPath, texturePath);
-	auto component = std::make_shared<SpriteComponent>(gameObject, graphics->CreateBillboard(material),
+	auto component = std::make_shared<SpriteComponent>(gameObject, IApplication::GetGraphics()->CreateBillboard(material),
 		material);
 	if (component != nullptr)
 	{
@@ -96,7 +92,7 @@ GameObjectFactory& GameObjectFactory::AddMeshRenderable(std::string meshPath, st
 	auto material = ResourceManager::GetMaterial(shaderPath, texturePath);
 	auto mesh = ResourceManager::GetMesh(meshPath);
 
-	auto component = std::make_shared<MeshComponent>(gameObject, graphics->CreateMeshRenderable(material, mesh),
+	auto component = std::make_shared<MeshComponent>(gameObject, IApplication::GetGraphics()->CreateMeshRenderable(material, mesh),
 		material);
 	if (component != nullptr)
 	{
@@ -142,9 +138,4 @@ GameObjectFactory& GameObjectFactory::AddOrthoCamera()
 		return *this;
 	}
 	return *this;
-}
-
-void GameObjectFactory::Init(IGraphics* graphics)
-{
-	GameObjectFactory::graphics = graphics;
 }
