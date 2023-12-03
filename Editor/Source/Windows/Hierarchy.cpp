@@ -4,20 +4,17 @@
 #include <vector>
 
 #include "imgui.h"
+#include "SceneManager.h"
 #include "Engine/Implementation/GameObject.h"
 #include "Engine/Implementation/GameObjectFactory.h"
 #include "Engine/Implementation/Scene.h"
-
-Hierarchy::Hierarchy(const std::weak_ptr<Scene>& scene) : scene(scene)
-{
-}
 
 void Hierarchy::Draw()
 {
     std::vector<std::shared_ptr<GameObject>> objectsToRemove;
 
     ImGui::Begin(HIERARCHY.c_str());
-    if (auto sharedScene = scene.lock())
+    if (auto sharedScene = SceneManager::GetScene().lock())
     {
         if (ImGui::IsMouseReleased(ImGuiMouseButton_Right) && ImGui::IsWindowHovered(ImGuiHoveredFlags_None))
         {
@@ -29,11 +26,11 @@ void Hierarchy::Draw()
             {
                 if (ImGui::MenuItem("Empty"))
                 {
-                    GameObjectFactory(sharedScene, "New GameObject").Build();
+                    GameObjectFactory().Build();
                 }
                 if (ImGui::MenuItem("Camera"))
                 {
-                    GameObjectFactory(sharedScene, "New Camera").AddPerspectiveCamera().Build();
+                    GameObjectFactory("New Camera").AddPerspectiveCamera().Build();
                 }
                 if (ImGui::MenuItem("Light"))
                 {
@@ -42,12 +39,12 @@ void Hierarchy::Draw()
                 ImGui::EndMenu();
             }
 
-
             ImGui::EndPopup();
         }
 
         for (const auto& object : sharedScene->GetObjects())
         {
+            if (object == nullptr) continue;
             std::string label = object->Name;
             bool is_selected = (selectedObject.lock() == object);
 
@@ -55,7 +52,6 @@ void Hierarchy::Draw()
             {
                 selectedObject = object;
             }
-
 
             if (ImGui::BeginPopupContextItem(
                 ("ObjectContextMenu" + std::to_string(reinterpret_cast<std::uintptr_t>(object.get()))).c_str()))
@@ -68,6 +64,7 @@ void Hierarchy::Draw()
                 }
                 if (ImGui::MenuItem("Rename"))
                 {
+                    renamingHelper.RequestRename(object);
                 }
 
                 ImGui::EndPopup();
@@ -77,8 +74,9 @@ void Hierarchy::Draw()
         {
             sharedScene->RemoveObject(object);
         }
-    }
+        renamingHelper.DrawRenamePopup();
 
+    }
 
     ImGui::End();
 }
@@ -86,9 +84,4 @@ void Hierarchy::Draw()
 std::weak_ptr<GameObject> Hierarchy::GetSelectedObject()
 {
     return selectedObject;
-}
-
-void Hierarchy::SetScene(std::weak_ptr<Scene> value)
-{
-    this->scene = value;
 }

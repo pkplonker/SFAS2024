@@ -3,41 +3,45 @@
 #include <fstream>
 #include <string>
 #include "json.hpp"
+#include "SceneManager.h"
 #include "SpriteComponent.h"
 #include "Engine/IMaterial.h"
 #include "Engine/IShader.h"
 #include "Engine/ITexture.h"
 #include "Engine/ResourceManager.h"
 #include "Engine/Implementation/CameraComponent.h"
-#include "Engine/Implementation/Debug.h"
 #include "Engine/Implementation/GameObjectFactory.h"
 #include "Engine/Implementation/Helpers.h"
 #include "Engine/Implementation/OrthographicCamera.h"
 #include "Engine/Implementation/PerspectiveCamera.h"
 #include "Engine/Implementation/Scene.h"
+#include "Logging/Debug.h"
 using json = nlohmann::json;
 
-SceneSerializer::SceneSerializer(std::weak_ptr<Scene> scene, IGraphics* graphics)
+SceneSerializer::SceneSerializer(IGraphics* graphics)
 {
-    SceneSerializer::scene = scene;
     SceneSerializer::graphics = graphics;
 }
 
 void SceneSerializer::WriteToFile(json sceneData, std::string path)
 {
-    Debug("Saving to disk")
+    Trace("Saving to disk")
 
     std::ofstream outputFile(path);
 
     if (outputFile.is_open())
     {
+        Trace("Dumping json to disk")
+
         outputFile << sceneData.dump(4);
 
         outputFile.close();
+        Trace("Closed stream")
+
     }
     else
     {
-        Debug("Failed writing to file")
+        Warning("Failed writing to file")
     }
 }
 
@@ -54,6 +58,11 @@ nlohmann::json SceneSerializer::SerializeMaterial(const std::shared_ptr<IRendera
         {
             serializedData["texture"] = Helpers::WideStringToString(texture->GetPath());
         }
+        auto color = material->GetColor();
+        serializedData["color"]["r"] = color.X();
+        serializedData["color"]["g"] = color.Y();
+        serializedData["color"]["b"] = color.Z();
+        serializedData["color"]["a"] = color.W();
     }
     return serializedData;
 }
@@ -81,9 +90,9 @@ bool SceneSerializer::Serialize(std::string path)
 {
     json sceneData;
     json objectsData;
-    Debug("Saving")
+    Trace("Saving")
 
-    if (auto sharedScene = scene.lock())
+    if (auto sharedScene = SceneManager::GetScene().lock())
     {
         for (const auto& object : sharedScene->GetObjects())
         {
@@ -93,10 +102,10 @@ bool SceneSerializer::Serialize(std::string path)
         sceneData["objects"] = objectsData;
 
         WriteToFile(sceneData, path);
-        Debug("Saved")
+        Trace("Saved")
         return true;
     }
-    Debug("Saving failed")
+    Trace("Saving failed")
 
     return false;
 }
@@ -199,17 +208,17 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
         }
         catch (const std::exception& e)
         {
-            Debug("Failed to parse scene data: " + std::string(e.what()));
+            Warning("Failed to parse scene data: " + std::string(e.what()));
             return nullptr;
         }
     }
     else
     {
-        Debug("Failed to open scene file for reading");
+        Warning("Failed to open scene file for reading");
         return nullptr;
     }
 
-    std::shared_ptr<Scene> scene = std::make_shared<Scene>(graphics);
+    std::shared_ptr<Scene> scene = std::make_shared<Scene>();
 
     if (sceneData.contains("objects"))
     {
@@ -226,24 +235,23 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
                 }
                 else
                 {
-                    Debug("Failed to deserialize GameObject in scene file");
+                    Warning("Failed to deserialize GameObject in scene file");
                 }
             }
         }
         else
         {
-            Debug("Invalid data format for 'objects' field in scene file");
+            Warning("Invalid data format for 'objects' field in scene file");
             return nullptr;
         }
     }
     else
     {
-        Debug("Missing 'objects' field in scene file");
+        Warning("Missing 'objects' field in scene file");
         return nullptr;
     }
 
-    Debug("Scene deserialization succeded");
-    SceneSerializer::scene = scene;
+    Trace("Scene deserialization succeded");
     return scene;
 }
 
@@ -271,6 +279,14 @@ IMaterial* SceneSerializer::DeserializeMaterial(const nlohmann::json& data, std:
             material = ResourceManager::GetMaterial(Helpers::StringToWstring(shaderPath));
         }
     }
+    if (data.contains("color"))
+    {
+        material->SetColor(Vec4(static_cast<float>(data["color"]["r"]),
+                                static_cast<float>(data["color"]["g"]),
+                                static_cast<float>(data["color"]["b"]),
+                                static_cast<float>(data["color"]["a"]))
+        );
+    }
     return material;
 }
 
@@ -285,7 +301,7 @@ void SceneSerializer::DeserializeMeshComponent(const std::shared_ptr<GameObject>
     Mesh* mesh = nullptr;
     std::shared_ptr<MeshComponent> component = nullptr;
     material = DeserializeMaterial(data, texturePath, shaderPath);
-    if(data.contains("material"))
+    if (data.contains("material"))
     {
         material = DeserializeMaterial(data["material"], texturePath, shaderPath);
     }
@@ -319,7 +335,7 @@ void SceneSerializer::DeserializeSpriteComponent(const std::shared_ptr<GameObjec
     std::string shaderPath = "";
     IMaterial* material = nullptr;
     std::shared_ptr<SpriteComponent> component = nullptr;
-    if(data.contains("material"))
+    if (data.contains("material"))
     {
         material = DeserializeMaterial(data["material"], texturePath, shaderPath);
     }
@@ -372,11 +388,11 @@ std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohman
             return newObject;
         }
 
-        Debug("Invalid data for GameObject in scene file");
+        Warning("Invalid data for GameObject in scene file");
     }
     else
     {
-        Debug("Invalid data format for GameObject in scene file");
+        Warning("Invalid data format for GameObject in scene file");
     }
 
     return nullptr;

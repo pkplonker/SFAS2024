@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\EditorSettings.cpp" />
     <ClCompile Include="Source\FileDialog.cpp" />
     <ClCompile Include="Source\MeshImporter.cpp" />
     <ClCompile Include="Source\SceneSerializer.cpp" />
@@ -176,9 +177,13 @@
     <ClCompile Include="Packages\ImGui\misc\fonts\binary_to_compressed_c.cpp" />
     <ClCompile Include="Source\EntryPoints\WindowsMain.cpp" />
     <ClCompile Include="Source\Editor.cpp" />
-    <ClCompile Include="Source\Windows\ImGuiFPSCounter.cpp" />
+    <ClCompile Include="Source\Windows\MaterialDrawerHelper.cpp" />
+    <ClCompile Include="Source\Windows\TimeWindow.cpp" />
+    <ClCompile Include="Source\Windows\LoggerWindow.cpp" />
     <ClCompile Include="Source\Windows\MeshImporterWindow.cpp" />
     <ClCompile Include="Source\Windows\MeshComponentDrawer.cpp" />
+    <ClCompile Include="Source\Windows\RenderStatWindow.cpp" />
+    <ClCompile Include="Source\Windows\SpriteComponentDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Packages\assimp\aabb.h" />
@@ -264,7 +269,9 @@
     <ClInclude Include="Packages\assimp\XmlParser.h" />
     <ClInclude Include="Packages\assimp\XMLTools.h" />
     <ClInclude Include="Packages\assimp\ZipArchiveIOSystem.h" />
+    <ClInclude Include="Source\EditorSettings.h" />
     <ClInclude Include="Source\FileDialog.h" />
+    <ClInclude Include="Source\ImGuiHelpers.h" />
     <ClInclude Include="Source\ImGuiTheme.h" />
     <ClInclude Include="Source\MeshImporter.h" />
     <ClInclude Include="Source\SceneSerializer.h" />
@@ -273,7 +280,9 @@
     <ClInclude Include="Source\Windows\ComponentDrawerFactory.h" />
     <ClInclude Include="Source\Windows\Inspector.h" />
     <ClInclude Include="Source\Windows\Hierarchy.h" />
-    <ClInclude Include="Source\Windows\ImGuiFPSCounter.h" />
+    <ClInclude Include="Source\Windows\MaterialDrawerHelper.h" />
+    <ClInclude Include="Source\Windows\RenamingHelper.h" />
+    <ClInclude Include="Source\Windows\TimeWindow.h" />
     <ClInclude Include="Source\Windows\ImGuiWindow.h" />
     <ClInclude Include="Source\ImGuiController.h" />
     <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\Audio.h" />
@@ -320,8 +329,11 @@
     <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xaudio2Redist.h" />
     <ClInclude Include="Packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xdsp.h" />
     <ClInclude Include="Source\Editor.h" />
+    <ClInclude Include="Source\Windows\LoggerWindow.h" />
     <ClInclude Include="Source\Windows\MeshImporterWindow.h" />
     <ClInclude Include="Source\Windows\MeshComponentDrawer.h" />
+    <ClInclude Include="Source\Windows\RenderStatWindow.h" />
+    <ClInclude Include="Source\Windows\SpriteComponentDrawer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -342,6 +354,9 @@
     <ProjectReference Include="..\Star\Star.vcxproj">
       <Project>{a5827ab4-4626-47d8-82f2-598dfc535976}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\MessageBoxWrapper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

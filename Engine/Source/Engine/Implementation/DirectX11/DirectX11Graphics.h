@@ -8,6 +8,7 @@
 #include <DirectXMath.h>
 #include <memory>
 
+#include "RenderingStats.h"
 #include "Engine/ICamera.h"
 
 struct Transform3D;
@@ -28,7 +29,8 @@ public:
 	~DirectX11Graphics() override;
 
 	void Update() override;
-	void RemoveRenderable(const std::shared_ptr<IRenderable>& shared) override;
+	void UpdateRenderable(IMaterial* mat, const std::shared_ptr<IRenderable>& renderable) override;
+	void RemoveRenderable(const std::shared_ptr<IRenderable>& renderable) override;
 	void PostUpdate() override;
 	bool IsValid() override;
 
@@ -50,10 +52,12 @@ public:
 	int GetTextureWidth() { return texWidth; }
 	int GetTextureHeight() { return texHeight; }
 	IMaterial* CreateMaterial(IShader* shader,ITexture* texture) override;
+	void Resize(int width, int height) override;
+	void UpdateRenderToTextureResources(int newWidth, int newHeight);
 
 protected:
 
-	virtual void SetWorldMatrix(std::weak_ptr<Transform3D> transform);
+	virtual void SetMatrixBuffers(std::weak_ptr<Transform3D> transform);
 	virtual bool CompileShader(LPCWSTR filepath, LPCSTR entry, LPCSTR shader, ID3DBlob** buffer);
 
 
@@ -81,4 +85,6 @@ private:
 	ID3D11Texture2D* textureTargetDepthStencilBuffer = nullptr;
 	ID3D11DepthStencilView* textureTargetDepthStencilView = nullptr;
 	bool renderToTexture;
+	ID3D11Buffer* materialBuffer;
+	D3D11_BUFFER_DESC materialBufferDesc;
 };

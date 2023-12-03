@@ -2275,7 +2275,7 @@ struct ImGuiContext
 
     // Mouse state
     ImGuiMouseCursor        MouseCursor;
-    float                   MouseStationaryTimer;               // Time the mouse has been stationary (with some loose heuristic)
+    float                   MouseStationaryTimer;               // EngineTime the mouse has been stationary (with some loose heuristic)
     ImVec2                  MouseLastValidPos;
 
     // Widget state

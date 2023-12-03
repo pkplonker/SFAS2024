@@ -11,10 +11,19 @@
 
 #include "DirectX11Material.h"
 #include "DirectX11Mesh.h"
+#include "IApplication.h"
+#include "RenderingStats.h"
 #include "ResourceManager.h"
-#include "Engine/Implementation/Debug.h"
+#include "Engine/Implementation/Logging/Debug.h"
 #include "Implementation/Mesh.h"
 #include "Implementation/Vertex.h"
+
+struct
+{
+    DirectX::XMMATRIX mvp;
+    DirectX::XMMATRIX worldMatrix;
+    DirectX::XMFLOAT3 cameraPosition;
+} matrices;
 
 DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
                                                     BackbufferView(nullptr), BackbufferTexture(nullptr), Mvp(nullptr),
@@ -86,7 +95,7 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         D3D11_BUFFER_DESC constDesc;
         ZeroMemory(&constDesc, sizeof(constDesc));
         constDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-        constDesc.ByteWidth = sizeof(DirectX::XMMATRIX);
+        constDesc.ByteWidth = sizeof(matrices);
         constDesc.Usage = D3D11_USAGE_DEFAULT;
         hr = Device->CreateBuffer(&constDesc, 0, &Mvp);
 
@@ -158,6 +167,13 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         Device->CreateDepthStencilView(depthStencil, &depthViewDesc, &DepthStencilView);
 
         Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
+
+        ZeroMemory(&materialBufferDesc, sizeof(D3D11_BUFFER_DESC));
+        materialBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+        materialBufferDesc.ByteWidth = sizeof(MaterialBufferObject);
+        materialBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        materialBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+        Device->CreateBuffer(&materialBufferDesc, nullptr, &materialBuffer);
     }
 }
 
@@ -194,6 +210,17 @@ DirectX11Graphics::~DirectX11Graphics()
 
 void DirectX11Graphics::Update()
 {
+    for (auto it = Renderables.begin(); it != Renderables.end();)
+    {
+        if (it->first == nullptr)
+        {
+            it = Renderables.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
     if (Context && SwapChain)
     {
         ID3D11RenderTargetView* activeRenderTarget = renderToTexture ? renderTargetView : BackbufferView;
@@ -212,7 +239,7 @@ void DirectX11Graphics::Update()
         {
             float color = 32.0f / 255;
             float clearColour[4] = {color, color, color, 1.0f};
-            float textureClearColour[4] = {color, color, color, 1.0f};//{1.0f, 1.0f, 1.0f, 1.0f};
+            float textureClearColour[4] = {color, color, color, 1.0f}; //{1.0f, 1.0f, 1.0f, 1.0f};
             Context->ClearRenderTargetView(renderTargetView, clearColour);
             Context->ClearRenderTargetView(BackbufferView, textureClearColour);
         }
@@ -229,32 +256,81 @@ void DirectX11Graphics::Update()
             viewport.TopLeftY = 0.0f;
             Context->RSSetViewports(1, &viewport);
         }
-
+        RenderingStats stats;
+        stats.width = width;
+        stats.height = height;
+        stats.viewportWidth = texWidth;
+        stats.viewportHeight = texHeight;
+        IShader* previousShader = nullptr;
         for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
         {
-            bucket->first->Update();
+            if (bucket->first == nullptr)
+            {
+                Warning("Skipping bucket as material is nullptr")
+                continue;
+            }
+            if (!bucket->first->Update())
+            {
+                Warning("Skipping bucket as material shader is nullptr")
+                continue;
+            }
+            stats.materials++;
 
             for (auto renderable = bucket->second.begin(); renderable != bucket->second.end(); ++renderable)
             {
-                std::weak_ptr<Transform3D> transform = (*renderable)->GetTransform();
-                SetWorldMatrix(transform);
+                auto currentShader = bucket->first->GetShader();
+                if (currentShader != previousShader)
+                {
+                    previousShader = currentShader;
+                    stats.shaders++;
+                }
+                const auto renderObject = renderable->get();
+
+                if (renderObject == nullptr)
+                {
+                    Warning("Detected null renderable")
+                    continue;
+                }
+
+                stats.tris += renderObject->GetTriangles();
+                stats.verts += renderObject->GetVerts();
+                stats.drawCalls++;
+                {
+                    // Currently setting the material buffer per object, which is no doubt inefficient. This likely needs splitting to be grouped, shader->texture->material values?
+                    D3D11_MAPPED_SUBRESOURCE mappedResource;
+                    Context->Map(materialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+                    auto* data = static_cast<MaterialBufferObject*>(mappedResource.pData);
+                    bucket->first->UpdateMaterialBuffer(data);
+                    Context->Unmap(materialBuffer, 0);
+                    Context->PSSetConstantBuffers(1, 1, &materialBuffer);
+                    Context->VSSetConstantBuffers(1, 1, &materialBuffer);
+                }
+                const std::weak_ptr<Transform3D> transform = (*renderable)->GetTransform();
+                SetMatrixBuffers(transform);
                 Context->OMSetBlendState(BlendState, nullptr, ~0U);
                 (*renderable)->Update();
             }
         }
-
+        currentStats = stats;
 
         Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
     }
 }
 
-void DirectX11Graphics::RemoveRenderable(const std::shared_ptr<IRenderable>& shared)
+void DirectX11Graphics::UpdateRenderable(IMaterial* mat, const std::shared_ptr<IRenderable>& renderable)
+{
+    RemoveRenderable(renderable);
+    AddRenderable(mat, renderable);
+}
+
+void DirectX11Graphics::RemoveRenderable(const std::shared_ptr<IRenderable>& renderable)
 {
     for (auto& kvp : Renderables)
     {
         std::list<std::shared_ptr<IRenderable>>& renderablesList = kvp.second;
 
-        if (auto it = std::find(renderablesList.begin(), renderablesList.end(), shared); it != renderablesList.end())
+        if (auto it = std::find(renderablesList.begin(), renderablesList.end(), renderable); it != renderablesList.
+            end())
         {
             renderablesList.erase(it);
 
@@ -392,7 +468,7 @@ IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vs
             return nullptr;
         }
 
-        Result = new DirectX11Shader(filepath,Context, VertexShader, PixelShader, InputLayout);
+        Result = new DirectX11Shader(filepath, Context, VertexShader, PixelShader, InputLayout);
     }
     else
     {
@@ -402,27 +478,36 @@ IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vs
     return Result;
 }
 
-
 std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IMaterial* material)
 {
     std::shared_ptr<IRenderable> Result = nullptr;
 
     if (IsValid())
     {
-        const ITexture* texture = material->GetTexture();
-        const float halfWidth = texture ? texture->GetWidth() / 2.0f : 0.5f;
-        const float halfHeight = texture ? texture->GetHeight() / 2.0f : 0.5f;
+        float halfWidth = 1.0f;
+        float halfHeight = 1.0f;
+
+        if (material != nullptr)
+        {
+            ITexture* texture = material->GetTexture();
+            if (texture != nullptr)
+            {
+                halfWidth = texture ? texture->GetWidth() / 2.0f : 0.5f;
+                halfHeight = texture ? texture->GetHeight() / 2.0f : 0.5f;
+            }
+        }
 
         float vertex_data_array[] =
         {
-            halfWidth, halfHeight, 0.0f, 1.0f, 1.0f,
-            halfWidth, -halfHeight, 0.0f, 1.0f, 0.0f,
-            -halfWidth, -halfHeight, 0.0f, 0.0f, 0.0f,
-
-            -halfWidth, halfHeight, 0.0f, 0.0f, 1.0f,
+            // Positions                    // Colors                // Normals           // UVs
+            halfWidth, halfHeight, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+            halfWidth, -halfHeight, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+            -halfWidth, -halfHeight, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+            -halfWidth, halfHeight, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
         };
+
         ID3D11Buffer* VertexBuffer;
-        unsigned int vertexStride = 5 * sizeof(float);
+        unsigned int vertexStride = 12 * sizeof(float);
         unsigned int vertexOffset = 0;
         unsigned int vertexCount = 4;
 
@@ -453,12 +538,11 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IMaterial* mater
         ZeroMemory(&indexResourceData, sizeof(indexResourceData));
         indexResourceData.pSysMem = indexBufferData;
 
-        if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) && SUCCEEDED(
-            Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
+        if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) &&
+            SUCCEEDED(Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
         {
             Result = std::make_shared<DirectX11Billboard>(Context, VertexBuffer, IndexBuffer, vertexStride,
-                                                          vertexOffset,
-                                                          vertexCount, indexCount);
+                                                          vertexOffset, vertexCount, indexCount);
             AddRenderable(material, Result);
         }
     }
@@ -567,7 +651,6 @@ std::shared_ptr<IMeshRenderable> DirectX11Graphics::CreateMeshRenderable(Mesh* m
     return Result;
 }
 
-
 void DirectX11Graphics::SetActiveCamera(std::shared_ptr<ICamera> camera)
 {
     this->camera = camera;
@@ -649,21 +732,137 @@ IMaterial* DirectX11Graphics::CreateMaterial(IShader* shader, ITexture* texture)
     return new DirectX11Material(shader, texture);
 }
 
-void DirectX11Graphics::SetWorldMatrix(const std::weak_ptr<Transform3D> transform)
+void DirectX11Graphics::Resize(int newWidth, int newHeight)
+{
+    if (Device == nullptr || newWidth == 0 || newHeight == 0) return;
+
+    Context->OMSetRenderTargets(0, nullptr, nullptr);
+    if (BackbufferView)
+    {
+        BackbufferView->Release();
+        BackbufferView = nullptr;
+    }
+    if (DepthStencilView)
+    {
+        DepthStencilView->Release();
+        DepthStencilView = nullptr;
+    }
+
+    HRESULT hr = SwapChain->ResizeBuffers(0, newWidth, newHeight, DXGI_FORMAT_UNKNOWN, 0);
+    if (FAILED(hr))
+    {
+        Error("Failed resizing swapchain buffersr")
+    }
+
+    ID3D11Texture2D* backBuffer = nullptr;
+    hr = SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer));
+    if (SUCCEEDED(hr))
+    {
+        hr = Device->CreateRenderTargetView(backBuffer, nullptr, &BackbufferView);
+        backBuffer->Release();
+    }
+    if (FAILED(hr))
+    {
+        Error("Failed resetting back buffer")
+    }
+
+    D3D11_TEXTURE2D_DESC depthStencilDesc;
+    ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+    depthStencilDesc.Width = newWidth;
+    depthStencilDesc.Height = newHeight;
+    depthStencilDesc.MipLevels = 1;
+    depthStencilDesc.ArraySize = 1;
+    depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depthStencilDesc.SampleDesc.Count = 1;
+    depthStencilDesc.SampleDesc.Quality = 0;
+    depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+    depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+    ID3D11Texture2D* depthStencilBuffer;
+    hr = Device->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencilBuffer);
+    if (SUCCEEDED(hr))
+    {
+        hr = Device->CreateDepthStencilView(depthStencilBuffer, nullptr, &DepthStencilView);
+        depthStencilBuffer->Release();
+    }
+    if (FAILED(hr))
+    {
+        Error("Failed modifying depth buffer")
+    }
+
+    Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
+
+    D3D11_VIEWPORT viewport = {};
+    viewport.Width = static_cast<float>(newWidth);
+    viewport.Height = static_cast<float>(newHeight);
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+    viewport.TopLeftX = 0.0f;
+    viewport.TopLeftY = 0.0f;
+    Context->RSSetViewports(1, &viewport);
+
+    this->width = newWidth;
+    this->height = newHeight;
+    UpdateRenderToTextureResources(newWidth, newHeight);
+}
+
+void DirectX11Graphics::UpdateRenderToTextureResources(int newWidth, int newHeight)
+{
+    if (renderToTexture)
+    {
+        if (renderTargetTexture) renderTargetTexture->Release();
+        if (renderTargetView) renderTargetView->Release();
+        if (shaderResourceView) shaderResourceView->Release();
+
+        D3D11_TEXTURE2D_DESC textureDesc;
+        ZeroMemory(&textureDesc, sizeof(textureDesc));
+        textureDesc.Width = newWidth;
+        textureDesc.Height = newHeight;
+        textureDesc.MipLevels = 1;
+        textureDesc.ArraySize = 1;
+        textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        textureDesc.SampleDesc.Count = 1;
+        textureDesc.Usage = D3D11_USAGE_DEFAULT;
+        textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+        Device->CreateTexture2D(&textureDesc, nullptr, &renderTargetTexture);
+        Device->CreateRenderTargetView(renderTargetTexture, nullptr, &renderTargetView);
+        Device->CreateShaderResourceView(renderTargetTexture, nullptr, &shaderResourceView);
+
+        texWidth = newWidth;
+        texHeight = newHeight;
+
+        if (camera)
+        {
+            camera->SetWidth(texWidth);
+            camera->SetHeight(texHeight);
+        }
+    }
+}
+
+void DirectX11Graphics::SetMatrixBuffers(const std::weak_ptr<Transform3D> transform)
 {
     if (std::shared_ptr<Transform3D> trans = transform.lock())
     {
         DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(trans->Position.X(), trans->Position.Y(),
                                                                      trans->Position.Z());
         DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationRollPitchYaw(
-            trans->Rotation.X(), trans->Rotation.Y(),
-            trans->Rotation.Z());
-        DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(trans->Scale.X(), trans->Scale.Y(),
-                                                           trans->Scale.Z());
+            DirectX::XMConvertToRadians(trans->Rotation.X())
+            , DirectX::XMConvertToRadians(trans->Rotation.Y()), DirectX::XMConvertToRadians(trans->Rotation.Z()));
+        DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(trans->Scale.X(), trans->Scale.Y(), trans->Scale.Z());
+
         DirectX::XMMATRIX world = scale * rotation * translation;
         DirectX::XMMATRIX mvp = DirectX::XMMatrixMultiply(world, vpMatrix);
+
+        world = DirectX::XMMatrixTranspose(world);
         mvp = DirectX::XMMatrixTranspose(mvp);
-        Context->UpdateSubresource(Mvp, 0, 0, &mvp, 0, 0);
+
+        auto camPos = camera->GetTransform()->Position;
+
+        matrices.mvp = mvp;
+        matrices.worldMatrix = world;
+        matrices.cameraPosition = DirectX::XMFLOAT3(camPos.X(), camPos.Y(), camPos.Z());
+
+        Context->UpdateSubresource(Mvp, 0, 0, &matrices, 0, 0);
         Context->VSSetConstantBuffers(0, 1, &Mvp);
     }
 }

@@ -1,6 +1,6 @@
 ﻿#include "MeshImporter.h"
 
-#include "Engine/Implementation/Debug.h"
+#include "Engine/Implementation/Logging/Debug.h"
 #include "Engine/Implementation/Mesh.h"
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -19,7 +19,7 @@ Mesh* MeshImporter::LoadMesh(std::string path)
 
     if (nullptr == scene)
     {
-        Debug(importer.GetErrorString())
+        Warning(importer.GetErrorString())
         return nullptr;
     }
 
@@ -63,7 +63,7 @@ void MeshImporter::ProcessMesh(aiMesh* aiMesh, const aiScene* scene, Mesh* mesh)
                                 aiMesh->mColors[0]->a);
         }else
         {
-            vertex.color = Vec4(DEFAULT_COLOR);
+            vertex.color = Vec4(MESH_DEFAULT_COLOR);
         }
         mesh->Vertices.push_back(vertex);
     }

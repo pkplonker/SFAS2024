@@ -3,10 +3,10 @@
 #include <fstream>
 #include <iostream>
 
-#include "Engine/Implementation/Debug.h"
+#include "Engine/Implementation/Logging/Debug.h"
 
 
-void MeshSerializer::Serialize(Mesh* mesh, std::string fullFilePath)
+bool MeshSerializer::Serialize(Mesh* mesh, std::string fullFilePath)
 {
     std::ofstream file(fullFilePath, std::ios::binary);
 
@@ -21,11 +21,11 @@ void MeshSerializer::Serialize(Mesh* mesh, std::string fullFilePath)
         file.write(reinterpret_cast<char*>(mesh->Indices.data()), numIndices * sizeof(unsigned int));
 
         file.close();
-        return;
+        return true;
     }
 
-    std::string error = "Failed to open file for writing";
-    Debug(error)
+    Warning("Failed to open file for writing")
+    return false;
 }
 
 Mesh* MeshSerializer::Deserialize(std::string fullFilePath)
@@ -52,6 +52,6 @@ Mesh* MeshSerializer::Deserialize(std::string fullFilePath)
     }
 
     std::string error = "Failed to open file for reading";
-    Debug(error)
+    Trace(error)
     return nullptr;
 }

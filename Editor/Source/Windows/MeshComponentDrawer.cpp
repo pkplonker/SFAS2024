@@ -1,20 +1,32 @@
 ﻿#include "MeshComponentDrawer.h"
 
+#include <functional>
+
+#include "Engine/Implementation/Logging/Debug.h"
 #include "imgui.h"
-#include "Engine/Implementation/Helpers.h"
+#include "MeshSerializer.h"
+#include "../FileDialog.h"
+#include "../ImGuiHelpers.h"
 #include "Engine/IMaterial.h"
 #include "Engine/IShader.h"
 #include "Engine/ITexture.h"
 #include "Engine/Implementation/MeshComponent.h"
+#include <filesystem>
+
+#include "MaterialDrawerHelper.h"
+#include "ResourceManager.h"
+#include "../MessageBoxWrapper.h"
+#include "../Editor.h"
 
 MeshComponentDrawer::~MeshComponentDrawer()
 {
 }
 
-MeshComponentDrawer::MeshComponentDrawer(std::weak_ptr<IComponent> component) : ComponentDrawer(
-    std::move(component))
+MeshComponentDrawer::MeshComponentDrawer(std::weak_ptr<MeshComponent> component) : ComponentDrawer(),
+    component(component), materialDrawerHelper(MaterialDrawerHelper(component))
 {
 }
+
 
 void MeshComponentDrawer::Draw()
 {
@@ -36,32 +48,42 @@ void MeshComponentDrawer::Draw()
                     ImGui::EndPopup();
                 }
             }
-            ImGui::Text("Mesh Path:");
-            ImGui::SameLine();
-            ImGui::Text(meshComponent->GetMeshPath().c_str());
-            if (const auto mat = meshComponent->GetMaterial())
-            {
-                if (const auto shader = mat->GetShader())
-                {
-                    const auto shaderPath = shader->GetPath();
-                    if (shaderPath != L"")
-                    {
-                        ImGui::Text("Shader Path:");
-                        ImGui::SameLine();
-                        ImGui::Text(Helpers::WideStringToString(shaderPath).c_str());
-                    }
-                }
-                if (const auto tex = mat->GetTexture())
-                {
-                    const auto texturePath = tex->GetPath();
-                    if (texturePath != L"")
-                    {
-                        ImGui::Text("Texture Path:");
-                        ImGui::SameLine();
-                        ImGui::Text(Helpers::WideStringToString(texturePath).c_str());
-                    }
-                }
-            }
+
+            ImGuiHelpers::WrappedText("Mesh Path:", meshComponent->GetMeshPath(),
+                                      std::bind(&MeshComponentDrawer::ChangeMesh, this));
+
+            materialDrawerHelper.DrawMaterial();
         }
     }
 }
+
+
+void MeshComponentDrawer::ChangeMesh()
+{
+    std::filesystem::path path = FileDialog::OpenFileDialog();
+    if (path.empty())
+    {
+        Trace("Closed dialog without selecting path")
+        return;
+    }
+    std::string extension = path.extension().string();
+    if (extension == "." + MeshSerializer::MESH_EXTENSION)
+    {
+        if (auto comp = component.lock())
+        {
+            auto mesh = ResourceManager::GetMesh(path.generic_string());
+            if (mesh == nullptr)
+            {
+                MessageBoxWrapper::ShowWarning("Unable to generate mesh", "Unable to generate mesh");
+                return;
+            }
+            Trace("Setting new mesh")
+            comp->SetMesh(mesh);
+        }
+    }
+    else
+    {
+        MessageBoxWrapper::ShowWarning("Incorrect file type", "Incorrect file type");
+    }
+}
+

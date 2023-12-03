@@ -1,0 +1,71 @@
+{
+    "objects": [
+        [
+            "Camera",
+            {
+                "cameraComponent": {
+                    "camera": {
+                        "far": 200.0,
+                        "fov": 66.66899871826172,
+                        "height": 958.0,
+                        "near": 0.10000000149011612,
+                        "type": "PerspectiveCamera",
+                        "width": 1783.0
+                    }
+                },
+                "name": "Camera",
+                "transform": {
+                    "position": {
+                        "x": 0.20000000298023224,
+                        "y": -1.2000000476837158,
+                        "z": -12.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 4.699999809265137,
+                        "y": 5.699999809265137,
+                        "z": 4.300000190734863
+                    }
+                }
+            }
+        ],
+        [
+            "New Gameobject (1)",
+            {
+                "name": "New Gameobject (1)",
+                "spriteComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\Grid.fx"
+                    }
+                },
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ]
+    ]
+}

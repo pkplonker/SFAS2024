@@ -3,7 +3,7 @@
 #include <assimp/scene.h>
 
 class Mesh;
-const float DEFAULT_COLOR =1.0f;
+const float MESH_DEFAULT_COLOR = 1.0f;
 
 class MeshImporter
 {

@@ -1,7 +1,7 @@
 ﻿#include "GameObject.h"
 #include <utility>
 #include "Engine/IComponent.h"
-#include "Debug.h"
+#include "Engine/Implementation/Logging/Debug.h"
 #include "Transform3D.h"
 
 GameObject::GameObject()

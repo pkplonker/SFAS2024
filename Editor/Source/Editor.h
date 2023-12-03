@@ -4,10 +4,11 @@
 
 #include "Game.h"
 #include "imgui.h"
+#include "SceneSerializer.h"
 #include "Engine/IApplication.h"
 #include "Engine/Implementation/Scene.h"
+#include "ImGuiController.h"
 
-class SceneSerializer;
 class DirectX11Graphics;
 class ResourceManager;
 class GameObject;
@@ -31,14 +32,16 @@ public:
 	virtual void Update();
 	virtual void Cleanup();
 	virtual void PostGraphics();
+	static IGraphics* GetGraphics();
+	void Resize(int width, int height) override;
 
 private:
 
-	std::shared_ptr<GameObject> camera;
-	DirectX11Graphics* dx11Graphics;
-	Game* game;
-	HWND hwnd;
-	ImVec2 gameViewportSize;
-	std::unique_ptr<ImGuiController> imguiController;
-	std::unique_ptr<SceneSerializer> sceneSerializer;
+	inline static std::shared_ptr<GameObject> camera ={};
+	inline static DirectX11Graphics* dx11Graphics ={};
+	inline static Game* game ={};
+	inline static HWND hwnd ={};
+	inline static ImVec2 gameViewportSize ={};
+	inline static std::unique_ptr<ImGuiController> imguiController ={};
+	inline static std::unique_ptr<SceneSerializer> sceneSerializer ={};
 };

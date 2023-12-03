@@ -18,11 +18,10 @@ public:
 	virtual void Update();
 	virtual void Cleanup();
 	virtual void PostGraphics();
-	std::weak_ptr<Scene> GetScene();
-	void SetScene(const std::shared_ptr<Scene>& scene);
+	void Resize(int width, int height) override;
 
 private:
 	
-	std::shared_ptr<Scene> scene;
 	std::shared_ptr<GameObject> camera;
+
 };

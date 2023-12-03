@@ -7,10 +7,10 @@
 #include "Engine/Implementation/GameObject.h"
 #include "Engine/Implementation/OrthographicCamera.h"
 #include "Engine/Implementation/PerspectiveCamera.h"
+#include "Logging/Debug.h"
 CameraComponentDrawer::~CameraComponentDrawer() = default;
 
-CameraComponentDrawer::CameraComponentDrawer(std::weak_ptr<IComponent> component) : ComponentDrawer(
-    std::move(component))
+CameraComponentDrawer::CameraComponentDrawer(std::weak_ptr<CameraComponent> component) : component(component)
 {
 }
 
@@ -23,19 +23,22 @@ void CameraComponentDrawer::DrawPerspective(std::shared_ptr<PerspectiveCamera> c
             if (ImGui::MenuItem("Reset Near"))
             {
                 cam->SetNear();
+                Trace("Resetting near")
             }
             if (ImGui::MenuItem("Reset Far"))
             {
                 cam->SetFar();
+                Trace("Resetting far")
             }
             if (ImGui::MenuItem("Reset FOV"))
             {
                 cam->SetFOV();
+                Trace("Resetting FOV")
             }
             ImGui::EndPopup();
         }
         float fov = cam->GetFOV();
-        if (ImGui::SliderFloat("Field of View", &fov, 0.01f, 3.141f))
+        if (ImGui::SliderFloat("Field of View", &fov, 0.5f, 120))
         {
             cam->SetFOV(fov);
         }
@@ -77,6 +80,8 @@ void CameraComponentDrawer::Draw()
                         if (auto gameobject = cameraComponent->GetGameObject().lock())
                         {
                             gameobject->RemoveComponent(cameraComponent);
+                            Trace("Removing camera")
+
                         }
                     }
                     ImGui::EndPopup();
@@ -97,11 +102,14 @@ void CameraComponentDrawer::Draw()
                                 if (ImGui::MenuItem("Reset Near"))
                                 {
                                     cam->SetNear();
+                                    Trace("Resetting near")
                                 }
                                 if (ImGui::MenuItem("Reset Far"))
                                 {
                                     cam->SetFar();
+                                    Trace("Resetting far")
                                 }
+                                
                                 ImGui::EndPopup();
                             }
                             float newNearZ = cam->GetNear();

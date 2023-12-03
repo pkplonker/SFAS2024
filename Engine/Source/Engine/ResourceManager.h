@@ -11,7 +11,7 @@
 
 class IGraphics;
 
-const std::wstring DEFAULT_UNLIT_SHADER = L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColor.fx";
+const std::wstring DEFAULT_UNLIT_SHADER = L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/boing.fx";
 const std::string DEFAULT_VS_SHADER = "vs_4_0";
 const std::string DEFAULT_PS_SHADER = "ps_4_0";
 const std::string DEFAULT_VS_ENRTY = "VS_Main";

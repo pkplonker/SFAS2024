@@ -1,6 +1,6 @@
 ﻿#include "TestComponent.h"
 
-#include "Engine/Implementation/Debug.h"
+#include "Engine/Implementation/Logging/Debug.h"
 
 void TestComponent::Update()
 {

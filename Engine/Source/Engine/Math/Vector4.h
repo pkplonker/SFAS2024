@@ -1,7 +1,13 @@
 ﻿#pragma once
+#include "Math/Vector3.h"
+#include "Math/Vector2.h"
 
 struct Vec4
 {
+    Vec4()
+    {
+        vec = dx::XMFLOAT4(0);
+    }
     Vec4(float x, float y, float z, float w)
     {
         vec = dx::XMFLOAT4(x, y, z, w);

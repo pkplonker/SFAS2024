@@ -3,22 +3,24 @@
 
 #include "ComponentDrawerFactory.h"
 #include "ImGuiWindow.h"
+#include "RenamingHelper.h"
 class GameObject;
 class Scene;
 const std::string HIERARCHY = "Hierarchy";
+const int RENAME_BUFFER_SIZE = 256;
 
 class Hierarchy : public EditorWindow
 {
 public:
-    Hierarchy(const std::weak_ptr<Scene>& scene);
+    Hierarchy() = default;
 
     void Draw() override;
     std::string GetName() override { return HIERARCHY; }
     std::weak_ptr<GameObject> GetSelectedObject();
-    void SetScene(std::weak_ptr<Scene> value);
 
 private:
-    std::weak_ptr<Scene> scene;
     std::weak_ptr<GameObject> selectedObject;
     std::unique_ptr<ComponentDrawerFactory> factory;
+    RenamingHelper renamingHelper;
+
 };

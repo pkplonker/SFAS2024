@@ -9,7 +9,8 @@ public:
 
 	IRenderableComponent(std::weak_ptr<GameObject> object, std::shared_ptr<IRenderable> renderable, IMaterial* material);
 
-	void SetRenderable(std::shared_ptr<IRenderable> renderable);
+	virtual void SetRenderable(std::shared_ptr<IRenderable> renderable);
+	virtual void UpdateRenderableTransform();
 
 	virtual std::shared_ptr<IRenderable> GetRenderable()
 	{
@@ -20,8 +21,10 @@ public:
 	{
 		return material;
 	}
+	virtual void SetMaterial(IMaterial* material);;
+
 
 protected:
 	std::shared_ptr<IRenderable> renderable = nullptr;
-	IMaterial* material = material;
+	IMaterial* material = nullptr;
 };

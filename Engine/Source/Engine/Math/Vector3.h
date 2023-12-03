@@ -7,6 +7,11 @@ namespace dx = DirectX;
 
 struct Vec3
 {
+    Vec3()
+    {
+        vec = dx::XMFLOAT3(0);
+    }
+    
     Vec3(float x, float y, float z)
     {
         vec = dx::XMFLOAT3(x, y, z);
