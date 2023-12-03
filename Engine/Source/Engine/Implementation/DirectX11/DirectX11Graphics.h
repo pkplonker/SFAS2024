@@ -53,6 +53,7 @@ public:
 	int GetTextureHeight() { return texHeight; }
 	IMaterial* CreateMaterial(IShader* shader,ITexture* texture) override;
 	void Resize(int width, int height) override;
+	void UpdateRenderToTextureResources(int newWidth, int newHeight);
 
 protected:
 

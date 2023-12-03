@@ -13,8 +13,8 @@
 #include "Logging/FileSink.h"
 const char WindowClassName[] = "Star";
 const char WindowTitle[] = "Stuart Heath SFAS24 - WIP";
-const int WindowWidth = 1920;
-const int WindowHeight = 1080;
+const int WindowWidth = 2560;
+const int WindowHeight = 1440;
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 IApplication* GetEditorApplication(IGraphics* Graphics, IInput* Input, HWND hwnd);

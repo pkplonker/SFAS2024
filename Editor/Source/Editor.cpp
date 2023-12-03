@@ -48,8 +48,8 @@ bool Editor::Load()
     sceneSerializer = std::make_unique<SceneSerializer>(dx11Graphics);
     dx11Graphics->SetRenderToTexture(true, 1, 1);
     ResourceManager::Init(dx11Graphics);
-    imguiController->LoadScene("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/onecomponent.scene");
-    // this logic needs moving
+    imguiController->LoadScene(
+        "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/onecomponent.scene");
     return true;
 }
 
@@ -81,6 +81,6 @@ IGraphics* Editor::GetGraphics()
 
 void Editor::Resize(int width, int height)
 {
-    Graphics->Resize(width,height);
+    Graphics->Resize(width, height);
     imguiController->Resize(width, height);
 }

@@ -692,9 +692,111 @@ IMaterial* DirectX11Graphics::CreateMaterial(IShader* shader, ITexture* texture)
     return new DirectX11Material(shader, texture);
 }
 
-void DirectX11Graphics::Resize(int width, int height)
+void DirectX11Graphics::Resize(int newWidth, int newHeight)
 {
-    
+    if (Device == nullptr || newWidth == 0 || newHeight == 0) return;
+
+    Context->OMSetRenderTargets(0, nullptr, nullptr);
+    if (BackbufferView)
+    {
+        BackbufferView->Release();
+        BackbufferView = nullptr;
+    }
+    if (DepthStencilView)
+    {
+        DepthStencilView->Release();
+        DepthStencilView = nullptr;
+    }
+
+    HRESULT hr = SwapChain->ResizeBuffers(0, newWidth, newHeight, DXGI_FORMAT_UNKNOWN, 0);
+    if (FAILED(hr))
+    {
+        Error("Failed resizing swapchain buffersr")
+    }
+
+    ID3D11Texture2D* backBuffer = nullptr;
+    hr = SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer));
+    if (SUCCEEDED(hr))
+    {
+        hr = Device->CreateRenderTargetView(backBuffer, nullptr, &BackbufferView);
+        backBuffer->Release();
+    }
+    if (FAILED(hr))
+    {
+        Error("Failed resetting back buffer")
+    }
+
+    D3D11_TEXTURE2D_DESC depthStencilDesc;
+    ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+    depthStencilDesc.Width = newWidth;
+    depthStencilDesc.Height = newHeight;
+    depthStencilDesc.MipLevels = 1;
+    depthStencilDesc.ArraySize = 1;
+    depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depthStencilDesc.SampleDesc.Count = 1;
+    depthStencilDesc.SampleDesc.Quality = 0;
+    depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+    depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+    ID3D11Texture2D* depthStencilBuffer;
+    hr = Device->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencilBuffer);
+    if (SUCCEEDED(hr))
+    {
+        hr = Device->CreateDepthStencilView(depthStencilBuffer, nullptr, &DepthStencilView);
+        depthStencilBuffer->Release();
+    }
+    if (FAILED(hr))
+    {
+        Error("Failed modifying depth buffer")
+    }
+
+    Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
+
+    D3D11_VIEWPORT viewport = {};
+    viewport.Width = static_cast<float>(newWidth);
+    viewport.Height = static_cast<float>(newHeight);
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+    viewport.TopLeftX = 0.0f;
+    viewport.TopLeftY = 0.0f;
+    Context->RSSetViewports(1, &viewport);
+
+    this->width = newWidth;
+    this->height = newHeight;
+    UpdateRenderToTextureResources(newWidth, newHeight);
+}
+
+void DirectX11Graphics::UpdateRenderToTextureResources(int newWidth, int newHeight)
+{
+    if (renderToTexture)
+    {
+        if (renderTargetTexture) renderTargetTexture->Release();
+        if (renderTargetView) renderTargetView->Release();
+        if (shaderResourceView) shaderResourceView->Release();
+
+        D3D11_TEXTURE2D_DESC textureDesc;
+        ZeroMemory(&textureDesc, sizeof(textureDesc));
+        textureDesc.Width = newWidth;
+        textureDesc.Height = newHeight;
+        textureDesc.MipLevels = 1;
+        textureDesc.ArraySize = 1;
+        textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        textureDesc.SampleDesc.Count = 1;
+        textureDesc.Usage = D3D11_USAGE_DEFAULT;
+        textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+        Device->CreateTexture2D(&textureDesc, nullptr, &renderTargetTexture);
+        Device->CreateRenderTargetView(renderTargetTexture, nullptr, &renderTargetView);
+        Device->CreateShaderResourceView(renderTargetTexture, nullptr, &shaderResourceView);
+
+        texWidth = newWidth;
+        texHeight = newHeight;
+
+        if (camera)
+        {
+            camera->SetWidth(texWidth);
+            camera->SetHeight(texHeight);
+        }
+    }
 }
 
 void DirectX11Graphics::SetWorldMatrix(const std::weak_ptr<Transform3D> transform)
