@@ -1,16 +1,52 @@
 {
     "objects": [
         [
+            "Sphere",
+            {
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 0.4166666865348816,
+                            "g": 0.3972029983997345,
+                            "r": 0.08578432351350784
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
+                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx"
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
+                },
+                "name": "Sphere",
+                "transform": {
+                    "position": {
+                        "x": -1.0,
+                        "y": 3.5,
+                        "z": 2.0
+                    },
+                    "rotation": {
+                        "x": 2.0,
+                        "y": 35.0,
+                        "z": 103.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
             "Camera",
             {
                 "cameraComponent": {
                     "camera": {
                         "far": 200.0,
-                        "fov": 0.7853981852531433,
+                        "fov": 69.63200378417969,
                         "height": 958.0,
                         "near": 0.10000000149011612,
                         "type": "PerspectiveCamera",
-                        "width": 1783.0
+                        "width": 958.0
                     }
                 },
                 "name": "Camera",
@@ -18,7 +54,7 @@
                     "position": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": -12.0
+                        "z": -14.399999618530273
                     },
                     "rotation": {
                         "x": 0.0,
@@ -29,6 +65,40 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Ground",
+            {
+                "name": "Ground",
+                "spriteComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 0.049596305936574936,
+                            "g": 0.6323529481887817,
+                            "r": 0.3409746289253235
+                        },
+                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorBillboard.fx"
+                    }
+                },
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 45.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 10.0,
+                        "y": 10.0,
+                        "z": 0.054999999701976776
                     }
                 }
             }
@@ -70,32 +140,32 @@
             }
         ],
         [
-            "Sphere",
+            "Grid",
             {
                 "meshComponent": {
                     "material": {
                         "color": {
-                            "a": 1.0,
-                            "b": 0.4166666865348816,
-                            "g": 0.3972029983997345,
-                            "r": 0.08578432351350784
+                            "a": 0.25,
+                            "b": 0.7009804248809814,
+                            "g": 0.7009804248809814,
+                            "r": 0.7009804248809814
                         },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
-                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx"
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Plane10.smesh",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\Grid.fx"
                     },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Plane10.smesh"
                 },
-                "name": "Sphere",
+                "name": "Grid",
                 "transform": {
                     "position": {
-                        "x": -1.0,
-                        "y": 3.5,
-                        "z": 2.0
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
                     },
                     "rotation": {
-                        "x": 2.0,
-                        "y": 35.0,
-                        "z": 103.0
+                        "x": -45.0,
+                        "y": 0.0,
+                        "z": 0.0
                     },
                     "scale": {
                         "x": 1.0,
@@ -137,74 +207,6 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0
-                    }
-                }
-            }
-        ],
-        [
-            "Ground",
-            {
-                "name": "Ground",
-                "spriteComponent": {
-                    "material": {
-                        "color": {
-                            "a": 1.0,
-                            "b": 0.049596305936574936,
-                            "g": 0.6323529481887817,
-                            "r": 0.3409746289253235
-                        },
-                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorBillboard.fx"
-                    }
-                },
-                "transform": {
-                    "position": {
-                        "x": 0.0,
-                        "y": -2.5999999046325684,
-                        "z": 0.0
-                    },
-                    "rotation": {
-                        "x": 45.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "scale": {
-                        "x": 15.0,
-                        "y": 15.0,
-                        "z": 0.054999999701976776
-                    }
-                }
-            }
-        ],
-        [
-            "New Gameobject (1)",
-            {
-                "name": "New Gameobject (1)",
-                "spriteComponent": {
-                    "material": {
-                        "color": {
-                            "a": 1.0,
-                            "b": 1.0,
-                            "g": 1.0,
-                            "r": 1.0
-                        },
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\Grid.fx"
-                    }
-                },
-                "transform": {
-                    "position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "rotation": {
-                        "x": 1.2000000476837158,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "scale": {
-                        "x": 11.600000381469727,
-                        "y": 14.0,
-                        "z": 2.5999999046325684
                     }
                 }
             }

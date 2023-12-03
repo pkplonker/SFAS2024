@@ -1,6 +1,7 @@
 #include "Editor.h"
 
 #include "EditorSettings.h"
+#include "Helpers.h"
 #include "Engine/IGraphics.h"
 #include "Engine/IInput.h"
 #include "Engine/Implementation/Logging/Debug.h"
@@ -48,7 +49,7 @@ bool Editor::Load()
     dx11Graphics->SetRenderToTexture(true, 1, 1);
     ResourceManager::Init(dx11Graphics);
     imguiController->LoadScene(
-        "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/onecomponent.scene");
+        EditorSettings::Get("LastScene", Helpers::WideStringToString(L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/TestScene2.scene")));
     return true;
 }
 

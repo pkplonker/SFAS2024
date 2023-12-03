@@ -25,177 +25,189 @@ const std::string IMGUI_SETTING_ID = "IMGUI_WINDOW";
 
 ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) : dx11Graphics(dx11Graphics), game(game)
 {
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	io.IniFilename = "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/imgui.ini";
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-	//io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
-	//io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleFonts;
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.IniFilename = "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/imgui.ini";
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+    //io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
+    //io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleFonts;
 
-	ImGui_ImplWin32_Init(dx11Graphics->GetHWND());
-	ImGui_ImplDX11_Init(dx11Graphics->GetDevice(), dx11Graphics->GetContext());
-	const std::shared_ptr<TimeWindow> timeWindow = std::make_shared<TimeWindow>();
-	renderables.try_emplace(timeWindow, EditorSettings::Get(IMGUI_SETTING_ID + timeWindow->GetName(), true));
+    ImGui_ImplWin32_Init(dx11Graphics->GetHWND());
+    ImGui_ImplDX11_Init(dx11Graphics->GetDevice(), dx11Graphics->GetContext());
+    const std::shared_ptr<TimeWindow> timeWindow = std::make_shared<TimeWindow>();
+    renderables.try_emplace(timeWindow, EditorSettings::Get(IMGUI_SETTING_ID + timeWindow->GetName(), true));
 
-	const std::shared_ptr<Hierarchy> hierarchy = std::make_shared<Hierarchy>();
-	renderables.try_emplace(hierarchy, EditorSettings::Get(IMGUI_SETTING_ID + hierarchy->GetName(), true));
+    const std::shared_ptr<Hierarchy> hierarchy = std::make_shared<Hierarchy>();
+    renderables.try_emplace(hierarchy, EditorSettings::Get(IMGUI_SETTING_ID + hierarchy->GetName(), true));
 
-	const std::shared_ptr<Inspector> inspector = std::make_shared<Inspector>(hierarchy);
-	renderables.try_emplace(inspector, EditorSettings::Get(IMGUI_SETTING_ID + inspector->GetName(), true));
+    const std::shared_ptr<Inspector> inspector = std::make_shared<Inspector>(hierarchy);
+    renderables.try_emplace(inspector, EditorSettings::Get(IMGUI_SETTING_ID + inspector->GetName(), true));
 
-	const std::shared_ptr<MeshImporterWindow> meshImporterWindow = std::make_shared<MeshImporterWindow>();
-	renderables.try_emplace(meshImporterWindow, EditorSettings::Get(IMGUI_SETTING_ID + meshImporterWindow->GetName(), true));
+    const std::shared_ptr<MeshImporterWindow> meshImporterWindow = std::make_shared<MeshImporterWindow>();
+    renderables.try_emplace(meshImporterWindow,
+                            EditorSettings::Get(IMGUI_SETTING_ID + meshImporterWindow->GetName(), true));
 
-	const std::shared_ptr<RenderStatWindow> drawStats = std::make_shared<RenderStatWindow>();
-	renderables.try_emplace(drawStats, EditorSettings::Get(IMGUI_SETTING_ID + drawStats->GetName(), true));
+    const std::shared_ptr<RenderStatWindow> drawStats = std::make_shared<RenderStatWindow>();
+    renderables.try_emplace(drawStats, EditorSettings::Get(IMGUI_SETTING_ID + drawStats->GetName(), true));
 
-	const std::shared_ptr<LoggerWindow> logger = std::make_shared<LoggerWindow>(new BufferSink(1000));
-	renderables.try_emplace(logger, EditorSettings::Get(IMGUI_SETTING_ID + logger->GetName(), true));
-	ImGuiTheme::ApplyTheme(0);
+    const std::shared_ptr<LoggerWindow> logger = std::make_shared<LoggerWindow>(new BufferSink(1000));
+    renderables.try_emplace(logger, EditorSettings::Get(IMGUI_SETTING_ID + logger->GetName(), true));
+    ImGuiTheme::ApplyTheme(0);
 }
 
 void ImGuiController::ImGuiPreFrame()
 {
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-	ImGui::DockSpaceOverViewport();
-	ImGui::ShowDemoWindow();
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
+    ImGui::DockSpaceOverViewport();
+    ImGui::ShowDemoWindow();
 }
 
 void ImGuiController::DrawViewport()
 {
-	ImGui::Begin("GameView");
-	auto w = dx11Graphics->GetWidth();
-	auto h = dx11Graphics->GetHeight();
-	ImGui::Image((ImTextureID)dx11Graphics->GetTextureView(),
-		ImVec2(static_cast<float>(dx11Graphics->GetTextureWidth()),
-			static_cast<float>(dx11Graphics->GetTextureHeight())));
-	gameViewportSize = ImGui::GetWindowSize();
-	ImGui::End();
+    ImGui::Begin("GameView", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+    auto w = dx11Graphics->GetWidth();
+    auto h = dx11Graphics->GetHeight();
+    ImGui::Image((ImTextureID)dx11Graphics->GetTextureView(),
+                 ImVec2(static_cast<float>(dx11Graphics->GetTextureWidth()),
+                        static_cast<float>(dx11Graphics->GetTextureHeight())));
+    gameViewportSize = ImGui::GetWindowSize();
+    ImGui::End();
+}
+
+
+void ImGuiController::ImGuiPostUpdate() const
+{
+    ImGui::Render();
+    ImGui::UpdatePlatformWindows();
+    ImGui::RenderPlatformWindowsDefault();
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+    dx11Graphics->SetRenderToTexture(true, gameViewportSize.x, gameViewportSize.y);
+    if (auto scene = SceneManager::GetScene().lock())
+    {
+        if (scene->GetActiveCamera() != nullptr)
+        {
+            scene->GetActiveCamera()->SetWidth(gameViewportSize.x);
+            scene->GetActiveCamera()->SetWidth(gameViewportSize.y);
+        }
+    }
 }
 
 void ImGuiController::Save()
 {
-	SceneSerializer::Serialize(FileDialog::SaveFileDialog());
+    SceneSerializer::Serialize(FileDialog::SaveFileDialog());
 }
 
 void ImGuiController::LoadScene() const
 {
-	LoadScene(FileDialog::OpenFileDialog());
+    LoadScene(FileDialog::OpenFileDialog());
 }
 
 void ImGuiController::LoadScene(std::string path) const
 {
-	if (path != "")
-	{
-		SceneManager::SetScene(SceneSerializer::Deserialize(path));
-	}
+    if (path != "")
+    {
+        SceneManager::SetScene(SceneSerializer::Deserialize(path));
+        EditorSettings::Set("LastScene", path);
+    }
 }
 
 void ImGuiController::DrawMenu()
 {
-	if (ImGui::BeginMainMenuBar())
-	{
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("Save", "Ctrl+S"))
-			{
-				Save();
-			}
-			if (ImGui::MenuItem("Load", "Ctrl+O"))
-			{
-				LoadScene();
-			}
-			ImGui::EndMenu();
-		}
-		if (ImGui::BeginMenu("Windows"))
-		{
-			for (auto& item : renderables)
-			{
-				bool& isVisible = item.second;
+    if (ImGui::BeginMainMenuBar())
+    {
+        if (ImGui::BeginMenu("File"))
+        {
+            if (ImGui::MenuItem("Save", "Ctrl+S"))
+            {
+                Save();
+            }
+            if (ImGui::MenuItem("Load", "Ctrl+O"))
+            {
+                LoadScene();
+            }
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Windows"))
+        {
+            for (auto& item : renderables)
+            {
+                bool& isVisible = item.second;
 
-				if (ImGui::MenuItem(item.first->GetName().c_str(), nullptr, isVisible))
-				{
-					isVisible = !isVisible;
-				}
-			}
-			ImGui::EndMenu();
-		}
-		if (ImGui::BeginMenu("Tools"))
-		{
-			if (ImGui::MenuItem("Import Mesh"))
-			{
-				MeshImporterWindow::Load();
-			}
-			ImGui::EndMenu();
-		}
+                if (ImGui::MenuItem(item.first->GetName().c_str(), nullptr, isVisible))
+                {
+                    isVisible = !isVisible;
+                }
+            }
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Tools"))
+        {
+            if (ImGui::MenuItem("Import Mesh"))
+            {
+                MeshImporterWindow::Load();
+            }
+            ImGui::EndMenu();
+        }
 
-		ImGui::EndMainMenuBar();
-	}
+        ImGui::EndMainMenuBar();
+    }
 }
 
 void ImGuiController::DrawWindows()
 {
-	std::vector<std::shared_ptr<EditorWindow>> identifiersToRemove;
+    std::vector<std::shared_ptr<EditorWindow>> identifiersToRemove;
 
-	for (const auto& renderable : renderables)
-	{
-		// Todo make this better, second/first garbage
-		if (renderable.first == nullptr)
-		{
-			identifiersToRemove.push_back(renderable.first);
-		}
-		else
-		{
-			if (renderable.second)
-				renderable.first->Draw();
-		}
-	}
+    for (const auto& renderable : renderables)
+    {
+        // Todo make this better, second/first garbage
+        if (renderable.first == nullptr)
+        {
+            identifiersToRemove.push_back(renderable.first);
+        }
+        else
+        {
+            if (renderable.second)
+                renderable.first->Draw();
+        }
+    }
 
-	for (const auto& identifier : identifiersToRemove)
-	{
-		renderables.erase(identifier);
-	}
+    for (const auto& identifier : identifiersToRemove)
+    {
+        renderables.erase(identifier);
+    }
 }
 
 void ImGuiController::Draw()
 {
-	DrawWindows();
-	DrawViewport();
-	DrawMenu();
+    DrawWindows();
+    DrawViewport();
+    DrawMenu();
 }
 
-void ImGuiController::ImGuiPostUpdate() const
-{
-	ImGui::Render();
-	ImGui::UpdatePlatformWindows();
-	ImGui::RenderPlatformWindowsDefault();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-	dx11Graphics->SetRenderToTexture(true, gameViewportSize.x, gameViewportSize.y);
-}
 
 void ImGuiController::ShutDown()
 {
-	for (auto renderable : renderables)
-	{
-		EditorSettings::Set(IMGUI_SETTING_ID + renderable.first->GetName(), renderable.second);
-	}
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+    for (auto renderable : renderables)
+    {
+        EditorSettings::Set(IMGUI_SETTING_ID + renderable.first->GetName(), renderable.second);
+    }
+    ImGui_ImplDX11_Shutdown();
+    ImGui_ImplWin32_Shutdown();
+    ImGui::DestroyContext();
 }
 
 void ImGuiController::Resize(int width, int height)
 {
-	RECT rect;
-	::GetClientRect(dx11Graphics->GetHWND(), &rect);
-	float x = static_cast<float>(rect.right - rect.left);
-	float y = static_cast<float>(rect.bottom - rect.top);
-	ImGui::GetIO().DisplaySize = ImVec2(x, y);
-	Trace(std::to_string(x) + ":" + std::to_string(y))
-		//ImGui::GetIO().DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
+    RECT rect;
+    ::GetClientRect(dx11Graphics->GetHWND(), &rect);
+    float x = static_cast<float>(rect.right - rect.left);
+    float y = static_cast<float>(rect.bottom - rect.top);
+    ImGui::GetIO().DisplaySize = ImVec2(x, y);
+    Trace(std::to_string(x) + ":" + std::to_string(y))
+    //ImGui::GetIO().DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
 }

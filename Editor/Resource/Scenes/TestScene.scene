@@ -1,78 +1,6 @@
 {
     "objects": [
         [
-            "Cube2",
-            {
-                "meshComponent": {
-                    "material": {
-                        "color": {
-                            "a": 1.0,
-                            "b": 0.10049018263816833,
-                            "g": 0.10049018263816833,
-                            "r": 0.5
-                        },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Sphere.smesh",
-                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx"
-                    },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Sphere.smesh"
-                },
-                "name": "Cube2",
-                "transform": {
-                    "position": {
-                        "x": -2.5,
-                        "y": 2.5,
-                        "z": 2.0
-                    },
-                    "rotation": {
-                        "x": 239.0,
-                        "y": 196.0,
-                        "z": 234.0
-                    },
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            }
-        ],
-        [
-            "Sphere",
-            {
-                "meshComponent": {
-                    "material": {
-                        "color": {
-                            "a": 1.0,
-                            "b": 0.4166666865348816,
-                            "g": 0.3972029983997345,
-                            "r": 0.08578432351350784
-                        },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
-                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx"
-                    },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
-                },
-                "name": "Sphere",
-                "transform": {
-                    "position": {
-                        "x": -1.0,
-                        "y": 3.5,
-                        "z": 2.0
-                    },
-                    "rotation": {
-                        "x": 2.0,
-                        "y": 35.0,
-                        "z": 103.0
-                    },
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            }
-        ],
-        [
             "TestShape",
             {
                 "meshComponent": {
@@ -99,6 +27,75 @@
                         "x": 299.20001220703125,
                         "y": 354.29998779296875,
                         "z": 122.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Camera",
+            {
+                "cameraComponent": {
+                    "camera": {
+                        "far": 200.0,
+                        "fov": 44.448001861572266,
+                        "height": 958.0,
+                        "near": 0.10000000149011612,
+                        "type": "PerspectiveCamera",
+                        "width": 1783.0
+                    }
+                },
+                "name": "Camera",
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": -14.600000381469727
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Cube2",
+            {
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 0.10049018263816833,
+                            "g": 0.10049018263816833,
+                            "r": 0.5
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Sphere.smesh",
+                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx"
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Sphere.smesh"
+                },
+                "name": "Cube2",
+                "transform": {
+                    "position": {
+                        "x": -2.5,
+                        "y": 2.5,
+                        "z": 2.0
+                    },
+                    "rotation": {
+                        "x": 239.0,
+                        "y": 196.0,
+                        "z": 234.0
                     },
                     "scale": {
                         "x": 1.0,
@@ -143,29 +140,32 @@
             }
         ],
         [
-            "Camera",
+            "Sphere",
             {
-                "cameraComponent": {
-                    "camera": {
-                        "far": 200.0,
-                        "fov": 0.7853981852531433,
-                        "height": 1018.0,
-                        "near": 0.10000000149011612,
-                        "type": "PerspectiveCamera",
-                        "width": 1053.0
-                    }
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 0.4166666865348816,
+                            "g": 0.3972029983997345,
+                            "r": 0.08578432351350784
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
+                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx"
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
                 },
-                "name": "Camera",
+                "name": "Sphere",
                 "transform": {
                     "position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": -12.0
+                        "x": -1.0,
+                        "y": 3.5,
+                        "z": 2.0
                     },
                     "rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "x": 2.0,
+                        "y": 35.0,
+                        "z": 103.0
                     },
                     "scale": {
                         "x": 1.0,

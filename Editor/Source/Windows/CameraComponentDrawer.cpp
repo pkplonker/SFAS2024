@@ -38,7 +38,7 @@ void CameraComponentDrawer::DrawPerspective(std::shared_ptr<PerspectiveCamera> c
             ImGui::EndPopup();
         }
         float fov = cam->GetFOV();
-        if (ImGui::SliderFloat("Field of View", &fov, 0.01f, 3.141f))
+        if (ImGui::SliderFloat("Field of View", &fov, 0.5f, 120))
         {
             cam->SetFOV(fov);
         }

@@ -32,7 +32,7 @@ struct PS_Input
 	float inverseScale : TEXCOORD2;
 };
 
-static const float GridScale = 0.1f;
+static const float GridScale = 1.0f;
 static const float LineWidthX = 0.01;
 static const float LineWidthY = 0.01;
 static const float4 BaseColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
@@ -44,7 +44,6 @@ PS_Input VS_Main(VS_Input vertex)
     vsOut.position = mul(vertex.position, mvp);
     vsOut.worldPos = mul(vertex.position, worldMatrix).xyz;
 
-    // Calculate the scale factor from the world matrix (assuming uniform scaling)
     vsOut.inverseScale = 1.0 / length(worldMatrix._11_12_13); 
 
     return vsOut;
@@ -59,7 +58,6 @@ float PristineGrid(float2 gridPosition, float2 lineWidth)
 }
 float4 PS_Main(PS_Input frag) : SV_TARGET
 {
-    // Use inverse scale to adjust grid spacing
     float2 gridPositionXZ = frag.worldPos.xy / frag.inverseScale;
     float grid = PristineGrid(gridPositionXZ * GridScale, float2(LineWidthX, LineWidthY));
     grid = 1.0 - grid;

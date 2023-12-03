@@ -17,7 +17,7 @@ class IMaterial
 public:
     IMaterial(Vec4 color = MATERIAL_DEFAULT_COLOR);
     virtual ~IMaterial();
-    virtual void Update() = 0;
+    virtual bool Update() = 0;
     virtual void SetShader(IShader* value) { this->shader = value; }
     virtual void SetTexture(ITexture* value) { this->texture = value; }
     virtual IShader* GetShader() { return shader; }
