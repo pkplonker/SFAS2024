@@ -28,7 +28,7 @@ std::string MeshComponent::GetMeshPath()
 
 void MeshComponent::SetMesh(Mesh* mesh)
 {
-    if(auto scene = SceneManager::GetScene().lock())
+    if (auto scene = SceneManager::GetScene().lock())
     {
         scene->RemoveRenderable(renderable);
         renderable = IApplication::GetGraphics()->CreateMeshRenderable(this->material, mesh);
@@ -38,7 +38,7 @@ void MeshComponent::SetMesh(Mesh* mesh)
 
 void MeshComponent::SetMaterial(IMaterial* material)
 {
-    if(auto scene = SceneManager::GetScene().lock())
+    if (auto scene = SceneManager::GetScene().lock())
     {
         this->material = material;
         IApplication::GetGraphics()->UpdateRenderable(material, renderable);
@@ -48,6 +48,7 @@ void MeshComponent::SetMaterial(IMaterial* material)
 
 void MeshComponent::UpdateRenderableTransform()
 {
+    if (renderable == nullptr)return;
     if (auto obj = gameObject.lock())
     {
         this->renderable->SetTransform(obj->Transform());

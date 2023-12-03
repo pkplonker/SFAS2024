@@ -245,8 +245,13 @@ void DirectX11Graphics::Update()
         IShader* previousShader = nullptr;
         for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
         {
-            stats.materials++;
+            if (bucket->first == nullptr)
+            {
+                Warning("Skipping bucket as material is nullptr")
+                continue;
+            }
             bucket->first->Update();
+            stats.materials++;
 
             for (auto renderable = bucket->second.begin(); renderable != bucket->second.end(); ++renderable)
             {
@@ -257,12 +262,18 @@ void DirectX11Graphics::Update()
                     stats.shaders ++;
                 }
                 const auto renderObject = renderable->get();
-
+                
+                if (renderObject == nullptr)
+                {
+                    Warning("Detected null renderable")
+                    continue;
+                }
+                
                 stats.tris += renderObject->GetTriangles();
                 stats.verts += renderObject->GetVerts();
                 stats.drawCalls++;
                 {
-                    // Currently setting the material buffer per object, which is inefficient. This likely needs splitting to be grouped, shader->texture->material values?
+                    // Currently setting the material buffer per object, which is no doubt inefficient. This likely needs splitting to be grouped, shader->texture->material values?
                     D3D11_MAPPED_SUBRESOURCE mappedResource;
                     Context->Map(materialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
                     auto* data = static_cast<MaterialBufferObject*>(mappedResource.pData);

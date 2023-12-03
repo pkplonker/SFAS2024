@@ -52,7 +52,7 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) : 
 	const std::shared_ptr<RenderStatWindow> drawStats = std::make_shared<RenderStatWindow>();
 	renderables.try_emplace(drawStats, EditorSettings::Get(IMGUI_SETTING_ID + drawStats->GetName(), true));
 
-	const std::shared_ptr<LoggerWindow> logger = std::make_shared<LoggerWindow>(new BufferSink(500));
+	const std::shared_ptr<LoggerWindow> logger = std::make_shared<LoggerWindow>(new BufferSink(1000));
 	renderables.try_emplace(logger, EditorSettings::Get(IMGUI_SETTING_ID + logger->GetName(), true));
 	ImGuiTheme::ApplyTheme(0);
 }

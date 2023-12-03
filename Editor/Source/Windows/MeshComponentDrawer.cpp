@@ -27,7 +27,6 @@ MeshComponentDrawer::MeshComponentDrawer(std::weak_ptr<MeshComponent> component)
 }
 
 
-
 void MeshComponentDrawer::Draw()
 {
     if (std::shared_ptr<IComponent> sharedComponent = component.lock())
@@ -52,24 +51,29 @@ void MeshComponentDrawer::Draw()
             ImGuiHelpers::WrappedText("Mesh Path:", meshComponent->GetMeshPath(),
                                       std::bind(&MeshComponentDrawer::ChangeMesh, this));
 
-            if (const auto mat = meshComponent->GetMaterial())
+            const auto mat = meshComponent->GetMaterial();
+            if (mat != nullptr)
             {
+                std::wstring shaderPath;
                 if (const auto shader = mat->GetShader())
                 {
-                    const auto shaderPath = shader->GetPath();
-                    if (shaderPath != L"")
-                    {
-                        ImGuiHelpers::WrappedText("Shader Path:", shaderPath,std::bind(&MeshComponentDrawer::ChangeShader, this));
-                    }
+                    shaderPath = shader->GetPath();
                 }
+
+
+                ImGuiHelpers::WrappedText("Shader Path:", shaderPath,
+                                          std::bind(&MeshComponentDrawer::ChangeShader, this));
+
+                std::wstring texturePath;
                 if (const auto tex = mat->GetTexture())
                 {
-                    const auto texturePath = tex->GetPath();
-                    if (texturePath != L"")
-                    {
-                        ImGuiHelpers::WrappedText("Texture Path:", texturePath,std::bind(&MeshComponentDrawer::ChangeTexture, this));
-                    }
+                    texturePath = tex->GetPath();
                 }
+
+                ImGuiHelpers::WrappedText("Texture Path:", texturePath,
+                                          std::bind(&MeshComponentDrawer::ChangeTexture, this));
+
+
                 auto color = mat->GetColor();
                 ImGui::Text("Color:");
                 ImGui::SameLine();
@@ -78,13 +82,24 @@ void MeshComponentDrawer::Draw()
                     mat->SetColor(color);
                 }
             }
+            else
+            {
+                if (ImGui::Button("Create Material"))
+                {
+                    Trace("Creating material for mesh component")
+                    auto mat = IApplication::GetGraphics()->CreateMaterial(nullptr, nullptr);
+                    meshComponent->SetMaterial(mat);
+                }
+            }
         }
     }
 }
+
+
 void MeshComponentDrawer::ChangeMesh()
 {
     std::filesystem::path path = FileDialog::OpenFileDialog();
-    if(path.empty())
+    if (path.empty())
     {
         Trace("Closed dialog without selecting path")
         return;
@@ -109,10 +124,11 @@ void MeshComponentDrawer::ChangeMesh()
         MessageBoxWrapper::ShowWarning("Incorrect file type", "Incorrect file type");
     }
 }
+
 void MeshComponentDrawer::ChangeShader()
 {
     std::filesystem::path path = FileDialog::OpenFileDialog();
-    if(path.empty())
+    if (path.empty())
     {
         Trace("Closed dialog without selecting path")
         return;
@@ -132,7 +148,6 @@ void MeshComponentDrawer::ChangeShader()
             material->SetColor(comp->GetMaterial()->GetColor()); // need to implement updating existing material
             comp->SetMaterial(material);
             Trace("Setting new shader/material")
-
         }
     }
     else
@@ -144,13 +159,13 @@ void MeshComponentDrawer::ChangeShader()
 void MeshComponentDrawer::ChangeTexture()
 {
     std::filesystem::path path = FileDialog::OpenFileDialog();
-    if(path.empty())
+    if (path.empty())
     {
         Trace("Closed dialog without selecting path")
         return;
     }
     std::string extension = path.extension().string();
-    if (extension == ".FX")
+    if (extension == ".dds")
     {
         if (auto comp = component.lock())
         {
@@ -164,7 +179,6 @@ void MeshComponentDrawer::ChangeTexture()
             material->SetColor(comp->GetMaterial()->GetColor()); // need to implement updating existing material
             comp->SetMaterial(material);
             Trace("Setting new texture/material")
-
         }
     }
     else
