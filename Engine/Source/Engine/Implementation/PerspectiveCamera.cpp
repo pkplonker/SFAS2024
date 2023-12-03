@@ -21,7 +21,7 @@ PerspectiveCamera::PerspectiveCamera( float width, float height, float near,
 
 DirectX::XMMATRIX PerspectiveCamera::GetProjectionMatrix()
 {
-	projection = DirectX::XMMatrixPerspectiveFovLH(FOV, width / height, nearZ, farZ);
+	projection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(FOV), width / height, nearZ, farZ);
 	return projection;
 }
 
@@ -41,8 +41,8 @@ DirectX::XMMATRIX PerspectiveCamera::GetViewProjectionMatrix()
 
 DirectX::XMVECTOR PerspectiveCamera::GetFocusPoint()
 {
-	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(
-		transform->Rotation.X(), transform->Rotation.Y(), transform->Rotation.Z());
+	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw( DirectX::XMConvertToRadians(transform->Rotation.X())
+		, DirectX::XMConvertToRadians(transform->Rotation.Y()), DirectX::XMConvertToRadians(transform->Rotation.Z()));
 	DirectX::XMVECTOR forwardBase = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 	DirectX::XMVECTOR forwardDirection = DirectX::XMVector3TransformNormal(forwardBase, rotationMatrix);
 	return DirectX::XMVectorAdd(GetEyePosition(), forwardDirection);
@@ -55,8 +55,8 @@ DirectX::XMVECTOR PerspectiveCamera::GetEyePosition()
 
 DirectX::XMVECTOR PerspectiveCamera::GetUpDirection()
 {
-	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(
-		transform->Rotation.X(), transform->Rotation.Y(), transform->Rotation.Z());
+	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw( DirectX::XMConvertToRadians(transform->Rotation.X())
+		, DirectX::XMConvertToRadians(transform->Rotation.Y()), DirectX::XMConvertToRadians(transform->Rotation.Z()));
 
 	DirectX::XMVECTOR upBase = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 

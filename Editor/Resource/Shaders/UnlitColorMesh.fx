@@ -1,6 +1,8 @@
 cbuffer cbChangedPerFrame : register(b0)
 {
     matrix mvp;
+	matrix worldMatrix;
+
 };
 
 cbuffer MaterialBuffer : register(b1)

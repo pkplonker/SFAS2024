@@ -1,71 +1,12 @@
 {
     "objects": [
         [
-            "New Gameobject (1)",
-            {
-                "name": "New Gameobject (1)",
-                "transform": {
-                    "position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            }
-        ],
-        [
-            "Cube",
-            {
-                "meshComponent": {
-                    "material": {
-                        "color": {
-                            "a": 1.0,
-                            "b": 0.40453189611434937,
-                            "g": 0.906862735748291,
-                            "r": 0.8477649688720703
-                        },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh",
-                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/UnlitColorMesh.fx"
-                    },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/TestCube.smesh"
-                },
-                "name": "Cube",
-                "transform": {
-                    "position": {
-                        "x": 2.5,
-                        "y": 2.5,
-                        "z": 2.0
-                    },
-                    "rotation": {
-                        "x": 190.0,
-                        "y": 84.0,
-                        "z": 319.0
-                    },
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            }
-        ],
-        [
             "Camera",
             {
                 "cameraComponent": {
                     "camera": {
                         "far": 200.0,
-                        "fov": 0.7853981852531433,
+                        "fov": 66.66899871826172,
                         "height": 958.0,
                         "near": 0.10000000149011612,
                         "type": "PerspectiveCamera",
@@ -75,9 +16,43 @@
                 "name": "Camera",
                 "transform": {
                     "position": {
+                        "x": 0.20000000298023224,
+                        "y": -1.2000000476837158,
+                        "z": -12.0
+                    },
+                    "rotation": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": -12.0
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 4.699999809265137,
+                        "y": 5.699999809265137,
+                        "z": 4.300000190734863
+                    }
+                }
+            }
+        ],
+        [
+            "New Gameobject (1)",
+            {
+                "name": "New Gameobject (1)",
+                "spriteComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\Grid.fx"
+                    }
+                },
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
                     },
                     "rotation": {
                         "x": 0.0,

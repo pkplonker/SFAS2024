@@ -11,11 +11,19 @@
 
 #include "DirectX11Material.h"
 #include "DirectX11Mesh.h"
+#include "IApplication.h"
 #include "RenderingStats.h"
 #include "ResourceManager.h"
 #include "Engine/Implementation/Logging/Debug.h"
 #include "Implementation/Mesh.h"
 #include "Implementation/Vertex.h"
+
+struct
+{
+    DirectX::XMMATRIX mvp;
+    DirectX::XMMATRIX worldMatrix;
+    DirectX::XMFLOAT3 cameraPosition;
+} matrices;
 
 DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
                                                     BackbufferView(nullptr), BackbufferTexture(nullptr), Mvp(nullptr),
@@ -87,7 +95,7 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         D3D11_BUFFER_DESC constDesc;
         ZeroMemory(&constDesc, sizeof(constDesc));
         constDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-        constDesc.ByteWidth = sizeof(DirectX::XMMATRIX);
+        constDesc.ByteWidth = sizeof(matrices);
         constDesc.Usage = D3D11_USAGE_DEFAULT;
         hr = Device->CreateBuffer(&constDesc, 0, &Mvp);
 
@@ -202,6 +210,17 @@ DirectX11Graphics::~DirectX11Graphics()
 
 void DirectX11Graphics::Update()
 {
+    for (auto it = Renderables.begin(); it != Renderables.end();)
+    {
+        if (it->first == nullptr)
+        {
+            it = Renderables.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
     if (Context && SwapChain)
     {
         ID3D11RenderTargetView* activeRenderTarget = renderToTexture ? renderTargetView : BackbufferView;
@@ -250,7 +269,11 @@ void DirectX11Graphics::Update()
                 Warning("Skipping bucket as material is nullptr")
                 continue;
             }
-            bucket->first->Update();
+            if (!bucket->first->Update())
+            {
+                Warning("Skipping bucket as material shader is nullptr")
+                continue;
+            }
             stats.materials++;
 
             for (auto renderable = bucket->second.begin(); renderable != bucket->second.end(); ++renderable)
@@ -259,7 +282,7 @@ void DirectX11Graphics::Update()
                 if (currentShader != previousShader)
                 {
                     previousShader = currentShader;
-                    stats.shaders ++;
+                    stats.shaders++;
                 }
                 const auto renderObject = renderable->get();
 
@@ -283,13 +306,12 @@ void DirectX11Graphics::Update()
                     Context->VSSetConstantBuffers(1, 1, &materialBuffer);
                 }
                 const std::weak_ptr<Transform3D> transform = (*renderable)->GetTransform();
-                SetWorldMatrix(transform);
+                SetMatrixBuffers(transform);
                 Context->OMSetBlendState(BlendState, nullptr, ~0U);
                 (*renderable)->Update();
             }
         }
         currentStats = stats;
-
 
         Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
     }
@@ -456,7 +478,6 @@ IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vs
     return Result;
 }
 
-
 std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IMaterial* material)
 {
     std::shared_ptr<IRenderable> Result = nullptr;
@@ -476,17 +497,17 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IMaterial* mater
             }
         }
 
-
         float vertex_data_array[] =
         {
-            halfWidth, halfHeight, 0.0f, 1.0f, 1.0f,
-            halfWidth, -halfHeight, 0.0f, 1.0f, 0.0f,
-            -halfWidth, -halfHeight, 0.0f, 0.0f, 0.0f,
-
-            -halfWidth, halfHeight, 0.0f, 0.0f, 1.0f,
+            // Positions                    // Colors                // Normals           // UVs
+            halfWidth, halfHeight, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+            halfWidth, -halfHeight, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+            -halfWidth, -halfHeight, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+            -halfWidth, halfHeight, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
         };
+
         ID3D11Buffer* VertexBuffer;
-        unsigned int vertexStride = 5 * sizeof(float);
+        unsigned int vertexStride = 12 * sizeof(float);
         unsigned int vertexOffset = 0;
         unsigned int vertexCount = 4;
 
@@ -517,12 +538,11 @@ std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IMaterial* mater
         ZeroMemory(&indexResourceData, sizeof(indexResourceData));
         indexResourceData.pSysMem = indexBufferData;
 
-        if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) && SUCCEEDED(
-            Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
+        if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) &&
+            SUCCEEDED(Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
         {
             Result = std::make_shared<DirectX11Billboard>(Context, VertexBuffer, IndexBuffer, vertexStride,
-                                                          vertexOffset,
-                                                          vertexCount, indexCount);
+                                                          vertexOffset, vertexCount, indexCount);
             AddRenderable(material, Result);
         }
     }
@@ -630,7 +650,6 @@ std::shared_ptr<IMeshRenderable> DirectX11Graphics::CreateMeshRenderable(Mesh* m
 
     return Result;
 }
-
 
 void DirectX11Graphics::SetActiveCamera(std::shared_ptr<ICamera> camera)
 {
@@ -820,21 +839,30 @@ void DirectX11Graphics::UpdateRenderToTextureResources(int newWidth, int newHeig
     }
 }
 
-void DirectX11Graphics::SetWorldMatrix(const std::weak_ptr<Transform3D> transform)
+void DirectX11Graphics::SetMatrixBuffers(const std::weak_ptr<Transform3D> transform)
 {
     if (std::shared_ptr<Transform3D> trans = transform.lock())
     {
         DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(trans->Position.X(), trans->Position.Y(),
                                                                      trans->Position.Z());
         DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationRollPitchYaw(
-            trans->Rotation.X(), trans->Rotation.Y(),
-            trans->Rotation.Z());
-        DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(trans->Scale.X(), trans->Scale.Y(),
-                                                           trans->Scale.Z());
+            DirectX::XMConvertToRadians(trans->Rotation.X())
+            , DirectX::XMConvertToRadians(trans->Rotation.Y()), DirectX::XMConvertToRadians(trans->Rotation.Z()));
+        DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(trans->Scale.X(), trans->Scale.Y(), trans->Scale.Z());
+
         DirectX::XMMATRIX world = scale * rotation * translation;
         DirectX::XMMATRIX mvp = DirectX::XMMatrixMultiply(world, vpMatrix);
+
+        world = DirectX::XMMatrixTranspose(world);
         mvp = DirectX::XMMatrixTranspose(mvp);
-        Context->UpdateSubresource(Mvp, 0, 0, &mvp, 0, 0);
+
+        auto camPos = camera->GetTransform()->Position;
+
+        matrices.mvp = mvp;
+        matrices.worldMatrix = world;
+        matrices.cameraPosition = DirectX::XMFLOAT3(camPos.X(), camPos.Y(), camPos.Z());
+
+        Context->UpdateSubresource(Mvp, 0, 0, &matrices, 0, 0);
         Context->VSSetConstantBuffers(0, 1, &Mvp);
     }
 }

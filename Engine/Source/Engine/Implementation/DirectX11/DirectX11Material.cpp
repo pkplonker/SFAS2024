@@ -6,9 +6,8 @@
 #include "ITexture.h"
 #include "ResourceManager.h"
 
-DirectX11Material::DirectX11Material() 
+DirectX11Material::DirectX11Material()
 {
-    
 }
 
 DirectX11Material::DirectX11Material(IShader* shader) : DirectX11Material(shader, nullptr)
@@ -17,14 +16,16 @@ DirectX11Material::DirectX11Material(IShader* shader) : DirectX11Material(shader
 
 DirectX11Material::DirectX11Material(IShader* shader, ITexture* texture) : IMaterial()
 {
-    SetShader(shader);
-    SetTexture(texture);
+	SetShader(shader);
+	SetTexture(texture);
 }
 
-void DirectX11Material::Update()
+bool DirectX11Material::Update()
 {
-    if (shader) shader->Update();
-    if (texture) texture->Update();
+	if (shader == nullptr)return false;
+	if (shader) shader->Update();
+	if (texture) texture->Update();
+	return true;
 }
 
 DirectX11Material::~DirectX11Material()
