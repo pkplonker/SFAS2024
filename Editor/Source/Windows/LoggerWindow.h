@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "imgui.h"
-#include "ImGuiWindow.h"
+#include "EditorWindow.h"
 #include "Logging/BufferSink.h"
 #include "Logging/Debug.h"
 

@@ -9,6 +9,7 @@ void Debug::Log(LogLevel level, const char* file, int line, const std::string& m
 {
     try
     {
+        if(sinks.size()==0)return;
         for (auto sink : sinks)
         {
             if (sink == nullptr) continue;

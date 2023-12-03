@@ -20,6 +20,7 @@ public:
 	void LoadScene(std::string path) const;
 	void DrawMenu();
 	void DrawViewport();
+	void AddWindow(const std::shared_ptr<EditorWindow>& shared);
 	static void Save();
 	void DrawWindows();
 	void Draw();

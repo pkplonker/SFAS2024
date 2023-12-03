@@ -1,5 +1,6 @@
 #include "Editor.h"
 
+#include "EditorCamera.h"
 #include "EditorSettings.h"
 #include "Helpers.h"
 #include "Engine/IGraphics.h"
@@ -10,6 +11,8 @@
 #include "MeshImporter.h"
 #include "SceneSerializer.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
+#include "Windows/EditorCameraWindow.h"
+#include "Windows/EditorWindow.h"
 
 #define CLAMP(v, x, y) fmin(fmax(v, x), y)
 
@@ -50,6 +53,10 @@ bool Editor::Load()
     ResourceManager::Init(dx11Graphics);
     imguiController->LoadScene(
         EditorSettings::Get("LastScene", Helpers::WideStringToString(L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/TestScene2.scene")));
+    editorCamera = std::make_shared<EditorCamera>();
+    editorCamera->SetActiveCamera();
+    editorCamera->SetFov(80);
+    imguiController->AddWindow(std::make_shared<EditorCameraWindow>(editorCamera));
     return true;
 }
 

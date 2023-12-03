@@ -79,6 +79,11 @@ void ImGuiController::DrawViewport()
     ImGui::End();
 }
 
+void ImGuiController::AddWindow(const std::shared_ptr<EditorWindow>& shared)
+{
+    renderables.try_emplace(shared, EditorSettings::Get(IMGUI_SETTING_ID + shared->GetName(), true));
+}
+
 
 void ImGuiController::ImGuiPostUpdate() const
 {

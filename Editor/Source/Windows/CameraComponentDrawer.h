@@ -9,7 +9,8 @@ class CameraComponentDrawer : public ComponentDrawer
 public:
 	virtual ~CameraComponentDrawer();
 	CameraComponentDrawer(std::weak_ptr<CameraComponent> component);
-	void DrawPerspective(std::shared_ptr<PerspectiveCamera> cam);
+	static void DrawPerspective(std::shared_ptr<PerspectiveCamera> cam);
+	static void DrawCameraControls(std::shared_ptr<ICamera> camera);
 	void Draw() override;
 private:
 	std::weak_ptr<CameraComponent> component;
