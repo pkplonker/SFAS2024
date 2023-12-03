@@ -23,5 +23,5 @@ public:
 
 protected:
 	std::shared_ptr<IRenderable> renderable = nullptr;
-	IMaterial* material = material;
+	IMaterial* material = nullptr;
 };

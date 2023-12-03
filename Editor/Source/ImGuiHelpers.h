@@ -23,7 +23,6 @@ public:
                 callback();
             }
             ImGui::SameLine();
-
         }
 
         float fullWidth = ImGui::GetWindowWidth();
@@ -56,5 +55,33 @@ public:
         ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + availableWidth);
         ImGui::TextUnformatted(Helpers::WideStringToString(std::move(content)).c_str());
         ImGui::PopTextWrapPos();
+    }
+
+    //https://github.com/ocornut/imgui/discussions/3862
+    static bool ButtonCenteredOnLine(const char* label, float alignment = 0.5f)
+    {
+        ImGuiStyle& style = ImGui::GetStyle();
+
+        float size = ImGui::CalcTextSize(label).x + style.FramePadding.x * 2.0f;
+        float avail = ImGui::GetContentRegionAvail().x;
+
+        float off = (avail - size) * alignment;
+        if (off > 0.0f)
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
+
+        return ImGui::Button(label);
+    }
+
+    static void SpacedSeperator(int firstGap = 1, int secondGap = 1)
+    {
+        for (auto i = 0; i < firstGap; i++)
+        {
+            ImGui::NewLine();
+        }
+        ImGui::Separator();
+        for (auto i = 0; i < secondGap; i++)
+        {
+            ImGui::NewLine();
+        }
     }
 };
