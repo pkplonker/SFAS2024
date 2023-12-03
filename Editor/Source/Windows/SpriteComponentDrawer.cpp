@@ -22,7 +22,7 @@ void SpriteComponentDrawer::Draw()
     {
         if (auto meshComponent = std::dynamic_pointer_cast<SpriteComponent>(sharedComponent))
         {
-            if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
+            if (ImGui::CollapsingHeader("Sprite Component", ImGuiTreeNodeFlags_DefaultOpen))
             {
                 if (ImGui::BeginPopupContextItem("MeshComponentContext"))
                 {

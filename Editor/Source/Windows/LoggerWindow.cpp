@@ -74,6 +74,8 @@ void LoggerWindow::Draw()
     }
     ImGui::BeginChild("Scrolling", ImVec2(0, 0), true,
                       ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
+
+    // all this string stuff should be cached off for performance / use dirty flag on settings/data
     if (collapse)
     {
         std::unordered_map<std::string, int> messageCounts;

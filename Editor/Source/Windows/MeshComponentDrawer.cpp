@@ -87,7 +87,7 @@ void MeshComponentDrawer::Draw()
                 if (ImGui::Button("Create Material"))
                 {
                     Trace("Creating material for mesh component")
-                    auto mat = IApplication::GetGraphics()->CreateMaterial(nullptr, nullptr);
+                    auto mat = ResourceManager::GetMaterial();
                     meshComponent->SetMaterial(mat);
                 }
             }

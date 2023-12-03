@@ -1,7 +1,10 @@
 ﻿#include "IMaterial.h"
 
+#include "ResourceManager.h"
+
 IMaterial::IMaterial(Vec4 color)
 {
+    SetShader(ResourceManager::GetShader());
     this->color = color;
 }
 
