@@ -8,7 +8,6 @@
 #include "ImGuiController.h"
 #include "MeshImporter.h"
 #include "SceneSerializer.h"
-#include "Engine/MeshSerializer.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 
 #define CLAMP(v, x, y) fmin(fmax(v, x), y)

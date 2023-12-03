@@ -26,7 +26,7 @@ void Hierarchy::Draw()
 			{
 				if (ImGui::MenuItem("Empty"))
 				{
-					GameObjectFactory("New GameObject").Build();
+					GameObjectFactory().Build();
 				}
 				if (ImGui::MenuItem("Camera"))
 				{

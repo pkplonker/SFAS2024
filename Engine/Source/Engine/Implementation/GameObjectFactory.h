@@ -17,6 +17,7 @@ class GameObjectFactory
 {
 public:
 	GameObjectFactory();
+	static bool ObjectNameExists(const std::shared_ptr<Scene>& scene, const std::string& name);
 
 	GameObjectFactory(std::string name);
 

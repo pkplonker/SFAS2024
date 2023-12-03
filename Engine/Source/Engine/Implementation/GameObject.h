@@ -10,9 +10,10 @@ class IComponent;
 
 class GameObject : IUpdateable
 {
-	const std::string GAMEOBJECT_DEFAULT_NAME;
 
 public:
+	inline static const std::string GAMEOBJECT_DEFAULT_NAME =  "New Gameobject";
+
 	GameObject();
 	GameObject(std::unique_ptr<Transform3D> transform);
 	GameObject(std::string name, std::unique_ptr<Transform3D> transform);
