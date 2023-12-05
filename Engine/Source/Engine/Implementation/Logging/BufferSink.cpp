@@ -14,7 +14,8 @@ void BufferSink::Log(LogLevel level, const char* file, int line, const std::stri
     {
         buffer.pop_back();
     }
-    buffer.push_front(LogMessageData(level,file, line, message));
+    buffer.push_front(LogMessageData(level, file, line, message));
+    isDirty = true;
 }
 
 std::pmr::deque<LogMessageData> BufferSink::GetBuffer()
@@ -25,4 +26,9 @@ std::pmr::deque<LogMessageData> BufferSink::GetBuffer()
 void BufferSink::Clear()
 {
     buffer.clear();
+}
+
+bool BufferSink::IsDirty()
+{
+    return isDirty;
 }

@@ -23,8 +23,15 @@ public:
     void Log(LogLevel level, const char* file, int line, const std::string message) override;
     std::pmr::deque<LogMessageData> GetBuffer();
     void Clear();
+    bool IsDirty() override;
+
+    void ClearDirty() override
+    {
+        isDirty=false;
+    }
 
 private:
     std::pmr::deque<LogMessageData> buffer;
     unsigned int maxSize;
+    bool isDirty;
 };
