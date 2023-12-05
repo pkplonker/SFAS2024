@@ -72,7 +72,6 @@ bool Editor::Load()
 void Editor::Update()
 {
     game->Update();
-
     imguiController->ImGuiPreFrame();
 
     imguiController->Draw();

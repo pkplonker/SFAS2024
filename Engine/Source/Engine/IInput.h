@@ -1,60 +1,61 @@
-
 #pragma once
+#include "Audio.h"
 
 enum InputAction
 {
-	ButtonLeft,
-	ButtonRight,
-	ButtonTop,
-	ButtonBottom,
+    ButtonLeft,
+    ButtonRight,
+    ButtonTop,
+    ButtonBottom,
 
-	DirectionPadLeft,
-	DirectionPadRight,
-	DirectionPadTop,
-	DirectionPadBottom,
+    DirectionPadLeft,
+    DirectionPadRight,
+    DirectionPadTop,
+    DirectionPadBottom,
 
-	LeftStickXAxis,
-	LeftStickYAxis,
-	LeftStickPress,
+    LeftStickXAxis,
+    LeftStickYAxis,
+    LeftStickPress,
 
-	RightStickXAxis,
-	RightStickYAxis,
-	RightStickPress,
+    RightStickXAxis,
+    RightStickYAxis,
+    RightStickPress,
 
-	TriggerLeft,
-	TriggerRight,
-	ShoulderButtonLeft,
-	ShoulderButtonRight,
+    TriggerLeft,
+    TriggerRight,
+    ShoulderButtonLeft,
+    ShoulderButtonRight,
 
-	SpecialLeft,
-	SpecialRight,
+    SpecialLeft,
+    SpecialRight,
 
-	NumActions,
+    NumActions,
 
-	DefaultSelect = ButtonBottom,
-	DefaultBack = ButtonRight,
+    DefaultSelect = ButtonBottom,
+    DefaultBack = ButtonRight,
 
+    MouseLeft,
+    MouseRight,
+    MouseMiddle
 };
 
 class IInput
 {
 public:
+    IInput();
 
-	IInput();
+    virtual void Update();
 
-	virtual void Update();
+    virtual float GetValue(InputAction action) const;
+    virtual bool IsPressed(InputAction action, float threshold = 0.5f) const;
+    virtual bool IsReleased(InputAction action, float threshold = 0.5f) const;
+    virtual bool IsHeld(InputAction action, float threshold = 0.5f) const;
+    virtual void ProcessMouse(UINT msg, WPARAM uint, LPARAM lparam) const =0;
+    virtual void ProcessKeyboard(UINT msg, WPARAM uint, LPARAM lparam) const =0;
 
-	virtual float GetValue(InputAction action) const;
-	virtual bool IsPressed(InputAction action, float threshold = 0.5f) const;
-	virtual bool IsReleased(InputAction action, float threshold = 0.5f) const;
-	virtual bool IsHeld(InputAction action, float threshold = 0.5f) const;
-
-	static const unsigned int NumInputActions = static_cast<unsigned int>(NumActions);
+    static const unsigned int NumInputActions = static_cast<unsigned int>(NumActions);
 
 protected:
-	
-	float CurrentState[NumInputActions];
-	float PreviousState[NumInputActions];
-
+    float CurrentState[NumInputActions];
+    float PreviousState[NumInputActions];
 };
-
