@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <unordered_map>
+
 #include "imgui.h"
 #include "EditorWindow.h"
 #include "Logging/BufferSink.h"
@@ -29,4 +31,8 @@ private:
     bool collapse;
     bool showLine;
     ImGuiTextFilter filter;
+    void CacheLogMessages();
+    std::unordered_map<std::string, int> cachedMessageCounts;
+    std::vector<std::pair<std::string, LogMessageData>> cachedOrderedMessages;
+    bool isLocalDirty;
 };
