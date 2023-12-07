@@ -5,15 +5,15 @@ class IShader;
 
 const float MATERIAL_DEFAULT_COLOR = 1.0f;
 
-struct MaterialBufferObject {
+struct MaterialBufferObject
+{
     Vec4 color;
     bool useTex = false;
-    float padding[3]{0,0,0};
+    float padding[3]{0, 0, 0};
 };
 
 class IMaterial
 {
-
 public:
     IMaterial(Vec4 color = MATERIAL_DEFAULT_COLOR);
     virtual ~IMaterial();
@@ -25,6 +25,8 @@ public:
     virtual Vec4 GetColor() { return color; }
     virtual void SetColor(Vec4 value) { color = value; }
     void UpdateMaterialBuffer(MaterialBufferObject* data);
+    virtual bool GetIsSkybox() =0;
+    virtual void SetIsSkyBox(bool val) =0;
 
 protected:
     IShader* shader = {};

@@ -1,16 +1,19 @@
 ﻿#include "EditorCamera.h"
 
+#include "IInput.h"
 #include "PerspectiveCamera.h"
 #include "SceneManager.h"
 #include "Transform3D.h"
 #include "Implementation/Scene.h"
+#include "Logging/Debug.h"
 
-EditorCamera::EditorCamera()
+EditorCamera::EditorCamera(IInput* input)
 {
+    this->input = input;
     transform = std::make_shared<Transform3D>();
-    transform->Position = Vec3(0,0,-12);
+    transform->Position = Vec3(0, 0, -12);
     camera = std::make_shared<PerspectiveCamera>(transform, 1000, 1000);
-    camera-> SetFOV(80);
+    camera->SetFOV(80);
 }
 
 void EditorCamera::SetActiveCamera()
@@ -59,4 +62,12 @@ void EditorCamera::SetWidth(float width)
 void EditorCamera::SetFov(int fov)
 {
     camera->SetFOV(fov);
+}
+
+void EditorCamera::Update()
+{
+    if(input->IsPressed(InputAction::MouseLeft)==1.0f)
+    {
+        //Trace("Pressed")
+    }
 }

@@ -14,7 +14,7 @@ public:
     MeshComponent(std::weak_ptr<GameObject> object);
     MeshComponent(std::weak_ptr<GameObject> object, std::shared_ptr<IMeshRenderable> renderable,
         IMaterial* material);
-
+    void Remove() override;
     std::string GetMeshPath();
 
     IMaterial* GetMaterial() override { return IRenderableComponent::GetMaterial(); }

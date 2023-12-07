@@ -56,12 +56,12 @@ bool Editor::Load()
         EditorSettings::Get("LastScene",
                             Helpers::WideStringToString(
                                 L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/TestScene2.scene")));
-    editorCamera = std::make_shared<EditorCamera>();
+    editorCamera = std::make_shared<EditorCamera>(Input);
     editorCamera->SetActiveCamera();
     imguiController->AddWindow(std::make_shared<EditorCameraWindow>(editorCamera));
     SceneManager::OnSceneChangedEvent.Subscribe([this]()
     {
-        if(auto scene = SceneManager::GetScene().lock())
+        if (auto scene = SceneManager::GetScene().lock())
         {
             scene->SetActiveCamera(editorCamera);
         }
@@ -73,7 +73,7 @@ void Editor::Update()
 {
     game->Update();
     imguiController->ImGuiPreFrame();
-
+    editorCamera->Update();
     imguiController->Draw();
 }
 

@@ -36,7 +36,9 @@ enum InputAction
 
     MouseLeft,
     MouseRight,
-    MouseMiddle
+    MouseMiddle,
+    MouseX,
+    MouseY
 };
 
 class IInput
