@@ -1,14 +1,19 @@
 #include "DirectXInput.h"
+
+#include <iostream>
 #include <math.h>
 
+#include "EngineTime.h"
 #include "Keyboard.h"
 #include "Mouse.h"
+#include "Math/Vector2.h"
 
 DirectXInput::DirectXInput(HWND window) : IInput(), State()
 {
     keyboard = std::make_unique<DirectX::Keyboard>();
     mouse = std::make_unique<DirectX::Mouse>();
     mouse->SetWindow(window);
+    auto state = mouse->GetState();
 }
 
 DirectXInput::~DirectXInput()
@@ -18,11 +23,13 @@ DirectXInput::~DirectXInput()
 void DirectXInput::ProcessMouse(UINT msg, WPARAM wParam, LPARAM lParam) const
 {
     DirectX::Mouse::ProcessMessage(msg, wParam, lParam);
+    mouseDataUpdated = true;
 }
 
 void DirectXInput::ProcessKeyboard(UINT msg, WPARAM wParam, LPARAM lParam) const
 {
     DirectX::Keyboard::ProcessMessage(msg, wParam, lParam);
+    keyboardDataUpdated = true;
 }
 
 void DirectXInput::HandleController()
@@ -58,12 +65,12 @@ void DirectXInput::HandleController()
         State.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER ? 1.0f : 0.0f;
     CurrentState[static_cast<unsigned int>(InputAction::ShoulderButtonRight)] =
         State.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER ? 1.0f : 0.0f;
-    CurrentState[static_cast<unsigned int>(InputAction::SpecialLeft)] = State.Gamepad.wButtons & XINPUT_GAMEPAD_BACK
-                                                                            ? 1.0f
-                                                                            : 0.0f;
-    CurrentState[static_cast<unsigned int>(InputAction::SpecialRight)] = State.Gamepad.wButtons & XINPUT_GAMEPAD_START
-                                                                             ? 1.0f
-                                                                             : 0.0f;
+    // CurrentState[static_cast<unsigned int>(InputAction::SpecialLeft)] = State.Gamepad.wButtons & XINPUT_GAMEPAD_BACK
+    //                                                                         ? 1.0f
+    //                                                                         : 0.0f;
+    // CurrentState[static_cast<unsigned int>(InputAction::SpecialRight)] = State.Gamepad.wButtons & XINPUT_GAMEPAD_START
+    //                                                                          ? 1.0f
+    //                                                                          : 0.0f;
 
     // Triggers
     CurrentState[static_cast<unsigned int>(InputAction::TriggerLeft)] = CalculateTriggerValue(
@@ -84,25 +91,33 @@ void DirectXInput::HandleController()
 
 void DirectXInput::HandleMouse()
 {
+    if (mouse == nullptr)return;
     auto state = mouse->GetState();
     tracker.Update(state);
 
+    // Update button states
+    leftPressed = tracker.leftButton == DirectX::Mouse::ButtonStateTracker::PRESSED;
+    leftHeld = tracker.leftButton == DirectX::Mouse::ButtonStateTracker::HELD;
+    leftReleased = tracker.leftButton == DirectX::Mouse::ButtonStateTracker::RELEASED;
 
-    CurrentState[static_cast<int>(InputAction::MouseLeft)] = tracker.leftButton ==
-                                                             DirectX::Mouse::ButtonStateTracker::PRESSED || tracker.
-                                                             leftButton == DirectX::Mouse::ButtonStateTracker::HELD
-                                                                 ? 1.0f
-                                                                 : 0.0f;
-    CurrentState[static_cast<int>(InputAction::MouseRight)] = tracker.rightButton ==
-                                                              DirectX::Mouse::ButtonStateTracker::PRESSED || tracker.
-                                                              leftButton == DirectX::Mouse::ButtonStateTracker::HELD
-                                                                  ? 1.0f
-                                                                  : 0.0f;
-    CurrentState[static_cast<int>(InputAction::MouseMiddle)] = tracker.middleButton ==
-                                                               DirectX::Mouse::ButtonStateTracker::PRESSED || tracker.
-                                                               leftButton == DirectX::Mouse::ButtonStateTracker::HELD
-                                                                   ? 1.0f
-                                                                   : 0.0f;
+    rightPressed = tracker.rightButton == DirectX::Mouse::ButtonStateTracker::PRESSED;
+    rightHeld = tracker.rightButton == DirectX::Mouse::ButtonStateTracker::HELD;
+    rightReleased = tracker.rightButton == DirectX::Mouse::ButtonStateTracker::RELEASED;
+
+    middlePressed = tracker.middleButton == DirectX::Mouse::ButtonStateTracker::PRESSED;
+    middleHeld = tracker.middleButton == DirectX::Mouse::ButtonStateTracker::HELD;
+    middleReleased = tracker.middleButton == DirectX::Mouse::ButtonStateTracker::RELEASED;
+
+    mouseX = state.x;
+    mouseY = state.y;
+    deltaX = state.x - lastX;
+    deltaY = state.y - lastY;
+
+    lastX = state.x;
+    lastY = state.y;
+
+    std::cout << EngineTime::CurrentFrame() << " Current: " << deltaX << ", " << deltaY << std::endl;
+    //std::cout<< EngineTime::CurrentFrame() <<std::endl;
 }
 
 void DirectXInput::HandleKeyboard()
@@ -111,9 +126,99 @@ void DirectXInput::HandleKeyboard()
 
 void DirectXInput::Update()
 {
+    IInput::Update();
     HandleController();
-    HandleMouse();
-    HandleKeyboard();
+    deltaX=0;
+    deltaY=0;
+    // Hardware polling of devices is massively out of sync with current FPS
+    // so getting bogus delta data if I process mouse updates multiple times between polls.
+    if (DirectXInput::mouseDataUpdated)
+    {
+        HandleMouse();
+        DirectXInput::mouseDataUpdated = false;
+    }
+    if (DirectXInput::keyboardDataUpdated)
+    {
+        HandleKeyboard();
+        DirectXInput::keyboardDataUpdated = false;
+    }
+    
+}
+
+bool DirectXInput::IsLeftPressed() const
+{
+    return leftPressed;
+}
+
+bool DirectXInput::IsLeftHeld() const
+{
+    return leftHeld;
+}
+
+bool DirectXInput::IsLeftReleased() const
+{
+    return leftReleased;
+}
+
+bool DirectXInput::IsRightPressed() const
+{
+    return rightPressed;
+}
+
+bool DirectXInput::IsRightHeld() const
+{
+    return rightHeld;
+}
+
+bool DirectXInput::IsRightReleased() const
+{
+    return rightReleased;
+}
+
+bool DirectXInput::IsMiddlePressed() const
+{
+    return middlePressed;
+}
+
+bool DirectXInput::IsMiddleHeld() const
+{
+    return middleHeld;
+}
+
+bool DirectXInput::IsMiddleReleased() const
+{
+    return middleReleased;
+}
+
+int DirectXInput::GetMouseX() const
+{
+    return mouseX;
+}
+
+int DirectXInput::GetMouseY() const
+{
+    return mouseY;
+}
+
+int DirectXInput::GetDeltaX() const
+{
+    return deltaX;
+}
+
+int DirectXInput::GetDeltaY() const
+{
+    return deltaY;
+}
+
+
+Vec2 DirectXInput::GetMousePosition()
+{
+    return Vec2(mouseX, mouseY);
+}
+
+Vec2 DirectXInput::GetMouseDelta()
+{
+    return Vec2(lastX - mouseX, lastY - mouseY);
 }
 
 float DirectXInput::CalculateTriggerValue(BYTE rawValue, float threshold, float max)

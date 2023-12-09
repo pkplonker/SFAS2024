@@ -33,7 +33,7 @@ public:
 	void RemoveRenderable(const std::shared_ptr<IRenderable>& renderable) override;
 	void PostUpdate() override;
 	bool IsValid() override;
-	bool RenderBucket(RenderingStats& stats, IShader* previousShader, std::map<IMaterial*, std::list<std::shared_ptr<IRenderable>>>::iterator bucket);
+	void RenderBucket(RenderingStats& stats, IShader* previousShader, std::map<IMaterial*, std::list<std::shared_ptr<IRenderable>>>::iterator bucket);
 
 	ITexture* CreateTexture(const wchar_t* filepath) override;
 	IShader* CreateShader(const wchar_t* filepath, const char* vsentry, const char* vsshader, const char* psentry, const char* psshader) override;

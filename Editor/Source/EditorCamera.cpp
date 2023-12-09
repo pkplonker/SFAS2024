@@ -1,4 +1,6 @@
-﻿#include "EditorCamera.h"
+#include "EditorCamera.h"
+
+#include <iostream>
 
 #include "IInput.h"
 #include "PerspectiveCamera.h"
@@ -66,8 +68,15 @@ void EditorCamera::SetFov(int fov)
 
 void EditorCamera::Update()
 {
-    if(input->IsPressed(InputAction::MouseLeft)==1.0f)
+    auto xSpeed = 1.0f;
+    auto ySpeed = 1.0f;
+    auto deltaTime = 0.16f;
+
+    if (input->IsRightHeld())
     {
-        //Trace("Pressed")
+        transform->Rotation = Vec3(transform->Rotation.X() /*+ input->GetDeltaY() * xSpeed * deltaTime*/,
+                                   transform->Rotation.Y() + input->GetDeltaX() * ySpeed * deltaTime,
+                                   transform->Rotation.Z());
+        std::cout << "Setting rot " << input->GetDeltaX() << ":" << input->GetDeltaY() << std::endl;
     }
 }

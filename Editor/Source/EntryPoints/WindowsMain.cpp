@@ -1,7 +1,9 @@
 // The main Windows / DirectX Graphics / XInput entry point for Star Applications
 
+#include <iostream>
 #include <Windows.h>
 
+#include "EngineTime.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 #include "Engine/Implementation/XInput/DirectXInput.h"
 #include "Engine/IRenderable.h"
@@ -87,6 +89,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
         while (msg.message != WM_QUIT && Application->IsValid())
         {
+            EngineTime::Update();
             if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
             {
                 TranslateMessage(&msg);
@@ -144,7 +147,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         case WM_SYSKEYUP:
             ShepherdKeyboardInput(msg, wParam, lParam);
             break;
-        case WM_INPUT:
+        //case WM_INPUT:
         case WM_MOUSEMOVE:
         case WM_LBUTTONDOWN:
         case WM_LBUTTONUP:
@@ -155,7 +158,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         case WM_MOUSEWHEEL:
         case WM_XBUTTONDOWN:
         case WM_XBUTTONUP:
-        case WM_MOUSEHOVER:
+        //case WM_MOUSEHOVER:
             ShepherdMouseInput(msg, wParam, lParam);
             break;
         }

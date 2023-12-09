@@ -217,12 +217,12 @@ DirectX11Graphics::~DirectX11Graphics()
     if (skyDepthState) skyDepthState->Release();
 }
 
-bool DirectX11Graphics::RenderBucket(RenderingStats& stats, IShader* previousShader,
+void DirectX11Graphics::RenderBucket(RenderingStats& stats, IShader* previousShader,
                                      std::map<IMaterial*, std::list<std::shared_ptr<IRenderable>>>::iterator bucket)
 {
     if (bucket->first == nullptr)
     {
-        return false;
+        return;
     }
     bucket->first->GetIsSkybox()
         ? Context->OMSetDepthStencilState(skyDepthState, 1)
@@ -230,7 +230,7 @@ bool DirectX11Graphics::RenderBucket(RenderingStats& stats, IShader* previousSha
 
     if (!bucket->first->Update())
     {
-        return false;
+        return;
     }
     stats.materials++;
 
@@ -266,7 +266,6 @@ bool DirectX11Graphics::RenderBucket(RenderingStats& stats, IShader* previousSha
         Context->OMSetBlendState(BlendState, nullptr, ~0U);
         (*renderable)->Update();
     }
-    return true;
 }
 
 void DirectX11Graphics::Update()
@@ -343,7 +342,7 @@ void DirectX11Graphics::Update()
                 continue;
             }
 
-            if (!RenderBucket(stats, previousShader, bucket)) continue;
+            RenderBucket(stats, previousShader, bucket);
         }
         currentStats = stats;
 
@@ -894,7 +893,7 @@ void DirectX11Graphics::SetMatrixBuffers(const std::weak_ptr<Transform3D> transf
         matrices.mvp = mvp;
         matrices.worldMatrix = world;
         matrices.camForward = camera->GetCameraForward();
-        
+
         if (renderToTexture)
         {
             matrices.screenSize = DirectX::XMFLOAT2(static_cast<float>(texWidth), static_cast<float>(texHeight));

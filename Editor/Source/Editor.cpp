@@ -48,7 +48,7 @@ bool Editor::Load()
 {
     game->Load();
 
-    imguiController = std::make_unique<ImGuiController>(dx11Graphics, game);
+    imguiController = std::make_unique<ImGuiController>(dx11Graphics, game, Input);
     sceneSerializer = std::make_unique<SceneSerializer>(dx11Graphics);
     dx11Graphics->SetRenderToTexture(true, 1, 1);
     ResourceManager::Init(dx11Graphics);

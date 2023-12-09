@@ -15,6 +15,7 @@
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 #include "Logging/BufferSink.h"
 #include "Windows/Hierarchy.h"
+#include "Windows/InputStatsWindow.h"
 #include "Windows/TimeWindow.h"
 #include "Windows/Inspector.h"
 #include "Windows/LoggerWindow.h"
@@ -23,7 +24,7 @@
 
 const std::string IMGUI_SETTING_ID = "IMGUI_WINDOW";
 
-ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) : dx11Graphics(dx11Graphics), game(game)
+ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, IInput* input) : dx11Graphics(dx11Graphics), game(game), input(input)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -52,9 +53,15 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) : 
 
     const std::shared_ptr<RenderStatWindow> drawStats = std::make_shared<RenderStatWindow>();
     renderables.try_emplace(drawStats, EditorSettings::Get(IMGUI_SETTING_ID + drawStats->GetName(), true));
+    
     bufferSink = new BufferSink(1000);
     const std::shared_ptr<LoggerWindow> logger = std::make_shared<LoggerWindow>(bufferSink);
     renderables.try_emplace(logger, EditorSettings::Get(IMGUI_SETTING_ID + logger->GetName(), true));
+
+    const std::shared_ptr<InputStatsWindow> inputWindow = std::make_shared<InputStatsWindow>(input);
+    renderables.try_emplace(inputWindow, EditorSettings::Get(IMGUI_SETTING_ID + inputWindow->GetName(), true));
+
+    
     ImGuiTheme::ApplyTheme(0);
 }
 

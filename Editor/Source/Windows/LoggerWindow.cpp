@@ -15,6 +15,7 @@ LoggerWindow::LoggerWindow(BufferSink* sink) : sink(sink), currentLevel(0), coll
     currentLevel = EditorSettings::Get(CURRENTLEVEL_KEY, 0);
     collapse = EditorSettings::Get(COLLAPSE_KEY, false);
     showLine = EditorSettings::Get(SHOWLINE_KEY, false);
+    isEnabled = EditorSettings::Get(ENABLED_KEY, true);
 }
 
 std::string LoggerWindow::CreateMessageString(const LogMessageData& line) const
@@ -110,8 +111,17 @@ void LoggerWindow::Draw()
     {
         filter.Clear();
     }
+    ImGui::SameLine();
+    if (ImGui::Checkbox("##Enabled", &isEnabled))
+    {
+        EditorSettings::Set(ENABLED_KEY, isEnabled);
+        isLocalDirty = true;
+    }
+    ImGui::SameLine();
+    ImGui::Text("Enabled?");
+    ImGui::SameLine();
 
-    if (sink->IsDirty() || isLocalDirty)
+    if (sink->IsDirty() || isLocalDirty && isEnabled)
     {
         CacheLogMessages();
         sink->ClearDirty();
@@ -119,29 +129,32 @@ void LoggerWindow::Draw()
 
     ImGui::BeginChild("Scrolling", ImVec2(0, 0), true,
                       ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
-
-    for (const auto& message : cachedOrderedMessages)
+    if (isEnabled)
     {
-        if (filter.PassFilter(message.first.c_str()))
+        for (const auto& message : cachedOrderedMessages)
         {
-            if (message.second.level == 2)
+            if (filter.PassFilter(message.first.c_str()))
             {
-                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 0, 1));
-                ImGui::Text("%s (%d)", message.first.c_str(), cachedMessageCounts[message.first]);
-                ImGui::PopStyleColor();
-            }
-            else if (message.second.level == 3)
-            {
-                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 0, 0, 1));
-                ImGui::Text("%s (%d)", message.first.c_str(), cachedMessageCounts[message.first]);
-                ImGui::PopStyleColor();
-            }
-            else
-            {
-                ImGui::Text("%s (%d)", message.first.c_str(), cachedMessageCounts[message.first]);
+                if (message.second.level == 2)
+                {
+                    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 0, 1));
+                    ImGui::Text("%s (%d)", message.first.c_str(), cachedMessageCounts[message.first]);
+                    ImGui::PopStyleColor();
+                }
+                else if (message.second.level == 3)
+                {
+                    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 0, 0, 1));
+                    ImGui::Text("%s (%d)", message.first.c_str(), cachedMessageCounts[message.first]);
+                    ImGui::PopStyleColor();
+                }
+                else
+                {
+                    ImGui::Text("%s (%d)", message.first.c_str(), cachedMessageCounts[message.first]);
+                }
             }
         }
     }
+
 
     ImGui::EndChild();
     ImGui::End();
