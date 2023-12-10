@@ -116,8 +116,8 @@ void DirectXInput::HandleMouse()
     lastX = state.x;
     lastY = state.y;
 
-    std::cout << EngineTime::CurrentFrame() << " Current: " << deltaX << ", " << deltaY << std::endl;
-    //std::cout<< EngineTime::CurrentFrame() <<std::endl;
+    scrollDelta = state.scrollWheelValue - lastScrollValue;
+    lastScrollValue = state.scrollWheelValue;
 }
 
 void DirectXInput::HandleKeyboard()
@@ -128,21 +128,11 @@ void DirectXInput::Update()
 {
     IInput::Update();
     HandleController();
-    deltaX=0;
-    deltaY=0;
-    // Hardware polling of devices is massively out of sync with current FPS
-    // so getting bogus delta data if I process mouse updates multiple times between polls.
-    if (DirectXInput::mouseDataUpdated)
-    {
-        HandleMouse();
-        DirectXInput::mouseDataUpdated = false;
-    }
-    if (DirectXInput::keyboardDataUpdated)
-    {
-        HandleKeyboard();
-        DirectXInput::keyboardDataUpdated = false;
-    }
-    
+    deltaX = 0;
+    deltaY = 0;
+
+    HandleMouse();
+    HandleKeyboard();
 }
 
 bool DirectXInput::IsLeftPressed() const
@@ -219,6 +209,11 @@ Vec2 DirectXInput::GetMousePosition()
 Vec2 DirectXInput::GetMouseDelta()
 {
     return Vec2(lastX - mouseX, lastY - mouseY);
+}
+
+int DirectXInput::GetMouseScrollDelta()
+{
+    return scrollDelta;
 }
 
 float DirectXInput::CalculateTriggerValue(BYTE rawValue, float threshold, float max)

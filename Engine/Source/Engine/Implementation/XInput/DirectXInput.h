@@ -38,13 +38,15 @@ public:
     int GetMouseY() const override;
     int GetDeltaX() const override;
     int GetDeltaY() const override;
-    Vec2 GetMousePosition();
-    Vec2 GetMouseDelta();
-
+    Vec2 GetMousePosition() override;
+    Vec2 GetMouseDelta() override;
+    int GetMouseScrollDelta() override;
 private:
     float CalculateTriggerValue(BYTE rawValue, float threshold = XINPUT_GAMEPAD_TRIGGER_THRESHOLD, float max = 255.0f);
     float CalculateAxisValue(SHORT rawValue, float deadzone, float left = -32768.0f, float right = 32767.0f);
 
+
+private:
     std::unique_ptr<DirectX::Mouse> mouse{};
     std::unique_ptr<DirectX::Keyboard> keyboard{};
     DirectX::Mouse::ButtonStateTracker tracker;
@@ -67,6 +69,8 @@ private:
     int lastY = 0;
     int deltaX = 0;
     int deltaY = 0;
+    int scrollDelta=0;
+    int lastScrollValue=0;
     inline static bool mouseDataUpdated;
     inline static bool keyboardDataUpdated;
 };

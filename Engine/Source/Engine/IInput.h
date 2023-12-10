@@ -67,6 +67,7 @@ public:
     virtual int GetDeltaY() const =0;
     virtual Vec2 GetMousePosition() =0;
     virtual Vec2 GetMouseDelta() =0;
+    virtual int GetMouseScrollDelta() =0;
     static const unsigned int NumInputActions = static_cast<unsigned int>(NumActions);
 
 protected:

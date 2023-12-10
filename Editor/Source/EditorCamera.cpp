@@ -67,11 +67,12 @@ void EditorCamera::SetFov(int fov)
 
 void EditorCamera::Update()
 {
-    auto xRotSpeed = 1.0f;
-    auto yRotSpeed = 1.0f;
-    auto xMoveSpeed = 1.0f;
-    auto yMoveSpeed = 1.0f;
     auto deltaTime = 0.16f;
+
+    DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(
+        DirectX::XMConvertToRadians(transform->Rotation.X()),
+        DirectX::XMConvertToRadians(transform->Rotation.Y()),
+        DirectX::XMConvertToRadians(transform->Rotation.Z()));
 
     if (input->IsRightHeld())
     {
@@ -79,10 +80,29 @@ void EditorCamera::Update()
                                    transform->Rotation.Y() + input->GetDeltaX() * yRotSpeed * deltaTime,
                                    transform->Rotation.Z());
     }
+
+    DirectX::XMFLOAT3 moveVec(0.0f, 0.0f, 0.0f);
+
     if (input->IsMiddleHeld())
     {
-        transform->Position = Vec3(transform->Position.X() + input->GetDeltaX() * -xMoveSpeed * deltaTime,
-                                   transform->Position.Y() + input->GetDeltaY() * yMoveSpeed * deltaTime,
-                                   transform->Position.Z());
+        moveVec.x = input->GetDeltaX() * -xMoveSpeed * deltaTime;
+        moveVec.y = input->GetDeltaY() * yMoveSpeed * deltaTime;
+    }
+
+    int scroll = input->GetMouseScrollDelta();
+    if (scroll != 0)
+    {
+        moveVec.z = scroll * scrollSpeed * deltaTime;
+    }
+
+    if (moveVec.x != 0.0f || moveVec.y != 0.0f || moveVec.z != 0.0f)
+    {
+        DirectX::XMVECTOR moveVecDX = DirectX::XMLoadFloat3(&moveVec);
+        moveVecDX = DirectX::XMVector3TransformNormal(moveVecDX, rotationMatrix);
+        DirectX::XMStoreFloat3(&moveVec, moveVecDX);
+
+        transform->Position = Vec3(transform->Position.X() + moveVec.x,
+                                   transform->Position.Y() + moveVec.y,
+                                   transform->Position.Z() + moveVec.z);
     }
 }
