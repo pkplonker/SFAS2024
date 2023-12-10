@@ -119,7 +119,6 @@ void LoggerWindow::Draw()
     }
     ImGui::SameLine();
     ImGui::Text("Enabled?");
-    ImGui::SameLine();
 
     if (sink->IsDirty() || isLocalDirty && isEnabled)
     {
