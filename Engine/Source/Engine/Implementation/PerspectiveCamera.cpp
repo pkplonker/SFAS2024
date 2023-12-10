@@ -42,7 +42,7 @@ DirectX::XMMATRIX PerspectiveCamera::GetViewProjectionMatrix()
 DirectX::XMVECTOR PerspectiveCamera::GetFocusPoint()
 {
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw( DirectX::XMConvertToRadians(transform->Rotation.X())
-		, DirectX::XMConvertToRadians(transform->Rotation.Y()), 0);
+		, DirectX::XMConvertToRadians(transform->Rotation.Y()), DirectX::XMConvertToRadians(transform->Rotation.Z()));
 	DirectX::XMVECTOR forwardBase = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 	DirectX::XMVECTOR forwardDirection = DirectX::XMVector3TransformCoord(forwardBase, rotationMatrix);
 	return DirectX::XMVectorAdd(GetEyePosition(), forwardDirection);
