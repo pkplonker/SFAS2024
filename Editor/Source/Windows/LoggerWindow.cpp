@@ -68,6 +68,7 @@ void LoggerWindow::CacheLogMessages()
 
 void LoggerWindow::Draw()
 {
+   
     ImGui::Begin("Console");
     ImGui::SameLine();
     ImGui::Text("Collapse:");

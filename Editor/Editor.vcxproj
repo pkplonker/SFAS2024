@@ -254,6 +254,7 @@
     <ClCompile Include="Source\EntryPoints\WindowsMain.cpp" />
     <ClCompile Include="Source\Editor.cpp" />
     <ClCompile Include="Source\Windows\MaterialDrawerHelper.cpp" />
+    <ClCompile Include="Source\Windows\SettingsWindow.cpp" />
     <ClCompile Include="Source\Windows\TimeWindow.cpp" />
     <ClCompile Include="Source\Windows\LoggerWindow.cpp" />
     <ClCompile Include="Source\Windows\MeshImporterWindow.cpp" />
@@ -361,6 +362,7 @@
     <ClInclude Include="Source\Windows\Hierarchy.h" />
     <ClInclude Include="Source\Windows\MaterialDrawerHelper.h" />
     <ClInclude Include="Source\Windows\RenamingHelper.h" />
+    <ClInclude Include="Source\Windows\SettingsWindow.h" />
     <ClInclude Include="Source\Windows\TimeWindow.h" />
     <ClInclude Include="Source\Windows\EditorWindow.h" />
     <ClInclude Include="Source\ImGuiController.h" />

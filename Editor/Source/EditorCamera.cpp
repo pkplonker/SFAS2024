@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "EditorSettings.h"
 #include "IInput.h"
 #include "PerspectiveCamera.h"
 #include "SceneManager.h"
@@ -67,6 +68,11 @@ void EditorCamera::SetFov(int fov)
 
 void EditorCamera::Update()
 {
+    xRotSpeed = EditorSettings::Get("Editor_Cam_XROT_SPEED", 1.0f, "Editor Camera X Rotation Speed", "Editor Camera");
+    yRotSpeed = EditorSettings::Get("Editor_Cam_YROT_SPEED", 1.0f, "Editor Camera Y Rotation Speed", "Editor Camera");
+    xMoveSpeed = EditorSettings::Get("Editor_Cam_XMOVE_SPEED", 1.0f, "Editor Camera X Move Speed", "Editor Camera");
+    yMoveSpeed = EditorSettings::Get("Editor_Cam_YMOVE_SPEED", 1.0f, "Editor Camera Y Move Speed", "Editor Camera");
+    scrollSpeed = EditorSettings::Get("Editor_Cam_ZOOM_SPEED", 1.0f, "Editor Camera Zoom Speed", "Editor Camera");
     auto deltaTime = 0.16f;
 
     DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(

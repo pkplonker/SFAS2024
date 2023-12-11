@@ -21,10 +21,12 @@
 #include "Windows/LoggerWindow.h"
 #include "Windows/MeshImporterWindow.h"
 #include "Windows/RenderStatWindow.h"
+#include "Windows/SettingsWindow.h"
 
 const std::string IMGUI_SETTING_ID = "IMGUI_WINDOW";
 
-ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, IInput* input) : dx11Graphics(dx11Graphics), game(game), input(input)
+ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, IInput* input) :
+    dx11Graphics(dx11Graphics), game(game), input(input)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -53,7 +55,7 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, II
 
     const std::shared_ptr<RenderStatWindow> drawStats = std::make_shared<RenderStatWindow>();
     renderables.try_emplace(drawStats, EditorSettings::Get(IMGUI_SETTING_ID + drawStats->GetName(), true));
-    
+
     bufferSink = new BufferSink(1000);
     const std::shared_ptr<LoggerWindow> logger = std::make_shared<LoggerWindow>(bufferSink);
     renderables.try_emplace(logger, EditorSettings::Get(IMGUI_SETTING_ID + logger->GetName(), true));
@@ -61,8 +63,13 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, II
     const std::shared_ptr<InputStatsWindow> inputWindow = std::make_shared<InputStatsWindow>(input);
     renderables.try_emplace(inputWindow, EditorSettings::Get(IMGUI_SETTING_ID + inputWindow->GetName(), true));
 
-    
+    settingsWindow = new SettingsWindow();
     ImGuiTheme::ApplyTheme(0);
+}
+
+ImGuiController::~ImGuiController()
+{
+    delete settingsWindow;
 }
 
 void ImGuiController::ImGuiPreFrame()
@@ -144,6 +151,10 @@ void ImGuiController::DrawMenu()
             }
             ImGui::EndMenu();
         }
+        if (ImGui::MenuItem("Settings"))
+        {
+            openSettings = true;
+        }
         if (ImGui::BeginMenu("Windows"))
         {
             for (auto& item : renderables)
@@ -168,6 +179,13 @@ void ImGuiController::DrawMenu()
 
         ImGui::EndMainMenuBar();
     }
+
+    if (openSettings)
+    {
+        ImGui::OpenPopup("Settings");
+        openSettings = false;
+    }
+    settingsWindow->Draw();
 }
 
 void ImGuiController::DrawWindows()
