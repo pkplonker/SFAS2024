@@ -14,7 +14,7 @@ CameraComponentDrawer::CameraComponentDrawer(std::weak_ptr<CameraComponent> comp
 {
 }
 
-void CameraComponentDrawer::DrawPerspective(std::shared_ptr<PerspectiveCamera> cam)
+ void CameraComponentDrawer::DrawPerspective(std::shared_ptr<PerspectiveCamera> cam)
 {
     if (ImGui::TreeNodeEx("Perspective Camera Settings", ImGuiTreeNodeFlags_DefaultOpen))
     {
@@ -65,6 +65,58 @@ void CameraComponentDrawer::DrawPerspective(std::shared_ptr<PerspectiveCamera> c
     }
 }
 
+void CameraComponentDrawer::DrawCameraControls(std::shared_ptr<ICamera> camera)
+{
+    if (auto cam = std::dynamic_pointer_cast<PerspectiveCamera>(camera))
+    {
+        DrawPerspective(cam);
+    }
+    else if (auto cam = std::dynamic_pointer_cast<OrthographicCamera>(camera))
+    {
+        if (ImGui::TreeNodeEx("Orthographic Camera Settings", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            if (ImGui::BeginPopupContextItem("OrthographicCameraContext"))
+            {
+                if (ImGui::MenuItem("Reset Near"))
+                {
+                    cam->SetNear();
+                    Trace("Resetting near")
+                }
+                if (ImGui::MenuItem("Reset Far"))
+                {
+                    cam->SetFar();
+                    Trace("Resetting far")
+                }
+                                
+                ImGui::EndPopup();
+            }
+            float newNearZ = cam->GetNear();
+            if (ImGui::DragFloat("Near Plane", &newNearZ, 1.0f, 1))
+            {
+                if (newNearZ > 0)
+                {
+                    cam->SetNear(newNearZ);
+                }
+            }
+
+            float newFarZ = cam->GetFar();
+            if (ImGui::DragFloat("Far Plane", &newFarZ, 1.0f, 1))
+            {
+                if (newFarZ > newNearZ)
+                {
+                    cam->SetFar(newFarZ);
+                }
+            }
+
+            ImGui::TreePop();
+        }
+    }
+    else
+    {
+        ImGui::Text("No camera attached");
+    }
+}
+
 void CameraComponentDrawer::Draw()
 {
     if (std::shared_ptr<IComponent> sharedComponent = component.lock())
@@ -89,54 +141,7 @@ void CameraComponentDrawer::Draw()
 
                 if (auto camera = cameraComponent->GetCamera())
                 {
-                    if (auto cam = std::dynamic_pointer_cast<PerspectiveCamera>(camera))
-                    {
-                        DrawPerspective(cam);
-                    }
-                    else if (auto cam = std::dynamic_pointer_cast<OrthographicCamera>(camera))
-                    {
-                        if (ImGui::TreeNodeEx("Orthographic Camera Settings", ImGuiTreeNodeFlags_DefaultOpen))
-                        {
-                            if (ImGui::BeginPopupContextItem("OrthographicCameraContext"))
-                            {
-                                if (ImGui::MenuItem("Reset Near"))
-                                {
-                                    cam->SetNear();
-                                    Trace("Resetting near")
-                                }
-                                if (ImGui::MenuItem("Reset Far"))
-                                {
-                                    cam->SetFar();
-                                    Trace("Resetting far")
-                                }
-                                
-                                ImGui::EndPopup();
-                            }
-                            float newNearZ = cam->GetNear();
-                            if (ImGui::DragFloat("Near Plane", &newNearZ, 1.0f, 1))
-                            {
-                                if (newNearZ > 0)
-                                {
-                                    cam->SetNear(newNearZ);
-                                }
-                            }
-
-                            float newFarZ = cam->GetFar();
-                            if (ImGui::DragFloat("Far Plane", &newFarZ, 1.0f, 1))
-                            {
-                                if (newFarZ > newNearZ)
-                                {
-                                    cam->SetFar(newFarZ);
-                                }
-                            }
-
-                            ImGui::TreePop();
-                        }
-                    }
-                    else
-                    {
-                        ImGui::Text("No camera attached");
-                    }
+                    DrawCameraControls(camera);
                 }
             }
         }

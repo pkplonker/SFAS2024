@@ -12,9 +12,9 @@
 #include "../FileDialog.h"
 #include "../Editor.h"
 #include "../MessageBoxWrapper.h"
+
 MaterialDrawerHelper::MaterialDrawerHelper(std::weak_ptr<IRenderableComponent> component) : component(component)
 {
-    
 }
 
 void MaterialDrawerHelper::DrawMaterial()
@@ -50,6 +50,11 @@ void MaterialDrawerHelper::DrawMaterial()
             if (ImGui::ColorEdit4("", reinterpret_cast<float*>(&color), ImGuiColorEditFlags_Float))
             {
                 mat->SetColor(color);
+            }
+            auto sb = mat->GetIsSkybox();
+            if (ImGui::Checkbox("Is Skybox", &sb))
+            {
+                mat->SetIsSkyBox(sb);
             }
         }
         else

@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <string>
 
-#include "ImGuiWindow.h"
+#include "EditorWindow.h"
 
 class Mesh;
 

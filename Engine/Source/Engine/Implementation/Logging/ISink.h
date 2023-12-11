@@ -9,6 +9,11 @@ public:
     bool GetShowLine();
     void SetShowLine(bool value);
     static std::string BeautifyLogLevel(LogLevel level);
+    virtual bool IsDirty() { return true; }
+
+    virtual void ClearDirty()
+    {
+    }
 
 protected:
     bool showLineInfo = true;

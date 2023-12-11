@@ -63,6 +63,8 @@ nlohmann::json SceneSerializer::SerializeMaterial(const std::shared_ptr<IRendera
         serializedData["color"]["g"] = color.Y();
         serializedData["color"]["b"] = color.Z();
         serializedData["color"]["a"] = color.W();
+        serializedData["skybox"] = material->GetIsSkybox();
+
     }
     return serializedData;
 }
@@ -286,6 +288,10 @@ IMaterial* SceneSerializer::DeserializeMaterial(const nlohmann::json& data, std:
                                 static_cast<float>(data["color"]["b"]),
                                 static_cast<float>(data["color"]["a"]))
         );
+    }
+    if (data.contains("skybox"))
+    {
+        material->SetIsSkyBox(data["skybox"]);
     }
     return material;
 }

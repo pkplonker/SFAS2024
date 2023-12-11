@@ -56,7 +56,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	msg.message = WM_NULL;
 	msg.wParam = -1;
 	IGraphics* Graphics = new DirectX11Graphics(hwnd);
-	IInput* Input = new DirectXInput();
+	IInput* Input = new DirectXInput(hwnd);
 	IApplication* Application = GetApplication(Graphics, Input);
 	if (Graphics && Graphics->IsValid() && Application)
 	{

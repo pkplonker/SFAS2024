@@ -30,3 +30,4 @@ bool IInput::IsHeld(InputAction action, float threshold) const
 {
     return abs(CurrentState[static_cast<unsigned int>(action)]) > threshold && abs(PreviousState[static_cast<unsigned int>(action)]) > threshold;
 }
+

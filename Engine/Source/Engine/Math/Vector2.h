@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <DirectXMath.h>
 
+#include "Implementation/XInput/DirectXInput.h"
+
 namespace dx = DirectX;
 
 struct Vec2
@@ -61,6 +63,15 @@ struct Vec2
     bool operator==(const Vec2& vec2) const
     {
         return X() == vec2.X() && Y() == vec2.Y();
+    }
+
+    Vec2 operator-(const Vec2& other) const
+    {
+        return Vec2(this->X()-other.X(), this->Y()-other.Y());
+    }
+    Vec2 operator+(const Vec2& other) const
+    {
+        return Vec2(this->X()+other.X(), this->Y()+other.Y());
     }
 
 private:

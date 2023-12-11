@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "EditorCamera.h"
 #include "Game.h"
 #include "imgui.h"
 #include "SceneSerializer.h"
@@ -44,4 +45,5 @@ private:
 	inline static ImVec2 gameViewportSize ={};
 	inline static std::unique_ptr<ImGuiController> imguiController ={};
 	inline static std::unique_ptr<SceneSerializer> sceneSerializer ={};
+	std::shared_ptr<EditorCamera> editorCamera;
 };
