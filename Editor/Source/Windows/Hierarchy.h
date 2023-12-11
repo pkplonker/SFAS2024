@@ -2,7 +2,7 @@
 #include <memory>
 
 #include "ComponentDrawerFactory.h"
-#include "ImGuiWindow.h"
+#include "EditorWindow.h"
 #include "RenamingHelper.h"
 class GameObject;
 class Scene;

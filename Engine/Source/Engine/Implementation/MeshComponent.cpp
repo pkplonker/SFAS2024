@@ -13,6 +13,15 @@ MeshComponent::MeshComponent(std::weak_ptr<GameObject> object, std::shared_ptr<I
 {
 }
 
+void MeshComponent::Remove()
+{
+    IRenderableComponent::Remove();
+    if (auto scene = SceneManager::GetScene().lock())
+    {
+        scene->RemoveRenderable(renderable);
+    }
+}
+
 std::string MeshComponent::GetMeshPath()
 {
     if (renderable)

@@ -10,5 +10,6 @@ public:
 	IComponent(std::weak_ptr<GameObject> object);
 	virtual ~IComponent() = default;
 	std::weak_ptr<GameObject> GetGameObject();
+	virtual void Remove();
 	std::weak_ptr<GameObject> gameObject;
 };

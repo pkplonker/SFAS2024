@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ImGuiWindow.h"
+#include "EditorWindow.h"
 
 const std::string TIME_WINDOW = "Time";
 

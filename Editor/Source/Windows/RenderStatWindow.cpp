@@ -22,7 +22,6 @@ void RenderStatWindow::Draw()
     ImGui::Text("Screen Size: %u x %u", stats.width, stats.height);
     ImGui::Text("Viewport Size: %u x %u", stats.viewportWidth, stats.viewportHeight);
     ImGui::End();
-
 }
 
 std::string RenderStatWindow::GetName()

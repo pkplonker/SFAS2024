@@ -2,7 +2,7 @@
 #include <memory>
 
 #include "ComponentDrawerFactory.h"
-#include "ImGuiWindow.h"
+#include "EditorWindow.h"
 #include "RenamingHelper.h"
 #include "Engine/Math/Vector3.h"
 class Hierarchy;

@@ -1,7 +1,9 @@
 ﻿#pragma once
 
+#include <unordered_map>
+
 #include "imgui.h"
-#include "ImGuiWindow.h"
+#include "EditorWindow.h"
 #include "Logging/BufferSink.h"
 #include "Logging/Debug.h"
 
@@ -12,6 +14,7 @@ const std::string LOGGER = "Console";
 const std::string CURRENTLEVEL_KEY = "CURRENTLEVEL_KEY";
 const std::string COLLAPSE_KEY = "COLLAPSE_KEY";
 const std::string SHOWLINE_KEY = "SHOWLINE_KEY";
+const std::string ENABLED_KEY = "ENABLED_KEY";
 
 class LoggerWindow : public EditorWindow
 {
@@ -29,4 +32,9 @@ private:
     bool collapse;
     bool showLine;
     ImGuiTextFilter filter;
+    bool isEnabled;
+    void CacheLogMessages();
+    std::unordered_map<std::string, int> cachedMessageCounts;
+    std::vector<std::pair<std::string, LogMessageData>> cachedOrderedMessages;
+    bool isLocalDirty;
 };

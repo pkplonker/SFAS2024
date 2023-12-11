@@ -8,3 +8,7 @@ std::weak_ptr<GameObject> IComponent::GetGameObject()
 {
 	return gameObject;
 }
+
+void IComponent::Remove()
+{
+}

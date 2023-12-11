@@ -1,18 +1,18 @@
-﻿#include "PerspectiveCamera.h"
+#include "PerspectiveCamera.h"
 
 #include "Engine/Implementation/Transform3D.h"
 
-PerspectiveCamera::PerspectiveCamera(std::shared_ptr<Transform3D> transform, float width, float height, float near,
-	float far, float FOV) : transform(transform), nearZ(near),
-	farZ(far), width(width), height(height), FOV(FOV),
+PerspectiveCamera::PerspectiveCamera(std::shared_ptr<Transform3D> transform, float width, float height, float nearZ,
+	float farZ, float FOV) : transform(transform), nearZ(nearZ),
+	farZ(farZ), width(width), height(height), FOV(FOV),
 	view(DirectX::XMMatrixIdentity()),
 	projection(DirectX::XMMatrixIdentity()),
 	vpMatrix(DirectX::XMMatrixIdentity())
 {
 }
-PerspectiveCamera::PerspectiveCamera( float width, float height, float near,
-	float far, float FOV) : nearZ(near),
-	farZ(far), width(width), height(height), FOV(FOV),
+PerspectiveCamera::PerspectiveCamera( float width, float height, float nearZ,
+	float farZ, float FOV) : nearZ(nearZ),
+	farZ(farZ), width(width), height(height), FOV(FOV),
 	view(DirectX::XMMatrixIdentity()),
 	projection(DirectX::XMMatrixIdentity()),
 	vpMatrix(DirectX::XMMatrixIdentity())
@@ -44,7 +44,7 @@ DirectX::XMVECTOR PerspectiveCamera::GetFocusPoint()
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw( DirectX::XMConvertToRadians(transform->Rotation.X())
 		, DirectX::XMConvertToRadians(transform->Rotation.Y()), DirectX::XMConvertToRadians(transform->Rotation.Z()));
 	DirectX::XMVECTOR forwardBase = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
-	DirectX::XMVECTOR forwardDirection = DirectX::XMVector3TransformNormal(forwardBase, rotationMatrix);
+	DirectX::XMVECTOR forwardDirection = DirectX::XMVector3TransformCoord(forwardBase, rotationMatrix);
 	return DirectX::XMVectorAdd(GetEyePosition(), forwardDirection);
 }
 
@@ -60,7 +60,7 @@ DirectX::XMVECTOR PerspectiveCamera::GetUpDirection()
 
 	DirectX::XMVECTOR upBase = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
-	return DirectX::XMVector3TransformNormal(upBase, rotationMatrix);
+	return DirectX::XMVector3TransformCoord(upBase, rotationMatrix);
 }
 
 void PerspectiveCamera::SetHeight(float height)
@@ -73,14 +73,14 @@ void PerspectiveCamera::SetWidth(float width)
 	this->width = width;
 }
 
-void PerspectiveCamera::SetNear(float near)
+void PerspectiveCamera::SetNear(float newNear)
 {
-	this->nearZ = near;
+	this->nearZ = newNear;
 }
 
-void PerspectiveCamera::SetFar(float far)
+void PerspectiveCamera::SetFar(float newFar)
 {
-	this->farZ = far;
+	this->farZ = newFar;
 }
 
 void PerspectiveCamera::SetFOV(float fov)

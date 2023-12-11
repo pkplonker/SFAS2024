@@ -1,5 +1,6 @@
 #include "Editor.h"
 
+#include "EditorCamera.h"
 #include "EditorSettings.h"
 #include "Helpers.h"
 #include "Engine/IGraphics.h"
@@ -8,8 +9,11 @@
 #include "Engine/ResourceManager.h"
 #include "ImGuiController.h"
 #include "MeshImporter.h"
+#include "SceneManager.h"
 #include "SceneSerializer.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
+#include "Windows/EditorCameraWindow.h"
+#include "Windows/EditorWindow.h"
 
 #define CLAMP(v, x, y) fmin(fmax(v, x), y)
 
@@ -44,21 +48,32 @@ bool Editor::Load()
 {
     game->Load();
 
-    imguiController = std::make_unique<ImGuiController>(dx11Graphics, game);
+    imguiController = std::make_unique<ImGuiController>(dx11Graphics, game, Input);
     sceneSerializer = std::make_unique<SceneSerializer>(dx11Graphics);
     dx11Graphics->SetRenderToTexture(true, 1, 1);
     ResourceManager::Init(dx11Graphics);
     imguiController->LoadScene(
-        EditorSettings::Get("LastScene", Helpers::WideStringToString(L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/TestScene2.scene")));
+        EditorSettings::Get("LastScene",
+                            Helpers::WideStringToString(
+                                L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/TestScene2.scene")));
+    editorCamera = std::make_shared<EditorCamera>(Input);
+    editorCamera->SetActiveCamera();
+    imguiController->AddWindow(std::make_shared<EditorCameraWindow>(editorCamera));
+    SceneManager::OnSceneChangedEvent.Subscribe([this]()
+    {
+        if (auto scene = SceneManager::GetScene().lock())
+        {
+            scene->SetActiveCamera(editorCamera);
+        }
+    });
     return true;
 }
 
 void Editor::Update()
 {
     game->Update();
-
     imguiController->ImGuiPreFrame();
-
+    editorCamera->Update();
     imguiController->Draw();
 }
 

@@ -7,9 +7,18 @@
 
 void Debug::Log(LogLevel level, const char* file, int line, const std::string& message)
 {
-    for (auto sink : sinks)
+    try
     {
-        sink->Log(level, file, line, message);
+        if(sinks.size()==0)return;
+        for (auto sink : sinks)
+        {
+            if (sink == nullptr) continue;
+
+            sink->Log(level, file, line, message);
+        }
+    }
+    catch (...)
+    {
     }
 }
 

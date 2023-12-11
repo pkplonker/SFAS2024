@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "../IComponent.h"
 #include "Engine/IUpdateable.h"
 
 #include "Transform3D.h"
@@ -41,6 +42,8 @@ public:
 		const auto index = std::find(components->begin(), components->end(), baseComponent);
 		if (index != components->end())
 		{
+			(*index)->Remove();
+
 			components->erase(index);
 			return true;
 		}

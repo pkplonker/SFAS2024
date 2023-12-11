@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\EditorCamera.cpp" />
     <ClCompile Include="Source\EditorSettings.cpp" />
     <ClCompile Include="Source\FileDialog.cpp" />
     <ClCompile Include="Source\MeshImporter.cpp" />
@@ -162,9 +163,84 @@
     <ClCompile Include="Source\Windows\CameraComponentDrawer.cpp" />
     <ClCompile Include="Source\Windows\ComponentDrawer.cpp" />
     <ClCompile Include="Source\Windows\ComponentDrawerFactory.cpp" />
+    <ClCompile Include="Source\Windows\EditorCameraWindow.cpp" />
+    <ClCompile Include="Source\Windows\InputStatsWindow.cpp">
+      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>Debug\Editor\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>Debug\Editor\</BrowseInformationFile>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>true</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFuzzer>false</EnableFuzzer>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>Debug\Editor\</ModuleDependenciesFile>
+      <ModuleOutputFile>Debug\Editor\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ObjectFileName>Debug\Editor\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>Debug\Editor\vc143.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>Debug\Editor\Editor.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>Debug\Editor\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TrackerLogDirectory>Debug\Editor\Editor.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <XMLDocumentationFileName>Debug\Editor\</XMLDocumentationFileName>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <PreprocessorDefinitions>HAS_DIRECTXTK;HAS_DIRECTXTK;USING_XAUDIO2_REDIST;_MBCS;</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\packages\directxtk_desktop_2019.2023.10.31.1\build\native\..\..\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\directxtk_desktop_2019.2023.9.6.1\build\native\..\..\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\\Star\Source\Game;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\\Engine\Source;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\Packages\ImGui\backends;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\Packages\ImGui;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\Packages\assimp;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\Packages\nlohmann;;S:\Users\pkplo\Downloads\vcpkg\installed\x64-windows\include</AdditionalIncludeDirectories>
+      <LinkCompiled>true</LinkCompiled>
+    </ClCompile>
     <ClCompile Include="Source\Windows\Inspector.cpp" />
     <ClCompile Include="Source\Windows\Hierarchy.cpp" />
-    <ClCompile Include="Source\Windows\ImGuiWindow.cpp" />
+    <ClCompile Include="Source\Windows\EditorWindow.cpp" />
     <ClCompile Include="Source\ImGuiController.cpp" />
     <ClCompile Include="Packages\ImGui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="Packages\ImGui\backends\imgui_impl_win32.cpp" />
@@ -178,6 +254,7 @@
     <ClCompile Include="Source\EntryPoints\WindowsMain.cpp" />
     <ClCompile Include="Source\Editor.cpp" />
     <ClCompile Include="Source\Windows\MaterialDrawerHelper.cpp" />
+    <ClCompile Include="Source\Windows\SettingsWindow.cpp" />
     <ClCompile Include="Source\Windows\TimeWindow.cpp" />
     <ClCompile Include="Source\Windows\LoggerWindow.cpp" />
     <ClCompile Include="Source\Windows\MeshImporterWindow.cpp" />
@@ -269,6 +346,7 @@
     <ClInclude Include="Packages\assimp\XmlParser.h" />
     <ClInclude Include="Packages\assimp\XMLTools.h" />
     <ClInclude Include="Packages\assimp\ZipArchiveIOSystem.h" />
+    <ClInclude Include="Source\EditorCamera.h" />
     <ClInclude Include="Source\EditorSettings.h" />
     <ClInclude Include="Source\FileDialog.h" />
     <ClInclude Include="Source\ImGuiHelpers.h" />
@@ -278,12 +356,15 @@
     <ClInclude Include="Source\Windows\CameraComponentDrawer.h" />
     <ClInclude Include="Source\Windows\ComponentDrawer.h" />
     <ClInclude Include="Source\Windows\ComponentDrawerFactory.h" />
+    <ClInclude Include="Source\Windows\EditorCameraWindow.h" />
+    <ClInclude Include="Source\Windows\InputStatsWindow.h" />
     <ClInclude Include="Source\Windows\Inspector.h" />
     <ClInclude Include="Source\Windows\Hierarchy.h" />
     <ClInclude Include="Source\Windows\MaterialDrawerHelper.h" />
     <ClInclude Include="Source\Windows\RenamingHelper.h" />
+    <ClInclude Include="Source\Windows\SettingsWindow.h" />
     <ClInclude Include="Source\Windows\TimeWindow.h" />
-    <ClInclude Include="Source\Windows\ImGuiWindow.h" />
+    <ClInclude Include="Source\Windows\EditorWindow.h" />
     <ClInclude Include="Source\ImGuiController.h" />
     <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\Audio.h" />
     <ClInclude Include="Packages\directxtk_desktop_2019.2023.9.6.1\include\BufferHelpers.h" />

@@ -15,15 +15,18 @@
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 #include "Logging/BufferSink.h"
 #include "Windows/Hierarchy.h"
+#include "Windows/InputStatsWindow.h"
 #include "Windows/TimeWindow.h"
 #include "Windows/Inspector.h"
 #include "Windows/LoggerWindow.h"
 #include "Windows/MeshImporterWindow.h"
 #include "Windows/RenderStatWindow.h"
+#include "Windows/SettingsWindow.h"
 
 const std::string IMGUI_SETTING_ID = "IMGUI_WINDOW";
 
-ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) : dx11Graphics(dx11Graphics), game(game)
+ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, IInput* input) :
+    dx11Graphics(dx11Graphics), game(game), input(input)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -53,9 +56,20 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game) : 
     const std::shared_ptr<RenderStatWindow> drawStats = std::make_shared<RenderStatWindow>();
     renderables.try_emplace(drawStats, EditorSettings::Get(IMGUI_SETTING_ID + drawStats->GetName(), true));
 
-    const std::shared_ptr<LoggerWindow> logger = std::make_shared<LoggerWindow>(new BufferSink(1000));
+    bufferSink = new BufferSink(1000);
+    const std::shared_ptr<LoggerWindow> logger = std::make_shared<LoggerWindow>(bufferSink);
     renderables.try_emplace(logger, EditorSettings::Get(IMGUI_SETTING_ID + logger->GetName(), true));
+
+    const std::shared_ptr<InputStatsWindow> inputWindow = std::make_shared<InputStatsWindow>(input);
+    renderables.try_emplace(inputWindow, EditorSettings::Get(IMGUI_SETTING_ID + inputWindow->GetName(), true));
+
+    settingsWindow = new SettingsWindow();
     ImGuiTheme::ApplyTheme(0);
+}
+
+ImGuiController::~ImGuiController()
+{
+    delete settingsWindow;
 }
 
 void ImGuiController::ImGuiPreFrame()
@@ -77,6 +91,11 @@ void ImGuiController::DrawViewport()
                         static_cast<float>(dx11Graphics->GetTextureHeight())));
     gameViewportSize = ImGui::GetWindowSize();
     ImGui::End();
+}
+
+void ImGuiController::AddWindow(const std::shared_ptr<EditorWindow>& shared)
+{
+    renderables.try_emplace(shared, EditorSettings::Get(IMGUI_SETTING_ID + shared->GetName(), true));
 }
 
 
@@ -132,6 +151,10 @@ void ImGuiController::DrawMenu()
             }
             ImGui::EndMenu();
         }
+        if (ImGui::MenuItem("Settings"))
+        {
+            openSettings = true;
+        }
         if (ImGui::BeginMenu("Windows"))
         {
             for (auto& item : renderables)
@@ -156,6 +179,13 @@ void ImGuiController::DrawMenu()
 
         ImGui::EndMainMenuBar();
     }
+
+    if (openSettings)
+    {
+        ImGui::OpenPopup("Settings");
+        openSettings = false;
+    }
+    settingsWindow->Draw();
 }
 
 void ImGuiController::DrawWindows()
@@ -199,6 +229,8 @@ void ImGuiController::ShutDown()
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
+    Debug::DeregisterSink(bufferSink);
+    delete bufferSink;
 }
 
 void ImGuiController::Resize(int width, int height)
@@ -209,5 +241,4 @@ void ImGuiController::Resize(int width, int height)
     float y = static_cast<float>(rect.bottom - rect.top);
     ImGui::GetIO().DisplaySize = ImVec2(x, y);
     Trace(std::to_string(x) + ":" + std::to_string(y))
-    //ImGui::GetIO().DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
 }

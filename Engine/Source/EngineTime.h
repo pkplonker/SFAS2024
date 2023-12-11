@@ -42,7 +42,12 @@ public:
             init = true;
         }
     }
-    
+
+    static void Update()
+    {
+        frames++;
+    }
+
 
     static std::string GetCurrentTime()
     {
@@ -57,7 +62,10 @@ public:
         return oss.str();
     }
 
+    inline static unsigned long long CurrentFrame() { return frames; }
+
 private:
     static inline std::chrono::steady_clock::time_point startTime;
-    static inline bool init = false;;
+    static inline bool init = false;
+    static inline unsigned long long frames = 0;
 };

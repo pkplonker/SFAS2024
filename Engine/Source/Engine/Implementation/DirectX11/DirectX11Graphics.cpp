@@ -1,5 +1,7 @@
 #include "DirectX11Graphics.h"
 
+#include <algorithm>
+
 #include "DirectX11Billboard.h"
 #include "DirectX11Shader.h"
 #include "DirectX11Texture.h"
@@ -22,7 +24,8 @@ struct
 {
     DirectX::XMMATRIX mvp;
     DirectX::XMMATRIX worldMatrix;
-    DirectX::XMFLOAT3 cameraPosition;
+    DirectX::XMFLOAT3 camForward;
+    DirectX::XMFLOAT2 screenSize;
 } matrices;
 
 DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
@@ -143,8 +146,12 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         depthStencildesc.DepthEnable = true;
         depthStencildesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
         depthStencildesc.DepthFunc = D3D11_COMPARISON_LESS;
-        ID3D11DepthStencilState* depthState;
         Device->CreateDepthStencilState(&depthStencildesc, &depthState);
+
+        depthStencildesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+        depthStencildesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+        Device->CreateDepthStencilState(&depthStencildesc, &skyDepthState);
+
         Context->OMSetDepthStencilState(depthState, 1u);
 
         ID3D11Texture2D* depthStencil;
@@ -206,6 +213,59 @@ DirectX11Graphics::~DirectX11Graphics()
     if (renderTargetTexture) renderTargetTexture->Release();
     if (renderTargetView) renderTargetView->Release();
     if (shaderResourceView) shaderResourceView->Release();
+    if (depthState) depthState->Release();
+    if (skyDepthState) skyDepthState->Release();
+}
+
+void DirectX11Graphics::RenderBucket(RenderingStats& stats, IShader* previousShader,
+                                     std::map<IMaterial*, std::list<std::shared_ptr<IRenderable>>>::iterator bucket)
+{
+    if (bucket->first == nullptr)
+    {
+        return;
+    }
+    bucket->first->GetIsSkybox()
+        ? Context->OMSetDepthStencilState(skyDepthState, 1)
+        : Context->OMSetDepthStencilState(depthState, 1);
+
+    if (!bucket->first->Update())
+    {
+        return;
+    }
+    stats.materials++;
+
+    for (auto renderable = bucket->second.begin(); renderable != bucket->second.end(); ++renderable)
+    {
+        auto currentShader = bucket->first->GetShader();
+        if (currentShader != previousShader)
+        {
+            previousShader = currentShader;
+            stats.shaders++;
+        }
+        const auto renderObject = renderable->get();
+
+        if (renderObject == nullptr)
+        {
+            continue;
+        }
+        stats.tris += renderObject->GetTriangles();
+        stats.verts += renderObject->GetVerts();
+        stats.drawCalls++;
+        {
+            // Currently setting the material buffer per object, which is no doubt inefficient. This likely needs splitting to be grouped, shader->texture->material values?
+            D3D11_MAPPED_SUBRESOURCE mappedResource;
+            Context->Map(materialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+            auto* data = static_cast<MaterialBufferObject*>(mappedResource.pData);
+            bucket->first->UpdateMaterialBuffer(data);
+            Context->Unmap(materialBuffer, 0);
+            Context->PSSetConstantBuffers(1, 1, &materialBuffer);
+            Context->VSSetConstantBuffers(1, 1, &materialBuffer);
+        }
+        const std::weak_ptr<Transform3D> transform = (*renderable)->GetTransform();
+        SetMatrixBuffers(transform);
+        Context->OMSetBlendState(BlendState, nullptr, ~0U);
+        (*renderable)->Update();
+    }
 }
 
 void DirectX11Graphics::Update()
@@ -221,6 +281,7 @@ void DirectX11Graphics::Update()
             ++it;
         }
     }
+
     if (Context && SwapChain)
     {
         ID3D11RenderTargetView* activeRenderTarget = renderToTexture ? renderTargetView : BackbufferView;
@@ -262,54 +323,26 @@ void DirectX11Graphics::Update()
         stats.viewportWidth = texWidth;
         stats.viewportHeight = texHeight;
         IShader* previousShader = nullptr;
+
         for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
         {
-            if (bucket->first == nullptr)
+            if (bucket->first == nullptr || !bucket->first->GetIsSkybox())
             {
-                Warning("Skipping bucket as material is nullptr")
                 continue;
             }
-            if (!bucket->first->Update())
+
+            Context->OMSetDepthStencilState(skyDepthState, 1);
+
+            RenderBucket(stats, previousShader, bucket);
+        }
+        for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
+        {
+            if (bucket->first == nullptr || bucket->first->GetIsSkybox())
             {
-                Warning("Skipping bucket as material shader is nullptr")
                 continue;
             }
-            stats.materials++;
 
-            for (auto renderable = bucket->second.begin(); renderable != bucket->second.end(); ++renderable)
-            {
-                auto currentShader = bucket->first->GetShader();
-                if (currentShader != previousShader)
-                {
-                    previousShader = currentShader;
-                    stats.shaders++;
-                }
-                const auto renderObject = renderable->get();
-
-                if (renderObject == nullptr)
-                {
-                    Warning("Detected null renderable")
-                    continue;
-                }
-
-                stats.tris += renderObject->GetTriangles();
-                stats.verts += renderObject->GetVerts();
-                stats.drawCalls++;
-                {
-                    // Currently setting the material buffer per object, which is no doubt inefficient. This likely needs splitting to be grouped, shader->texture->material values?
-                    D3D11_MAPPED_SUBRESOURCE mappedResource;
-                    Context->Map(materialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-                    auto* data = static_cast<MaterialBufferObject*>(mappedResource.pData);
-                    bucket->first->UpdateMaterialBuffer(data);
-                    Context->Unmap(materialBuffer, 0);
-                    Context->PSSetConstantBuffers(1, 1, &materialBuffer);
-                    Context->VSSetConstantBuffers(1, 1, &materialBuffer);
-                }
-                const std::weak_ptr<Transform3D> transform = (*renderable)->GetTransform();
-                SetMatrixBuffers(transform);
-                Context->OMSetBlendState(BlendState, nullptr, ~0U);
-                (*renderable)->Update();
-            }
+            RenderBucket(stats, previousShader, bucket);
         }
         currentStats = stats;
 
@@ -856,12 +889,19 @@ void DirectX11Graphics::SetMatrixBuffers(const std::weak_ptr<Transform3D> transf
         world = DirectX::XMMatrixTranspose(world);
         mvp = DirectX::XMMatrixTranspose(mvp);
 
-        auto camPos = camera->GetTransform()->Position;
 
         matrices.mvp = mvp;
         matrices.worldMatrix = world;
-        matrices.cameraPosition = DirectX::XMFLOAT3(camPos.X(), camPos.Y(), camPos.Z());
+        matrices.camForward = camera->GetCameraForward();
 
+        if (renderToTexture)
+        {
+            matrices.screenSize = DirectX::XMFLOAT2(static_cast<float>(texWidth), static_cast<float>(texHeight));
+        }
+        else
+        {
+            matrices.screenSize = DirectX::XMFLOAT2(static_cast<float>(width), static_cast<float>(height));
+        }
         Context->UpdateSubresource(Mvp, 0, 0, &matrices, 0, 0);
         Context->VSSetConstantBuffers(0, 1, &Mvp);
     }

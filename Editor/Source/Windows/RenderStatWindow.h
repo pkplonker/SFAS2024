@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <string>
 
-#include "ImGuiWindow.h"
+#include "EditorWindow.h"
 
 const std::string RENDER_STAT = "Render Stats";
 
