@@ -29,9 +29,9 @@ IInput* Input;
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     auto consoleSink = new ConsoleSink();
-    //auto fileSink = new FileSink("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/log.log");
+    auto fileSink = new FileSink("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/log.log");
     Debug::RegisterSink(consoleSink);
-    //Debug::RegisterSink(fileSink);
+    Debug::RegisterSink(fileSink);
 
     Trace("Creating winman")
     WNDCLASSEX wc;
