@@ -43,11 +43,21 @@ public:
         }
     }
 
-    static void Update()
-    {
+    static void Update() {
+        auto now = std::chrono::steady_clock::now();
+        deltaTime = std::chrono::duration<double, std::milli>(now - lastFrameTime).count() / 1000.0;
+        lastFrameTime = now;
+
         frames++;
     }
 
+    static double GetDeltaTime() {
+        return deltaTime;
+    }
+
+    static unsigned int GetFPS() {
+        return deltaTime > 0 ? 1.0 / deltaTime : 0.0;
+    }
 
     static std::string GetCurrentTime()
     {
@@ -66,6 +76,9 @@ public:
 
 private:
     static inline std::chrono::steady_clock::time_point startTime;
+    static inline std::chrono::steady_clock::time_point lastFrameTime;
+
     static inline bool init = false;
     static inline unsigned long long frames = 0;
+    static inline double deltaTime = 0.0;
 };
