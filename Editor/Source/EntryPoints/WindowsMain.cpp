@@ -108,9 +108,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     delete Application;
     delete Graphics;
-    Debug::DeregisterSink(consoleSink);
+    //Debug::DeregisterSink(consoleSink);
     //Debug::DeregisterSink(fileSink);
-    delete consoleSink;
+    //delete consoleSink;
     //delete fileSink;
     return static_cast<int>(msg.wParam);
 }

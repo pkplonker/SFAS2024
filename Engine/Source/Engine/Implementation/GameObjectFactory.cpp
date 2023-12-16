@@ -24,12 +24,12 @@ GameObjectFactory::GameObjectFactory()
 
     int counter = 1;
     std::string baseName = GameObject::GAMEOBJECT_DEFAULT_NAME;
-    std::string name = baseName +" ("+ std::to_string(counter)+")";
+    std::string name = baseName + " (" + std::to_string(counter) + ")";
 
     while (ObjectNameExists(scene, name))
     {
         counter++;
-        name = baseName +" ("+ std::to_string(counter)+")";
+        name = baseName + " (" + std::to_string(counter) + ")";
     }
 
     gameObject = std::make_shared<GameObject>(name);
@@ -126,6 +126,59 @@ GameObjectFactory& GameObjectFactory::AddMeshRenderable(std::string meshPath, st
     auto component = std::make_shared<MeshComponent>(
         gameObject, IApplication::GetGraphics()->CreateMeshRenderable(material, mesh),
         material);
+    if (component != nullptr)
+    {
+        gameObject->AddComponent(std::move(component));
+        return *this;
+    }
+    return *this;
+}
+
+GameObjectFactory& GameObjectFactory::AddMeshRenderable(Mesh* mesh, std::wstring shaderPath = L"")
+{
+    IMaterial* material;
+    if (shaderPath == L"")
+    {
+        material = ResourceManager::GetMaterial();
+    }
+    else
+    {
+        material = ResourceManager::GetMaterial(shaderPath);
+    }
+
+    auto component = std::make_shared<MeshComponent>(
+        gameObject, IApplication::GetGraphics()->CreateMeshRenderable(material, mesh),
+        material);
+    if (component != nullptr)
+    {
+        gameObject->AddComponent(std::move(component));
+        return *this;
+    }
+    return *this;
+}
+
+GameObjectFactory& GameObjectFactory::AddMeshRenderable(Mesh* mesh)
+{
+    IMaterial* material;
+
+    material = ResourceManager::GetMaterial();
+    
+    auto component = std::make_shared<MeshComponent>(
+        gameObject, IApplication::GetGraphics()->CreateMeshRenderable(material, mesh),
+        material);
+    if (component != nullptr)
+    {
+        gameObject->AddComponent(std::move(component));
+        return *this;
+    }
+    return *this;
+}
+
+GameObjectFactory& GameObjectFactory::AddEmptyMeshRenderable()
+{
+    auto component = std::make_shared<MeshComponent>(
+        gameObject, nullptr,
+        nullptr);
     if (component != nullptr)
     {
         gameObject->AddComponent(std::move(component));
