@@ -49,6 +49,11 @@ void Hierarchy::Draw()
                 {
                     GameObjectFactory("New Mesh").AddEmptyMeshRenderable().Build();
                 }
+                if (ImGui::MenuItem("Empty Sprite"))
+                {
+                    GameObjectFactory("New Sprite").AddEmptySpriteRenderable().Build();
+                }
+                
                 
                 if (ImGui::MenuItem("Camera"))
                 {

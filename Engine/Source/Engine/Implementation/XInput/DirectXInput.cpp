@@ -122,6 +122,12 @@ void DirectXInput::HandleMouse()
 
 void DirectXInput::HandleKeyboard()
 {
+    keyboardState = keyboard->GetState();
+}
+
+bool DirectXInput::IsKeyDown(Keys key) const
+{
+    return keyboardState.IsKeyDown(static_cast<DirectX::Keyboard::Keys>(key));
 }
 
 void DirectXInput::Update()

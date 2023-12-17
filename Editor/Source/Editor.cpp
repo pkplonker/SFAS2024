@@ -73,7 +73,10 @@ void Editor::Update()
 {
     game->Update();
     imguiController->ImGuiPreFrame();
-    editorCamera->Update();
+    if (imguiController->IsViewportInFocus())
+    {
+        editorCamera->Update();
+    }
     imguiController->Draw();
 }
 

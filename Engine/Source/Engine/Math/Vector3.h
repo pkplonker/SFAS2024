@@ -3,6 +3,7 @@
 
 #include "Vector2.h"
 
+
 namespace dx = DirectX;
 
 struct Vec3
@@ -11,7 +12,7 @@ struct Vec3
     {
         vec = dx::XMFLOAT3(0);
     }
-    
+
     Vec3(float x, float y, float z)
     {
         vec = dx::XMFLOAT3(x, y, z);
@@ -37,6 +38,31 @@ struct Vec3
     static Vec3 One()
     {
         return {1, 1, 1};
+    }
+    
+    static Vec3 Up()
+    {
+        return {0, 1, 0};
+    }
+    static Vec3 Down()
+    {
+        return {0, -1, 0};
+    }
+    static Vec3 Left()
+    {
+        return {-1, 0, 0};
+    }
+    static Vec3 Right()
+    {
+        return {1, 0, 0};
+    }
+    static Vec3 Forward()
+    {
+        return {0, 0, 1};
+    }
+    static Vec3 Back()
+    {
+        return {0, 0, -1};
     }
 
 
@@ -93,6 +119,33 @@ struct Vec3
     bool operator==(const Vec3& vec3) const
     {
         return vec.x == vec3.vec.x && vec.y == vec3.vec.y && vec.z == vec3.vec.z;
+    }
+
+    Vec3 operator+(const Vec3& vec3) const
+    {
+        return Vec3(vec.x + vec3.vec.x, vec.y + vec3.vec.y, vec.z + vec3.vec.z);
+    }
+
+    Vec3 operator-(const Vec3& vec3) const
+    {
+        return Vec3(vec.x - vec3.vec.x, vec.y - vec3.vec.y, vec.z - vec3.vec.z);
+    }
+
+    Vec3 operator*(float scalar) const
+    {
+        return Vec3(vec.x * scalar, vec.y * scalar, vec.z * scalar);
+    }
+
+    Vec3 operator*(int scalar) const
+    {
+        return Vec3(vec.x * scalar, vec.y * scalar, vec.z * scalar);
+    }
+
+    Vec3 operator*(const DirectX::XMMATRIX& m)
+    {
+        DirectX::XMVECTOR vec = DirectX::XMVectorSet(X(), Y(), Z(), 1.0f);
+        DirectX::XMVECTOR resultVec = DirectX::XMVector3Transform(vec, m);
+        return Vec3(DirectX::XMVectorGetX(resultVec), DirectX::XMVectorGetY(resultVec), DirectX::XMVectorGetZ(resultVec));
     }
 
 private:

@@ -66,6 +66,7 @@ public:
     GameObjectFactory& AddPerspectiveCamera();
 
     GameObjectFactory& AddOrthoCamera();
+    GameObjectFactory& AddEmptySpriteRenderable();
 
 #pragma endregion
 

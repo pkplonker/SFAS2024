@@ -10,6 +10,7 @@
 
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
+#include "imgui_internal.h"
 #include "SceneManager.h"
 #include "SceneSerializer.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
@@ -84,11 +85,17 @@ void ImGuiController::ImGuiPreFrame()
     ImGui::ShowDemoWindow();
 }
 
+void ImGuiController::ViewPortActiveWindowCheck()
+{
+    viewportFocused = ImGui::IsWindowHovered();
+}
+
 void ImGuiController::DrawViewport()
 {
     ImGui::Begin("GameView", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-    auto w = dx11Graphics->GetWidth();
-    auto h = dx11Graphics->GetHeight();
+
+    ViewPortActiveWindowCheck();
+
     ImGui::Image((ImTextureID)dx11Graphics->GetTextureView(),
                  ImVec2(static_cast<float>(dx11Graphics->GetTextureWidth()),
                         static_cast<float>(dx11Graphics->GetTextureHeight())));

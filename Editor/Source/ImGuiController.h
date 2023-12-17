@@ -19,6 +19,7 @@ public:
 	ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, IInput* input);
 ~ImGuiController() override;
 	static void ImGuiPreFrame();
+	void ViewPortActiveWindowCheck();
 	void LoadScene() const;
 	void LoadScene(std::string path) const;
 	void DrawMenu();
@@ -30,7 +31,10 @@ public:
 	void ImGuiPostUpdate() const;
 	void ShutDown();
 	void Resize(int width, int height) override;
-
+	bool IsViewportInFocus()
+	{
+		return viewportFocused;
+	}
 private:
 	DirectX11Graphics* dx11Graphics;
 	Game* game;
@@ -40,4 +44,5 @@ private:
 	IInput* input;
 	bool openSettings;
 	SettingsWindow* settingsWindow;
+	bool viewportFocused;
 };

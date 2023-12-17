@@ -162,7 +162,7 @@ GameObjectFactory& GameObjectFactory::AddMeshRenderable(Mesh* mesh)
     IMaterial* material;
 
     material = ResourceManager::GetMaterial();
-    
+
     auto component = std::make_shared<MeshComponent>(
         gameObject, IApplication::GetGraphics()->CreateMeshRenderable(material, mesh),
         material);
@@ -217,6 +217,19 @@ GameObjectFactory& GameObjectFactory::AddOrthoCamera()
     auto ortho = std::make_shared<OrthographicCamera>(gameObject->Transform(), 0, 0);
 
     auto component = std::make_shared<CameraComponent>(gameObject, ortho);
+    if (component != nullptr)
+    {
+        gameObject->AddComponent(std::move(component));
+        return *this;
+    }
+    return *this;
+}
+
+GameObjectFactory& GameObjectFactory::AddEmptySpriteRenderable()
+{
+    auto component = std::make_shared<SpriteComponent>(
+        gameObject, nullptr,
+        nullptr);
     if (component != nullptr)
     {
         gameObject->AddComponent(std::move(component));

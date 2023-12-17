@@ -18,8 +18,13 @@ public:
     void SetHeight(float getHeight) override;
     void SetWidth(float getHeight) override;
     void SetFov(int fov);
+    void MouseInput();
+    void KeyboardInput();
     void Update() override;
     std::shared_ptr<PerspectiveCamera> camera;
+    float speed;
+    float xSpeed;
+    float multiplier;
 
     float GetXRotSpeed() const { return xRotSpeed; }
     float GetYRotSpeed() const { return yRotSpeed; }

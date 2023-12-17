@@ -21,6 +21,7 @@ public:
     void HandleController();
     void HandleMouse();
     void HandleKeyboard();
+    bool IsKeyDown(Keys key) const override;
     void Update() override;
     bool IsLeftPressed() const override;
     bool IsLeftHeld() const override;
@@ -71,6 +72,7 @@ private:
     int deltaY = 0;
     int scrollDelta=0;
     int lastScrollValue=0;
+    std::unique_ptr<DirectX::Keyboard>::element_type::State keyboardState;
     inline static bool mouseDataUpdated;
     inline static bool keyboardDataUpdated;
 };
