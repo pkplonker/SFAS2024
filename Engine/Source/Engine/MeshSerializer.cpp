@@ -9,7 +9,7 @@
 bool MeshSerializer::Serialize(Mesh* mesh, std::string fullFilePath)
 {
     std::ofstream file(fullFilePath, std::ios::binary);
-
+    // need to look at RAII. No finally block in C++ :/
     if (file.is_open())
     {
         unsigned int numVertices = mesh->Vertices.size();

@@ -49,7 +49,7 @@ void MeshComponentDrawer::Draw()
                 }
             }
 
-            ImGuiHelpers::WrappedText("Mesh Path:", meshComponent->GetMeshPath(),
+            ImGuiHelpers::WrappedText("Mesh Path:", meshComponent->GetMeshPath(),"Replace",
                                       std::bind(&MeshComponentDrawer::ChangeMesh, this));
 
             materialDrawerHelper.DrawMaterial();

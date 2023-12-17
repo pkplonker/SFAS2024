@@ -1,5 +1,6 @@
 ﻿#include "RenderStatWindow.h"
 
+#include "EngineTime.h"
 #include "IApplication.h"
 #include "IGraphics.h"
 #include "imgui.h"
@@ -21,6 +22,8 @@ void RenderStatWindow::Draw()
     
     ImGui::Text("Screen Size: %u x %u", stats.width, stats.height);
     ImGui::Text("Viewport Size: %u x %u", stats.viewportWidth, stats.viewportHeight);
+    ImGui::Text("FPS: %u", EngineTime::GetFPS());
+    ImGui::SameLine();
     ImGui::End();
 }
 

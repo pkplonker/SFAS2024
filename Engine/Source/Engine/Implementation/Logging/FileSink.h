@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <fstream>
+#include <sstream>
 
 #include "ISink.h"
 
@@ -13,4 +14,8 @@ public:
 private:
     std::string path;
     std::ofstream logFile;
+    std::ostringstream buffer;
+    const int bufferSizeLimit = 1024 * 10;
+
+    void FlushBuffer();
 };

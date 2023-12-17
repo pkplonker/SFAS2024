@@ -11,6 +11,7 @@
 #include "../ImGuiHelpers.h"
 #include "../FileDialog.h"
 #include "../Editor.h"
+#include "../FileOpener.h"
 #include "../MessageBoxWrapper.h"
 
 MaterialDrawerHelper::MaterialDrawerHelper(std::weak_ptr<IRenderableComponent> component) : component(component)
@@ -19,28 +20,33 @@ MaterialDrawerHelper::MaterialDrawerHelper(std::weak_ptr<IRenderableComponent> c
 
 void MaterialDrawerHelper::DrawMaterial()
 {
+    ImGui::Separator();
     if (auto comp = component.lock())
     {
         const auto mat = comp->GetMaterial();
         if (mat != nullptr)
         {
             std::wstring shaderPath;
-            if (const auto shader = mat->GetShader())
+            const auto shader = mat->GetShader();
+            if (shader != nullptr)
             {
                 shaderPath = shader->GetPath();
             }
+            std::vector<std::pair<std::string, std::function<void()>>> buttons;
+            buttons.emplace_back("Replace", std::bind(&MaterialDrawerHelper::ChangeShader, this));
 
+            buttons.emplace_back("Modify", std::bind(&MaterialDrawerHelper::OpenShader, this));
+            buttons.emplace_back("Reload", std::bind(&IShader::Reload, shader));
 
-            ImGuiHelpers::WrappedText("Shader Path:", shaderPath,
-                                      std::bind(&MaterialDrawerHelper::ChangeShader, this));
-
+            ImGuiHelpers::WrappedText("Shader Path:", shaderPath,buttons);
+            
             std::wstring texturePath;
             if (const auto tex = mat->GetTexture())
             {
                 texturePath = tex->GetPath();
             }
 
-            ImGuiHelpers::WrappedText("Texture Path:", texturePath,
+            ImGuiHelpers::WrappedText("Texture Path:", texturePath, "Replace",
                                       std::bind(&MaterialDrawerHelper::ChangeTexture, this));
 
 
@@ -129,5 +135,19 @@ void MaterialDrawerHelper::ChangeTexture()
     else
     {
         MessageBoxWrapper::ShowWarning("Incorrect file type", "Incorrect file type");
+    }
+}
+
+void MaterialDrawerHelper::OpenShader() const
+{
+    if (const auto comp = component.lock())
+    {
+        if (const auto mat = comp->GetMaterial())
+        {
+            if (const auto shader = mat->GetShader())
+            {
+                FileOpener::Open(shader->GetPath());
+            }
+        }
     }
 }

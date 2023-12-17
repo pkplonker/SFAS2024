@@ -66,9 +66,16 @@ void LoggerWindow::CacheLogMessages()
     isLocalDirty = false;
 }
 
+void LoggerWindow::PrintMessageLine(const std::vector<std::pair<std::string, LogMessageData>>::value_type& message)
+{
+    if (collapse)
+        ImGui::Text("%s (%d)", message.first.c_str(), cachedMessageCounts[message.first]);
+    else
+        ImGui::Text(message.first.c_str());
+}
+
 void LoggerWindow::Draw()
 {
-   
     ImGui::Begin("Console");
     ImGui::SameLine();
     ImGui::Text("Collapse:");
@@ -131,25 +138,26 @@ void LoggerWindow::Draw()
                       ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
     if (isEnabled)
     {
-        for (const auto& message : cachedOrderedMessages)
+        for (auto it = cachedOrderedMessages.rbegin(); it != cachedOrderedMessages.rend(); ++it)
         {
+            const auto& message = *it;
             if (filter.PassFilter(message.first.c_str()))
             {
                 if (message.second.level == 2)
                 {
                     ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 0, 1));
-                    ImGui::Text("%s (%d)", message.first.c_str(), cachedMessageCounts[message.first]);
+                    PrintMessageLine(message);
                     ImGui::PopStyleColor();
                 }
                 else if (message.second.level == 3)
                 {
                     ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 0, 0, 1));
-                    ImGui::Text("%s (%d)", message.first.c_str(), cachedMessageCounts[message.first]);
+                    PrintMessageLine(message);
                     ImGui::PopStyleColor();
                 }
                 else
                 {
-                    ImGui::Text("%s (%d)", message.first.c_str(), cachedMessageCounts[message.first]);
+                    PrintMessageLine(message);
                 }
             }
         }

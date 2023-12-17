@@ -6,6 +6,7 @@
 
 #include "IResizeHandler.h"
 #include "RenderingStats.h"
+#include "Implementation/DirectX11/DirectX11Shader.h"
 
 class IMeshRenderable;
 class MeshComponent;
@@ -40,6 +41,8 @@ public:
     virtual IMaterial* CreateMaterial(IShader* shader, ITexture* texture) =0;
     virtual void UpdateRenderable(IMaterial* mat, const std::shared_ptr<IRenderable>& shared) =0;
     virtual void Resize(int width, int height) = 0;
+    virtual bool TryUpdateShader(IShader* shader, const char* vsentry, const char* vsshader,
+                                 const char* psentry, const char* psshader) = 0;
     RenderingStats currentStats;
 
 protected:

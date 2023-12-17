@@ -36,6 +36,9 @@ public:
 	void RenderBucket(RenderingStats& stats, IShader* previousShader, std::map<IMaterial*, std::list<std::shared_ptr<IRenderable>>>::iterator bucket);
 
 	ITexture* CreateTexture(const wchar_t* filepath) override;
+	bool TryCreateShaderData(const wchar_t* filepath, const char* vsentry, const char* vsshader, const char* psentry,
+	                         const char* psshader, ID3D11VertexShader** VertexShader, ID3D11PixelShader** PixelShader,
+	                         ID3D11InputLayout** InputLayout);
 	IShader* CreateShader(const wchar_t* filepath, const char* vsentry, const char* vsshader, const char* psentry, const char* psshader) override;
 	std::shared_ptr<IRenderable> CreateBillboard(IMaterial* material) override;
 	void AddRenderable(IMaterial* material, std::shared_ptr<IRenderable> Result);
@@ -55,7 +58,8 @@ public:
 	IMaterial* CreateMaterial(IShader* shader,ITexture* texture) override;
 	void Resize(int width, int height) override;
 	void UpdateRenderToTextureResources(int newWidth, int newHeight);
-
+	bool TryUpdateShader(IShader* shader, const char* vsentry, const char* vsshader, const char* psentry,
+	                     const char* psshader) override;
 protected:
 
 	virtual void SetMatrixBuffers(std::weak_ptr<Transform3D> transform);

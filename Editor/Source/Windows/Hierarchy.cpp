@@ -5,6 +5,7 @@
 
 #include "imgui.h"
 #include "SceneManager.h"
+#include "../DefaultShapes.h"
 #include "Engine/Implementation/GameObject.h"
 #include "Engine/Implementation/GameObjectFactory.h"
 #include "Engine/Implementation/Scene.h"
@@ -24,10 +25,31 @@ void Hierarchy::Draw()
         {
             if (ImGui::BeginMenu("Add"))
             {
+                if (ImGui::BeginMenu("Default Shapes"))
+                {
+                    if (ImGui::MenuItem("Cube"))
+                    {
+                        GameObjectFactory("New Cube").AddMeshRenderable(DefaultShapes::GetCubeMesh()).Build();
+                    }
+                    if (ImGui::MenuItem("Sphere"))
+                    {
+                        GameObjectFactory("New Sphere").AddMeshRenderable(DefaultShapes::GetSphereMesh()).Build();
+                    }
+                    if (ImGui::MenuItem("Plane"))
+                    {
+                        GameObjectFactory("New Plane").AddMeshRenderable(DefaultShapes::GetPlaneMesh()).Build();
+                    }
+                    ImGui::EndMenu();
+                }
                 if (ImGui::MenuItem("Empty"))
                 {
                     GameObjectFactory().Build();
                 }
+                if (ImGui::MenuItem("Empty Mesh"))
+                {
+                    GameObjectFactory("New Mesh").AddEmptyMeshRenderable().Build();
+                }
+                
                 if (ImGui::MenuItem("Camera"))
                 {
                     GameObjectFactory("New Camera").AddPerspectiveCamera().Build();
