@@ -66,9 +66,16 @@ void LoggerWindow::CacheLogMessages()
     isLocalDirty = false;
 }
 
+void LoggerWindow::PrintMessageLine(const std::vector<std::pair<std::string, LogMessageData>>::value_type& message)
+{
+    if (collapse)
+        ImGui::Text("%s (%d)", message.first.c_str(), cachedMessageCounts[message.first]);
+    else
+        ImGui::Text(message.first.c_str());
+}
+
 void LoggerWindow::Draw()
 {
-   
     ImGui::Begin("Console");
     ImGui::SameLine();
     ImGui::Text("Collapse:");
@@ -138,18 +145,18 @@ void LoggerWindow::Draw()
                 if (message.second.level == 2)
                 {
                     ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 0, 1));
-                    ImGui::Text("%s (%d)", message.first.c_str(), cachedMessageCounts[message.first]);
+                    PrintMessageLine(message);
                     ImGui::PopStyleColor();
                 }
                 else if (message.second.level == 3)
                 {
                     ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 0, 0, 1));
-                    ImGui::Text("%s (%d)", message.first.c_str(), cachedMessageCounts[message.first]);
+                    PrintMessageLine(message);
                     ImGui::PopStyleColor();
                 }
                 else
                 {
-                    ImGui::Text("%s (%d)", message.first.c_str(), cachedMessageCounts[message.first]);
+                    PrintMessageLine(message);
                 }
             }
         }

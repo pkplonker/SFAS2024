@@ -34,6 +34,7 @@ private:
     ImGuiTextFilter filter;
     bool isEnabled;
     void CacheLogMessages();
+    void PrintMessageLine(const std::vector<std::pair<std::string, LogMessageData>>::value_type& message);
     std::unordered_map<std::string, int> cachedMessageCounts;
     std::vector<std::pair<std::string, LogMessageData>> cachedOrderedMessages;
     bool isLocalDirty;
