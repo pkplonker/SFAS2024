@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -25,21 +25,18 @@ public:
 
 	static ITexture* GetTexture(std::wstring path);
 
-	static IShader* GetShader(std::wstring shaderPath = DEFAULT_UNLIT_SHADER,
-		std::string vsentry = DEFAULT_VS_ENRTY, std::string vsshader = DEFAULT_VS_SHADER,
-		std::string psentry = DEFAULT_PS_ENRTY, std::string psshader = DEFAULT_PS_SHADER);
+	static IShader* GetShader(const std::wstring& shaderPath = DEFAULT_UNLIT_SHADER,
+	                          const std::string& vsentry = DEFAULT_VS_ENRTY, const std::string& vsshader = DEFAULT_VS_SHADER,
+	                          const std::string& psentry = DEFAULT_PS_ENRTY, const std::string& psshader = DEFAULT_PS_SHADER);
 
 	static IMaterial* GetMaterial(std::wstring shaderPath = DEFAULT_UNLIT_SHADER, std::wstring texturePath = L"");
-
-	static std::wstring GenerateShaderKey(const std::wstring& shaderPath,
-		const std::string& vsEntry,
-		const std::string& vsShader,
-		const std::string& psEntry,
-		const std::string& psShader);
+	
+	static std::wstring GenerateShaderKey(const std::wstring& shaderPath);
 
 	static std::wstring GenerateMaterialKey(const std::wstring& shaderPath,
 		const std::wstring& texturePath);
 	static void Init(IGraphics* graphics);
+	static void ReloadShader(IShader* shader);
 
 private:
 	inline static IGraphics* graphics;

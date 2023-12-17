@@ -138,8 +138,9 @@ void LoggerWindow::Draw()
                       ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
     if (isEnabled)
     {
-        for (const auto& message : cachedOrderedMessages)
+        for (auto it = cachedOrderedMessages.rbegin(); it != cachedOrderedMessages.rend(); ++it)
         {
+            const auto& message = *it;
             if (filter.PassFilter(message.first.c_str()))
             {
                 if (message.second.level == 2)

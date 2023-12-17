@@ -14,7 +14,9 @@ public:
 	virtual ~DirectX11Shader();
 	virtual void Update();
 	void Reload() override;
-
+	void SetVertexShader(ID3D11VertexShader* vertexShader);
+	void SetPixelShader(ID3D11PixelShader* pixelShader);
+	void SetInputLayout(ID3D11InputLayout* inputLayout);
 private:
 
 	ID3D11DeviceContext* Context;
