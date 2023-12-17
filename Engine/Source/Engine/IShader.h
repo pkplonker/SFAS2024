@@ -12,7 +12,7 @@ public:
     }
 
     virtual void Update() = 0;
-    virtual std::wstring GetPath() { return path; }
+    virtual std::wstring& GetPath() { return path; }
 
 protected:
     std::wstring path;

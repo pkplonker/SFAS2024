@@ -430,6 +430,7 @@ ITexture* DirectX11Graphics::CreateTexture(const wchar_t* filepath)
     return Result;
 }
 
+
 IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vsentry, const char* vsshader,
                                          const char* psentry, const char* psshader)
 {
@@ -437,71 +438,19 @@ IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vs
     ID3D11VertexShader* VertexShader = nullptr;
     ID3D11PixelShader* PixelShader = nullptr;
     ID3D11InputLayout* InputLayout = nullptr;
-    HRESULT hr = S_FALSE;
-    ID3DBlob* vsBuffer = nullptr;
-    ID3DBlob* psBuffer = nullptr;
+
 
     if (IsValid())
     {
-        // Compile the vertex shader
-        if (CompileShader(filepath, vsentry, vsshader, &vsBuffer))
+        if (TryCreateShaderData(filepath, vsentry, vsshader, psentry, psshader,
+                                &VertexShader, &PixelShader, &InputLayout))
         {
-            hr = Device->CreateVertexShader(vsBuffer->GetBufferPointer(), vsBuffer->GetBufferSize(), nullptr,
-                                            &VertexShader);
-            if (FAILED(hr))
-            {
-                MessageBox(nullptr, "Failed to create vertex shader", "Error!", MB_ICONEXCLAMATION | MB_OK);
-                vsBuffer->Release();
-                return nullptr;
-            }
-
-            D3D11_INPUT_ELEMENT_DESC layout[] =
-            {
-                {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-                {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
-                {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0},
-                {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0},
-            };
-            unsigned int totalLayoutElements = ARRAYSIZE(layout);
-
-            hr = Device->CreateInputLayout(layout, totalLayoutElements, vsBuffer->GetBufferPointer(),
-                                           vsBuffer->GetBufferSize(), &InputLayout);
-            vsBuffer->Release();
-            if (FAILED(hr))
-            {
-                MessageBox(nullptr, "Failed to create input layout", "Error!", MB_ICONEXCLAMATION | MB_OK);
-                VertexShader->Release();
-                return nullptr;
-            }
+            Result = new DirectX11Shader(filepath, Context, VertexShader, PixelShader, InputLayout);
         }
         else
         {
-            MessageBox(nullptr, "Failed to compile vertex shader", "Error!", MB_ICONEXCLAMATION | MB_OK);
-            return nullptr;
+            Error("Unable to create shader")
         }
-
-        if (CompileShader(filepath, psentry, psshader, &psBuffer))
-        {
-            hr = Device->CreatePixelShader(psBuffer->GetBufferPointer(), psBuffer->GetBufferSize(), nullptr,
-                                           &PixelShader);
-            psBuffer->Release();
-            if (FAILED(hr))
-            {
-                MessageBox(nullptr, "Failed to create pixel shader", "Error!", MB_ICONEXCLAMATION | MB_OK);
-                VertexShader->Release();
-                InputLayout->Release();
-                return nullptr;
-            }
-        }
-        else
-        {
-            MessageBox(nullptr, "Failed to compile pixel shader", "Error!", MB_ICONEXCLAMATION | MB_OK);
-            VertexShader->Release();
-            InputLayout->Release();
-            return nullptr;
-        }
-
-        Result = new DirectX11Shader(filepath, Context, VertexShader, PixelShader, InputLayout);
     }
     else
     {
@@ -509,6 +458,74 @@ IShader* DirectX11Graphics::CreateShader(const wchar_t* filepath, const char* vs
     }
 
     return Result;
+}
+
+bool DirectX11Graphics::TryCreateShaderData(const wchar_t* filepath, const char* vsentry, const char* vsshader,
+                                            const char* psentry, const char* psshader,
+                                            ID3D11VertexShader** VertexShader,
+                                            ID3D11PixelShader** PixelShader, ID3D11InputLayout** InputLayout)
+{
+    HRESULT hr = S_FALSE;
+    ID3DBlob* vsBuffer = nullptr;
+    ID3DBlob* psBuffer = nullptr;
+    // Compile the vertex shader
+    if (CompileShader(filepath, vsentry, vsshader, &vsBuffer))
+    {
+        hr = Device->CreateVertexShader(vsBuffer->GetBufferPointer(), vsBuffer->GetBufferSize(), nullptr,
+                                        VertexShader);
+        if (FAILED(hr))
+        {
+            MessageBox(nullptr, "Failed to create vertex shader", "Error!", MB_ICONEXCLAMATION | MB_OK);
+            vsBuffer->Release();
+            return false;
+        }
+
+        D3D11_INPUT_ELEMENT_DESC layout[] =
+        {
+            {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+            {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+            {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0},
+            {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        };
+        unsigned int totalLayoutElements = ARRAYSIZE(layout);
+
+        hr = Device->CreateInputLayout(layout, totalLayoutElements, vsBuffer->GetBufferPointer(),
+                                       vsBuffer->GetBufferSize(), InputLayout);
+        vsBuffer->Release();
+        if (FAILED(hr))
+        {
+            MessageBox(nullptr, "Failed to create input layout", "Error!", MB_ICONEXCLAMATION | MB_OK);
+            if (*VertexShader) (*VertexShader)->Release(); // Release VertexShader if it was created
+            return false;
+        }
+    }
+    else
+    {
+        MessageBox(nullptr, "Failed to compile vertex shader", "Error!", MB_ICONEXCLAMATION | MB_OK);
+        return false;
+    }
+
+    if (CompileShader(filepath, psentry, psshader, &psBuffer))
+    {
+        hr = Device->CreatePixelShader(psBuffer->GetBufferPointer(), psBuffer->GetBufferSize(), nullptr,
+                                       PixelShader);
+        psBuffer->Release();
+        if (FAILED(hr))
+        {
+            MessageBox(nullptr, "Failed to create pixel shader", "Error!", MB_ICONEXCLAMATION | MB_OK);
+            if (*VertexShader) (*VertexShader)->Release();
+            if (*InputLayout) (*InputLayout)->Release();
+            return false;
+        }
+    }
+    else
+    {
+        MessageBox(nullptr, "Failed to compile pixel shader", "Error!", MB_ICONEXCLAMATION | MB_OK);
+        if (*VertexShader) (*VertexShader)->Release();
+        if (*InputLayout) (*InputLayout)->Release();
+        return false;
+    }
+    return true;
 }
 
 std::shared_ptr<IRenderable> DirectX11Graphics::CreateBillboard(IMaterial* material)
@@ -870,6 +887,37 @@ void DirectX11Graphics::UpdateRenderToTextureResources(int newWidth, int newHeig
             camera->SetHeight(texHeight);
         }
     }
+}
+
+bool DirectX11Graphics::TryUpdateShader(IShader* shader, const char* vsentry, const char* vsshader, const char* psentry,
+                                        const char* psshader)
+{
+    IShader* Result = nullptr;
+    ID3D11VertexShader* VertexShader = nullptr;
+    ID3D11PixelShader* PixelShader = nullptr;
+    ID3D11InputLayout* InputLayout = nullptr;
+
+
+    if (IsValid())
+    {
+        if (TryCreateShaderData(shader->GetPath().c_str(), vsentry, vsshader, psentry, psshader,
+                                &VertexShader, &PixelShader, &InputLayout))
+        {
+            // shader->SetVertexShader(VertexShader);
+            // shader->SetPixelShader(PixelShader);
+            // shader->InputLayout(InputLayout);
+        }
+        else
+        {
+            Error("Unable to update shader")
+            return false;
+        }
+    }
+    else
+    {
+        MessageBox(nullptr, "Invalid DirectX11Graphics", "Error!", MB_ICONEXCLAMATION | MB_OK);
+    }
+    return true;
 }
 
 void DirectX11Graphics::SetMatrixBuffers(const std::weak_ptr<Transform3D> transform)

@@ -16,9 +16,9 @@ public:
     static std::string Format(long long time)
     {
         Init();
-        int hours = time / 3600;
-        int minutes = (time % 3600) / 60;
-        int seconds = time % 60;
+        const int hours = static_cast<int>(time / 3600);
+        const int minutes = static_cast<int>((time % 3600) / 60);
+        const int seconds = static_cast<int>(time % 60);
 
         std::ostringstream oss;
         oss << std::setw(2) << std::setfill('0') << hours << ":"
@@ -43,7 +43,8 @@ public:
         }
     }
 
-    static void Update() {
+    static void Update()
+    {
         auto now = std::chrono::steady_clock::now();
         deltaTime = std::chrono::duration<double, std::milli>(now - lastFrameTime).count() / 1000.0;
         lastFrameTime = now;
@@ -51,12 +52,15 @@ public:
         frames++;
     }
 
-    static double GetDeltaTime() {
+    static double GetDeltaTime()
+    {
         return deltaTime;
     }
 
-    static unsigned int GetFPS() {
-        return deltaTime > 0 ? 1.0 / deltaTime : 0.0;
+    static unsigned int GetFPS()
+    {
+        if (deltaTime > 0) return static_cast<unsigned int>(1.0 / deltaTime);
+        return 0;
     }
 
     static std::string GetCurrentTime()

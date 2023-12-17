@@ -81,8 +81,8 @@ void Scene::Update()
 void Scene::SetActiveCamera(const std::shared_ptr<ICamera>& camera)
 {
     this->camera = camera;
-    camera->SetWidth(IApplication::GetGraphics()->GetWidth());
-    camera->SetHeight(IApplication::GetGraphics()->GetHeight());
+    camera->SetWidth(static_cast<float>(IApplication::GetGraphics()->GetWidth()));
+    camera->SetHeight(static_cast<float>(IApplication::GetGraphics()->GetHeight()));
     IApplication::GetGraphics()->SetActiveCamera(camera);
 }
 

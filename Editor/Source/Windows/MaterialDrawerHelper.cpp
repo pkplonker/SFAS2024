@@ -32,11 +32,11 @@ void MaterialDrawerHelper::DrawMaterial()
             {
                 shaderPath = shader->GetPath();
             }
-
             std::vector<std::pair<std::string, std::function<void()>>> buttons;
             buttons.emplace_back("Replace", std::bind(&MaterialDrawerHelper::ChangeShader, this));
 
             buttons.emplace_back("Modify", std::bind(&MaterialDrawerHelper::OpenShader, this));
+            buttons.emplace_back("Reload", std::bind(&IShader::Reload, shader));
 
             ImGuiHelpers::WrappedText("Shader Path:", shaderPath,buttons);
             
@@ -61,14 +61,6 @@ void MaterialDrawerHelper::DrawMaterial()
             if (ImGui::Checkbox("Is Skybox", &sb))
             {
                 mat->SetIsSkyBox(sb);
-            }
-
-            if (shader)
-            {
-                if (ImGui::Button("Reload Shader"))
-                {
-                    shader->Reload();
-                }
             }
         }
         else
