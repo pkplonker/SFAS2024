@@ -3,7 +3,6 @@
 
 #include "Engine/IShader.h"
 #include <d3d11.h>
-#include <DirectXMath.h>
 
 class DirectX11Graphics;
 
@@ -14,6 +13,7 @@ public:
 	DirectX11Shader(std::wstring path, ID3D11DeviceContext* ContextIn, ID3D11VertexShader* VertexShaderIn,	ID3D11PixelShader* PixelShaderIn, ID3D11InputLayout* InputLayoutIn);
 	virtual ~DirectX11Shader();
 	virtual void Update();
+	void Reload() override;
 
 private:
 

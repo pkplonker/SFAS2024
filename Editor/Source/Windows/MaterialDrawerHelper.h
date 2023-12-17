@@ -10,6 +10,7 @@ public:
     void DrawMaterial();
     void ChangeShader();
     void ChangeTexture();
+    void OpenShader() const;
 private:
     std::weak_ptr<IRenderableComponent> component;
 };

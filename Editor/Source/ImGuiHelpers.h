@@ -9,52 +9,55 @@
 class ImGuiHelpers
 {
 public:
-    static void WrappedText(std::string label, std::string content, std::function<void()> callback = nullptr,
-                            std::string buttonText = "...")
+    template <typename StringType>
+    static void WrappedText(std::string label, StringType content,
+                            const std::vector<std::pair<std::string, std::function<void()>>>& buttons)
     {
         ImGui::Text(label.c_str());
         ImGui::SameLine();
-        if (callback != nullptr)
-        {
-            std::string buttonId = buttonText + "##" + label + content;
 
-            if (ImGui::Button(buttonId.c_str()))
+        for (const auto& [buttonText, callback] : buttons)
+        {
+            if (callback != nullptr)
             {
-                callback();
+                std::ostringstream oss;
+                oss << buttonText << "##" << label;
+
+                std::string buttonId = oss.str();
+                if (ImGui::Button(buttonId.c_str()))
+                {
+                    callback();
+                }
+                ImGui::SameLine();
             }
-            ImGui::SameLine();
         }
 
         float fullWidth = ImGui::GetWindowWidth();
         float labelWidth = ImGui::CalcTextSize(label.c_str()).x + ImGui::GetStyle().ItemSpacing.x;
         float availableWidth = fullWidth - labelWidth - (ImGui::GetStyle().WindowPadding.x * 2);
         ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + availableWidth);
-        ImGui::TextUnformatted(content.c_str());
+
+        if constexpr (std::is_same<StringType, std::wstring>::value)
+        {
+            ImGui::TextUnformatted(Helpers::WideStringToString(std::move(content)).c_str());
+        }
+        else
+        {
+            ImGui::TextUnformatted(content.c_str());
+        }
+
         ImGui::PopTextWrapPos();
     }
 
-    static void WrappedText(std::string label, std::wstring content, std::function<void()> callback = nullptr,
-                            std::string buttonText = "...")
+    template <typename StringType>
+    static void WrappedText(std::string label, StringType content,
+                            const std::string& singleButtonText, const std::function<void()>& singleButtonCallback)
     {
-        ImGui::Text(label.c_str());
-        ImGui::SameLine();
-        if (callback != nullptr)
-        {
-            std::string buttonId = buttonText + "##" + label + Helpers::WideStringToString(content);
+        std::vector<std::pair<std::string, std::function<void()>>> buttons = {
+            {singleButtonText, singleButtonCallback}
+        };
 
-            if (ImGui::Button(buttonId.c_str()))
-            {
-                callback();
-            }
-        }
-
-        ImGui::SameLine();
-        float fullWidth = ImGui::GetWindowWidth();
-        float labelWidth = ImGui::CalcTextSize(label.c_str()).x + ImGui::GetStyle().ItemSpacing.x;
-        float availableWidth = fullWidth - labelWidth - (ImGui::GetStyle().WindowPadding.x * 2);
-        ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + availableWidth);
-        ImGui::TextUnformatted(Helpers::WideStringToString(std::move(content)).c_str());
-        ImGui::PopTextWrapPos();
+        WrappedText(label, content, buttons);
     }
 
     //https://github.com/ocornut/imgui/discussions/3862

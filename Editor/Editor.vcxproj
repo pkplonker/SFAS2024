@@ -159,6 +159,7 @@
     <ClCompile Include="Source\EditorCamera.cpp" />
     <ClCompile Include="Source\EditorSettings.cpp" />
     <ClCompile Include="Source\FileDialog.cpp" />
+    <ClCompile Include="Source\FileOpener.cpp" />
     <ClCompile Include="Source\MeshImporter.cpp" />
     <ClCompile Include="Source\SceneSerializer.cpp" />
     <ClCompile Include="Source\Windows\CameraComponentDrawer.cpp" />
@@ -351,6 +352,7 @@
     <ClInclude Include="Source\EditorCamera.h" />
     <ClInclude Include="Source\EditorSettings.h" />
     <ClInclude Include="Source\FileDialog.h" />
+    <ClInclude Include="Source\FileOpener.h" />
     <ClInclude Include="Source\ImGuiHelpers.h" />
     <ClInclude Include="Source\ImGuiTheme.h" />
     <ClInclude Include="Source\MeshImporter.h" />
