@@ -889,23 +889,23 @@ void DirectX11Graphics::UpdateRenderToTextureResources(int newWidth, int newHeig
     }
 }
 
-bool DirectX11Graphics::TryUpdateShader(IShader* shader, const char* vsentry, const char* vsshader, const char* psentry,
+bool DirectX11Graphics::TryUpdateShader(IShader* iShader, const char* vsentry, const char* vsshader,
+                                        const char* psentry,
                                         const char* psshader)
 {
-    IShader* Result = nullptr;
     ID3D11VertexShader* VertexShader = nullptr;
     ID3D11PixelShader* PixelShader = nullptr;
     ID3D11InputLayout* InputLayout = nullptr;
 
-
-    if (IsValid())
+    const auto shader = dynamic_cast<DirectX11Shader*>(iShader);
+    if (IsValid() && shader)
     {
         if (TryCreateShaderData(shader->GetPath().c_str(), vsentry, vsshader, psentry, psshader,
                                 &VertexShader, &PixelShader, &InputLayout))
         {
-            // shader->SetVertexShader(VertexShader);
-            // shader->SetPixelShader(PixelShader);
-            // shader->InputLayout(InputLayout);
+            shader->SetVertexShader(VertexShader);
+            shader->SetPixelShader(PixelShader);
+            shader->SetInputLayout(InputLayout);
         }
         else
         {

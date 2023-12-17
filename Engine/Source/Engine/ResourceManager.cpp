@@ -38,7 +38,6 @@ IShader* ResourceManager::GetShader(const std::wstring& shaderPath, const std::s
 {
     auto key = GenerateShaderKey(shaderPath);
 
-    Info("Shader key generated" + Helpers::WideStringToString(key))
     if (const auto it = shaders.find(key); it != shaders.end())
     {
         return it->second.get();
