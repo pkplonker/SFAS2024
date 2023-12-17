@@ -1,6 +1,43 @@
 {
     "objects": [
         [
+            "Grid",
+            {
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 0.3019999861717224,
+                            "b": 0.0,
+                            "g": 0.0,
+                            "r": 0.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Plane.smesh",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\Grid.fx",
+                        "skybox": false
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Plane.smesh"
+                },
+                "name": "Grid",
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
             "Cube",
             {
                 "meshComponent": {
