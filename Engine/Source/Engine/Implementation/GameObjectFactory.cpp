@@ -33,6 +33,7 @@ GameObjectFactory::GameObjectFactory()
     }
 
     gameObject = std::make_shared<GameObject>(name);
+    gameObject->Init();
     SetupRandom();
 }
 
@@ -40,6 +41,7 @@ GameObjectFactory::GameObjectFactory()
 GameObjectFactory::GameObjectFactory(std::string name)
 {
     gameObject = std::make_shared<GameObject>(name);
+    gameObject->Init();
     SetupRandom();
 }
 

@@ -373,6 +373,7 @@ std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohman
 
             std::shared_ptr<GameObject> newObject = std::make_shared<GameObject>(name);
             newObject->SetTransform(transform);
+            newObject->Init();
             if (objectProperties.contains("cameraComponent"))
             {
                 auto cam = DeserializeCameraComponent(newObject, objectProperties["cameraComponent"]);

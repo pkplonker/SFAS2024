@@ -33,6 +33,11 @@ GameObject::GameObject(std::string name) : GameObject()
 	this->Name = std::move(name);
 }
 
+void GameObject::Init()
+{
+	transform->SetGameObject(shared_from_this());
+}
+
 void GameObject::Update()
 {
 	for (const auto& component : *components)
@@ -50,4 +55,10 @@ void GameObject::Update()
 const std::vector<std::shared_ptr<IComponent>>& GameObject::GetComponents() const
 {
 	return *components;
+}
+
+void GameObject::SetTransform(const std::shared_ptr<Transform3D> transform)
+{
+	this->transform = transform;
+	transform->SetGameObject(shared_from_this());
 }

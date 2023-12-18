@@ -10,8 +10,7 @@ class SpriteComponent;
 
 Scene::Scene()
 {
-    objects = std::make_unique<std::set<std::shared_ptr<
-        GameObject>>>();
+    objects = std::make_unique<std::set<std::shared_ptr<GameObject>>>();
 }
 
 Scene::~Scene()

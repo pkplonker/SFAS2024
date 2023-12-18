@@ -7,7 +7,7 @@
 
 class ImGuiController;
 
-class Scene : public IUpdateable
+class Scene : public IUpdateable, public Transform
 {
 public:
 	Scene();
@@ -20,10 +20,11 @@ public:
 	void SetActiveCamera(const std::shared_ptr<ICamera>& camera);
 	std::set<std::shared_ptr<GameObject>>& GetObjects() const;
 	std::shared_ptr<ICamera> GetActiveCamera();
-
+	
 private:
 	std::unique_ptr<std::set<std::shared_ptr<GameObject>>> objects = std::make_unique<std::set<std::shared_ptr<
 		GameObject>>>();
 	std::shared_ptr<ICamera> camera = {};
 	std::weak_ptr<GameObject> selectedObject = {};
+	
 };
