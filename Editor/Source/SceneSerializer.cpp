@@ -159,6 +159,18 @@ json SceneSerializer::SerializeTransform(std::shared_ptr<Transform3D> transform)
     serializedData["scale"]["x"] = transform->Scale.X();
     serializedData["scale"]["y"] = transform->Scale.Y();
     serializedData["scale"]["z"] = transform->Scale.Z();
+    std::string parentGuidString = "";
+    if (auto parent = transform->parent.lock())
+    {
+        if (auto parentShared = parent->gameobject.lock())
+        {
+            if (!Helpers::TryGetStringFromGuid(parentShared->GetGUID(), parentGuidString))
+            {
+                Warning("Failed to load GUID from parent")
+            }
+        }
+    }
+    serializedData["parent"] = parentGuidString;
     return serializedData;
 }
 
@@ -232,6 +244,8 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
     }
 
     std::shared_ptr<Scene> scene = std::make_shared<Scene>();
+    std::unordered_map<std::string, std::shared_ptr<GameObject>> gameObjectDict;
+    std::unordered_map<std::string, std::string> parentsDict;
 
     if (sceneData.contains("objects"))
     {
@@ -241,15 +255,35 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
         {
             for (const json& objectData : objectsData)
             {
-                std::shared_ptr<GameObject> gameObject = DeserializeGameObject(objectData);
+                std::shared_ptr<GameObject> gameObject = DeserializeGameObject(objectData, parentsDict);
                 if (gameObject)
                 {
+                    std::string g;
+                    if (Helpers::TryGetStringFromGuid(gameObject->GetGUID(), g))
+                    {
+                        if (!gameObjectDict.try_emplace(g, gameObject).second)
+                        {
+                            Error("Duplicate guid detected" + g)
+                        }
+                    }
+
                     scene->AddChild(gameObject->Transform());
                     scene->AddObject(gameObject);
                 }
                 else
                 {
                     Warning("Failed to deserialize GameObject in scene file");
+                }
+            }
+            // process graph
+            for (auto& [object, parent] : parentsDict)
+            {
+                if (parent == "") continue;
+                auto parentGameObject = gameObjectDict[parent];
+                auto objectGameObject = gameObjectDict[object];
+                if (parentGameObject != nullptr && objectGameObject != nullptr)
+                {
+                    objectGameObject->Transform()->SetParent(parentGameObject->Transform());
                 }
             }
         }
@@ -371,7 +405,9 @@ void SceneSerializer::DeserializeSpriteComponent(const std::shared_ptr<GameObjec
 }
 
 
-std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohmann::json& data)
+std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohmann::json& data,
+                                                                   std::unordered_map<std::string, std::string>&
+                                                                   parentsDict)
 {
     if (data.is_array() && data.size() == 2)
     {
@@ -382,9 +418,11 @@ std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohman
         if (objectProperties.contains("name") && objectProperties.contains("transform"))
         {
             // Deserialize the transform
-            std::shared_ptr<Transform3D> transform = DeserializeTransform(objectProperties["transform"]);
-
+            std::string parentGuidString;
+            std::shared_ptr<Transform3D> transform = DeserializeTransform(
+                objectProperties["transform"], parentGuidString);
             std::shared_ptr<GameObject> newObject = std::make_shared<GameObject>(name);
+
             newObject->SetTransform(transform);
             newObject->Init();
             if (objectProperties.contains("guid"))
@@ -398,6 +436,9 @@ std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohman
                 {
                     newObject->GenerateGUID();
                 }
+                std::string objectGuidString;
+                Helpers::TryGetStringFromGuid(newObject->GetGUID(), objectGuidString);
+                parentsDict.try_emplace(objectGuidString, parentGuidString);
             }
             else
             {
@@ -436,7 +477,7 @@ std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohman
     return nullptr;
 }
 
-std::shared_ptr<Transform3D> SceneSerializer::DeserializeTransform(const nlohmann::json& data)
+std::shared_ptr<Transform3D> SceneSerializer::DeserializeTransform(const nlohmann::json& data, std::string& parentGuid)
 {
     std::shared_ptr<Transform3D> transform = std::make_shared<Transform3D>();
 
@@ -449,7 +490,7 @@ std::shared_ptr<Transform3D> SceneSerializer::DeserializeTransform(const nlohman
     transform->Scale.X(static_cast<float>(data["scale"]["x"]));
     transform->Scale.Y(static_cast<float>(data["scale"]["y"]));
     transform->Scale.Z(static_cast<float>(data["scale"]["z"]));
-
+    parentGuid = data["parent"];
     return transform;
 }
 

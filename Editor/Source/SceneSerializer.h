@@ -34,8 +34,8 @@ public:
     static void DeserializeMeshComponent(const std::shared_ptr<GameObject>& shared, const nlohmann::json& value);
     static void DeserializeSpriteComponent(const std::shared_ptr<GameObject>& shared, const nlohmann::json& value);
 
-    static std::shared_ptr<GameObject> DeserializeGameObject(const nlohmann::json& data);
-    static std::shared_ptr<Transform3D> DeserializeTransform(const nlohmann::json& data);
+    static std::shared_ptr<GameObject> DeserializeGameObject(const nlohmann::json& data, std::unordered_map<std::string, std::string>& parentsDict);
+    static std::shared_ptr<Transform3D> DeserializeTransform(const nlohmann::json& data, std::string& parentGuid);
     static std::shared_ptr<CameraComponent> DeserializeCameraComponent(std::shared_ptr<GameObject> gameObject,
                                                                        const nlohmann::json& data);
     static std::shared_ptr<OrthographicCamera> DeserializeOrthographicCamera(const nlohmann::json& data);
