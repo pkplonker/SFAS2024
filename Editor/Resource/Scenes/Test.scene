@@ -1,45 +1,9 @@
 {
     "objects": [
         [
-            "Cube",
-            {
-                "meshComponent": {
-                    "material": {
-                        "color": {
-                            "a": 1.0,
-                            "b": 0.43739601969718933,
-                            "g": 0.44607841968536377,
-                            "r": 0.15087947249412537
-                        },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false
-                    },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
-                },
-                "name": "Cube",
-                "transform": {
-                    "position": {
-                        "x": 0.0,
-                        "y": 0.5,
-                        "z": 0.0
-                    },
-                    "rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            }
-        ],
-        [
             "Grid",
             {
+                "guid": "{83580A11-7D88-499C-9CDF-5F92D19F2B09}",
                 "meshComponent": {
                     "material": {
                         "color": {
@@ -75,8 +39,47 @@
             }
         ],
         [
+            "Cube",
+            {
+                "guid": "{CC2FA29A-240C-49F4-8633-A407CFF55DA0}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 0.43739601969718933,
+                            "g": 0.44607841968536377,
+                            "r": 0.15087947249412537
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
+                        "skybox": false
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
+                },
+                "name": "Cube",
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.5,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
             "Ground",
             {
+                "guid": "{D177B4E5-A76B-4DCD-B293-39D36951A290}",
                 "meshComponent": {
                     "material": {
                         "color": {
@@ -124,6 +127,7 @@
                         "width": 2540.0
                     }
                 },
+                "guid": "{E8AD1BD2-E3CB-4A1A-9F18-4BFDC4492D92}",
                 "name": "Camera",
                 "transform": {
                     "position": {
@@ -147,6 +151,7 @@
         [
             "New Mesh",
             {
+                "guid": "{C5B0AC51-6D20-469C-80AA-27724E7C888D}",
                 "meshComponent": {
                     "material": {
                         "color": {

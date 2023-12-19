@@ -272,6 +272,7 @@
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Mesh.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Shader.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\Helpers.cpp" />
     <ClCompile Include="Source\Engine\Implementation\Logging\BufferSink.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>

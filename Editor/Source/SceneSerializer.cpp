@@ -37,7 +37,6 @@ void SceneSerializer::WriteToFile(json sceneData, std::string path)
 
         outputFile.close();
         Trace("Closed stream")
-
     }
     else
     {
@@ -64,7 +63,6 @@ nlohmann::json SceneSerializer::SerializeMaterial(const std::shared_ptr<IRendera
         serializedData["color"]["b"] = color.Z();
         serializedData["color"]["a"] = color.W();
         serializedData["skybox"] = material->GetIsSkybox();
-
     }
     return serializedData;
 }
@@ -115,9 +113,22 @@ bool SceneSerializer::Serialize(std::string path)
 nlohmann::json SceneSerializer::SerializeGameObject(const std::shared_ptr<GameObject>& object)
 {
     json serializedData;
-
+    std::string guidString;
+    if (Helpers::TryGetStringFromGuid(object->GetGUID(), guidString))
+    {
+        serializedData["guid"] = guidString;
+    }
+    else if (Helpers::TryGetStringFromGuid(object->GenerateGUID(), guidString))
+    {
+        serializedData["guid"] = guidString;
+    }
+    else
+    {
+        Error("Failed processing guid for object serialization")
+    }
     serializedData["name"] = object->Name;
     serializedData["transform"] = SerializeTransform(object->Transform());
+
 
     if (auto cameraComponent = object->GetComponent<CameraComponent>())
     {
@@ -233,6 +244,7 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
                 std::shared_ptr<GameObject> gameObject = DeserializeGameObject(objectData);
                 if (gameObject)
                 {
+                    scene->AddChild(gameObject->Transform());
                     scene->AddObject(gameObject);
                 }
                 else
@@ -358,6 +370,7 @@ void SceneSerializer::DeserializeSpriteComponent(const std::shared_ptr<GameObjec
     }
 }
 
+
 std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohmann::json& data)
 {
     if (data.is_array() && data.size() == 2)
@@ -374,6 +387,24 @@ std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohman
             std::shared_ptr<GameObject> newObject = std::make_shared<GameObject>(name);
             newObject->SetTransform(transform);
             newObject->Init();
+            if (objectProperties.contains("guid"))
+            {
+                GUID guid = {};
+                if (Helpers::TryGetGuidFromString(objectProperties["guid"], guid))
+                {
+                    newObject->SetGUID(guid);
+                }
+                else
+                {
+                    newObject->GenerateGUID();
+                }
+            }
+            else
+            {
+                Warning("GUID not found or is not a string in serialized data");
+
+                newObject->GenerateGUID();
+            }
             if (objectProperties.contains("cameraComponent"))
             {
                 auto cam = DeserializeCameraComponent(newObject, objectProperties["cameraComponent"]);
