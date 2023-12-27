@@ -7,7 +7,7 @@
 #include "imgui.h"
 #include "functional"
 #include "UndoManager.h"
-#include "Engine/Implementation/Logging/Debug.h"
+#include "Engine/Math/Vector3.h"
 class ImGuiHelpers
 {
 public:
@@ -115,7 +115,50 @@ public:
         if (ImGui::IsItemActivated())
         {
             sliderStates[label] = static_cast<float>(getValue());
-            std::cout << "setting inital value: " << static_cast<float>(getValue()) << std::endl;
+        }
+
+        if (valueChanged)
+        {
+            setValue(value);
+        }
+
+        if (ImGui::IsItemDeactivatedAfterEdit())
+        {
+            auto originalVal = static_cast<T>(sliderStates[label]);
+            if (value != originalVal)
+            {
+                UndoManager::Execute(
+                    Memento(
+                        [setValue, value] { setValue(value); },
+                        [setValue,originalVal] { setValue(static_cast<T>(originalVal)); },
+                        actionDescription));
+            }
+        }
+    }
+
+    template <typename T>
+    static void UndoableDrag(
+        std::function<T()> getValue,
+        std::function<void(T)> setValue,
+        const char* label,
+        const std::string& actionDescription)
+    {
+        T value = getValue();
+
+
+        bool valueChanged = false;
+        if constexpr (std::is_same<T, float>::value)
+        {
+            valueChanged = ImGui::DragFloat(label, reinterpret_cast<float*>(&value));
+        }
+        else if constexpr (std::is_same<T, int>::value)
+        {
+            valueChanged = ImGui::DragInt(label, reinterpret_cast<int*>(&value));
+        }
+
+        if (ImGui::IsItemActivated())
+        {
+            sliderStates[label] = static_cast<float>(getValue());
         }
 
         if (valueChanged)
@@ -173,6 +216,54 @@ public:
                     undoAction,
                     actionDescription));
         }
+    }
+
+    static void DrawVector(const char* vectorName, Vec3& vector)
+    {
+        float labelWidth = ImGui::CalcTextSize("Rotation").x + 20.0f;
+        float totalWidth = ImGui::GetContentRegionAvail().x - labelWidth;
+        float fieldWidth = totalWidth / 3.0f - ImGui::GetStyle().ItemInnerSpacing.x;
+
+        ImGui::Text(vectorName);
+        ImGui::SameLine(labelWidth);
+
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1, 0, 0, 1));
+        ImGui::Text("X");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(fieldWidth - ImGui::CalcTextSize("X").x);
+        UndoableDrag<float>(
+            [&vector]() { return vector.X(); },
+            [&vector](float x) { vector.X(x); },
+            (std::string("##X") + vectorName).c_str(),
+            "Change X Component"
+        );
+        ImGui::PopStyleColor();
+        ImGui::SameLine();
+
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 1, 0, 1));
+        ImGui::Text("Y");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(fieldWidth - ImGui::CalcTextSize("Y").x);
+        UndoableDrag<float>(
+            [&vector]() { return vector.Y(); },
+            [&vector](float y) { vector.Y(y); },
+            (std::string("##Y") + vectorName).c_str(),
+            "Change Y Component"
+        );
+        ImGui::PopStyleColor();
+        ImGui::SameLine();
+
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 1, 1));
+        ImGui::Text("Z");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(fieldWidth - ImGui::CalcTextSize("Z").x);
+        UndoableDrag<float>(
+            [&vector]() { return vector.Z(); },
+            [&vector](float z) { vector.Z(z); },
+            (std::string("##Z") + vectorName).c_str(),
+            "Change Z Component"
+        );
+        ImGui::PopStyleColor();
     }
 
 private:
