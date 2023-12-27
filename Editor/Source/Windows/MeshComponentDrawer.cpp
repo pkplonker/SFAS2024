@@ -67,7 +67,7 @@ void MeshComponentDrawer::Draw()
                                 }
                             }
                         },
-                        "Deleting camera component"
+                        "Deleting mesh component"
                     );
 
                     ImGui::EndPopup();
