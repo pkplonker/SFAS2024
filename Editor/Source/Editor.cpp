@@ -11,6 +11,7 @@
 #include "MeshImporter.h"
 #include "SceneManager.h"
 #include "SceneSerializer.h"
+#include "UndoManager.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 #include "Windows/EditorCameraWindow.h"
 #include "Windows/EditorWindow.h"
@@ -66,12 +67,14 @@ bool Editor::Load()
             scene->SetActiveCamera(editorCamera);
         }
     });
+    undomanager = std::make_unique<UndoManager>(Input);
     return true;
 }
 
 void Editor::Update()
 {
     game->Update();
+    undomanager->Update();
     imguiController->ImGuiPreFrame();
     if (imguiController->IsViewportInFocus())
     {

@@ -10,6 +10,7 @@
 #include "Engine/Implementation/Scene.h"
 #include "ImGuiController.h"
 
+class UndoManager;
 class DirectX11Graphics;
 class ResourceManager;
 class GameObject;
@@ -46,4 +47,5 @@ private:
 	inline static std::unique_ptr<ImGuiController> imguiController ={};
 	inline static std::unique_ptr<SceneSerializer> sceneSerializer ={};
 	std::shared_ptr<EditorCamera> editorCamera;
+	std::unique_ptr<UndoManager> undomanager;
 };
