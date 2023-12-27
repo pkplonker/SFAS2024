@@ -8,9 +8,10 @@
 #include "Engine/IApplication.h"
 class SpriteComponent;
 
-Scene::Scene()
+Scene::Scene(IGraphics* graphics)
 {
     objects = std::make_unique<std::map<std::string, std::shared_ptr<GameObject>>>();
+    this->graphics = graphics;
 }
 
 Scene::~Scene()
@@ -37,7 +38,14 @@ void Scene::AddObject(std::shared_ptr<GameObject> object)
     }
     objects->emplace(object->GetGUID(), object);
 
-    //if doesn't  contain renderable then add.    
+    if (graphics != nullptr)
+    {
+        const auto renderable = object->GetComponent<IRenderableComponent>();
+        if (renderable != nullptr)
+        {
+            graphics->UpdateRenderable(renderable->GetMaterial(), renderable->GetRenderable());
+        }
+    }
 }
 
 void Scene::RemoveObject(std::shared_ptr<GameObject> object)
@@ -102,9 +110,9 @@ std::shared_ptr<ICamera> Scene::GetActiveCamera()
 
 bool Scene::TryFindObject(const std::string& string, std::weak_ptr<GameObject>& object) const
 {
-    if(objects->contains(string))
+    if (objects->contains(string))
     {
-        object= (*objects)[string];
+        object = (*objects)[string];
         return true;
     }
     return false;
