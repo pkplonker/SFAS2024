@@ -94,7 +94,7 @@ bool SceneSerializer::Serialize(std::string path)
 
     if (auto sharedScene = SceneManager::GetScene().lock())
     {
-        for (const auto& object : sharedScene->GetObjects())
+        for (const auto& [guid, object] : sharedScene->GetObjects())
         {
             objectsData.push_back(SerializeGameObject(object));
         }

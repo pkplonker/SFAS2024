@@ -22,13 +22,13 @@ public:
     void RemoveRenderable(std::shared_ptr<IRenderable> object) const;
     void Update() override;
     void SetActiveCamera(const std::shared_ptr<ICamera>& camera);
-    std::set<std::shared_ptr<GameObject>>& GetObjects() const;
+    std::map<std::string,std::shared_ptr<GameObject>>& GetObjects() const;
     std::shared_ptr<ICamera> GetActiveCamera();
 
     
 
 private:
-    std::unique_ptr<std::set<std::shared_ptr<GameObject>>> objects = std::make_unique<std::set<std::shared_ptr<
+    std::unique_ptr<std::map<std::string,std::shared_ptr<GameObject>>> objects = std::make_unique<std::map<std::string,std::shared_ptr<
         GameObject>>>();
     std::shared_ptr<ICamera> camera = {};
     std::weak_ptr<GameObject> selectedObject = {};
