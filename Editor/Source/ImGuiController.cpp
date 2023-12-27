@@ -115,7 +115,7 @@ void ImGuiController::ImGuiPostUpdate() const
     ImGui::UpdatePlatformWindows();
     ImGui::RenderPlatformWindowsDefault();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-    dx11Graphics->SetRenderToTexture(true, gameViewportSize.x, gameViewportSize.y);
+    dx11Graphics->SetRenderToTexture(true, static_cast<int>(gameViewportSize.x), static_cast<int>(gameViewportSize.y));
     if (auto scene = SceneManager::GetScene().lock())
     {
         if (scene->GetActiveCamera() != nullptr)

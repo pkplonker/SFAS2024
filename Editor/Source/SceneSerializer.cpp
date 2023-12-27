@@ -255,7 +255,7 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
                         Error("Duplicate guid detected" + gameObject->GetGUID())
                     }
 
-                    scene->AddChild(gameObject->Transform());
+                    gameObject->Transform()->SetParent(scene);
                     scene->AddObject(gameObject);
                 }
                 else
@@ -415,7 +415,7 @@ std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohman
             newObject->Init();
             if (objectProperties.contains("guid"))
             {
-                if (objectProperties["guid"]!="")
+                if (objectProperties["guid"] != "")
                 {
                     newObject->SetGUID(objectProperties["guid"]);
                 }
@@ -476,7 +476,11 @@ std::shared_ptr<Transform3D> SceneSerializer::DeserializeTransform(const nlohman
     transform->Scale.X(static_cast<float>(data["scale"]["x"]));
     transform->Scale.Y(static_cast<float>(data["scale"]["y"]));
     transform->Scale.Z(static_cast<float>(data["scale"]["z"]));
-    parentGuid = data["parent"];
+    if (data.contains("parent"))
+    {
+        parentGuid = data["parent"];
+    }
+
     return transform;
 }
 

@@ -15,6 +15,8 @@ public:
     Hierarchy() = default;
 
     void HandleContextMenu(const char* contextMenuName);
+    void ProcessChildren(std::vector<std::shared_ptr<GameObject>> objectsToRemove, ImGuiTreeNodeFlags baseFlags,
+                         std::set<std::weak_ptr<Transform>, Transform::TransformCompare> children);
     void Draw() override;
     std::string GetName() override { return HIERARCHY; }
     std::weak_ptr<GameObject> GetSelectedObject();
