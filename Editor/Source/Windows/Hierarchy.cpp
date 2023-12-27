@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "imgui.h"
+#include "imgui_internal.h"
 #include "SceneManager.h"
 #include "../DefaultShapes.h"
 #include "Engine/Implementation/GameObject.h"
@@ -81,17 +82,44 @@ void Hierarchy::ProcessChildren(std::vector<std::shared_ptr<GameObject>> objects
                 int localFlags = baseFlags;
 
                 std::string nodeLabel = label + "##" + object->GetGUID();
-                if(!object->Transform()->HasChildren())
+                if (!object->Transform()->HasChildren())
                 {
                     localFlags |= ImGuiTreeNodeFlags_Leaf;
                 }
+
+
                 bool nodeOpen = ImGui::TreeNodeEx(nodeLabel.c_str(), localFlags);
-                
+
+                if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+                {
+                    ImGui::SetDragDropPayload(DragDropPayloadID, object->GetGUID().c_str(),
+                                              object->GetGUID().size() + 1);
+                    ImGui::EndDragDropSource();
+                }
+                if (ImGui::BeginDragDropTarget())
+                {
+                    if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(DragDropPayloadID))
+                    {
+                        std::string payloadGUID = static_cast<const char*>(payload->Data);
+                        if (payloadGUID != object->GetGUID())
+                        {
+                            if (const auto scene = SceneManager::GetScene().lock())
+                            {
+                                std::weak_ptr<GameObject> foundObject;
+                                if (scene->TryFindObject(payloadGUID, foundObject))
+                                {
+                                    foundObject.lock()->Transform()->SetParent(object->Transform());
+                                }
+                            }
+                        }
+                    }
+                    ImGui::EndDragDropTarget();
+                }
                 if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
                 {
                     selectedObject = object;
                 }
-                
+
                 if (ImGui::BeginPopupContextItem(("ObjectContextMenu##" + object->GetGUID()).c_str()))
                 {
                     selectedObject = object;
@@ -125,6 +153,28 @@ void Hierarchy::Draw()
     std::vector<std::shared_ptr<GameObject>> objectsToRemove;
 
     ImGui::Begin(HIERARCHY.c_str());
+    const auto window = ImGui::GetCurrentWindow();
+    if (ImGui::BeginDragDropTargetCustom(window->ContentRegionRect, window->ID))
+    {
+        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(DragDropPayloadID))
+        {
+            std::string payloadGUID = static_cast<const char*>(payload->Data);
+            if (const auto scene = SceneManager::GetScene().lock())
+            {
+                std::weak_ptr<GameObject> foundObject;
+                if (scene->TryFindObject(payloadGUID, foundObject))
+                {
+                    auto draggedObject = foundObject.lock();
+                    if (draggedObject)
+                    {
+                        draggedObject->Transform()->SetParent(scene);
+                    }
+                }
+            }
+        }
+        ImGui::EndDragDropTarget();
+    }
+
     auto contextMenuName = "ContextMenuWindow";
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow |
         ImGuiTreeNodeFlags_SpanAvailWidth;
@@ -134,7 +184,7 @@ void Hierarchy::Draw()
         HandleContextMenu(contextMenuName);
         auto children = sharedScene->children;
         ProcessChildren(objectsToRemove, flags, children);
-        for (const auto object : objectsToRemove)
+        for (const auto& object : objectsToRemove)
         {
             sharedScene->RemoveObject(object);
         }

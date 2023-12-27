@@ -24,8 +24,7 @@ public:
     void SetActiveCamera(const std::shared_ptr<ICamera>& camera);
     std::map<std::string,std::shared_ptr<GameObject>>& GetObjects() const;
     std::shared_ptr<ICamera> GetActiveCamera();
-
-    
+    bool TryFindObject(const std::string& string,std::weak_ptr<GameObject>& object) const;
 
 private:
     std::unique_ptr<std::map<std::string,std::shared_ptr<GameObject>>> objects = std::make_unique<std::map<std::string,std::shared_ptr<

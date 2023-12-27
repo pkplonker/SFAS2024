@@ -96,3 +96,13 @@ std::shared_ptr<ICamera> Scene::GetActiveCamera()
 {
     return camera;
 }
+
+bool Scene::TryFindObject(const std::string& string, std::weak_ptr<GameObject>& object) const
+{
+    if(objects->contains(string))
+    {
+        object= (*objects)[string];
+        return true;
+    }
+    return false;
+}

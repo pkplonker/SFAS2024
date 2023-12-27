@@ -25,5 +25,5 @@ private:
     std::weak_ptr<GameObject> selectedObject;
     std::unique_ptr<ComponentDrawerFactory> factory;
     RenamingHelper renamingHelper;
-
+    static inline const char* DragDropPayloadID = "HIERARCHY_GAMEOBJECT";
 };
