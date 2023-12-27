@@ -17,6 +17,8 @@ class GameObject;
 class GameObjectFactory
 {
 public:
+    void Setup(std::string name);
+    std::string GenerateName() const;
     GameObjectFactory();
     static bool ObjectNameExists(const std::shared_ptr<Scene>& scene, const std::string& name);
 
@@ -40,6 +42,8 @@ public:
     GameObjectFactory& AddPosition(Vec3 vec);
 
     GameObjectFactory& AddRotation(Vec3 vec);
+    GameObjectFactory& SetParentWeak(std::weak_ptr<Transform> transform);
+    GameObjectFactory& SetParent(std::shared_ptr<Transform> transform);
 
     GameObjectFactory& AddScale(Vec3 vec);
 

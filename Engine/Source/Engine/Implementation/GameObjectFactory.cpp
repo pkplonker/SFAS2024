@@ -13,7 +13,46 @@
 #include "Engine/Implementation/CameraComponent.h"
 #include "Engine/Implementation/Scene.h"
 
+void GameObjectFactory::Setup(std::string name)
+{
+    gameObject = std::make_shared<GameObject>(name);
+    gameObject->Init();
+    auto scene = SceneManager::GetScene().lock();
+    if (scene == nullptr)
+    {
+        Warning("no scene to create gameobject");
+        return;
+    }
+    gameObject->Transform()->SetParent(scene);
+}
+
 GameObjectFactory::GameObjectFactory()
+{
+    Setup(GenerateName());
+}
+
+std::string GameObjectFactory::GenerateName() const
+{
+    auto scene = SceneManager::GetScene().lock();
+    if (scene == nullptr)
+    {
+        Warning("no scene to create gameobject");
+        return "";
+    }
+    int counter = 1;
+    std::string baseName = GameObject::GAMEOBJECT_DEFAULT_NAME;
+    auto name = baseName + " (" + std::to_string(counter) + ")";
+
+    while (ObjectNameExists(scene, name))
+    {
+        counter++;
+        name = baseName + " (" + std::to_string(counter) + ")";
+    }
+    return name;
+}
+
+
+GameObjectFactory::GameObjectFactory(std::string name)
 {
     auto scene = SceneManager::GetScene().lock();
     if (scene == nullptr)
@@ -21,27 +60,10 @@ GameObjectFactory::GameObjectFactory()
         Warning("no scene to create gameobject");
         return;
     }
-
-    int counter = 1;
-    std::string baseName = GameObject::GAMEOBJECT_DEFAULT_NAME;
-    std::string name = baseName + " (" + std::to_string(counter) + ")";
-
-    while (ObjectNameExists(scene, name))
-    {
-        counter++;
-        name = baseName + " (" + std::to_string(counter) + ")";
-    }
-
     gameObject = std::make_shared<GameObject>(name);
     gameObject->Init();
-    SetupRandom();
-}
+    gameObject->Transform()->SetParent(scene);
 
-
-GameObjectFactory::GameObjectFactory(std::string name)
-{
-    gameObject = std::make_shared<GameObject>(name);
-    gameObject->Init();
     SetupRandom();
 }
 
@@ -77,6 +99,22 @@ GameObjectFactory& GameObjectFactory::AddRotation(Vec3 vec)
     gameObject->Transform()->Rotation = vec;
     return *this;
 }
+
+GameObjectFactory& GameObjectFactory::SetParentWeak(std::weak_ptr<Transform> transform)
+{
+    if (const auto sharedTrans = transform.lock())
+    {
+        return SetParent(sharedTrans);
+    }
+    return *this;
+}
+
+GameObjectFactory& GameObjectFactory::SetParent(std::shared_ptr<Transform> transform)
+{
+    gameObject->Transform()->SetParent(transform);
+    return *this;
+}
+
 
 GameObjectFactory& GameObjectFactory::AddScale(Vec3 vec)
 {

@@ -29,15 +29,21 @@ void Hierarchy::HandleContextMenu(const char* contextMenuName)
             {
                 if (ImGui::MenuItem("Cube"))
                 {
-                    GameObjectFactory("New Cube").AddMeshRenderable(DefaultShapes::GetCubeMesh()).Build();
+                    GameObjectFactory("New Cube")
+                        .AddMeshRenderable(DefaultShapes::GetCubeMesh())
+                        .Build();
                 }
                 if (ImGui::MenuItem("Sphere"))
                 {
-                    GameObjectFactory("New Sphere").AddMeshRenderable(DefaultShapes::GetSphereMesh()).Build();
+                    GameObjectFactory("New Sphere")
+                        .AddMeshRenderable(DefaultShapes::GetSphereMesh())
+                        .Build();
                 }
                 if (ImGui::MenuItem("Plane"))
                 {
-                    GameObjectFactory("New Plane").AddMeshRenderable(DefaultShapes::GetPlaneMesh()).Build();
+                    GameObjectFactory("New Plane")
+                        .AddMeshRenderable(DefaultShapes::GetPlaneMesh())
+                        .Build();
                 }
                 ImGui::EndMenu();
             }
@@ -47,17 +53,23 @@ void Hierarchy::HandleContextMenu(const char* contextMenuName)
             }
             if (ImGui::MenuItem("Empty Mesh"))
             {
-                GameObjectFactory("New Mesh").AddEmptyMeshRenderable().Build();
+                GameObjectFactory("New Mesh")
+                    .AddEmptyMeshRenderable()
+                    .Build();
             }
             if (ImGui::MenuItem("Empty Sprite"))
             {
-                GameObjectFactory("New Sprite").AddEmptySpriteRenderable().Build();
+                GameObjectFactory("New Sprite")
+                    .AddEmptySpriteRenderable()
+                    .Build();
             }
 
 
             if (ImGui::MenuItem("Camera"))
             {
-                GameObjectFactory("New Camera").AddPerspectiveCamera().Build();
+                GameObjectFactory("New Camera")
+                    .AddPerspectiveCamera()
+                    .Build();
             }
             if (ImGui::MenuItem("Light"))
             {
