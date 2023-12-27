@@ -7,7 +7,7 @@
 #include "imgui.h"
 #include "functional"
 #include "UndoManager.h"
-
+#include "Engine/Implementation/Logging/Debug.h"
 class ImGuiHelpers
 {
 public:
@@ -111,13 +111,13 @@ public:
         {
             valueChanged = ImGui::SliderInt(label, reinterpret_cast<int*>(&value), minValue, maxValue);
         }
-        
+
         if (ImGui::IsItemActivated())
         {
             sliderStates[label] = static_cast<float>(getValue());
             std::cout << "setting inital value: " << static_cast<float>(getValue()) << std::endl;
         }
-        
+
         if (valueChanged)
         {
             setValue(value);
@@ -134,6 +134,44 @@ public:
                         [setValue,originalVal] { setValue(static_cast<T>(originalVal)); },
                         actionDescription));
             }
+        }
+    }
+
+    template <typename T>
+    static void UndoableMenuItem(
+        const std::string& label,
+        std::function<T()> getter,
+        std::function<void(const T&)> setter,
+        const T& newState,
+        const std::string& actionDescription)
+    {
+        T originalState = getter();
+
+        if (ImGui::MenuItem(label.c_str()))
+        {
+            setter(newState);
+
+            UndoManager::Execute(
+                Memento(
+                    [setter, newState] { setter(newState); },
+                    [setter, originalState] { setter(originalState); },
+                    actionDescription));
+        }
+    }
+
+    static void UndoableMenuItemAction(
+        const std::string& label,
+        std::function<void()> doAction,
+        std::function<void()> undoAction,
+        const std::string& actionDescription)
+    {
+        if (ImGui::MenuItem(label.c_str()))
+        {
+            UndoManager::Execute(
+                Memento(
+                    doAction,
+                    undoAction,
+                    actionDescription));
         }
     }
 

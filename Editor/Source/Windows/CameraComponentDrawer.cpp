@@ -22,36 +22,30 @@ void CameraComponentDrawer::DrawPerspective(std::shared_ptr<PerspectiveCamera> c
     {
         if (ImGui::BeginPopupContextItem("PerspectiveCameraContext"))
         {
-            float current = cam->GetNear();
-            if (ImGui::MenuItem("Reset Near"))
-            {
-                UndoManager::Execute(
-                    Memento(
-                        [cam] { cam->SetNear(); },
-                        [cam, current] { cam->SetNear(current); },
-                        "Resetting near"));
-            }
+            ImGuiHelpers::UndoableMenuItem<float>(
+                "Reset Near",
+                [cam]() { return cam->GetNear(); },
+                [cam](float value) { cam->SetNear(value); },
+                0.0f,
+                "Resetting near"
+            );
 
+            ImGuiHelpers::UndoableMenuItem<float>(
+                "Reset Far",
+                [cam]() { return cam->GetFar(); },
+                [cam](float value) { cam->SetFar(value); },
+                0.0f,
+                "Resetting far"
+            );
 
-            if (ImGui::MenuItem("Reset Far"))
-            {
-                auto current = cam->GetFar();
-                UndoManager::Execute(
-                    Memento(
-                        [cam] { cam->SetFar(); },
-                        [cam, current] { cam->SetFar(current); },
-                        "Resetting far"));
-            }
+            ImGuiHelpers::UndoableMenuItem<float>(
+                "Reset FOV",
+                [cam]() { return cam->GetFOV(); },
+                [cam](float value) { cam->SetFOV(value); },
+                0.0f,
+                "Resetting FOV"
+            );
 
-            if (ImGui::MenuItem("Reset FOV"))
-            {
-                auto current = cam->GetFOV();
-                UndoManager::Execute(
-                    Memento(
-                        [cam] { cam->SetFOV(); },
-                        [cam, current] { cam->SetFOV(current); },
-                        "Resetting FOV"));
-            }
 
             ImGui::EndPopup();
         }
@@ -88,17 +82,21 @@ void CameraComponentDrawer::DrawOrtho(std::shared_ptr<OrthographicCamera> cam)
     {
         if (ImGui::BeginPopupContextItem("OrthographicCameraContext"))
         {
-            if (ImGui::MenuItem("Reset Near"))
-            {
-                cam->SetNear();
-                Trace("Resetting near")
-            }
-            if (ImGui::MenuItem("Reset Far"))
-            {
-                cam->SetFar();
-                Trace("Resetting far")
-            }
+            ImGuiHelpers::UndoableMenuItem<float>(
+                "Reset Near",
+                [cam]() { return cam->GetNear(); },
+                [cam](float value) { cam->SetNear(value); },
+                0.0f,
+                "Resetting near"
+            );
 
+            ImGuiHelpers::UndoableMenuItem<float>(
+                "Reset Far",
+                [cam]() { return cam->GetFar(); },
+                [cam](float value) { cam->SetFar(value); },
+                0.0f,
+                "Resetting far"
+            );
             ImGui::EndPopup();
         }
 
@@ -148,13 +146,24 @@ void CameraComponentDrawer::Draw()
             {
                 if (ImGui::BeginPopupContextItem("CameraComponentContext"))
                 {
-                    if (ImGui::MenuItem("Delete component"))
+                    if (auto gameobject = cameraComponent->GetGameObject().lock())
                     {
-                        if (auto gameobject = cameraComponent->GetGameObject().lock())
-                        {
-                            gameobject->RemoveComponent(cameraComponent);
-                            Trace("Removing camera")
-                        }
+                        ImGuiHelpers::UndoableMenuItemAction(
+                            "Delete component",
+                            [cameraComponent]()
+                            {
+                                auto go = cameraComponent->GetGameObject().lock();
+                                go->RemoveComponent(cameraComponent);
+                            },
+                            [cameraComponent, gameobject]()
+                            {
+                                if (gameobject)
+                                {
+                                    gameobject->AddComponent(cameraComponent);
+                                }
+                            },
+                            "Deleting camera component"
+                        );
                     }
                     ImGui::EndPopup();
                 }

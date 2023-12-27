@@ -28,25 +28,34 @@ void Inspector::Draw()
         }
         renamingHelper.DrawRenamePopup();
         ImGui::SameLine();
-      
+
         ImGui::Text(gameobject->GetGUID().c_str());
 
         if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
         {
             if (ImGui::BeginPopupContextItem("TransformContextMenu"))
             {
-                if (ImGui::MenuItem("Reset Position"))
-                {
-                    gameobject->Transform()->Position = Vec3::Zero();
-                }
-                if (ImGui::MenuItem("Reset Rotation"))
-                {
-                    gameobject->Transform()->Rotation = Vec3::Zero();
-                }
-                if (ImGui::MenuItem("Reset Scale"))
-                {
-                    gameobject->Transform()->Scale = Vec3::One();
-                }
+                ImGuiHelpers::UndoableMenuItem<Vec3>(
+                    "Reset Position",
+                    [gameobject]() { return gameobject->Transform()->Position; },
+                    [gameobject](const Vec3& newVal) { gameobject->Transform()->Position = newVal; },
+                    Vec3::Zero(),
+                    "Reset GameObject Position"
+                );
+                ImGuiHelpers::UndoableMenuItem<Vec3>(
+                    "Reset Rotation",
+                    [gameobject]() { return gameobject->Transform()->Rotation; },
+                    [gameobject](const Vec3& newVal) { gameobject->Transform()->Rotation = newVal; },
+                    Vec3::Zero(),
+                    "Reset GameObject rotation"
+                );
+                ImGuiHelpers::UndoableMenuItem<Vec3>(
+                    "Reset Scale",
+                    [gameobject]() { return gameobject->Transform()->Scale; },
+                    [gameobject](const Vec3& newVal) { gameobject->Transform()->Scale = newVal; },
+                    Vec3::Zero(),
+                    "Reset GameObject scale"
+                );
                 ImGui::EndPopup();
             }
             DrawVector("Position", gameobject->Transform()->Position);
