@@ -37,7 +37,6 @@ void SceneSerializer::WriteToFile(json sceneData, std::string path)
 
         outputFile.close();
         Trace("Closed stream")
-
     }
     else
     {
@@ -64,7 +63,6 @@ nlohmann::json SceneSerializer::SerializeMaterial(const std::shared_ptr<IRendera
         serializedData["color"]["b"] = color.Z();
         serializedData["color"]["a"] = color.W();
         serializedData["skybox"] = material->GetIsSkybox();
-
     }
     return serializedData;
 }
@@ -96,7 +94,7 @@ bool SceneSerializer::Serialize(std::string path)
 
     if (auto sharedScene = SceneManager::GetScene().lock())
     {
-        for (const auto& object : sharedScene->GetObjects())
+        for (const auto& [guid, object] : sharedScene->GetObjects())
         {
             objectsData.push_back(SerializeGameObject(object));
         }
@@ -115,9 +113,19 @@ bool SceneSerializer::Serialize(std::string path)
 nlohmann::json SceneSerializer::SerializeGameObject(const std::shared_ptr<GameObject>& object)
 {
     json serializedData;
+    std::string guidString;
+    if (object->GetGUID() != "")
+    {
+        serializedData["guid"] = object->GetGUID();
+    }
+    else
+    {
+        serializedData["guid"] = object->GenerateGUID();
+    }
 
     serializedData["name"] = object->Name;
     serializedData["transform"] = SerializeTransform(object->Transform());
+
 
     if (auto cameraComponent = object->GetComponent<CameraComponent>())
     {
@@ -148,6 +156,13 @@ json SceneSerializer::SerializeTransform(std::shared_ptr<Transform3D> transform)
     serializedData["scale"]["x"] = transform->Scale.X();
     serializedData["scale"]["y"] = transform->Scale.Y();
     serializedData["scale"]["z"] = transform->Scale.Z();
+    if (const auto parent = transform->parent.lock())
+    {
+        if (const auto parentShared = parent->gameobject.lock())
+        {
+            serializedData["parent"] = parentShared->GetGUID();
+        }
+    }
     return serializedData;
 }
 
@@ -221,6 +236,8 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
     }
 
     std::shared_ptr<Scene> scene = std::make_shared<Scene>();
+    std::unordered_map<std::string, std::shared_ptr<GameObject>> gameObjectDict;
+    std::unordered_map<std::string, std::string> parentsDict;
 
     if (sceneData.contains("objects"))
     {
@@ -230,14 +247,31 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
         {
             for (const json& objectData : objectsData)
             {
-                std::shared_ptr<GameObject> gameObject = DeserializeGameObject(objectData);
+                std::shared_ptr<GameObject> gameObject = DeserializeGameObject(objectData, parentsDict);
                 if (gameObject)
                 {
+                    if (!gameObjectDict.try_emplace(gameObject->GetGUID(), gameObject).second)
+                    {
+                        Error("Duplicate guid detected" + gameObject->GetGUID())
+                    }
+
+                    gameObject->Transform()->SetParent(scene);
                     scene->AddObject(gameObject);
                 }
                 else
                 {
                     Warning("Failed to deserialize GameObject in scene file");
+                }
+            }
+            // process graph
+            for (auto& [object, parent] : parentsDict)
+            {
+                if (parent == "") continue;
+                auto parentGameObject = gameObjectDict[parent];
+                auto objectGameObject = gameObjectDict[object];
+                if (parentGameObject != nullptr && objectGameObject != nullptr)
+                {
+                    objectGameObject->Transform()->SetParent(parentGameObject->Transform());
                 }
             }
         }
@@ -358,7 +392,10 @@ void SceneSerializer::DeserializeSpriteComponent(const std::shared_ptr<GameObjec
     }
 }
 
-std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohmann::json& data)
+
+std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohmann::json& data,
+                                                                   std::unordered_map<std::string, std::string>&
+                                                                   parentsDict)
 {
     if (data.is_array() && data.size() == 2)
     {
@@ -369,10 +406,32 @@ std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohman
         if (objectProperties.contains("name") && objectProperties.contains("transform"))
         {
             // Deserialize the transform
-            std::shared_ptr<Transform3D> transform = DeserializeTransform(objectProperties["transform"]);
-
+            std::string parentGuidString;
+            std::shared_ptr<Transform3D> transform = DeserializeTransform(
+                objectProperties["transform"], parentGuidString);
             std::shared_ptr<GameObject> newObject = std::make_shared<GameObject>(name);
+
             newObject->SetTransform(transform);
+            newObject->Init();
+            if (objectProperties.contains("guid"))
+            {
+                if (objectProperties["guid"] != "")
+                {
+                    newObject->SetGUID(objectProperties["guid"]);
+                }
+                else
+                {
+                    newObject->GenerateGUID();
+                }
+
+                parentsDict.try_emplace(objectProperties["guid"], parentGuidString);
+            }
+            else
+            {
+                Warning("GUID not found or is not a string in serialized data");
+
+                newObject->GenerateGUID();
+            }
             if (objectProperties.contains("cameraComponent"))
             {
                 auto cam = DeserializeCameraComponent(newObject, objectProperties["cameraComponent"]);
@@ -404,7 +463,7 @@ std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohman
     return nullptr;
 }
 
-std::shared_ptr<Transform3D> SceneSerializer::DeserializeTransform(const nlohmann::json& data)
+std::shared_ptr<Transform3D> SceneSerializer::DeserializeTransform(const nlohmann::json& data, std::string& parentGuid)
 {
     std::shared_ptr<Transform3D> transform = std::make_shared<Transform3D>();
 
@@ -417,6 +476,10 @@ std::shared_ptr<Transform3D> SceneSerializer::DeserializeTransform(const nlohman
     transform->Scale.X(static_cast<float>(data["scale"]["x"]));
     transform->Scale.Y(static_cast<float>(data["scale"]["y"]));
     transform->Scale.Z(static_cast<float>(data["scale"]["z"]));
+    if (data.contains("parent"))
+    {
+        parentGuid = data["parent"];
+    }
 
     return transform;
 }

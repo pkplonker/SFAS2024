@@ -3,6 +3,7 @@
 #include "IApplication.h"
 #include "IRenderable.h"
 #include "SceneManager.h"
+#include "Implementation/Scene.h"
 
 IRenderableComponent::IRenderableComponent(std::weak_ptr<GameObject> object) : IComponent(object)
 {
@@ -16,6 +17,15 @@ IRenderableComponent::IRenderableComponent(std::weak_ptr<GameObject> object, std
     if (renderable != nullptr)
     {
         SetRenderable(renderable);
+    }
+}
+
+IRenderableComponent::~IRenderableComponent()
+{
+    const auto scene = SceneManager::GetScene();
+    if(const auto shared = scene.lock())
+    {
+        shared->RemoveRenderable(renderable);
     }
 }
 

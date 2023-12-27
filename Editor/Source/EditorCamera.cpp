@@ -1,7 +1,5 @@
 #include "EditorCamera.h"
 
-#include <iostream>
-
 #include "EditorSettings.h"
 #include "EngineTime.h"
 #include "IInput.h"
@@ -67,15 +65,15 @@ void EditorCamera::SetFov(int fov)
     camera->SetFOV(fov);
 }
 
-void EditorCamera::Update()
+void EditorCamera::MouseInput()
 {
-    xRotSpeed = EditorSettings::Get("Editor_Cam_XROT_SPEED", 1.0f, "Editor Camera X Rotation Speed", "Editor Camera");
-    yRotSpeed = EditorSettings::Get("Editor_Cam_YROT_SPEED", 1.0f, "Editor Camera Y Rotation Speed", "Editor Camera");
-    xMoveSpeed = EditorSettings::Get("Editor_Cam_XMOVE_SPEED", 1.0f, "Editor Camera X Move Speed", "Editor Camera");
-    yMoveSpeed = EditorSettings::Get("Editor_Cam_YMOVE_SPEED", 1.0f, "Editor Camera Y Move Speed", "Editor Camera");
-    scrollSpeed = EditorSettings::Get("Editor_Cam_ZOOM_SPEED", 1.0f, "Editor Camera Zoom Speed", "Editor Camera");
+    xRotSpeed = EditorSettings::Get("Editor_Cam_XROT_SPEED", 1.0f, "X Rotation Speed", "Editor Camera");
+    yRotSpeed = EditorSettings::Get("Editor_Cam_YROT_SPEED", 1.0f, "Rotation Speed", "Editor Camera");
+    xMoveSpeed = EditorSettings::Get("Editor_Cam_XMOVE_SPEED", 1.0f, "X Pan Move Speed", "Editor Camera");
+    yMoveSpeed = EditorSettings::Get("Editor_Cam_YMOVE_SPEED", 1.0f, "Y Pan Move Speed", "Editor Camera");
+    scrollSpeed = EditorSettings::Get("Editor_Cam_ZOOM_SPEED", 1.0f, "Zoom Speed", "Editor Camera");
     auto deltaTime = EngineTime::GetDeltaTime();
-    
+
     DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(
         DirectX::XMConvertToRadians(transform->Rotation.X()),
         DirectX::XMConvertToRadians(transform->Rotation.Y()),
@@ -112,4 +110,45 @@ void EditorCamera::Update()
                                    transform->Position.Y() + moveVec.y,
                                    transform->Position.Z() + moveVec.z);
     }
+}
+
+void EditorCamera::KeyboardInput()
+{
+    if (!input->IsRightHeld()) return;
+
+    speed = EditorSettings::Get("Editor_Cam_MOVESPEED", 1.0f, "Move Speed", "Editor Camera");
+    multiplier = EditorSettings::Get("Editor_Cam_MULTIPLIER_MOVESPEED", 1.0f, "Move Speed Multiplier", "Editor Camera");
+
+    auto currentSpeedMultiplier = input->IsKeyDown(LeftShift) ? multiplier : 1;
+
+    DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(
+        DirectX::XMConvertToRadians(transform->Rotation.X()),
+        DirectX::XMConvertToRadians(transform->Rotation.Y()),
+        DirectX::XMConvertToRadians(transform->Rotation.Z()));
+    
+    auto moveSpeed = speed * currentSpeedMultiplier;
+    
+    if (input->IsKeyDown(W))
+    {
+        transform->Position = transform->Position + ((Vec3::Forward() * rotationMatrix) * moveSpeed);
+    }
+    if (input->IsKeyDown(A))
+    {
+        transform->Position = transform->Position + ((Vec3::Left() * rotationMatrix) * moveSpeed);
+    }
+    if (input->IsKeyDown(S))
+    {
+        transform->Position = transform->Position + ((Vec3::Back() * rotationMatrix) * moveSpeed);
+    }
+    if (input->IsKeyDown(D))
+    {
+        transform->Position = transform->Position + ((Vec3::Right() * rotationMatrix) * moveSpeed);
+    }
+}
+
+
+void EditorCamera::Update()
+{
+    MouseInput();
+    KeyboardInput();
 }

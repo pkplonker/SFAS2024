@@ -122,6 +122,12 @@ void DirectXInput::HandleMouse()
 
 void DirectXInput::HandleKeyboard()
 {
+    keyboardState = keyboard->GetState();
+}
+
+bool DirectXInput::IsKeyDown(Keys key) const
+{
+    return keyboardState.IsKeyDown(static_cast<DirectX::Keyboard::Keys>(key));
 }
 
 void DirectXInput::Update()
@@ -203,12 +209,12 @@ int DirectXInput::GetDeltaY() const
 
 Vec2 DirectXInput::GetMousePosition()
 {
-    return Vec2(mouseX, mouseY);
+    return Vec2(static_cast<float>(mouseX), static_cast<float>(mouseY));
 }
 
 Vec2 DirectXInput::GetMouseDelta()
 {
-    return Vec2(lastX - mouseX, lastY - mouseY);
+    return Vec2(static_cast<float>(lastX) - mouseX, static_cast<float>(lastY) - mouseY);
 }
 
 int DirectXInput::GetMouseScrollDelta()

@@ -760,8 +760,8 @@ void DirectX11Graphics::SetRenderToTexture(bool state, int width, int height)
         Context->OMSetRenderTargets(1, &renderTargetView, textureTargetDepthStencilView);
         if (camera != nullptr)
         {
-            camera->SetWidth(texWidth);
-            camera->SetHeight(texHeight);
+            camera->SetWidth(static_cast<float>(texWidth));
+            camera->SetHeight(static_cast<float>(texHeight));
         }
     }
     renderToTexture = state;
@@ -883,8 +883,8 @@ void DirectX11Graphics::UpdateRenderToTextureResources(int newWidth, int newHeig
 
         if (camera)
         {
-            camera->SetWidth(texWidth);
-            camera->SetHeight(texHeight);
+            camera->SetWidth(static_cast<float>(texWidth));
+            camera->SetHeight(static_cast<float>(texHeight));
         }
     }
 }

@@ -33,6 +33,7 @@ GameObjectFactory::GameObjectFactory()
     }
 
     gameObject = std::make_shared<GameObject>(name);
+    gameObject->Init();
     SetupRandom();
 }
 
@@ -40,12 +41,13 @@ GameObjectFactory::GameObjectFactory()
 GameObjectFactory::GameObjectFactory(std::string name)
 {
     gameObject = std::make_shared<GameObject>(name);
+    gameObject->Init();
     SetupRandom();
 }
 
 bool GameObjectFactory::ObjectNameExists(const std::shared_ptr<Scene>& scene, const std::string& name)
 {
-    for (const auto& object : scene->GetObjects())
+    for (const auto& [guid, object] : scene->GetObjects())
     {
         if (object->Name == name)
         {
@@ -162,7 +164,7 @@ GameObjectFactory& GameObjectFactory::AddMeshRenderable(Mesh* mesh)
     IMaterial* material;
 
     material = ResourceManager::GetMaterial();
-    
+
     auto component = std::make_shared<MeshComponent>(
         gameObject, IApplication::GetGraphics()->CreateMeshRenderable(material, mesh),
         material);
@@ -217,6 +219,19 @@ GameObjectFactory& GameObjectFactory::AddOrthoCamera()
     auto ortho = std::make_shared<OrthographicCamera>(gameObject->Transform(), 0, 0);
 
     auto component = std::make_shared<CameraComponent>(gameObject, ortho);
+    if (component != nullptr)
+    {
+        gameObject->AddComponent(std::move(component));
+        return *this;
+    }
+    return *this;
+}
+
+GameObjectFactory& GameObjectFactory::AddEmptySpriteRenderable()
+{
+    auto component = std::make_shared<SpriteComponent>(
+        gameObject, nullptr,
+        nullptr);
     if (component != nullptr)
     {
         gameObject->AddComponent(std::move(component));

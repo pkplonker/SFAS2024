@@ -1,8 +1,86 @@
 {
     "objects": [
         [
+            "Grid",
+            {
+                "guid": "{83580A11-7D88-499C-9CDF-5F92D19F2B09}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 0.3019999861717224,
+                            "b": 0.8872548937797546,
+                            "g": 0.8872548937797546,
+                            "r": 0.8872548937797546
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Plane.smesh",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\Grid.fx",
+                        "skybox": false
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Plane.smesh"
+                },
+                "name": "Grid",
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": -0.05000000074505806,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "New Mesh",
+            {
+                "guid": "{C5B0AC51-6D20-469C-80AA-27724E7C888D}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 0.0,
+                            "g": 0.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
+                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/boing.fx",
+                        "skybox": false
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
+                },
+                "name": "New Mesh",
+                "transform": {
+                    "parent": "{CC2FA29A-240C-49F4-8633-A407CFF55DA0}",
+                    "position": {
+                        "x": 0.0,
+                        "y": 3.0999999046325684,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
             "Cube",
             {
+                "guid": "{CC2FA29A-240C-49F4-8633-A407CFF55DA0}",
                 "meshComponent": {
                     "material": {
                         "color": {
@@ -38,41 +116,9 @@
             }
         ],
         [
-            "Camera",
-            {
-                "cameraComponent": {
-                    "camera": {
-                        "far": 200.0,
-                        "fov": 66.66899871826172,
-                        "height": 1397.0,
-                        "near": 0.10000000149011612,
-                        "type": "PerspectiveCamera",
-                        "width": 2540.0
-                    }
-                },
-                "name": "Camera",
-                "transform": {
-                    "position": {
-                        "x": 0.20000000298023224,
-                        "y": -1.2000000476837158,
-                        "z": -12.0
-                    },
-                    "rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "scale": {
-                        "x": 4.699999809265137,
-                        "y": 5.699999809265137,
-                        "z": 4.300000190734863
-                    }
-                }
-            }
-        ],
-        [
             "Ground",
             {
+                "guid": "{D177B4E5-A76B-4DCD-B293-39D36951A290}",
                 "meshComponent": {
                     "material": {
                         "color": {
@@ -108,26 +154,25 @@
             }
         ],
         [
-            "Sky",
+            "Camera",
             {
-                "name": "Sky",
-                "spriteComponent": {
-                    "material": {
-                        "color": {
-                            "a": 1.0,
-                            "b": 1.0,
-                            "g": 1.0,
-                            "r": 1.0
-                        },
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\Sky.fx",
-                        "skybox": true
+                "cameraComponent": {
+                    "camera": {
+                        "far": 200.0,
+                        "fov": 66.66899871826172,
+                        "height": 1397.0,
+                        "near": 0.10000000149011612,
+                        "type": "PerspectiveCamera",
+                        "width": 2540.0
                     }
                 },
+                "guid": "{E8AD1BD2-E3CB-4A1A-9F18-4BFDC4492D92}",
+                "name": "Camera",
                 "transform": {
                     "position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "x": 0.20000000298023224,
+                        "y": -1.2000000476837158,
+                        "z": -12.0
                     },
                     "rotation": {
                         "x": 0.0,
@@ -135,9 +180,9 @@
                         "z": 0.0
                     },
                     "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
+                        "x": 4.699999809265137,
+                        "y": 5.699999809265137,
+                        "z": 4.300000190734863
                     }
                 }
             }

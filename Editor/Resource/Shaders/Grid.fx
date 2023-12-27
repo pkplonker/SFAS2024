@@ -58,7 +58,7 @@ float PristineGrid(float2 gridPosition, float2 lineWidth)
 }
 float4 PS_Main(PS_Input frag) : SV_TARGET
 {
-    float2 gridPositionXZ = frag.worldPos.xy / frag.inverseScale;
+    float2 gridPositionXZ = frag.worldPos.xz / frag.inverseScale;
     float grid = PristineGrid(gridPositionXZ * GridScale, float2(LineWidthX, LineWidthY));
     grid = 1.0 - grid;
 
