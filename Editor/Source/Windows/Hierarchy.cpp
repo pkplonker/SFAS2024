@@ -9,6 +9,7 @@
 #include "imgui_internal.h"
 #include "SceneManager.h"
 #include "../DefaultShapes.h"
+#include "../ImGuiHelpers.h"
 #include "Engine/Implementation/GameObject.h"
 #include "Engine/Implementation/GameObjectFactory.h"
 #include "Engine/Implementation/Scene.h"
@@ -123,14 +124,42 @@ void Hierarchy::ProcessChildren(std::vector<std::shared_ptr<GameObject>>& object
                 if (ImGui::BeginPopupContextItem(("ObjectContextMenu##" + object->GetGUID()).c_str()))
                 {
                     selectedObject = object;
-                    if (ImGui::MenuItem("Delete"))
-                    {
-                        objectsToRemove.emplace_back(object);
-                    }
-                    if (ImGui::MenuItem("Rename"))
-                    {
-                        renamingHelper.RequestRename(object);
-                    }
+                    ImGuiHelpers::UndoableMenuItemAction(
+                        "Delete",
+                        [&objectsToRemove, object]()
+                        {
+                            objectsToRemove.emplace_back(object);
+                        },
+                        [object]()
+                        {
+                            if (const auto scene = SceneManager::GetScene().lock())
+                            {
+                                scene->AddObject(object);
+
+                                //setting to scene as default and then attempting to set to old
+                                const auto oldParent = object->Transform()->parent;
+                                object->Transform()->SetParentWeak(scene);
+                                object->Transform()->SetParentWeak(oldParent);
+                                // need to add back to renderables
+                            }
+                        },
+                        "Deleting object"
+                    );
+
+                    std::string originalName = object->Name;
+                    ImGuiHelpers::UndoableMenuItemAction(
+                        "Rename",
+                        [this, object]()
+                        {
+                            this->renamingHelper.RequestRename(object);
+                        },
+                        [object, originalName]()
+                        {
+                            object->Name = originalName;
+                        },
+                        "Renaming object"
+                    );
+
                     ImGui::EndPopup();
                 }
 
@@ -186,6 +215,10 @@ void Hierarchy::Draw()
         ProcessChildren(objectsToRemove, flags, children);
         for (const auto& object : objectsToRemove)
         {
+            if (selectedObject.lock()->GetGUID() == object->GetGUID())
+            {
+                selectedObject = std::make_shared<GameObject>();
+            }
             sharedScene->RemoveObject(object);
         }
         renamingHelper.DrawRenamePopup();

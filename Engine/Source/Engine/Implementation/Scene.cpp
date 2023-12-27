@@ -1,4 +1,4 @@
-#include "Scene.h"
+﻿#include "Scene.h"
 
 #include "CameraComponent.h"
 #include "MeshComponent.h"
@@ -36,6 +36,8 @@ void Scene::AddObject(std::shared_ptr<GameObject> object)
         }
     }
     objects->emplace(object->GetGUID(), object);
+
+    //if doesn't  contain renderable then add.    
 }
 
 void Scene::RemoveObject(std::shared_ptr<GameObject> object)
