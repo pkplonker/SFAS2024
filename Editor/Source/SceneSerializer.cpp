@@ -114,18 +114,15 @@ nlohmann::json SceneSerializer::SerializeGameObject(const std::shared_ptr<GameOb
 {
     json serializedData;
     std::string guidString;
-    if (Helpers::TryGetStringFromGuid(object->GetGUID(), guidString))
+    if (object->GetGUID() != "")
     {
-        serializedData["guid"] = guidString;
-    }
-    else if (Helpers::TryGetStringFromGuid(object->GenerateGUID(), guidString))
-    {
-        serializedData["guid"] = guidString;
+        serializedData["guid"] = object->GetGUID();
     }
     else
     {
-        Error("Failed processing guid for object serialization")
+        serializedData["guid"] = object->GenerateGUID();
     }
+
     serializedData["name"] = object->Name;
     serializedData["transform"] = SerializeTransform(object->Transform());
 
@@ -159,18 +156,13 @@ json SceneSerializer::SerializeTransform(std::shared_ptr<Transform3D> transform)
     serializedData["scale"]["x"] = transform->Scale.X();
     serializedData["scale"]["y"] = transform->Scale.Y();
     serializedData["scale"]["z"] = transform->Scale.Z();
-    std::string parentGuidString = "";
-    if (auto parent = transform->parent.lock())
+    if (const auto parent = transform->parent.lock())
     {
-        if (auto parentShared = parent->gameobject.lock())
+        if (const auto parentShared = parent->gameobject.lock())
         {
-            if (!Helpers::TryGetStringFromGuid(parentShared->GetGUID(), parentGuidString))
-            {
-                Warning("Failed to load GUID from parent")
-            }
+            serializedData["parent"] = parentShared->GetGUID();
         }
     }
-    serializedData["parent"] = parentGuidString;
     return serializedData;
 }
 
@@ -258,13 +250,9 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
                 std::shared_ptr<GameObject> gameObject = DeserializeGameObject(objectData, parentsDict);
                 if (gameObject)
                 {
-                    std::string g;
-                    if (Helpers::TryGetStringFromGuid(gameObject->GetGUID(), g))
+                    if (!gameObjectDict.try_emplace(gameObject->GetGUID(), gameObject).second)
                     {
-                        if (!gameObjectDict.try_emplace(g, gameObject).second)
-                        {
-                            Error("Duplicate guid detected" + g)
-                        }
+                        Error("Duplicate guid detected" + gameObject->GetGUID())
                     }
 
                     scene->AddChild(gameObject->Transform());
@@ -427,18 +415,16 @@ std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohman
             newObject->Init();
             if (objectProperties.contains("guid"))
             {
-                GUID guid = {};
-                if (Helpers::TryGetGuidFromString(objectProperties["guid"], guid))
+                if (objectProperties["guid"]!="")
                 {
-                    newObject->SetGUID(guid);
+                    newObject->SetGUID(objectProperties["guid"]);
                 }
                 else
                 {
                     newObject->GenerateGUID();
                 }
-                std::string objectGuidString;
-                Helpers::TryGetStringFromGuid(newObject->GetGUID(), objectGuidString);
-                parentsDict.try_emplace(objectGuidString, parentGuidString);
+
+                parentsDict.try_emplace(objectProperties["guid"], parentGuidString);
             }
             else
             {

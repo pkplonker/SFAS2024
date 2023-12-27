@@ -14,6 +14,7 @@ class Hierarchy : public EditorWindow
 public:
     Hierarchy() = default;
 
+    void HandleContextMenu(const char* contextMenuName);
     void Draw() override;
     std::string GetName() override { return HIERARCHY; }
     std::weak_ptr<GameObject> GetSelectedObject();

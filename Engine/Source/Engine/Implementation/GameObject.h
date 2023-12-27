@@ -76,14 +76,14 @@ public:
     const std::vector<std::shared_ptr<IComponent>>& GetComponents() const;
 
     void SetTransform(const std::shared_ptr<Transform3D> transform);
-    GUID GetGUID() const;
-    void SetGUID(GUID value);
-    GUID GenerateGUID();
+    std::string GetGUID() const;
+    void SetGUID(std::string value);
+    std::string GenerateGUID();
 
     std::string Name = GAMEOBJECT_DEFAULT_NAME;
 
 private:
     std::unique_ptr<std::vector<std::shared_ptr<IComponent>>> components{};
     std::shared_ptr<Transform3D> transform = std::make_shared<Transform3D>();
-    GUID guid;
+    std::string guid;
 };

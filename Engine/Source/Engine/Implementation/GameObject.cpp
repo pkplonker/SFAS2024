@@ -1,5 +1,7 @@
 ﻿#include "GameObject.h"
 #include <utility>
+
+#include "Helpers.h"
 #include "Engine/IComponent.h"
 #include "Engine/Implementation/Logging/Debug.h"
 #include "Transform3D.h"
@@ -9,7 +11,7 @@ GameObject::GameObject()
     components = std::make_unique<std::vector<std::shared_ptr<IComponent>>>();
     transform = std::make_shared<Transform3D>();
     this->Name = GAMEOBJECT_DEFAULT_NAME;
-    CoCreateGuid(&guid);
+    GenerateGUID();
 }
 
 GameObject::GameObject(std::unique_ptr<Transform3D> transform) : GameObject()
@@ -50,7 +52,6 @@ void GameObject::Update()
             updateable->Update();
         }
     }
-    //Debug("Updated GO")
 }
 
 const std::vector<std::shared_ptr<IComponent>>& GameObject::GetComponents() const
@@ -64,18 +65,23 @@ void GameObject::SetTransform(const std::shared_ptr<Transform3D> transform)
     transform->SetGameObject(shared_from_this());
 }
 
-GUID GameObject::GetGUID() const
+std::string GameObject::GetGUID() const
 {
     return guid;
 }
 
-void GameObject::SetGUID(GUID value)
+void GameObject::SetGUID(std::string value)
 {
     guid = value;
 }
 
-GUID GameObject::GenerateGUID()
+std::string GameObject::GenerateGUID()
 {
-    CoCreateGuid(&guid);
-    return guid;
+    GUID newGuid;
+    CoCreateGuid(&newGuid);
+    if (Helpers::TryGetStringFromGuid(newGuid, guid))
+    {
+        return guid;
+    }
+    return "";
 }

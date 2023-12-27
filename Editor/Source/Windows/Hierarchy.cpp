@@ -10,64 +10,70 @@
 #include "Engine/Implementation/GameObjectFactory.h"
 #include "Engine/Implementation/Scene.h"
 
+void Hierarchy::HandleContextMenu(const char* contextMenuName)
+{
+    if (ImGui::IsMouseReleased(ImGuiMouseButton_Right) && ImGui::IsWindowHovered(ImGuiHoveredFlags_None))
+    {
+        ImGui::OpenPopup(contextMenuName);
+    }
+    if (ImGui::BeginPopup(contextMenuName))
+    {
+        if (ImGui::BeginMenu("Add"))
+        {
+            if (ImGui::BeginMenu("Default Shapes"))
+            {
+                if (ImGui::MenuItem("Cube"))
+                {
+                    GameObjectFactory("New Cube").AddMeshRenderable(DefaultShapes::GetCubeMesh()).Build();
+                }
+                if (ImGui::MenuItem("Sphere"))
+                {
+                    GameObjectFactory("New Sphere").AddMeshRenderable(DefaultShapes::GetSphereMesh()).Build();
+                }
+                if (ImGui::MenuItem("Plane"))
+                {
+                    GameObjectFactory("New Plane").AddMeshRenderable(DefaultShapes::GetPlaneMesh()).Build();
+                }
+                ImGui::EndMenu();
+            }
+            if (ImGui::MenuItem("Empty"))
+            {
+                GameObjectFactory().Build();
+            }
+            if (ImGui::MenuItem("Empty Mesh"))
+            {
+                GameObjectFactory("New Mesh").AddEmptyMeshRenderable().Build();
+            }
+            if (ImGui::MenuItem("Empty Sprite"))
+            {
+                GameObjectFactory("New Sprite").AddEmptySpriteRenderable().Build();
+            }
+                
+                
+            if (ImGui::MenuItem("Camera"))
+            {
+                GameObjectFactory("New Camera").AddPerspectiveCamera().Build();
+            }
+            if (ImGui::MenuItem("Light"))
+            {
+            }
+
+            ImGui::EndMenu();
+        }
+
+        ImGui::EndPopup();
+    }
+}
+
 void Hierarchy::Draw()
 {
     std::vector<std::shared_ptr<GameObject>> objectsToRemove;
 
     ImGui::Begin(HIERARCHY.c_str());
+    auto contextMenuName = "ContextMenuWindow";
     if (auto sharedScene = SceneManager::GetScene().lock())
     {
-        if (ImGui::IsMouseReleased(ImGuiMouseButton_Right) && ImGui::IsWindowHovered(ImGuiHoveredFlags_None))
-        {
-            ImGui::OpenPopup("ContextMenuWindow");
-        }
-        if (ImGui::BeginPopup("ContextMenuWindow"))
-        {
-            if (ImGui::BeginMenu("Add"))
-            {
-                if (ImGui::BeginMenu("Default Shapes"))
-                {
-                    if (ImGui::MenuItem("Cube"))
-                    {
-                        GameObjectFactory("New Cube").AddMeshRenderable(DefaultShapes::GetCubeMesh()).Build();
-                    }
-                    if (ImGui::MenuItem("Sphere"))
-                    {
-                        GameObjectFactory("New Sphere").AddMeshRenderable(DefaultShapes::GetSphereMesh()).Build();
-                    }
-                    if (ImGui::MenuItem("Plane"))
-                    {
-                        GameObjectFactory("New Plane").AddMeshRenderable(DefaultShapes::GetPlaneMesh()).Build();
-                    }
-                    ImGui::EndMenu();
-                }
-                if (ImGui::MenuItem("Empty"))
-                {
-                    GameObjectFactory().Build();
-                }
-                if (ImGui::MenuItem("Empty Mesh"))
-                {
-                    GameObjectFactory("New Mesh").AddEmptyMeshRenderable().Build();
-                }
-                if (ImGui::MenuItem("Empty Sprite"))
-                {
-                    GameObjectFactory("New Sprite").AddEmptySpriteRenderable().Build();
-                }
-                
-                
-                if (ImGui::MenuItem("Camera"))
-                {
-                    GameObjectFactory("New Camera").AddPerspectiveCamera().Build();
-                }
-                if (ImGui::MenuItem("Light"))
-                {
-                }
-
-                ImGui::EndMenu();
-            }
-
-            ImGui::EndPopup();
-        }
+        HandleContextMenu(contextMenuName);
 
         for (const auto& object : sharedScene->GetObjects())
         {
@@ -79,10 +85,7 @@ void Hierarchy::Draw()
             {
                 selectedObject = object;
             }
-
-            if (ImGui::BeginPopupContextItem(
-                ("ObjectContextMenu" + std::to_string(reinterpret_cast<std::uintptr_t>(object.get()))).c_str()))
-            // use the memory address as a unique identifer
+            if (ImGui::BeginPopupContextItem(("ObjectContextMenu##" + object->GetGUID()).c_str()))
             {
                 selectedObject = object;
                 if (ImGui::MenuItem("Delete"))
