@@ -38,8 +38,8 @@ void MaterialDrawerHelper::DrawMaterial()
             buttons.emplace_back("Modify", std::bind(&MaterialDrawerHelper::OpenShader, this));
             buttons.emplace_back("Reload", std::bind(&IShader::Reload, shader));
 
-            ImGuiHelpers::WrappedText("Shader Path:", shaderPath,buttons);
-            
+            ImGuiHelpers::WrappedText("Shader Path:", shaderPath, buttons);
+
             std::wstring texturePath;
             if (const auto tex = mat->GetTexture())
             {
@@ -95,10 +95,27 @@ void MaterialDrawerHelper::ChangeShader()
                 MessageBoxWrapper::ShowWarning("Unable to generate shader", "Unable to generate shader");
                 return;
             }
-            auto material = Editor::GetGraphics()->CreateMaterial(shader, comp->GetMaterial()->GetTexture());
-            material->SetColor(comp->GetMaterial()->GetColor()); // need to implement updating existing material
-            comp->SetMaterial(material);
-            Trace("Setting new shader/material")
+
+            auto originalMaterial = std::make_shared<std::shared_ptr<IMaterial>>(comp->GetMaterial());
+            UndoManager::Execute(Memento(
+                [comp, shader, originalMaterial]()
+                {
+                    auto material = Editor::GetGraphics()->CreateMaterial(shader, (*originalMaterial)->GetTexture());
+                    material->SetColor((*originalMaterial)->GetColor());
+                    material->SetIsSkyBox((*originalMaterial)->GetIsSkybox());
+                    comp->SetMaterial(material);
+                },
+                [comp, originalMaterial]()
+                {
+                    if (*originalMaterial != nullptr)
+                    {
+                        comp->SetMaterial(originalMaterial->get());
+                    }
+                },
+                "Changed Shader"
+            ));
+
+            Trace("Setting new shader/material");
         }
     }
     else
@@ -126,9 +143,31 @@ void MaterialDrawerHelper::ChangeTexture()
                 MessageBoxWrapper::ShowWarning("Unable to generate texture", "Unable to generate texture");
                 return;
             }
-            auto material = IApplication::GetGraphics()->CreateMaterial(comp->GetMaterial()->GetShader(), texture);
-            material->SetColor(comp->GetMaterial()->GetColor()); // need to implement updating existing material
-            comp->SetMaterial(material);
+            auto originalMaterial = std::make_shared<std::shared_ptr<IMaterial>>(comp->GetMaterial());
+            UndoManager::Execute(Memento(
+                [comp, texture, originalMaterial]()
+                {
+                    auto material = Editor::GetGraphics()->CreateMaterial((*originalMaterial)->GetShader(), texture);
+                    material->SetColor((*originalMaterial)->GetColor());
+                    material->SetIsSkyBox((*originalMaterial)->GetIsSkybox());
+                    comp->SetMaterial(material);
+                },
+                [comp, originalMaterial]()
+                {
+                    if (*originalMaterial != nullptr)
+                    {
+                        comp->SetMaterial(originalMaterial->get());
+                    }
+                },
+                "Changed Shader"
+            ));
+            UndoManager::Execute(Memento([comp, texture]()
+                                         {
+                                         }
+                                         , []()
+                                         {
+                                         }, "Changed Shader"));
+
             Trace("Setting new texture/material")
         }
     }

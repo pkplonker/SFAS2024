@@ -8,6 +8,7 @@
 #include "functional"
 #include "UndoManager.h"
 #include "Engine/Math/Vector3.h"
+
 class ImGuiHelpers
 {
 public:
@@ -209,6 +210,39 @@ public:
         const std::string& actionDescription)
     {
         if (ImGui::MenuItem(label.c_str()))
+        {
+            UndoManager::Execute(
+                Memento(
+                    doAction,
+                    undoAction,
+                    actionDescription));
+        }
+    }
+
+    static void UndoableButtonAction(
+        const std::string& label,
+        std::function<void()> doAction,
+        std::function<void()> undoAction,
+        const std::string& actionDescription)
+    {
+        if (ImGui::Button(label.c_str()))
+        {
+            UndoManager::Execute(
+                Memento(
+                    doAction,
+                    undoAction,
+                    actionDescription));
+        }
+    }
+
+    static void UndoableCheckboxAction(
+        const std::string& label,
+        bool* variable,
+        std::function<void()> doAction,
+        std::function<void()> undoAction,
+        const std::string& actionDescription)
+    {
+        if (ImGui::Checkbox(label.c_str(), variable))
         {
             UndoManager::Execute(
                 Memento(
