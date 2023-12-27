@@ -1,10 +1,12 @@
 ﻿#pragma once
+#include <iostream>
 #include <string>
 #include <utility>
 
 #include "Helpers.h"
 #include "imgui.h"
 #include "functional"
+#include "UndoManager.h"
 
 class ImGuiHelpers
 {
@@ -87,4 +89,61 @@ public:
             ImGui::NewLine();
         }
     }
+
+    template <typename T>
+    static void UndoableSlider(
+        std::function<T()> getValue,
+        std::function<void(T)> setValue,
+        const char* label,
+        T minValue,
+        T maxValue,
+        const std::string& actionDescription)
+    {
+        T value = getValue();
+
+
+        bool valueChanged = false;
+        if constexpr (std::is_same<T, float>::value)
+        {
+            valueChanged = ImGui::SliderFloat(label, reinterpret_cast<float*>(&value), minValue, maxValue);
+        }
+        else if constexpr (std::is_same<T, int>::value)
+        {
+            valueChanged = ImGui::SliderInt(label, reinterpret_cast<int*>(&value), minValue, maxValue);
+        }
+        
+        if (ImGui::IsItemActivated())
+        {
+            sliderStates[label] = static_cast<float>(getValue());
+            std::cout << "setting inital value: " << static_cast<float>(getValue()) << std::endl;
+        }
+        
+        if (valueChanged)
+        {
+            setValue(value);
+        }
+
+        if (ImGui::IsItemDeactivatedAfterEdit())
+        {
+            auto originalVal = static_cast<T>(sliderStates[label]);
+            if (value != originalVal)
+            {
+                UndoManager::Execute(
+                    Memento(
+                        [setValue, value] { setValue(value); },
+                        [setValue,originalVal] { setValue(static_cast<T>(originalVal)); },
+                        actionDescription));
+            }
+        }
+    }
+
+private:
+    bool IsClicked()
+    {
+        return ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left);
+    }
+
+    static inline bool isActivated = false;
+    static inline bool wasActive = false;
+    static inline std::unordered_map<std::string, float> sliderStates = {};
 };

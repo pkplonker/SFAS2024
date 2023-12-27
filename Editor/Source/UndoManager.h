@@ -10,11 +10,21 @@ class UndoManager : public IUpdateable
 {
 public:
     UndoManager(IInput* input);
-    void Undo();
-    void Redo();
+    static void Execute(Memento command);
+    static void Undo();
+    static void Redo();
     void Update() override;
-    ~UndoManager() override{}
+
+    ~UndoManager() override
+    {
+    }
+
+    static std::vector<std::string> GetCommandDescriptions();
+
 private:
-    IInput* input;
-    std::stack<Memento> mementos;
+    IInput* input = {};
+   static inline bool isDirty;
+    static inline bool init = false;;
+    static inline std::stack<Memento> commands = {};
+    static inline std::vector<std::string> commandStrings = {};
 };
