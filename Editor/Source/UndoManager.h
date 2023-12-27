@@ -27,4 +27,6 @@ private:
     static inline bool init = false;;
     static inline std::stack<Memento> commands = {};
     static inline std::vector<std::string> commandStrings = {};
+    static inline std::stack<Memento> redoCommands = {};
+
 };

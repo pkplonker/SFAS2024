@@ -17,24 +17,24 @@ void UndoManager::Execute(Memento command)
     isDirty = true;
     commands.emplace(command);
     commands.top().Execute();
-    std::cout << "Executed " << commands.top().description << std::endl;
 }
 
-void UndoManager::Undo()
-{
+void UndoManager::Undo() {
     if (!init || commands.empty()) return;
     isDirty = true;
     auto command = commands.top();
     command.Undo();
     commands.pop();
-    std::cout << "Undone " << command.description << std::endl;
+    redoCommands.push(command);
 }
 
-void UndoManager::Redo()
-{
-    if (!init || commands.empty()) return;
+void UndoManager::Redo() {
+    if (!init || redoCommands.empty()) return;
     isDirty = true;
-    std::cout << "pressed redo" << std::endl;
+    auto command = redoCommands.top();
+    command.Execute();
+    redoCommands.pop();
+    commands.push(command);
 }
 
 void UndoManager::Update()
