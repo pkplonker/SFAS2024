@@ -88,14 +88,34 @@ void Inspector::Draw()
             {
                 if (ImGui::Selectable(component.c_str()))
                 {
-                    Trace("Adding " + component + " to GameObject");
-                    auto comp = ComponentRegistry::CreateComponent(component, gameobject);
-                    gameobject->AddComponent(comp);
+                    auto comp = std::make_shared<std::shared_ptr<IComponent>>(nullptr);
+
+                    UndoManager::Execute(Memento(
+                        [this, comp, component]()
+                        {
+                            if (const auto gameobject = this->hierarchy->GetSelectedObject().lock())
+                            {
+                                *comp = ComponentRegistry::CreateComponent(component, gameobject);
+                                gameobject->AddComponent(*comp);
+                            }
+                        },
+                        [this, comp]()
+                        {
+                            if (comp)
+                            {
+                                if (auto gameobject = this->hierarchy->GetSelectedObject().lock())
+                                {
+                                    gameobject->RemoveComponent(*comp);
+                                }
+                            }
+                        },
+                        "Adding component"
+                    ));
+
                     ImGui::CloseCurrentPopup();
                     break;
                 }
             }
-
             ImGui::EndPopup();
         }
     }
