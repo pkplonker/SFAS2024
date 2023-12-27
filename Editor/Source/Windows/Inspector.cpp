@@ -27,6 +27,9 @@ void Inspector::Draw()
             renamingHelper.RequestRename(gameobject);
         }
         renamingHelper.DrawRenamePopup();
+        ImGui::SameLine();
+      
+        ImGui::Text(gameobject->GetGUID().c_str());
 
         if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
         {

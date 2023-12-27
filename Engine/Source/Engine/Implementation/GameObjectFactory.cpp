@@ -33,6 +33,7 @@ GameObjectFactory::GameObjectFactory()
     }
 
     gameObject = std::make_shared<GameObject>(name);
+    gameObject->Init();
     SetupRandom();
 }
 
@@ -40,12 +41,13 @@ GameObjectFactory::GameObjectFactory()
 GameObjectFactory::GameObjectFactory(std::string name)
 {
     gameObject = std::make_shared<GameObject>(name);
+    gameObject->Init();
     SetupRandom();
 }
 
 bool GameObjectFactory::ObjectNameExists(const std::shared_ptr<Scene>& scene, const std::string& name)
 {
-    for (const auto& object : scene->GetObjects())
+    for (const auto& [guid, object] : scene->GetObjects())
     {
         if (object->Name == name)
         {

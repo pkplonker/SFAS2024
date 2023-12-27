@@ -14,6 +14,9 @@ class Hierarchy : public EditorWindow
 public:
     Hierarchy() = default;
 
+    void HandleContextMenu(const char* contextMenuName);
+    void ProcessChildren(std::vector<std::shared_ptr<GameObject>> objectsToRemove, ImGuiTreeNodeFlags baseFlags,
+                         std::set<std::weak_ptr<Transform>, Transform::TransformCompare> children);
     void Draw() override;
     std::string GetName() override { return HIERARCHY; }
     std::weak_ptr<GameObject> GetSelectedObject();
@@ -22,5 +25,5 @@ private:
     std::weak_ptr<GameObject> selectedObject;
     std::unique_ptr<ComponentDrawerFactory> factory;
     RenamingHelper renamingHelper;
-
+    static inline const char* DragDropPayloadID = "HIERARCHY_GAMEOBJECT";
 };

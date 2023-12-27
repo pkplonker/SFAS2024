@@ -10,15 +10,14 @@ class SpriteComponent;
 
 Scene::Scene()
 {
-    objects = std::make_unique<std::set<std::shared_ptr<
-        GameObject>>>();
+    objects = std::make_unique<std::map<std::string, std::shared_ptr<GameObject>>>();
 }
 
 Scene::~Scene()
 {
     for (const auto object : *objects)
     {
-        auto renderable = object->GetComponent<IRenderableComponent>();
+        auto renderable = object.second->GetComponent<IRenderableComponent>();
         if (renderable != nullptr)
         {
             RemoveRenderable(renderable->GetRenderable());
@@ -36,26 +35,28 @@ void Scene::AddObject(std::shared_ptr<GameObject> object)
             this->SetActiveCamera(cameraComponent);
         }
     }
-    objects->emplace(object);
+    objects->emplace(object->GetGUID(), object);
 }
 
 void Scene::RemoveObject(std::shared_ptr<GameObject> object)
 {
-    auto it = std::find(objects->begin(), objects->end(), object);
+    if (object == nullptr)return;
     auto renderable = object->GetComponent<IRenderableComponent>();
-    if (it != objects->end())
+
+    if (objects->contains(object->GetGUID()))
     {
         if (renderable != nullptr)
         {
             RemoveRenderable(renderable->GetRenderable());
         }
-        objects->erase(it);
+        objects->erase(object->GetGUID());
     }
     else
     {
-        Warning("Renderable not found to delete");
+        Warning("GameObject not found to delete");
     }
 }
+
 
 void Scene::RemoveRenderable(std::shared_ptr<IRenderable> object) const
 {
@@ -72,9 +73,9 @@ void Scene::RemoveRenderable(std::shared_ptr<IRenderable> object) const
 
 void Scene::Update()
 {
-    for (const std::shared_ptr<GameObject>& object : *objects)
+    for (const auto& object : *objects)
     {
-        object->Update();
+        object.second->Update();
     }
 }
 
@@ -86,7 +87,7 @@ void Scene::SetActiveCamera(const std::shared_ptr<ICamera>& camera)
     IApplication::GetGraphics()->SetActiveCamera(camera);
 }
 
-std::set<std::shared_ptr<GameObject>>& Scene::GetObjects() const
+std::map<std::string, std::shared_ptr<GameObject>>& Scene::GetObjects() const
 {
     return *objects;
 }
@@ -94,4 +95,14 @@ std::set<std::shared_ptr<GameObject>>& Scene::GetObjects() const
 std::shared_ptr<ICamera> Scene::GetActiveCamera()
 {
     return camera;
+}
+
+bool Scene::TryFindObject(const std::string& string, std::weak_ptr<GameObject>& object) const
+{
+    if(objects->contains(string))
+    {
+        object= (*objects)[string];
+        return true;
+    }
+    return false;
 }

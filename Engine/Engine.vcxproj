@@ -232,6 +232,7 @@
     <ClInclude Include="Source\Engine\Implementation\Scene.h" />
     <ClInclude Include="Source\Engine\Implementation\SpriteComponent.h" />
     <ClInclude Include="Source\Engine\Implementation\TestComponent.h" />
+    <ClInclude Include="Source\Engine\Implementation\Transform.h" />
     <ClInclude Include="Source\Engine\Implementation\Vertex.h" />
     <ClInclude Include="Source\Engine\Implementation\XInput\DirectXInput.h" />
     <ClInclude Include="Source\Engine\IRenderable.h" />
@@ -271,6 +272,7 @@
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Mesh.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Shader.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\Helpers.cpp" />
     <ClCompile Include="Source\Engine\Implementation\Logging\BufferSink.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -576,6 +578,7 @@
     <ClCompile Include="Source\Engine\Implementation\Scene.cpp" />
     <ClCompile Include="Source\Engine\Implementation\SpriteComponent.cpp" />
     <ClCompile Include="Source\Engine\Implementation\TestComponent.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\Transform.cpp" />
     <ClCompile Include="Source\Engine\Implementation\Vertex.cpp" />
     <ClCompile Include="Source\Engine\Implementation\XInput\DirectXInput.cpp" />
     <ClCompile Include="Source\Engine\IRenderable.cpp" />
