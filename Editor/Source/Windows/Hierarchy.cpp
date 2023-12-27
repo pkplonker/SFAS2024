@@ -69,7 +69,7 @@ void Hierarchy::HandleContextMenu(const char* contextMenuName)
     }
 }
 
-void Hierarchy::ProcessChildren(std::vector<std::shared_ptr<GameObject>> objectsToRemove, ImGuiTreeNodeFlags baseFlags,
+void Hierarchy::ProcessChildren(std::vector<std::shared_ptr<GameObject>>& objectsToRemove, ImGuiTreeNodeFlags baseFlags,
                                 std::set<std::weak_ptr<Transform>, Transform::TransformCompare> children)
 {
     for (const auto& transform : children)

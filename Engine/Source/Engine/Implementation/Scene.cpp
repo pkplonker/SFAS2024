@@ -1,4 +1,4 @@
-﻿#include "Scene.h"
+#include "Scene.h"
 
 #include "CameraComponent.h"
 #include "MeshComponent.h"
@@ -49,6 +49,7 @@ void Scene::RemoveObject(std::shared_ptr<GameObject> object)
         {
             RemoveRenderable(renderable->GetRenderable());
         }
+        object->Transform()->SetParent(nullptr);
         objects->erase(object->GetGUID());
     }
     else
