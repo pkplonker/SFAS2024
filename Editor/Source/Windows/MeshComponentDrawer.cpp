@@ -97,14 +97,26 @@ void MeshComponentDrawer::ChangeMesh()
     {
         if (auto comp = component.lock())
         {
-            auto mesh = ResourceManager::GetMesh(path.generic_string());
+            Mesh* mesh = ResourceManager::GetMesh(path.generic_string());
             if (mesh == nullptr)
             {
                 MessageBoxWrapper::ShowWarning("Unable to generate mesh", "Unable to generate mesh");
                 return;
             }
             Trace("Setting new mesh")
-            comp->SetMesh(mesh);
+            auto meshRenderable = std::dynamic_pointer_cast<IMeshRenderable>(comp->GetRenderable());
+            auto originalMeshPath = meshRenderable->GetPath();
+            if (meshRenderable)
+            {
+                UndoManager::Execute(Memento([comp,mesh]()
+                                             {
+                                                 comp->SetMesh(mesh);
+                                             }, [comp,originalMeshPath]()
+                                             {
+                                                 Mesh* mesh = ResourceManager::GetMesh(originalMeshPath);
+                                                 comp->SetMesh(mesh);
+                                             }, "Setting new mesh"));
+            }
         }
     }
     else
