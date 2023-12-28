@@ -57,7 +57,7 @@ void Hierarchy::HandleContextMenu(const char* contextMenuName)
 
                 ImGui::EndMenu();
             }
-            
+
             CreateUndoableGameObject(
                 "New Empty",
                 [](GameObjectFactory& factory)
@@ -138,6 +138,18 @@ void Hierarchy::CreateUndoableGameObject(
 }
 
 
+void Hierarchy::SetSelectedObject(std::shared_ptr<GameObject> object)
+{
+    std::weak_ptr<GameObject> previousObject = selectedObject;
+    UndoManager::Execute(Memento([this, object]()
+                                 {
+                                     selectedObject = object;
+                                 }, [this, previousObject]()
+                                 {
+                                     selectedObject = previousObject;
+                                 }, "New selection"));
+}
+
 void Hierarchy::ProcessChildren(std::vector<std::shared_ptr<GameObject>>& objectsToRemove, ImGuiTreeNodeFlags baseFlags,
                                 std::set<std::weak_ptr<Transform>, Transform::TransformCompare> children)
 {
@@ -155,7 +167,10 @@ void Hierarchy::ProcessChildren(std::vector<std::shared_ptr<GameObject>>& object
                 {
                     localFlags |= ImGuiTreeNodeFlags_Leaf;
                 }
-
+                if (selectedObject.lock() != nullptr && selectedObject.lock() == object)
+                {
+                    localFlags |= ImGuiTreeNodeFlags_Selected;
+                }
 
                 bool nodeOpen = ImGui::TreeNodeEx(nodeLabel.c_str(), localFlags);
 
@@ -186,12 +201,12 @@ void Hierarchy::ProcessChildren(std::vector<std::shared_ptr<GameObject>>& object
                 }
                 if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
                 {
-                    selectedObject = object;
+                    SetSelectedObject(object);
                 }
 
                 if (ImGui::BeginPopupContextItem(("ObjectContextMenu##" + object->GetGUID()).c_str()))
                 {
-                    selectedObject = object;
+                    SetSelectedObject(object);
                     ImGuiHelpers::UndoableMenuItemAction(
                         "Delete",
                         [&objectsToRemove, object]()

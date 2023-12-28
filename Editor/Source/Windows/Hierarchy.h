@@ -18,6 +18,7 @@ public:
     void HandleContextMenu(const char* contextMenuName);
     void CreateUndoableGameObject(const std::string& name,
                                   std::function<std::shared_ptr<GameObject>(GameObjectFactory&)> createObjectFunc, const std::string& actionDescription);
+    void SetSelectedObject(std::shared_ptr<GameObject> object);
     void ProcessChildren(std::vector<std::shared_ptr<GameObject>>& objectsToRemove, ImGuiTreeNodeFlags baseFlags,
                          std::set<std::weak_ptr<Transform>, Transform::TransformCompare> children);
     void Draw() override;
