@@ -164,6 +164,7 @@
     <ClCompile Include="Source\EditorSettings.cpp" />
     <ClCompile Include="Source\FileDialog.cpp" />
     <ClCompile Include="Source\FileOpener.cpp" />
+    <ClCompile Include="Source\GizmoController.cpp" />
     <ClCompile Include="Source\Memento.cpp" />
     <ClCompile Include="Source\MeshImporter.cpp" />
     <ClCompile Include="Source\SceneSerializer.cpp" />
@@ -262,6 +263,7 @@
     <ClCompile Include="Source\EntryPoints\WindowsMain.cpp" />
     <ClCompile Include="Source\Editor.cpp" />
     <ClCompile Include="Source\Windows\MaterialDrawerHelper.cpp" />
+    <ClCompile Include="Source\Windows\ObjectControlWindow.cpp" />
     <ClCompile Include="Source\Windows\SettingsWindow.cpp" />
     <ClCompile Include="Source\Windows\TimeWindow.cpp" />
     <ClCompile Include="Source\Windows\LoggerWindow.cpp" />
@@ -365,6 +367,7 @@
     <ClInclude Include="Source\EditorSettings.h" />
     <ClInclude Include="Source\FileDialog.h" />
     <ClInclude Include="Source\FileOpener.h" />
+    <ClInclude Include="Source\GizmoController.h" />
     <ClInclude Include="Source\ImGuiHelpers.h" />
     <ClInclude Include="Source\ImGuiTheme.h" />
     <ClInclude Include="Source\Memento.h" />
@@ -379,6 +382,7 @@
     <ClInclude Include="Source\Windows\Inspector.h" />
     <ClInclude Include="Source\Windows\Hierarchy.h" />
     <ClInclude Include="Source\Windows\MaterialDrawerHelper.h" />
+    <ClInclude Include="Source\Windows\ObjectControlWindow.h" />
     <ClInclude Include="Source\Windows\RenamingHelper.h" />
     <ClInclude Include="Source\Windows\SettingsWindow.h" />
     <ClInclude Include="Source\Windows\TimeWindow.h" />
@@ -460,9 +464,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Packages\ImGuizmo\.editorconfig" />
-    <Content Include="Packages\ImGuizmo\bin\imgui.ini" />
-    <Content Include="Packages\ImGuizmo\bin\ImGuizmoSample.exe" />
-    <Content Include="Packages\ImGuizmo\Images\nodeeditor.jpg" />
     <Content Include="Packages\ImGuizmo\LICENSE" />
     <Content Include="Packages\ImGuizmo\Makefile" />
     <Content Include="Packages\ImGuizmo\README.md" />

@@ -11,6 +11,9 @@ struct Vec3
     Vec3()
     {
         vec = dx::XMFLOAT3(0);
+        vec.x = 0;
+        vec.y = 0;
+        vec.z = 0;
     }
 
     Vec3(float x, float y, float z)
@@ -30,6 +33,16 @@ struct Vec3
     {
     }
 
+    Vec3(float* data) : Vec3()
+    {
+        if (data != nullptr)
+        {
+            X(data[0]);
+            Y(data[1]);
+            Z(data[2]);
+        }
+    }
+
     static Vec3 Zero()
     {
         return {0, 0, 0};
@@ -39,27 +52,32 @@ struct Vec3
     {
         return {1, 1, 1};
     }
-    
+
     static Vec3 Up()
     {
         return {0, 1, 0};
     }
+
     static Vec3 Down()
     {
         return {0, -1, 0};
     }
+
     static Vec3 Left()
     {
         return {-1, 0, 0};
     }
+
     static Vec3 Right()
     {
         return {1, 0, 0};
     }
+
     static Vec3 Forward()
     {
         return {0, 0, 1};
     }
+
     static Vec3 Back()
     {
         return {0, 0, -1};
@@ -145,7 +163,8 @@ struct Vec3
     {
         DirectX::XMVECTOR vec = DirectX::XMVectorSet(X(), Y(), Z(), 1.0f);
         DirectX::XMVECTOR resultVec = DirectX::XMVector3Transform(vec, m);
-        return Vec3(DirectX::XMVectorGetX(resultVec), DirectX::XMVectorGetY(resultVec), DirectX::XMVectorGetZ(resultVec));
+        return Vec3(DirectX::XMVectorGetX(resultVec), DirectX::XMVectorGetY(resultVec),
+                    DirectX::XMVectorGetZ(resultVec));
     }
 
 private:

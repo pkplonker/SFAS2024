@@ -5,8 +5,10 @@
 #include "EditorSettings.h"
 #include "FileDialog.h"
 #include "Game.h"
+#include "GizmoController.h"
 #include "imgui.h"
 #include "ImGuiTheme.h"
+#include "ImGuizmo.h"
 
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
@@ -21,14 +23,16 @@
 #include "Windows/Inspector.h"
 #include "Windows/LoggerWindow.h"
 #include "Windows/MeshImporterWindow.h"
+#include "Windows/ObjectControlWindow.h"
 #include "Windows/RenderStatWindow.h"
 #include "Windows/SettingsWindow.h"
 #include "Windows/UndoWindow.h"
 
 const std::string IMGUI_SETTING_ID = "IMGUI_WINDOW";
 
-ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, IInput* input) :
-    dx11Graphics(dx11Graphics), game(game), input(input)
+ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, IInput* input,
+                                 std::shared_ptr<EditorCamera> camera) :
+    dx11Graphics(dx11Graphics), game(game), input(input), camera(camera)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -45,7 +49,7 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, II
     const std::shared_ptr<TimeWindow> timeWindow = std::make_shared<TimeWindow>();
     renderables.try_emplace(timeWindow, EditorSettings::Get(IMGUI_SETTING_ID + timeWindow->GetName(), true));
 
-    const std::shared_ptr<Hierarchy> hierarchy = std::make_shared<Hierarchy>();
+    hierarchy = std::make_shared<Hierarchy>();
     renderables.try_emplace(hierarchy, EditorSettings::Get(IMGUI_SETTING_ID + hierarchy->GetName(), true));
 
     const std::shared_ptr<Inspector> inspector = std::make_shared<Inspector>(hierarchy);
@@ -68,9 +72,13 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, II
     renderables.try_emplace(inputWindow, EditorSettings::Get(IMGUI_SETTING_ID + inputWindow->GetName(), true));
 
     const std::shared_ptr<UndoWindow> undoWindow = std::make_shared<UndoWindow>();
-    renderables.try_emplace(undoWindow, EditorSettings::Get(IMGUI_SETTING_ID + inputWindow->GetName(), true));
-
+    renderables.try_emplace(undoWindow, EditorSettings::Get(IMGUI_SETTING_ID + undoWindow->GetName(), true));
+    
+    const std::shared_ptr<ObjectControlWindow> objectControl = std::make_shared<ObjectControlWindow>();
+    renderables.try_emplace(objectControl, EditorSettings::Get(IMGUI_SETTING_ID + objectControl->GetName(), true));
+    
     settingsWindow = new SettingsWindow();
+    gizmoController = std::make_unique<GizmoController>(camera);
     ImGuiTheme::ApplyTheme(0);
     Trace("Imgui setup complete")
 }
@@ -80,11 +88,17 @@ ImGuiController::~ImGuiController()
     delete settingsWindow;
 }
 
+std::weak_ptr<GameObject> ImGuiController::GetSelectedObject()
+{
+    return hierarchy->GetSelectedObject();
+}
+
 void ImGuiController::ImGuiPreFrame()
 {
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
+    gizmoController->ImGuiPreFrame(gameViewportSize, gameViewportPosition);
     ImGui::DockSpaceOverViewport();
     ImGui::ShowDemoWindow();
 }
@@ -104,6 +118,9 @@ void ImGuiController::DrawViewport()
                  ImVec2(static_cast<float>(dx11Graphics->GetTextureWidth()),
                         static_cast<float>(dx11Graphics->GetTextureHeight())));
     gameViewportSize = ImGui::GetWindowSize();
+    gameViewportPosition = ImGui::GetWindowPos();
+    gizmoController->Update(GetSelectedObject(), gameViewportSize, gameViewportPosition);
+
     ImGui::End();
 }
 
@@ -209,7 +226,6 @@ void ImGuiController::DrawWindows()
     for (const auto [window,visible] : renderables)
     {
         if (window == nullptr)
-        if (renderable.first == nullptr)
         {
             identifiersToRemove.push_back(window);
         }
@@ -251,8 +267,8 @@ void ImGuiController::Resize(int width, int height)
 {
     RECT rect;
     ::GetClientRect(dx11Graphics->GetHWND(), &rect);
-    float x = static_cast<float>(rect.right - rect.left);
-    float y = static_cast<float>(rect.bottom - rect.top);
+    const auto x = static_cast<float>(rect.right - rect.left);
+    const auto y = static_cast<float>(rect.bottom - rect.top);
     ImGui::GetIO().DisplaySize = ImVec2(x, y);
     Trace(std::to_string(x) + ":" + std::to_string(y))
 }

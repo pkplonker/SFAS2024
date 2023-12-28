@@ -1,14 +1,11 @@
 ﻿#pragma once
-#include <string>
-
 #include "EditorWindow.h"
 
-const std::string RENDER_STAT = "Render Stats";
+const std::string NAME = "ObjectControl";
 
-class RenderStatWindow : public EditorWindow
+class ObjectControlWindow: public EditorWindow
 {
 public:
     void Draw() override;
     std::string GetName() override;
-    
 };

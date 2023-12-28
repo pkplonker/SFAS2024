@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <DirectXMath.h>
 #include <memory>
 #include <set>
 
@@ -6,6 +7,8 @@ class GameObject;
 
 struct Transform : std::enable_shared_from_this<Transform>
 {
+    virtual ~Transform() = default;
+
     Transform()
     {
     }
@@ -51,6 +54,8 @@ struct Transform : std::enable_shared_from_this<Transform>
     std::weak_ptr<Transform> parent;
     std::set<std::weak_ptr<Transform>, TransformCompare> children;
     std::weak_ptr<GameObject> gameobject;
+
+    virtual DirectX::XMMATRIX GetWorldMatrix()=0;
 
 private:
     void AddChild(const std::shared_ptr<Transform>& child)

@@ -17,8 +17,8 @@ void UndoWindow::Draw()
         {
             ImGui::Text(command.c_str());
         }
-        ImGui::EndChild();
+       
     }
-
+    ImGui::EndChild();
     ImGui::End();
 }
