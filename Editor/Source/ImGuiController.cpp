@@ -65,6 +65,9 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, II
     bufferSink = new BufferSink(1000);
     Debug::RegisterSink(bufferSink);
     Trace("Registered logging")
+
+    gizmoController = std::make_shared<GizmoController>(camera);
+    
     const std::shared_ptr<LoggerWindow> logger = std::make_shared<LoggerWindow>(bufferSink);
     renderables.try_emplace(logger, EditorSettings::Get(IMGUI_SETTING_ID + logger->GetName(), true));
 
@@ -74,11 +77,11 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, II
     const std::shared_ptr<UndoWindow> undoWindow = std::make_shared<UndoWindow>();
     renderables.try_emplace(undoWindow, EditorSettings::Get(IMGUI_SETTING_ID + undoWindow->GetName(), true));
     
-    const std::shared_ptr<ObjectControlWindow> objectControl = std::make_shared<ObjectControlWindow>();
+    const std::shared_ptr<ObjectControlWindow> objectControl = std::make_shared<ObjectControlWindow>(gizmoController);
     renderables.try_emplace(objectControl, EditorSettings::Get(IMGUI_SETTING_ID + objectControl->GetName(), true));
     
     settingsWindow = new SettingsWindow();
-    gizmoController = std::make_unique<GizmoController>(camera);
+    
     ImGuiTheme::ApplyTheme(0);
     Trace("Imgui setup complete")
 }

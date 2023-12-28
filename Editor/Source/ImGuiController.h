@@ -55,5 +55,5 @@ private:
     std::shared_ptr<Hierarchy> hierarchy;
     ImVec2 gameViewportPosition;
     std::shared_ptr<EditorCamera> camera;
-    std::unique_ptr<GizmoController> gizmoController;
+    std::shared_ptr<GizmoController> gizmoController;
 };
