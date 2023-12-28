@@ -31,12 +31,14 @@ void GizmoController::Update(std::weak_ptr<GameObject> gameobject, ImVec2 size, 
     ImGuizmo::MODE currentMode = space == World ? ImGuizmo::MODE::WORLD : ImGuizmo::MODE::LOCAL;
 
     static bool wasUsing = false;
+
     if (const auto& cam = editorCamera.lock())
     {
+        DirectX::XMFLOAT4X4 v = ChangeMat(cam->GetViewMatrix());
+        DirectX::XMFLOAT4X4 p = ChangeMat(cam->GetProjectionMatrix());
+
         if (const auto& object = gameobject.lock())
         {
-            DirectX::XMFLOAT4X4 v = ChangeMat(cam->GetViewMatrix());
-            DirectX::XMFLOAT4X4 p = ChangeMat(cam->GetProjectionMatrix());
             DirectX::XMFLOAT4X4 w = ChangeMat(object->Transform()->GetWorldMatrix());
 
             ImGuizmo::Manipulate(&v.m[0][0], &p.m[0][0],
@@ -51,7 +53,14 @@ void GizmoController::Update(std::weak_ptr<GameObject> gameobject, ImVec2 size, 
 
             if (isUsing)
             {
-                object->Transform()->SetWorldMatrix(&w.m[0][0]);
+                float t[3] = {};
+                float r[3] = {};
+                float s[3] = {};
+
+                ImGuizmo::DecomposeMatrixToComponents(&w.m[0][0], t, r, s);
+                object->Transform()->SetTranslation(t);
+                object->Transform()->SetRotationEuler(r);
+                object->Transform()->SetScale(s);
             }
 
             if (wasUsing && !isUsing)
@@ -63,11 +72,11 @@ void GizmoController::Update(std::weak_ptr<GameObject> gameobject, ImVec2 size, 
                 UndoManager::Execute(Memento(
                                          [object, finalMatrix]()
                                          {
-                                             object->Transform()->SetWorldMatrix(finalMatrix);
+                                             //object->Transform()->SetWorldMatrix(finalMatrix);
                                          },
                                          [object, operationInitialMatrix]()
                                          {
-                                             object->Transform()->SetWorldMatrix(operationInitialMatrix);
+                                             //object->Transform()->SetWorldMatrix(operationInitialMatrix);
                                          },
                                          "Modified transform"
                                      ), false);
@@ -81,7 +90,7 @@ void GizmoController::Update(std::weak_ptr<GameObject> gameobject, ImVec2 size, 
 
 DirectX::XMFLOAT4X4 GizmoController::ChangeMat(DirectX::XMMATRIX mat)
 {
-    DirectX::XMFLOAT4X4 temp;
+    DirectX::XMFLOAT4X4 temp = {};
     DirectX::XMStoreFloat4x4(&temp, mat);
 
     return temp;

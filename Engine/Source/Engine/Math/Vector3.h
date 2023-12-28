@@ -33,7 +33,7 @@ struct Vec3
     {
     }
 
-    Vec3(float* data) : Vec3()
+    Vec3(float* data)
     {
         if (data != nullptr)
         {
@@ -41,6 +41,11 @@ struct Vec3
             Y(data[1]);
             Z(data[2]);
         }
+    }
+
+    Vec3(DirectX::XMVECTOR xmvector)
+    {
+        DirectX::XMStoreFloat3(&vec, xmvector);
     }
 
     static Vec3 Zero()

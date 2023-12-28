@@ -13,11 +13,13 @@ enum GizmoOperation
     Rotation,
     Scale,
 };
+
 enum GizmoSpace
 {
     World,
     Local,
 };
+
 class GizmoController
 {
 public:
@@ -29,8 +31,15 @@ public:
     GizmoOperation GetGizmoOperation();
     void SetMode(GizmoSpace mode);
     GizmoSpace GetMode();
+
 private:
     GizmoOperation operation = Translation;
     GizmoSpace space = World;
     std::weak_ptr<EditorCamera> editorCamera;
+    float identityMatrix[16] = {
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
 };

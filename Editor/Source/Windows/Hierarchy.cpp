@@ -214,7 +214,7 @@ void Hierarchy::ProcessChildren(std::vector<std::shared_ptr<GameObject>>& object
 
                 if (ImGui::BeginPopupContextItem(("ObjectContextMenu##" + object->GetGUID()).c_str()))
                 {
-                    SetSelectedObject(object);
+                    //SetSelectedObject(object);
                     ImGuiHelpers::UndoableMenuItemAction(
                         "Delete",
                         [&objectsToRemove, object]()
