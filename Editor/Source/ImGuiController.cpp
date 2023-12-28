@@ -206,17 +206,17 @@ void ImGuiController::DrawWindows()
 {
     std::vector<std::shared_ptr<EditorWindow>> identifiersToRemove;
 
-    for (const auto& renderable : renderables)
+    for (const auto [window,visible] : renderables)
     {
-        // Todo make this better, second/first garbage
+        if (window == nullptr)
         if (renderable.first == nullptr)
         {
-            identifiersToRemove.push_back(renderable.first);
+            identifiersToRemove.push_back(window);
         }
         else
         {
-            if (renderable.second)
-                renderable.first->Draw();
+            if (visible)
+                window->Draw();
         }
     }
 
