@@ -3,6 +3,8 @@
 #include <utility>
 
 #include "imgui.h"
+#include "../ImGuiHelpers.h"
+#include "../UndoManager.h"
 #include "Engine/Implementation/CameraComponent.h"
 #include "Engine/Implementation/GameObject.h"
 #include "Engine/Implementation/OrthographicCamera.h"
@@ -14,52 +16,105 @@ CameraComponentDrawer::CameraComponentDrawer(std::weak_ptr<CameraComponent> comp
 {
 }
 
- void CameraComponentDrawer::DrawPerspective(std::shared_ptr<PerspectiveCamera> cam)
+void CameraComponentDrawer::DrawPerspective(std::shared_ptr<PerspectiveCamera> cam)
 {
     if (ImGui::TreeNodeEx("Perspective Camera Settings", ImGuiTreeNodeFlags_DefaultOpen))
     {
         if (ImGui::BeginPopupContextItem("PerspectiveCameraContext"))
         {
-            if (ImGui::MenuItem("Reset Near"))
-            {
-                cam->SetNear();
-                Trace("Resetting near")
-            }
-            if (ImGui::MenuItem("Reset Far"))
-            {
-                cam->SetFar();
-                Trace("Resetting far")
-            }
-            if (ImGui::MenuItem("Reset FOV"))
-            {
-                cam->SetFOV();
-                Trace("Resetting FOV")
-            }
+            ImGuiHelpers::UndoableMenuItemValue<float>(
+                "Reset Near",
+                [cam]() { return cam->GetNear(); },
+                [cam](float value) { cam->SetNear(value); },
+                0.0f,
+                "Resetting near"
+            );
+
+            ImGuiHelpers::UndoableMenuItemValue<float>(
+                "Reset Far",
+                [cam]() { return cam->GetFar(); },
+                [cam](float value) { cam->SetFar(value); },
+                0.0f,
+                "Resetting far"
+            );
+
+            ImGuiHelpers::UndoableMenuItemValue<float>(
+                "Reset FOV",
+                [cam]() { return cam->GetFOV(); },
+                [cam](float value) { cam->SetFOV(value); },
+                0.0f,
+                "Resetting FOV"
+            );
+
+
             ImGui::EndPopup();
         }
-        float fov = cam->GetFOV();
-        if (ImGui::SliderFloat("Field of View", &fov, 0.5f, 120))
+
+
+        ImGuiHelpers::UndoableSlider<float>(
+            [cam]() -> float { return cam->GetFOV(); },
+            [cam](float value) { cam->SetFOV(value); },
+            "FOV", 0.0f, 100.0f, "Adjust FOV"
+        );
+
+        ImGuiHelpers::UndoableSlider<float>(
+            [cam]() { return cam->GetNear(); },
+            [cam](float value) { cam->SetNear(value); },
+            "Near Plane",
+            0.1f, 1000.0f,
+            "Changing Near Plane");
+
+        ImGuiHelpers::UndoableSlider<float>(
+            [cam]() { return cam->GetFar(); },
+            [cam](float value) { cam->SetFar(value); },
+            "Far Plane",
+            1.0f, 10000.0f,
+            "Changing Far Plane");
+
+
+        ImGui::TreePop();
+    }
+}
+
+void CameraComponentDrawer::DrawOrtho(std::shared_ptr<OrthographicCamera> cam)
+{
+    if (ImGui::TreeNodeEx("Orthographic Camera Settings", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (ImGui::BeginPopupContextItem("OrthographicCameraContext"))
         {
-            cam->SetFOV(fov);
+            ImGuiHelpers::UndoableMenuItemValue<float>(
+                "Reset Near",
+                [cam]() { return cam->GetNear(); },
+                [cam](float value) { cam->SetNear(value); },
+                0.0f,
+                "Resetting near"
+            );
+
+            ImGuiHelpers::UndoableMenuItemValue<float>(
+                "Reset Far",
+                [cam]() { return cam->GetFar(); },
+                [cam](float value) { cam->SetFar(value); },
+                0.0f,
+                "Resetting far"
+            );
+            ImGui::EndPopup();
         }
 
-        float newNear = cam->GetNear();
-        if (ImGui::DragFloat("Near Plane", &newNear, 1, 0.1f))
-        {
-            if (newNear > 0)
-            {
-                cam->SetNear(newNear);
-            }
-        }
 
-        float newFar = cam->GetFar();
-        if (ImGui::DragFloat("Far Plane", &newFar, 1, 0.1f))
-        {
-            if (newFar > newNear)
-            {
-                cam->SetFar(newFar);
-            }
-        }
+        ImGuiHelpers::UndoableSlider<float>(
+            [cam]() { return cam->GetNear(); },
+            [cam](float value) { cam->SetNear(value); },
+            "Near Plane",
+            0.1f, 1000.0f,
+            "Changing Near Plane");
+
+        ImGuiHelpers::UndoableSlider<float>(
+            [cam]() { return cam->GetFar(); },
+            [cam](float value) { cam->SetFar(value); },
+            "Far Plane",
+            1.0f, 10000.0f,
+            "Changing Far Plane");
+
 
         ImGui::TreePop();
     }
@@ -73,43 +128,7 @@ void CameraComponentDrawer::DrawCameraControls(std::shared_ptr<ICamera> camera)
     }
     else if (auto cam = std::dynamic_pointer_cast<OrthographicCamera>(camera))
     {
-        if (ImGui::TreeNodeEx("Orthographic Camera Settings", ImGuiTreeNodeFlags_DefaultOpen))
-        {
-            if (ImGui::BeginPopupContextItem("OrthographicCameraContext"))
-            {
-                if (ImGui::MenuItem("Reset Near"))
-                {
-                    cam->SetNear();
-                    Trace("Resetting near")
-                }
-                if (ImGui::MenuItem("Reset Far"))
-                {
-                    cam->SetFar();
-                    Trace("Resetting far")
-                }
-                                
-                ImGui::EndPopup();
-            }
-            float newNearZ = cam->GetNear();
-            if (ImGui::DragFloat("Near Plane", &newNearZ, 1.0f, 1))
-            {
-                if (newNearZ > 0)
-                {
-                    cam->SetNear(newNearZ);
-                }
-            }
-
-            float newFarZ = cam->GetFar();
-            if (ImGui::DragFloat("Far Plane", &newFarZ, 1.0f, 1))
-            {
-                if (newFarZ > newNearZ)
-                {
-                    cam->SetFar(newFarZ);
-                }
-            }
-
-            ImGui::TreePop();
-        }
+        DrawOrtho(cam);
     }
     else
     {
@@ -127,14 +146,24 @@ void CameraComponentDrawer::Draw()
             {
                 if (ImGui::BeginPopupContextItem("CameraComponentContext"))
                 {
-                    if (ImGui::MenuItem("Delete component"))
+                    if (auto gameobject = cameraComponent->GetGameObject().lock())
                     {
-                        if (auto gameobject = cameraComponent->GetGameObject().lock())
-                        {
-                            gameobject->RemoveComponent(cameraComponent);
-                            Trace("Removing camera")
-
-                        }
+                        ImGuiHelpers::UndoableMenuItemAction(
+                            "Delete component",
+                            [cameraComponent]()
+                            {
+                                auto go = cameraComponent->GetGameObject().lock();
+                                go->RemoveComponent(cameraComponent);
+                            },
+                            [cameraComponent, gameobject]()
+                            {
+                                if (gameobject)
+                                {
+                                    gameobject->AddComponent(cameraComponent);
+                                }
+                            },
+                            "Deleting camera component"
+                        );
                     }
                     ImGui::EndPopup();
                 }

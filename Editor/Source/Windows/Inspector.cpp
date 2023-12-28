@@ -28,30 +28,39 @@ void Inspector::Draw()
         }
         renamingHelper.DrawRenamePopup();
         ImGui::SameLine();
-      
+
         ImGui::Text(gameobject->GetGUID().c_str());
 
         if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
         {
             if (ImGui::BeginPopupContextItem("TransformContextMenu"))
             {
-                if (ImGui::MenuItem("Reset Position"))
-                {
-                    gameobject->Transform()->Position = Vec3::Zero();
-                }
-                if (ImGui::MenuItem("Reset Rotation"))
-                {
-                    gameobject->Transform()->Rotation = Vec3::Zero();
-                }
-                if (ImGui::MenuItem("Reset Scale"))
-                {
-                    gameobject->Transform()->Scale = Vec3::One();
-                }
+                ImGuiHelpers::UndoableMenuItemValue<Vec3>(
+                    "Reset Position",
+                    [gameobject]() { return gameobject->Transform()->Position; },
+                    [gameobject](const Vec3& newVal) { gameobject->Transform()->Position = newVal; },
+                    Vec3::Zero(),
+                    "Reset GameObject Position"
+                );
+                ImGuiHelpers::UndoableMenuItemValue<Vec3>(
+                    "Reset Rotation",
+                    [gameobject]() { return gameobject->Transform()->Rotation; },
+                    [gameobject](const Vec3& newVal) { gameobject->Transform()->Rotation = newVal; },
+                    Vec3::Zero(),
+                    "Reset GameObject rotation"
+                );
+                ImGuiHelpers::UndoableMenuItemValue<Vec3>(
+                    "Reset Scale",
+                    [gameobject]() { return gameobject->Transform()->Scale; },
+                    [gameobject](const Vec3& newVal) { gameobject->Transform()->Scale = newVal; },
+                    Vec3::Zero(),
+                    "Reset GameObject scale"
+                );
                 ImGui::EndPopup();
             }
-            DrawVector("Position", gameobject->Transform()->Position);
-            DrawVector("Rotation", gameobject->Transform()->Rotation);
-            DrawVector("Scale", gameobject->Transform()->Scale);
+            ImGuiHelpers::DrawVector("Position", gameobject->Transform()->Position);
+            ImGuiHelpers::DrawVector("Rotation", gameobject->Transform()->Rotation);
+            ImGuiHelpers::DrawVector("Scale", gameobject->Transform()->Scale);
         }
 
 
@@ -79,14 +88,34 @@ void Inspector::Draw()
             {
                 if (ImGui::Selectable(component.c_str()))
                 {
-                    Trace("Adding " + component + " to GameObject");
-                    auto comp = ComponentRegistry::CreateComponent(component, gameobject);
-                    gameobject->AddComponent(comp);
+                    auto comp = std::make_shared<std::shared_ptr<IComponent>>(nullptr);
+
+                    UndoManager::Execute(Memento(
+                        [this, comp, component]()
+                        {
+                            if (const auto gameobject = this->hierarchy->GetSelectedObject().lock())
+                            {
+                                *comp = ComponentRegistry::CreateComponent(component, gameobject);
+                                gameobject->AddComponent(*comp);
+                            }
+                        },
+                        [this, comp]()
+                        {
+                            if (comp)
+                            {
+                                if (auto gameobject = this->hierarchy->GetSelectedObject().lock())
+                                {
+                                    gameobject->RemoveComponent(*comp);
+                                }
+                            }
+                        },
+                        "Adding component"
+                    ));
+
                     ImGui::CloseCurrentPopup();
                     break;
                 }
             }
-
             ImGui::EndPopup();
         }
     }
@@ -96,38 +125,4 @@ void Inspector::Draw()
     }
     ImGui::PopStyleVar(1);
     ImGui::End();
-}
-
-
-void Inspector::DrawVector(const char* vectorName, Vec3& vector)
-{
-    float labelWidth = ImGui::CalcTextSize("Rotation").x + 20.0f;
-    float totalWidth = ImGui::GetContentRegionAvail().x - labelWidth;
-    float fieldWidth = totalWidth / 3.0f - ImGui::GetStyle().ItemInnerSpacing.x;
-
-    ImGui::Text(vectorName);
-    ImGui::SameLine(labelWidth);
-
-    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1, 0, 0, 1));
-    ImGui::Text("X");
-    ImGui::SameLine();
-    ImGui::SetNextItemWidth(fieldWidth - ImGui::CalcTextSize("X").x);
-    ImGui::DragFloat((std::string("##X") + vectorName).c_str(), &vector.X(), 0.1f, -FLT_MAX, FLT_MAX, "%.3f");
-    ImGui::PopStyleColor();
-    ImGui::SameLine();
-
-    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 1, 0, 1));
-    ImGui::Text("Y");
-    ImGui::SameLine();
-    ImGui::SetNextItemWidth(fieldWidth - ImGui::CalcTextSize("Y").x);
-    ImGui::DragFloat((std::string("##Y") + vectorName).c_str(), &vector.Y(), 0.1f, -FLT_MAX, FLT_MAX, "%.3f");
-    ImGui::PopStyleColor();
-    ImGui::SameLine();
-
-    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 1, 1));
-    ImGui::Text("Z");
-    ImGui::SameLine();
-    ImGui::SetNextItemWidth(fieldWidth - ImGui::CalcTextSize("Z").x);
-    ImGui::DragFloat((std::string("##Z") + vectorName).c_str(), &vector.Z(), 0.1f, -FLT_MAX, FLT_MAX, "%.3f");
-    ImGui::PopStyleColor();
 }

@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "Inspector.h"
 #include "../EditorCamera.h"
+#include "../ImGuiHelpers.h"
 
 EditorCameraWindow::EditorCameraWindow(std::shared_ptr<EditorCamera> camera) : camera(std::move(camera))
 {
@@ -12,9 +13,9 @@ EditorCameraWindow::EditorCameraWindow(std::shared_ptr<EditorCamera> camera) : c
 void EditorCameraWindow::Draw()
 {
     ImGui::Begin(CAMERA_WINDOW.c_str());
-    Inspector::DrawVector("Position", camera->GetTransform()->Position);
-    Inspector::DrawVector("Rotation", camera->GetTransform()->Rotation);
-    Inspector::DrawVector("Scale", camera->GetTransform()->Scale);
+    ImGuiHelpers::DrawVector("Position", camera->GetTransform()->Position);
+    ImGuiHelpers::DrawVector("Rotation", camera->GetTransform()->Rotation);
+    ImGuiHelpers::DrawVector("Scale", camera->GetTransform()->Scale);
   
 
     CameraComponentDrawer::DrawCameraControls(camera->camera);

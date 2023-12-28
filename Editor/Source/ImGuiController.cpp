@@ -23,6 +23,7 @@
 #include "Windows/MeshImporterWindow.h"
 #include "Windows/RenderStatWindow.h"
 #include "Windows/SettingsWindow.h"
+#include "Windows/UndoWindow.h"
 
 const std::string IMGUI_SETTING_ID = "IMGUI_WINDOW";
 
@@ -65,6 +66,9 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, II
 
     const std::shared_ptr<InputStatsWindow> inputWindow = std::make_shared<InputStatsWindow>(input);
     renderables.try_emplace(inputWindow, EditorSettings::Get(IMGUI_SETTING_ID + inputWindow->GetName(), true));
+
+    const std::shared_ptr<UndoWindow> undoWindow = std::make_shared<UndoWindow>();
+    renderables.try_emplace(undoWindow, EditorSettings::Get(IMGUI_SETTING_ID + inputWindow->GetName(), true));
 
     settingsWindow = new SettingsWindow();
     ImGuiTheme::ApplyTheme(0);

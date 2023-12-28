@@ -42,12 +42,12 @@ public:
     Vec2 GetMousePosition() override;
     Vec2 GetMouseDelta() override;
     int GetMouseScrollDelta() override;
+    bool IsKeyPress(Keys keys) const override;
+    
 private:
     float CalculateTriggerValue(BYTE rawValue, float threshold = XINPUT_GAMEPAD_TRIGGER_THRESHOLD, float max = 255.0f);
     float CalculateAxisValue(SHORT rawValue, float deadzone, float left = -32768.0f, float right = 32767.0f);
 
-
-private:
     std::unique_ptr<DirectX::Mouse> mouse{};
     std::unique_ptr<DirectX::Keyboard> keyboard{};
     DirectX::Mouse::ButtonStateTracker tracker;
@@ -73,6 +73,8 @@ private:
     int scrollDelta=0;
     int lastScrollValue=0;
     std::unique_ptr<DirectX::Keyboard>::element_type::State keyboardState;
+    std::unique_ptr<DirectX::Keyboard>::element_type::State previousKeyState;
+
     inline static bool mouseDataUpdated;
     inline static bool keyboardDataUpdated;
 };

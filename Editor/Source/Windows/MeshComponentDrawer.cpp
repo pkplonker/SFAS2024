@@ -1,4 +1,4 @@
-﻿#include "MeshComponentDrawer.h"
+#include "MeshComponentDrawer.h"
 
 #include <functional>
 
@@ -38,18 +38,44 @@ void MeshComponentDrawer::Draw()
             {
                 if (ImGui::BeginPopupContextItem("MeshComponentContext"))
                 {
-                    if (ImGui::MenuItem("Delete component"))
-                    {
-                        if (auto gameobject = meshComponent->GetGameObject().lock())
+                    auto cachedComponent = meshComponent;
+
+                    ImGuiHelpers::UndoableMenuItemAction(
+                        "Delete component",
+                        [cachedComponent]()
                         {
-                            gameobject->RemoveComponent(meshComponent);
-                        }
-                    }
+                            if (auto go = cachedComponent->GetGameObject().lock())
+                            {
+                                go->RemoveComponent(cachedComponent);
+                            }
+                        },
+                        [cachedComponent]()
+                        {
+                            if (auto go = cachedComponent->GetGameObject().lock())
+                            {
+                                go->AddComponent(cachedComponent);
+
+                                auto renderable = std::dynamic_pointer_cast<IRenderableComponent>(cachedComponent);
+                                if (renderable)
+                                {
+                                    auto graphics = IApplication::GetGraphics();
+                                    if (graphics != nullptr)
+                                    {
+                                        graphics->UpdateRenderable(renderable->GetMaterial(),
+                                                                   renderable->GetRenderable());
+                                    }
+                                }
+                            }
+                        },
+                        "Deleting mesh component"
+                    );
+
                     ImGui::EndPopup();
                 }
             }
 
-            ImGuiHelpers::WrappedText("Mesh Path:", meshComponent->GetMeshPath(),"Replace",
+
+            ImGuiHelpers::WrappedText("Mesh Path:", meshComponent->GetMeshPath(), "Replace",
                                       std::bind(&MeshComponentDrawer::ChangeMesh, this));
 
             materialDrawerHelper.DrawMaterial();
@@ -71,14 +97,26 @@ void MeshComponentDrawer::ChangeMesh()
     {
         if (auto comp = component.lock())
         {
-            auto mesh = ResourceManager::GetMesh(path.generic_string());
+            Mesh* mesh = ResourceManager::GetMesh(path.generic_string());
             if (mesh == nullptr)
             {
                 MessageBoxWrapper::ShowWarning("Unable to generate mesh", "Unable to generate mesh");
                 return;
             }
             Trace("Setting new mesh")
-            comp->SetMesh(mesh);
+            auto meshRenderable = std::dynamic_pointer_cast<IMeshRenderable>(comp->GetRenderable());
+            auto originalMeshPath = meshRenderable->GetPath();
+            if (meshRenderable)
+            {
+                UndoManager::Execute(Memento([comp,mesh]()
+                                             {
+                                                 comp->SetMesh(mesh);
+                                             }, [comp,originalMeshPath]()
+                                             {
+                                                 Mesh* mesh = ResourceManager::GetMesh(originalMeshPath);
+                                                 comp->SetMesh(mesh);
+                                             }, "Setting new mesh"));
+            }
         }
     }
     else
@@ -86,4 +124,3 @@ void MeshComponentDrawer::ChangeMesh()
         MessageBoxWrapper::ShowWarning("Incorrect file type", "Incorrect file type");
     }
 }
-

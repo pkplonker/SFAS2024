@@ -8,9 +8,10 @@
 #include "Engine/IApplication.h"
 class SpriteComponent;
 
-Scene::Scene()
+Scene::Scene(IGraphics* graphics)
 {
     objects = std::make_unique<std::map<std::string, std::shared_ptr<GameObject>>>();
+    this->graphics = graphics;
 }
 
 Scene::~Scene()
@@ -36,6 +37,15 @@ void Scene::AddObject(std::shared_ptr<GameObject> object)
         }
     }
     objects->emplace(object->GetGUID(), object);
+
+    if (graphics != nullptr)
+    {
+        const auto renderable = object->GetComponent<IRenderableComponent>();
+        if (renderable != nullptr)
+        {
+            graphics->UpdateRenderable(renderable->GetMaterial(), renderable->GetRenderable());
+        }
+    }
 }
 
 void Scene::RemoveObject(std::shared_ptr<GameObject> object)
@@ -49,6 +59,27 @@ void Scene::RemoveObject(std::shared_ptr<GameObject> object)
         {
             RemoveRenderable(renderable->GetRenderable());
         }
+        object->Transform()->SetParent(nullptr);
+        objects->erase(object->GetGUID());
+    }
+    else
+    {
+        Warning("GameObject not found to delete");
+    }
+}
+
+void Scene::RemoveObject(std::string guid)
+{
+    if (guid == "")return;
+    if (objects->contains(guid))
+    {
+        auto object = (*objects)[guid];
+        auto renderable = object->GetComponent<IRenderableComponent>();
+        if (renderable != nullptr)
+        {
+            RemoveRenderable(renderable->GetRenderable());
+        }
+        object->Transform()->SetParent(nullptr);
         objects->erase(object->GetGUID());
     }
     else
@@ -99,9 +130,9 @@ std::shared_ptr<ICamera> Scene::GetActiveCamera()
 
 bool Scene::TryFindObject(const std::string& string, std::weak_ptr<GameObject>& object) const
 {
-    if(objects->contains(string))
+    if (objects->contains(string))
     {
-        object= (*objects)[string];
+        object = (*objects)[string];
         return true;
     }
     return false;
