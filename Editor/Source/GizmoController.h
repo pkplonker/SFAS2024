@@ -23,9 +23,9 @@ enum GizmoSpace
 class GizmoController
 {
 public:
-    GizmoController(std::weak_ptr<EditorCamera> editorCamera);
-    void ImGuiPreFrame(ImVec2 size, ImVec2 position);
-    void Update(std::weak_ptr<GameObject> gameobject, ImVec2 size, ImVec2 position);
+    GizmoController(std::weak_ptr<EditorCamera> editorCamera,IInput* input);
+    void ImGuiPreFrame();
+    void Update(bool isInFocus, std::weak_ptr<GameObject> gameobject, ImVec2 size, ImVec2 position);
     DirectX::XMFLOAT4X4 ChangeMat(DirectX::XMMATRIX mat);
     void SetGizmoOpertion(GizmoOperation op);
     GizmoOperation GetGizmoOperation();
@@ -42,4 +42,5 @@ private:
         0.0f, 0.0f, 1.0f, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f
     };
+    IInput* input;
 };

@@ -7,18 +7,35 @@
 #include "Transform.h"
 #include "UndoManager.h"
 
-GizmoController::GizmoController(std::weak_ptr<EditorCamera> editorCamera) : editorCamera(editorCamera)
+GizmoController::GizmoController(std::weak_ptr<EditorCamera> editorCamera, IInput* input) : editorCamera(editorCamera),
+    input(input)
 {
 }
 
-void GizmoController::ImGuiPreFrame(ImVec2 size, ImVec2 position)
+void GizmoController::ImGuiPreFrame()
 {
     ImGuizmo::SetOrthographic(false);
     ImGuizmo::BeginFrame();
 }
 
-void GizmoController::Update(std::weak_ptr<GameObject> gameobject, ImVec2 size, ImVec2 position)
+void GizmoController::Update(bool isInFocus, std::weak_ptr<GameObject> gameobject, ImVec2 size, ImVec2 position)
 {
+    if (isInFocus)
+    {
+        if (input->IsKeyPress(Keys::W))
+        {
+            operation = Translation;
+        }
+        else if (input->IsKeyPress(Keys::E))
+        {
+            operation = Rotation;
+        }
+        else if (input->IsKeyPress(Keys::R))
+        {
+            operation = Scale;
+        }
+    }
+
     ImGuizmo::Enable(true);
     ImGuizmo::SetRect(position.x, position.y, size.x, size.y);
     static DirectX::XMMATRIX lastInitialMatrix;
