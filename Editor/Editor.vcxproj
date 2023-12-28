@@ -70,12 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Editor\packages\ImGui;$(SolutionDir)Engine\Source\Engine;$(SolutionDir)Editor\packages\assimp;$(SolutionDir)Engine\Source\Engine\implementation</IncludePath>
+    <IncludePath>$(SolutionDir)Editor\packages\ImGui;$(SolutionDir)Editor\packages\ImGuizmo;$(SolutionDir)Engine\Source\Engine;$(SolutionDir)Editor\packages\assimp;$(SolutionDir)Engine\Source\Engine\implementation</IncludePath>
     <IntDir>$(Configuration)\Editor\</IntDir>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)\Editor\packages\ImGui;$(SolutionDir)Engine\Source\Engine;$(SolutionDir)Source\;$(SolutionDir)Engine\Source\Engine\implementation;$(SolutionDir)Engine\Source\Engine\implementation\directx11</IncludePath>
+    <IncludePath>$(SolutionDir)\Editor\packages\ImGui;$(SolutionDir)\Editor\packages\ImGuizmo;$(SolutionDir)Engine\Source\Engine;$(SolutionDir)Source\;$(SolutionDir)Engine\Source\Engine\implementation;$(SolutionDir)Engine\Source\Engine\implementation\directx11</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
@@ -90,7 +90,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Star\Source\Game;$(SolutionDir)\Engine\Source;$(ProjectDir)Packages\ImGui\backends;$(ProjectDir)Packages\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Star\Source\Game;$(SolutionDir)\Engine\Source;$(ProjectDir)Packages\ImGui\backends;$(ProjectDir)Packages\ImGui;$(ProjectDir)Packages\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -105,7 +105,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Star\Source\Game;$(SolutionDir)\Engine\Source;$(ProjectDir)Packages\ImGui\backends;$(ProjectDir)Packages\ImGui;$(ProjectDir)Packages\assimp;$(ProjectDir)Packages\nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Star\Source\Game;$(SolutionDir)\Engine\Source;$(ProjectDir)Packages\ImGui\backends;$(ProjectDir)Packages\ImGui;$(ProjectDir)Packages\ImGuizmo;$(ProjectDir)Packages\assimp;$(ProjectDir)Packages\nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -144,7 +144,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Star\Source\Game;$(SolutionDir)\Engine\Source;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui\backends;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Star\Source\Game;$(SolutionDir)\Engine\Source;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui\backends;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGui;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -155,6 +155,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Packages\ImGuizmo\ImCurveEdit.cpp" />
+    <ClCompile Include="Packages\ImGuizmo\ImGradient.cpp" />
+    <ClCompile Include="Packages\ImGuizmo\ImGuizmo.cpp" />
+    <ClCompile Include="Packages\ImGuizmo\ImSequencer.cpp" />
     <ClCompile Include="Source\DefaultShapes.cpp" />
     <ClCompile Include="Source\EditorCamera.cpp" />
     <ClCompile Include="Source\EditorSettings.cpp" />
@@ -351,6 +355,11 @@
     <ClInclude Include="Packages\assimp\XmlParser.h" />
     <ClInclude Include="Packages\assimp\XMLTools.h" />
     <ClInclude Include="Packages\assimp\ZipArchiveIOSystem.h" />
+    <ClInclude Include="Packages\ImGuizmo\ImCurveEdit.h" />
+    <ClInclude Include="Packages\ImGuizmo\ImGradient.h" />
+    <ClInclude Include="Packages\ImGuizmo\ImGuizmo.h" />
+    <ClInclude Include="Packages\ImGuizmo\ImSequencer.h" />
+    <ClInclude Include="Packages\ImGuizmo\ImZoomSlider.h" />
     <ClInclude Include="Source\DefaultShapes.h" />
     <ClInclude Include="Source\EditorCamera.h" />
     <ClInclude Include="Source\EditorSettings.h" />
@@ -448,6 +457,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\MessageBoxWrapper.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Packages\ImGuizmo\.editorconfig" />
+    <Content Include="Packages\ImGuizmo\bin\imgui.ini" />
+    <Content Include="Packages\ImGuizmo\bin\ImGuizmoSample.exe" />
+    <Content Include="Packages\ImGuizmo\Images\nodeeditor.jpg" />
+    <Content Include="Packages\ImGuizmo\LICENSE" />
+    <Content Include="Packages\ImGuizmo\Makefile" />
+    <Content Include="Packages\ImGuizmo\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

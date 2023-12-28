@@ -1,5 +1,4 @@
 #include "Editor.h"
-
 #include "EditorCamera.h"
 #include "EditorSettings.h"
 #include "Helpers.h"
