@@ -20,7 +20,7 @@ void GizmoController::ImGuiPreFrame()
 
 void GizmoController::Update(bool isInFocus, std::weak_ptr<GameObject> gameobject, ImVec2 size, ImVec2 position)
 {
-    if (isInFocus)
+    if (isInFocus && !(input->IsRightHeld() || input->IsRightPressed()))
     {
         if (input->IsKeyPress(Keys::W))
         {
