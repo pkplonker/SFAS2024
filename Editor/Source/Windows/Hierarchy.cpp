@@ -167,12 +167,20 @@ void Hierarchy::ProcessChildren(std::vector<std::shared_ptr<GameObject>>& object
                 {
                     localFlags |= ImGuiTreeNodeFlags_Leaf;
                 }
-                if (selectedObject.lock() != nullptr && selectedObject.lock() == object)
+                bool isSelected = (selectedObject.lock() == object);
+                if (isSelected)
                 {
                     localFlags |= ImGuiTreeNodeFlags_Selected;
+                    ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.1764705926179886f, 0.3490196168422699f,
+                                                                  0.5764706134796143f,
+                                                                  0.8619999885559082f));
                 }
 
                 bool nodeOpen = ImGui::TreeNodeEx(nodeLabel.c_str(), localFlags);
+                if (isSelected)
+                {
+                    ImGui::PopStyleColor(1);
+                }
 
                 if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
                 {
