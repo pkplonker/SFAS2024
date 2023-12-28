@@ -26,12 +26,20 @@ struct Transform : std::enable_shared_from_this<Transform>
             newParent->children.insert(shared_from_this());
         }
     }
-    
+
+    void SetParentWeak(const std::weak_ptr<Transform>& newParent)
+    {
+        if (auto newParentShared = newParent.lock())
+        {
+            SetParent(newParentShared);
+        }
+    }
+
     bool HasChildren() const
     {
-        return children.size()>0;
+        return children.size() > 0;
     }
-    
+
     struct TransformCompare
     {
         bool operator()(const std::weak_ptr<Transform>& lhs, const std::weak_ptr<Transform>& rhs) const
@@ -39,10 +47,11 @@ struct Transform : std::enable_shared_from_this<Transform>
             return lhs.lock().get() < rhs.lock().get();
         }
     };
+
     std::weak_ptr<Transform> parent;
     std::set<std::weak_ptr<Transform>, TransformCompare> children;
     std::weak_ptr<GameObject> gameobject;
-    
+
 private:
     void AddChild(const std::shared_ptr<Transform>& child)
     {
@@ -59,5 +68,4 @@ private:
             children.erase(child);
         }
     }
-   
 };

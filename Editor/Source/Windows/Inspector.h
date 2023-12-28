@@ -12,15 +12,13 @@ class Inspector : public EditorWindow
 
 {
 public:
+    Inspector(std::shared_ptr<Hierarchy> hierarchy);
 
-	Inspector(std::shared_ptr<Hierarchy> hierarchy);
+    void Draw() override;
+    std::string GetName() override { return INSPECTOR; }
 
-	void Draw() override;
-	static void DrawVector(const char* vectorName, Vec3& vector);
-	std::string GetName() override { return INSPECTOR; }
 private:
-	std::shared_ptr<Hierarchy> hierarchy;
-	std::unique_ptr<ComponentDrawerFactory> factory;
-	RenamingHelper renamingHelper;
-
+    std::shared_ptr<Hierarchy> hierarchy;
+    std::unique_ptr<ComponentDrawerFactory> factory;
+    RenamingHelper renamingHelper;
 };

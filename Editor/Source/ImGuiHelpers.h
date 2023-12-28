@@ -1,10 +1,13 @@
 ﻿#pragma once
+#include <iostream>
 #include <string>
 #include <utility>
 
 #include "Helpers.h"
 #include "imgui.h"
 #include "functional"
+#include "UndoManager.h"
+#include "Engine/Math/Vector3.h"
 
 class ImGuiHelpers
 {
@@ -87,4 +90,223 @@ public:
             ImGui::NewLine();
         }
     }
+
+    template <typename T>
+    static void UndoableSlider(
+        std::function<T()> getValue,
+        std::function<void(T)> setValue,
+        const char* label,
+        T minValue,
+        T maxValue,
+        const std::string& actionDescription)
+    {
+        T value = getValue();
+
+
+        bool valueChanged = false;
+        if constexpr (std::is_same<T, float>::value)
+        {
+            valueChanged = ImGui::SliderFloat(label, reinterpret_cast<float*>(&value), minValue, maxValue);
+        }
+        else if constexpr (std::is_same<T, int>::value)
+        {
+            valueChanged = ImGui::SliderInt(label, reinterpret_cast<int*>(&value), minValue, maxValue);
+        }
+
+        if (ImGui::IsItemActivated())
+        {
+            sliderStates[label] = static_cast<float>(getValue());
+        }
+
+        if (valueChanged)
+        {
+            setValue(value);
+        }
+
+        if (ImGui::IsItemDeactivatedAfterEdit())
+        {
+            auto originalVal = static_cast<T>(sliderStates[label]);
+            if (value != originalVal)
+            {
+                UndoManager::Execute(
+                    Memento(
+                        [setValue, value] { setValue(value); },
+                        [setValue,originalVal] { setValue(static_cast<T>(originalVal)); },
+                        actionDescription));
+            }
+        }
+    }
+
+    template <typename T>
+    static void UndoableDrag(
+        std::function<T()> getValue,
+        std::function<void(T)> setValue,
+        const char* label,
+        const std::string& actionDescription)
+    {
+        T value = getValue();
+
+
+        bool valueChanged = false;
+        if constexpr (std::is_same<T, float>::value)
+        {
+            valueChanged = ImGui::DragFloat(label, reinterpret_cast<float*>(&value));
+        }
+        else if constexpr (std::is_same<T, int>::value)
+        {
+            valueChanged = ImGui::DragInt(label, reinterpret_cast<int*>(&value));
+        }
+
+        if (ImGui::IsItemActivated())
+        {
+            sliderStates[label] = static_cast<float>(getValue());
+        }
+
+        if (valueChanged)
+        {
+            setValue(value);
+        }
+
+        if (ImGui::IsItemDeactivatedAfterEdit())
+        {
+            auto originalVal = static_cast<T>(sliderStates[label]);
+            if (value != originalVal)
+            {
+                UndoManager::Execute(
+                    Memento(
+                        [setValue, value] { setValue(value); },
+                        [setValue,originalVal] { setValue(static_cast<T>(originalVal)); },
+                        actionDescription));
+            }
+        }
+    }
+
+    template <typename T>
+    static void UndoableMenuItemValue(
+        const std::string& label,
+        std::function<T()> getter,
+        std::function<void(const T&)> setter,
+        const T& newState,
+        const std::string& actionDescription)
+    {
+        T originalState = getter();
+
+        if (ImGui::MenuItem(label.c_str()))
+        {
+            setter(newState);
+
+            UndoManager::Execute(
+                Memento(
+                    [setter, newState] { setter(newState); },
+                    [setter, originalState] { setter(originalState); },
+                    actionDescription));
+        }
+    }
+
+    static void UndoableMenuItemAction(
+        const std::string& label,
+        std::function<void()> doAction,
+        std::function<void()> undoAction,
+        const std::string& actionDescription)
+    {
+        if (ImGui::MenuItem(label.c_str()))
+        {
+            UndoManager::Execute(
+                Memento(
+                    doAction,
+                    undoAction,
+                    actionDescription));
+        }
+    }
+
+    static void UndoableButtonAction(
+        const std::string& label,
+        std::function<void()> doAction,
+        std::function<void()> undoAction,
+        const std::string& actionDescription)
+    {
+        if (ImGui::Button(label.c_str()))
+        {
+            UndoManager::Execute(
+                Memento(
+                    doAction,
+                    undoAction,
+                    actionDescription));
+        }
+    }
+
+    static void UndoableCheckboxAction(
+        const std::string& label,
+        bool* variable,
+        std::function<void()> doAction,
+        std::function<void()> undoAction,
+        const std::string& actionDescription)
+    {
+        if (ImGui::Checkbox(label.c_str(), variable))
+        {
+            UndoManager::Execute(
+                Memento(
+                    doAction,
+                    undoAction,
+                    actionDescription));
+        }
+    }
+
+    static void DrawVector(const char* vectorName, Vec3& vector)
+    {
+        float labelWidth = ImGui::CalcTextSize("Rotation").x + 20.0f;
+        float totalWidth = ImGui::GetContentRegionAvail().x - labelWidth;
+        float fieldWidth = totalWidth / 3.0f - ImGui::GetStyle().ItemInnerSpacing.x;
+
+        ImGui::Text(vectorName);
+        ImGui::SameLine(labelWidth);
+
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1, 0, 0, 1));
+        ImGui::Text("X");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(fieldWidth - ImGui::CalcTextSize("X").x);
+        UndoableDrag<float>(
+            [&vector]() { return vector.X(); },
+            [&vector](float x) { vector.X(x); },
+            (std::string("##X") + vectorName).c_str(),
+            "Change X Component"
+        );
+        ImGui::PopStyleColor();
+        ImGui::SameLine();
+
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 1, 0, 1));
+        ImGui::Text("Y");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(fieldWidth - ImGui::CalcTextSize("Y").x);
+        UndoableDrag<float>(
+            [&vector]() { return vector.Y(); },
+            [&vector](float y) { vector.Y(y); },
+            (std::string("##Y") + vectorName).c_str(),
+            "Change Y Component"
+        );
+        ImGui::PopStyleColor();
+        ImGui::SameLine();
+
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 1, 1));
+        ImGui::Text("Z");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(fieldWidth - ImGui::CalcTextSize("Z").x);
+        UndoableDrag<float>(
+            [&vector]() { return vector.Z(); },
+            [&vector](float z) { vector.Z(z); },
+            (std::string("##Z") + vectorName).c_str(),
+            "Change Z Component"
+        );
+        ImGui::PopStyleColor();
+    }
+
+private:
+    bool IsClicked()
+    {
+        return ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left);
+    }
+
+    static inline bool isActivated = false;
+    static inline bool wasActive = false;
+    static inline std::unordered_map<std::string, float> sliderStates = {};
 };

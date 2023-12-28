@@ -122,6 +122,7 @@ void DirectXInput::HandleMouse()
 
 void DirectXInput::HandleKeyboard()
 {
+    previousKeyState = keyboardState;
     keyboardState = keyboard->GetState();
 }
 
@@ -220,6 +221,12 @@ Vec2 DirectXInput::GetMouseDelta()
 int DirectXInput::GetMouseScrollDelta()
 {
     return scrollDelta;
+}
+
+bool DirectXInput::IsKeyPress(Keys inputkey) const
+{
+    auto key = static_cast<DirectX::Keyboard::Keys>(inputkey);
+    return keyboardState.IsKeyDown(key) && previousKeyState.IsKeyUp(key);
 }
 
 float DirectXInput::CalculateTriggerValue(BYTE rawValue, float threshold, float max)

@@ -62,7 +62,7 @@ void EditorCamera::SetWidth(float width)
 
 void EditorCamera::SetFov(int fov)
 {
-    camera->SetFOV(fov);
+    camera->SetFOV(static_cast<float>(fov));
 }
 
 void EditorCamera::MouseInput()

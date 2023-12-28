@@ -10,7 +10,7 @@ class ImGuiController;
 class Scene : public IUpdateable, public Transform
 {
 public:
-    Scene();
+    Scene(IGraphics* graphics);
     ~Scene() override;
 
     void SetScene()
@@ -19,6 +19,7 @@ public:
 
     void AddObject(std::shared_ptr<GameObject> object);
     void RemoveObject(std::shared_ptr<GameObject> object);
+    void RemoveObject(std::string guid);
     void RemoveRenderable(std::shared_ptr<IRenderable> object) const;
     void Update() override;
     void SetActiveCamera(const std::shared_ptr<ICamera>& camera);
@@ -31,4 +32,5 @@ private:
         GameObject>>>();
     std::shared_ptr<ICamera> camera = {};
     std::weak_ptr<GameObject> selectedObject = {};
+    IGraphics* graphics;
 };

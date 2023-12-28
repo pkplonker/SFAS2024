@@ -160,8 +160,10 @@
     <ClCompile Include="Source\EditorSettings.cpp" />
     <ClCompile Include="Source\FileDialog.cpp" />
     <ClCompile Include="Source\FileOpener.cpp" />
+    <ClCompile Include="Source\Memento.cpp" />
     <ClCompile Include="Source\MeshImporter.cpp" />
     <ClCompile Include="Source\SceneSerializer.cpp" />
+    <ClCompile Include="Source\UndoManager.cpp" />
     <ClCompile Include="Source\Windows\CameraComponentDrawer.cpp" />
     <ClCompile Include="Source\Windows\ComponentDrawer.cpp" />
     <ClCompile Include="Source\Windows\ComponentDrawerFactory.cpp" />
@@ -263,6 +265,7 @@
     <ClCompile Include="Source\Windows\MeshComponentDrawer.cpp" />
     <ClCompile Include="Source\Windows\RenderStatWindow.cpp" />
     <ClCompile Include="Source\Windows\SpriteComponentDrawer.cpp" />
+    <ClCompile Include="Source\Windows\UndoWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Packages\assimp\aabb.h" />
@@ -355,8 +358,10 @@
     <ClInclude Include="Source\FileOpener.h" />
     <ClInclude Include="Source\ImGuiHelpers.h" />
     <ClInclude Include="Source\ImGuiTheme.h" />
+    <ClInclude Include="Source\Memento.h" />
     <ClInclude Include="Source\MeshImporter.h" />
     <ClInclude Include="Source\SceneSerializer.h" />
+    <ClInclude Include="Source\UndoManager.h" />
     <ClInclude Include="Source\Windows\CameraComponentDrawer.h" />
     <ClInclude Include="Source\Windows\ComponentDrawer.h" />
     <ClInclude Include="Source\Windows\ComponentDrawerFactory.h" />
@@ -419,6 +424,7 @@
     <ClInclude Include="Source\Windows\MeshComponentDrawer.h" />
     <ClInclude Include="Source\Windows\RenderStatWindow.h" />
     <ClInclude Include="Source\Windows\SpriteComponentDrawer.h" />
+    <ClInclude Include="Source\Windows\UndoWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
