@@ -35,21 +35,21 @@ void Inspector::Draw()
         {
             if (ImGui::BeginPopupContextItem("TransformContextMenu"))
             {
-                ImGuiHelpers::UndoableMenuItem<Vec3>(
+                ImGuiHelpers::UndoableMenuItemValue<Vec3>(
                     "Reset Position",
                     [gameobject]() { return gameobject->Transform()->Position; },
                     [gameobject](const Vec3& newVal) { gameobject->Transform()->Position = newVal; },
                     Vec3::Zero(),
                     "Reset GameObject Position"
                 );
-                ImGuiHelpers::UndoableMenuItem<Vec3>(
+                ImGuiHelpers::UndoableMenuItemValue<Vec3>(
                     "Reset Rotation",
                     [gameobject]() { return gameobject->Transform()->Rotation; },
                     [gameobject](const Vec3& newVal) { gameobject->Transform()->Rotation = newVal; },
                     Vec3::Zero(),
                     "Reset GameObject rotation"
                 );
-                ImGuiHelpers::UndoableMenuItem<Vec3>(
+                ImGuiHelpers::UndoableMenuItemValue<Vec3>(
                     "Reset Scale",
                     [gameobject]() { return gameobject->Transform()->Scale; },
                     [gameobject](const Vec3& newVal) { gameobject->Transform()->Scale = newVal; },

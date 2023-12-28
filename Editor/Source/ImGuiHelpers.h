@@ -182,7 +182,7 @@ public:
     }
 
     template <typename T>
-    static void UndoableMenuItem(
+    static void UndoableMenuItemValue(
         const std::string& label,
         std::function<T()> getter,
         std::function<void(const T&)> setter,

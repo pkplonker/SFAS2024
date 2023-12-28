@@ -68,6 +68,26 @@ void Scene::RemoveObject(std::shared_ptr<GameObject> object)
     }
 }
 
+void Scene::RemoveObject(std::string guid)
+{
+    if (guid == "")return;
+    if (objects->contains(guid))
+    {
+        auto object = (*objects)[guid];
+        auto renderable = object->GetComponent<IRenderableComponent>();
+        if (renderable != nullptr)
+        {
+            RemoveRenderable(renderable->GetRenderable());
+        }
+        object->Transform()->SetParent(nullptr);
+        objects->erase(object->GetGUID());
+    }
+    else
+    {
+        Warning("GameObject not found to delete");
+    }
+}
+
 
 void Scene::RemoveRenderable(std::shared_ptr<IRenderable> object) const
 {

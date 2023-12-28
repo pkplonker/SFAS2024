@@ -19,6 +19,7 @@ public:
 
     void AddObject(std::shared_ptr<GameObject> object);
     void RemoveObject(std::shared_ptr<GameObject> object);
+    void RemoveObject(std::string guid);
     void RemoveRenderable(std::shared_ptr<IRenderable> object) const;
     void Update() override;
     void SetActiveCamera(const std::shared_ptr<ICamera>& camera);

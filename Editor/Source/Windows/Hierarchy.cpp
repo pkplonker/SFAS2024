@@ -27,50 +27,72 @@ void Hierarchy::HandleContextMenu(const char* contextMenuName)
         {
             if (ImGui::BeginMenu("Default Shapes"))
             {
-                if (ImGui::MenuItem("Cube"))
-                {
-                    GameObjectFactory("New Cube")
-                        .AddMeshRenderable(DefaultShapes::GetCubeMesh())
-                        .Build();
-                }
-                if (ImGui::MenuItem("Sphere"))
-                {
-                    GameObjectFactory("New Sphere")
-                        .AddMeshRenderable(DefaultShapes::GetSphereMesh())
-                        .Build();
-                }
-                if (ImGui::MenuItem("Plane"))
-                {
-                    GameObjectFactory("New Plane")
-                        .AddMeshRenderable(DefaultShapes::GetPlaneMesh())
-                        .Build();
-                }
+                CreateUndoableGameObject(
+                    "New Cube",
+                    [](GameObjectFactory& factory)
+                    {
+                        return factory.AddMeshRenderable(DefaultShapes::GetCubeMesh()).Build();
+                    },
+                    "Created cube"
+                );
+
+
+                CreateUndoableGameObject(
+                    "New Sphere",
+                    [](GameObjectFactory& factory)
+                    {
+                        return factory.AddMeshRenderable(DefaultShapes::GetSphereMesh()).Build();
+                    },
+                    "Created sphere"
+                );
+
+                CreateUndoableGameObject(
+                    "New Plane",
+                    [](GameObjectFactory& factory)
+                    {
+                        return factory.AddMeshRenderable(DefaultShapes::GetPlaneMesh()).Build();
+                    },
+                    "Created plane"
+                );
+
                 ImGui::EndMenu();
             }
-            if (ImGui::MenuItem("Empty"))
-            {
-                GameObjectFactory().Build();
-            }
-            if (ImGui::MenuItem("Empty Mesh"))
-            {
-                GameObjectFactory("New Mesh")
-                    .AddEmptyMeshRenderable()
-                    .Build();
-            }
-            if (ImGui::MenuItem("Empty Sprite"))
-            {
-                GameObjectFactory("New Sprite")
-                    .AddEmptySpriteRenderable()
-                    .Build();
-            }
+            
+            CreateUndoableGameObject(
+                "New Empty",
+                [](GameObjectFactory& factory)
+                {
+                    return factory.Build();
+                },
+                "Created empty object"
+            );
 
+            CreateUndoableGameObject(
+                "New Mesh",
+                [](GameObjectFactory& factory)
+                {
+                    return factory.AddEmptyMeshRenderable().Build();
+                },
+                "Created empty mesh"
+            );
 
-            if (ImGui::MenuItem("Camera"))
-            {
-                GameObjectFactory("New Camera")
-                    .AddPerspectiveCamera()
-                    .Build();
-            }
+            CreateUndoableGameObject(
+                "New Sprite",
+                [](GameObjectFactory& factory)
+                {
+                    return factory.AddEmptySpriteRenderable().Build();
+                },
+                "Created empty sprite"
+            );
+
+            CreateUndoableGameObject(
+                "New Camera",
+                [](GameObjectFactory& factory)
+                {
+                    return factory.AddPerspectiveCamera().Build();
+                },
+                "Created camera"
+            );
             if (ImGui::MenuItem("Light"))
             {
             }
@@ -81,6 +103,40 @@ void Hierarchy::HandleContextMenu(const char* contextMenuName)
         ImGui::EndPopup();
     }
 }
+
+void Hierarchy::CreateUndoableGameObject(
+    const std::string& name,
+    std::function<std::shared_ptr<GameObject>(GameObjectFactory&)> createObjectFunc,
+    const std::string& actionDescription)
+{
+    auto guidPtr = std::make_shared<std::string>();
+
+    ImGuiHelpers::UndoableMenuItemAction(
+        name.c_str(),
+        [guidPtr, createObjectFunc, name]()
+        {
+            if (const auto scene = SceneManager::GetScene().lock())
+            {
+                GameObjectFactory factory(name);
+                auto createdObject = createObjectFunc(factory);
+                *guidPtr = createdObject->GetGUID();
+                scene->AddObject(createdObject);
+            }
+        },
+        [guidPtr]()
+        {
+            if (const auto scene = SceneManager::GetScene().lock())
+            {
+                if (!guidPtr->empty())
+                {
+                    scene->RemoveObject(*guidPtr);
+                }
+            }
+        },
+        actionDescription
+    );
+}
+
 
 void Hierarchy::ProcessChildren(std::vector<std::shared_ptr<GameObject>>& objectsToRemove, ImGuiTreeNodeFlags baseFlags,
                                 std::set<std::weak_ptr<Transform>, Transform::TransformCompare> children)

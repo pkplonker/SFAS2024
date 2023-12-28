@@ -22,7 +22,7 @@ void CameraComponentDrawer::DrawPerspective(std::shared_ptr<PerspectiveCamera> c
     {
         if (ImGui::BeginPopupContextItem("PerspectiveCameraContext"))
         {
-            ImGuiHelpers::UndoableMenuItem<float>(
+            ImGuiHelpers::UndoableMenuItemValue<float>(
                 "Reset Near",
                 [cam]() { return cam->GetNear(); },
                 [cam](float value) { cam->SetNear(value); },
@@ -30,7 +30,7 @@ void CameraComponentDrawer::DrawPerspective(std::shared_ptr<PerspectiveCamera> c
                 "Resetting near"
             );
 
-            ImGuiHelpers::UndoableMenuItem<float>(
+            ImGuiHelpers::UndoableMenuItemValue<float>(
                 "Reset Far",
                 [cam]() { return cam->GetFar(); },
                 [cam](float value) { cam->SetFar(value); },
@@ -38,7 +38,7 @@ void CameraComponentDrawer::DrawPerspective(std::shared_ptr<PerspectiveCamera> c
                 "Resetting far"
             );
 
-            ImGuiHelpers::UndoableMenuItem<float>(
+            ImGuiHelpers::UndoableMenuItemValue<float>(
                 "Reset FOV",
                 [cam]() { return cam->GetFOV(); },
                 [cam](float value) { cam->SetFOV(value); },
@@ -82,7 +82,7 @@ void CameraComponentDrawer::DrawOrtho(std::shared_ptr<OrthographicCamera> cam)
     {
         if (ImGui::BeginPopupContextItem("OrthographicCameraContext"))
         {
-            ImGuiHelpers::UndoableMenuItem<float>(
+            ImGuiHelpers::UndoableMenuItemValue<float>(
                 "Reset Near",
                 [cam]() { return cam->GetNear(); },
                 [cam](float value) { cam->SetNear(value); },
@@ -90,7 +90,7 @@ void CameraComponentDrawer::DrawOrtho(std::shared_ptr<OrthographicCamera> cam)
                 "Resetting near"
             );
 
-            ImGuiHelpers::UndoableMenuItem<float>(
+            ImGuiHelpers::UndoableMenuItemValue<float>(
                 "Reset Far",
                 [cam]() { return cam->GetFar(); },
                 [cam](float value) { cam->SetFar(value); },
