@@ -10,7 +10,7 @@ class UndoManager : public IUpdateable
 {
 public:
     UndoManager(IInput* input);
-    static void Execute(Memento command);
+    static void Execute(Memento command, bool execute = true);
     static void Undo();
     static void Redo();
     void Update() override;

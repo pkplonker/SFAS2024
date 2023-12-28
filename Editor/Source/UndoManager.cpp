@@ -11,11 +11,12 @@ UndoManager::UndoManager(IInput* input)
     init = true;
 }
 
-void UndoManager::Execute(Memento command)
+void UndoManager::Execute(Memento command, bool execute)
 {
     if (!init) throw;
     isDirty = true;
     commands.emplace(command);
+    if(execute)
     commands.top().Execute();
 }
 
