@@ -72,5 +72,5 @@ float4 PS_Main(PS_Input frag) : SV_TARGET
     // Apply lighting
     finalColor *= diffuseColor;
 
-    return float4(lightColor.xyz,1);
+    return float4(finalColor.xyz,1);
 }

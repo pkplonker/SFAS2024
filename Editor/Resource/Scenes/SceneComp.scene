@@ -22,9 +22,9 @@
                 "name": "Barrel",
                 "transform": {
                     "position": {
-                        "x": 2.1540000438690186,
-                        "y": 3.777106761932373,
-                        "z": 0.013604044914245605
+                        "x": -8.029336929321289,
+                        "y": 2.4592862129211426,
+                        "z": -3.559278726577759
                     },
                     "rotation": {
                         "x": 0.0,
@@ -61,13 +61,13 @@
                 "name": "Barrel2",
                 "transform": {
                     "position": {
-                        "x": 4.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "x": -10.201177597045898,
+                        "y": 2.5789999961853027,
+                        "z": -3.1074814796447754
                     },
                     "rotation": {
                         "x": 0.0,
-                        "y": 0.0,
+                        "y": -0.0,
                         "z": 0.0
                     },
                     "scale": {
@@ -120,12 +120,12 @@
                 "transform": {
                     "position": {
                         "x": 0.0,
-                        "y": 0.0,
+                        "y": 10.123026847839355,
                         "z": 0.0
                     },
                     "rotation": {
                         "x": 0.0,
-                        "y": 0.0,
+                        "y": -0.0,
                         "z": 0.0
                     },
                     "scale": {
@@ -158,9 +158,9 @@
                 "name": "Fire",
                 "transform": {
                     "position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "x": -4.0,
+                        "y": 2.0,
+                        "z": -3.0
                     },
                     "rotation": {
                         "x": 0.0,
@@ -176,7 +176,7 @@
             }
         ],
         [
-            "Ground",
+            "Terrain",
             {
                 "guid": "{C0A3D52D-05F6-4821-BC64-8CB217D834FD}",
                 "meshComponent": {
@@ -187,55 +187,17 @@
                             "g": 0.36274510622024536,
                             "r": 0.09602076560258865
                         },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Ground.smesh",
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Terrain.smesh",
                         "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
                         "skybox": false
                     },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Ground.smesh"
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Terrain.smesh"
                 },
-                "name": "Ground",
+                "name": "Terrain",
                 "transform": {
                     "position": {
                         "x": 0.0,
                         "y": -1.7737367153167725,
-                        "z": 0.0
-                    },
-                    "rotation": {
-                        "x": 0.0,
-                        "y": -0.0,
-                        "z": 0.0
-                    },
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            }
-        ],
-        [
-            "Cube",
-            {
-                "guid": "{D4A98687-0BBB-47AD-8463-3CC0B6CABA02}",
-                "meshComponent": {
-                    "material": {
-                        "color": {
-                            "a": 1.0,
-                            "b": 0.43739601969718933,
-                            "g": 0.44607841968536377,
-                            "r": 0.15087947249412537
-                        },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false
-                    },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
-                },
-                "name": "Cube",
-                "transform": {
-                    "position": {
-                        "x": -2.5505118370056152,
-                        "y": 4.439856052398682,
                         "z": 0.0
                     },
                     "rotation": {

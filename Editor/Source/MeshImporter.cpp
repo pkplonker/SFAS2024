@@ -82,7 +82,7 @@ void MeshImporter::ProcessMesh(aiMesh* aiMesh, const aiScene* scene, Mesh* mesh)
         mesh->GetVerts().push_back(vertex);
     }
     Vec3 extents = (maxPoint - minPoint) * 0.5f;
-    mesh->GetAABB().Extents = extents;
+    mesh->SetExtents(extents);
     if (aiMesh->HasFaces())
     {
         for (unsigned int i = 0; i < aiMesh->mNumFaces; i++)

@@ -23,7 +23,7 @@ public:
 
     bool AllowInteraction() { return allowInteraction; }
 
-private:
+protected:
     std::shared_ptr<Transform3D> Transform;
     bool allowInteraction = true;
     DirectX::BoundingBox aabb;
