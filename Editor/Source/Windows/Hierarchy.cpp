@@ -15,6 +15,10 @@
 #include "Engine/Implementation/Scene.h"
 #include "Logging/Debug.h"
 
+Hierarchy::Hierarchy(IInput* input) : input(input)
+{
+}
+
 void Hierarchy::HandleContextMenu(const char* contextMenuName)
 {
     if (ImGui::IsMouseReleased(ImGuiMouseButton_Right) && ImGui::IsWindowHovered(ImGuiHoveredFlags_None))
@@ -150,6 +154,31 @@ void Hierarchy::SetSelectedObject(std::shared_ptr<GameObject> object)
                                  }, "New selection"));
 }
 
+auto Hierarchy::DeleteDo(std::vector<std::shared_ptr<GameObject>>& objectsToRemove, std::shared_ptr<GameObject> object)
+{
+    return [&objectsToRemove, object]()
+    {
+        objectsToRemove.emplace_back(object);
+    };
+}
+
+auto Hierarchy::DeleteUndo(std::shared_ptr<GameObject> object)
+{
+    return [object]()
+    {
+        if (const auto scene = SceneManager::GetScene().lock())
+        {
+            scene->AddObject(object);
+
+            //setting to scene as default and then attempting to set to old
+            const auto oldParent = object->Transform()->parent;
+            object->Transform()->SetParentWeak(scene);
+            object->Transform()->SetParentWeak(oldParent);
+            // need to add back to renderables
+        }
+    };
+}
+
 void Hierarchy::ProcessChildren(std::vector<std::shared_ptr<GameObject>>& objectsToRemove, ImGuiTreeNodeFlags baseFlags,
                                 std::set<std::weak_ptr<Transform>, Transform::TransformCompare> children)
 {
@@ -211,29 +240,13 @@ void Hierarchy::ProcessChildren(std::vector<std::shared_ptr<GameObject>>& object
                 {
                     SetSelectedObject(object);
                 }
-
                 if (ImGui::BeginPopupContextItem(("ObjectContextMenu##" + object->GetGUID()).c_str()))
                 {
-                    SetSelectedObject(object);
+                    //SetSelectedObject(object);
                     ImGuiHelpers::UndoableMenuItemAction(
                         "Delete",
-                        [&objectsToRemove, object]()
-                        {
-                            objectsToRemove.emplace_back(object);
-                        },
-                        [object]()
-                        {
-                            if (const auto scene = SceneManager::GetScene().lock())
-                            {
-                                scene->AddObject(object);
-
-                                //setting to scene as default and then attempting to set to old
-                                const auto oldParent = object->Transform()->parent;
-                                object->Transform()->SetParentWeak(scene);
-                                object->Transform()->SetParentWeak(oldParent);
-                                // need to add back to renderables
-                            }
-                        },
+                        DeleteDo(objectsToRemove, object),
+                        DeleteUndo(object),
                         "Deleting object"
                     );
 
@@ -298,6 +311,19 @@ void Hierarchy::Draw()
     auto contextMenuName = "ContextMenuWindow";
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow |
         ImGuiTreeNodeFlags_SpanAvailWidth;
+    if (const auto sharedSelectedObject = selectedObject.lock())
+    {
+        if (input->IsKeyPress(Keys::Delete))
+        {
+            UndoManager::Execute(Memento(
+                                     DeleteDo(objectsToRemove, sharedSelectedObject),
+                                     DeleteUndo(sharedSelectedObject), "Deleting Object"));
+        }
+        if (input->IsKeyPress(Keys::Q))
+        {
+            SetSelectedObject(nullptr);
+        }
+    }
 
     if (auto sharedScene = SceneManager::GetScene().lock())
     {

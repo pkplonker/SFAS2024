@@ -1,6 +1,7 @@
 ﻿#include "Memento.h"
 
-Memento::Memento(std::function<void()> action, std::function<void()> undo) : Memento(action, undo, DEFAULT_DESCRIPTION)
+Memento::Memento(std::function<void()> action, std::function<void()> undo) : Memento(
+    action, undo, DEFAULT_DESCRIPTION)
 {
 }
 

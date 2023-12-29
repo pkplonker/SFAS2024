@@ -1,7 +1,7 @@
 #include "Editor.h"
-
 #include "EditorCamera.h"
 #include "EditorSettings.h"
+#include "EditorViewportInteractor.h"
 #include "Helpers.h"
 #include "Engine/IGraphics.h"
 #include "Engine/IInput.h"
@@ -48,8 +48,7 @@ bool Editor::IsValid()
 bool Editor::Load()
 {
     game->Load();
-
-    imguiController = std::make_unique<ImGuiController>(dx11Graphics, game, Input);
+    
     sceneSerializer = std::make_unique<SceneSerializer>(dx11Graphics);
     dx11Graphics->SetRenderToTexture(true, 1, 1);
     ResourceManager::Init(dx11Graphics);
@@ -57,9 +56,8 @@ bool Editor::Load()
         EditorSettings::Get("LastScene",
                             Helpers::WideStringToString(
                                 L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/TestScene2.scene")));
-    editorCamera = std::make_shared<EditorCamera>(Input);
-    editorCamera->SetActiveCamera();
-    imguiController->AddWindow(std::make_shared<EditorCameraWindow>(editorCamera));
+    
+    
     SceneManager::OnSceneChangedEvent.Subscribe([this]()
     {
         if (auto scene = SceneManager::GetScene().lock())
@@ -68,6 +66,11 @@ bool Editor::Load()
         }
     });
     undomanager = std::make_unique<UndoManager>(Input);
+    editorCamera = std::make_shared<EditorCamera>(Input);
+    editorCamera->SetActiveCamera();
+    imguiController = std::make_unique<ImGuiController>(dx11Graphics, game, Input,editorCamera);
+    imguiController->AddWindow(std::make_shared<EditorCameraWindow>(editorCamera));
+    editorViewportInteractor = std::make_unique<EditorViewportInteractor>(Input,imguiController.get());
     return true;
 }
 
@@ -80,6 +83,7 @@ void Editor::Update()
     {
         editorCamera->Update();
     }
+    editorViewportInteractor->Update(editorCamera->camera);
     imguiController->Draw();
 }
 
