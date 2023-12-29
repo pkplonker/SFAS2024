@@ -1,10 +1,14 @@
-﻿#include "GameObject.h"
+#include "GameObject.h"
+
+#include <DirectXCollision.h>
+#include <iostream>
 #include <utility>
 
 #include "Helpers.h"
 #include "Engine/IComponent.h"
-#include "Engine/Implementation/Logging/Debug.h"
 #include "Transform3D.h"
+#include "DirectXMath.h"
+#include "IRenderableComponent.h"
 
 GameObject::GameObject()
 {
@@ -39,6 +43,27 @@ GameObject::GameObject(std::string name) : GameObject()
 void GameObject::Init()
 {
     transform->SetGameObject(shared_from_this());
+}
+
+DirectX::BoundingBox GameObject::GetAABB()
+{
+    DirectX::BoundingBox result;
+    result.Extents = DirectX::XMFLOAT3(0, 0, 0);
+
+    result.Center = Transform()->Position.vec;
+
+    if (auto renderableComponent = GetComponent<IRenderableComponent>(); renderableComponent != nullptr)
+    {
+        if (auto renderable = renderableComponent->GetRenderable())
+        {
+            if (renderable->AllowInteraction())
+            {
+                Vec3 ext = Transform()->Scale * renderable->GetBounds().Extents;
+                result.Extents = ext;
+            }
+        }
+    }
+    return result;
 }
 
 void GameObject::Update()
@@ -84,4 +109,18 @@ std::string GameObject::GenerateGUID()
         return guid;
     }
     return "";
+}
+
+bool GameObject::GetIsEnabled()
+{
+    return enabled;
+}
+
+void GameObject::SetIsEnabled(bool state)
+{
+    enabled = state;
+    for (auto component : *components)
+    {
+        component->SetIsEnabled(state);
+    }
 }

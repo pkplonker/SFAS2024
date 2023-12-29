@@ -49,6 +49,12 @@ void IRenderableComponent::UpdateRenderableTransform()
     }
 }
 
+void IRenderableComponent::SetIsEnabled(bool state)
+{
+    IComponent::SetIsEnabled(state);
+    renderable->SetIsEnabled(state);
+}
+
 void IRenderableComponent::SetMaterial(IMaterial* material)
 {
     if (auto scene = SceneManager::GetScene().lock())

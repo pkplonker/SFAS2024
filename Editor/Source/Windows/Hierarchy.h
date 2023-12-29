@@ -13,12 +13,14 @@ const int RENAME_BUFFER_SIZE = 256;
 class Hierarchy : public EditorWindow
 {
 public:
-    Hierarchy() = default;
+    Hierarchy(IInput* input);
 
     void HandleContextMenu(const char* contextMenuName);
     void CreateUndoableGameObject(const std::string& name,
                                   std::function<std::shared_ptr<GameObject>(GameObjectFactory&)> createObjectFunc, const std::string& actionDescription);
     void SetSelectedObject(std::shared_ptr<GameObject> object);
+    auto DeleteDo(std::vector<std::shared_ptr<GameObject>>& objectsToRemove, std::shared_ptr<GameObject> object);
+    auto DeleteUndo(std::shared_ptr<GameObject> object);
     void ProcessChildren(std::vector<std::shared_ptr<GameObject>>& objectsToRemove, ImGuiTreeNodeFlags baseFlags,
                          std::set<std::weak_ptr<Transform>, Transform::TransformCompare> children);
     void Draw() override;
@@ -30,4 +32,5 @@ private:
     std::unique_ptr<ComponentDrawerFactory> factory;
     RenamingHelper renamingHelper;
     static inline const char* DragDropPayloadID = "HIERARCHY_GAMEOBJECT";
+    IInput* input;
 };

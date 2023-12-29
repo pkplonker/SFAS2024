@@ -13,6 +13,7 @@
 #include "Engine/Implementation/MeshComponent.h"
 #include <filesystem>
 
+#include "BoundsDrawerHelper.h"
 #include "MaterialDrawerHelper.h"
 #include "ResourceManager.h"
 #include "../MessageBoxWrapper.h"
@@ -79,6 +80,10 @@ void MeshComponentDrawer::Draw()
                                       std::bind(&MeshComponentDrawer::ChangeMesh, this));
 
             materialDrawerHelper.DrawMaterial();
+            if (const auto& renderable = meshComponent->GetRenderable())
+            {
+                BoundsDrawerHelper::DrawBounds(renderable->GetBounds());
+            }
         }
     }
 }
@@ -105,7 +110,12 @@ void MeshComponentDrawer::ChangeMesh()
             }
             Trace("Setting new mesh")
             auto meshRenderable = std::dynamic_pointer_cast<IMeshRenderable>(comp->GetRenderable());
-            auto originalMeshPath = meshRenderable->GetPath();
+
+            std::string originalMeshPath = "";
+            if (meshRenderable != nullptr)
+            {
+                originalMeshPath = meshRenderable->GetPath();
+            }
             if (meshRenderable)
             {
                 UndoManager::Execute(Memento([comp,mesh]()

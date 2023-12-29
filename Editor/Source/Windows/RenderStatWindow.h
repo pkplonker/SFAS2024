@@ -10,4 +10,5 @@ class RenderStatWindow : public EditorWindow
 public:
     void Draw() override;
     std::string GetName() override;
+    
 };

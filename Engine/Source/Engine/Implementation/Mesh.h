@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <DirectXCollision.h>
 #include <string>
 #include <vector>
 
@@ -8,9 +9,16 @@ class Mesh
 {
 public:
     Mesh(std::string path);
+    std::vector<Vertex>& GetVerts();
+    void SetVerts(std::vector<Vertex> verts);
+    std::vector<unsigned int>& GetIndices();
+    void SetIndices(std::vector<unsigned int> indices);
+    std::string GetPath() { return path; }
+    DirectX::BoundingBox GetAABB() { return aabb; }
+
+protected:
+    std::string path;
+    DirectX::BoundingBox aabb;
     std::vector<Vertex> Vertices = {};
     std::vector<unsigned int> Indices = {};
-    std::string GetPath() { return path; }
-    protected:
-        std::string path;
 };

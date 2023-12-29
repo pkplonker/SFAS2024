@@ -14,8 +14,8 @@ public:
                        unsigned int indexCount);
     virtual ~DirectX11Billboard();
     virtual void Update();
-    unsigned int GetVerts() override { return 4; }
-    unsigned int GetTriangles() override { return 2; }
+    unsigned int GetVertsCount() override { return 4; }
+    unsigned int GetTriangleCount() override { return 2; }
 
 private:
     ID3D11DeviceContext* Context;
