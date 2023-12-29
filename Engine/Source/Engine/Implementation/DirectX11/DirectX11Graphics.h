@@ -28,6 +28,7 @@ public:
 	DirectX11Graphics(HWND hwndIn);
 	~DirectX11Graphics() override;
 
+	void SetDirectionalLightBuffers();
 	void Update() override;
 	void UpdateRenderable(IMaterial* mat, const std::shared_ptr<IRenderable>& renderable) override;
 	void RemoveRenderable(const std::shared_ptr<IRenderable>& renderable) override;
@@ -92,6 +93,8 @@ private:
 	bool renderToTexture;
 	ID3D11Buffer* materialBuffer;
 	D3D11_BUFFER_DESC materialBufferDesc;
+	ID3D11Buffer* directionalLightBuffer;
+	D3D11_BUFFER_DESC directionalLightBufferDesc;
 	ID3D11DepthStencilState* depthState;
 	ID3D11DepthStencilState* skyDepthState;
 };

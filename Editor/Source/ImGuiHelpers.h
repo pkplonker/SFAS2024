@@ -301,11 +301,10 @@ public:
         ImGui::PopStyleColor();
     }
 
-    static bool ButtonWithState(const char* str, ImVec2 buttonSize, bool state, bool activeOnTrue = true)
+    static bool ButtonWithState(const char* str, ImVec2 buttonSize, bool state, bool activeOnTrue = true, ImVec4 color = ImVec4(0.1372549086809158f, 0.1921568661928177f, 0.2627451121807098f,
+                            1.0f))
     {
         bool style = state == activeOnTrue;
-        auto color = ImVec4(0.1372549086809158f, 0.1921568661928177f, 0.2627451121807098f,
-                            1.0f);
         bool result = false;
         if (style)
         {

@@ -124,7 +124,8 @@ void ImGuiController::DrawViewport()
     gameViewportPosition = ImGui::GetWindowPos();
 
 
-    gizmoController->Update(IsViewportInFocus(), GetSelectedObject(), gameViewportSize, gameViewportPosition);
+    isUsingGizmo = gizmoController->Update(IsViewportInFocus(), GetSelectedObject(), gameViewportSize,
+                                           gameViewportPosition);
 
 
     ImGui::End();
@@ -161,6 +162,11 @@ void ImGuiController::ImGuiPostUpdate() const
 void ImGuiController::Save()
 {
     SceneSerializer::Serialize(FileDialog::SaveFileDialog());
+}
+
+void ImGuiController::Save(std::string path)
+{
+    SceneSerializer::Serialize(path);
 }
 
 void ImGuiController::LoadScene() const

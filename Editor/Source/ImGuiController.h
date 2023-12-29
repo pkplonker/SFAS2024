@@ -31,7 +31,12 @@ public:
     void DrawViewport();
     void AddWindow(const std::shared_ptr<EditorWindow>& window);
     void SetSelectedObject(const std::shared_ptr<GameObject>& obj);
+    bool IsUsingGizmo()
+    {
+        return isUsingGizmo;
+    }
     static void Save();
+    void Save(std::string path);
     void DrawWindows();
     void Draw();
     void ImGuiPostUpdate() const;
@@ -64,4 +69,5 @@ private:
     ImVec2 gameViewportPosition;
     std::shared_ptr<EditorCamera> camera;
     std::shared_ptr<GizmoController> gizmoController;
+    bool isUsingGizmo;
 };

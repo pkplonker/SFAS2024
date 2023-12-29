@@ -8,9 +8,10 @@ DirectX11Mesh::DirectX11Mesh(std::string path, DirectX::BoundingBox aabb, ID3D11
                                                         Context(ContextIn), VertexBuffer(VertexBufferIn),
                                                         vertexStride(vertexStride), vertexOffset(vertexOffset),
                                                         vertexCount(vertexCountIn),
-                                                        IndexBuffer(IndexBufferIn), indexCount(indexCount),
-                                                        aabb(aabb)
+                                                        IndexBuffer(IndexBufferIn), indexCount(indexCount)
 {
+    this->aabb.Center = aabb.Center;
+    this->aabb.Extents = aabb.Extents;
 }
 
 DirectX11Mesh::~DirectX11Mesh()

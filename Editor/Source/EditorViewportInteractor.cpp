@@ -32,6 +32,7 @@ void EditorViewportInteractor::Update(std::weak_ptr<ICamera> cameraComponent)
         bool found = false;
         for (auto [guid, obj] : scene->GetObjects())
         {
+            auto extents = obj->GetAABB();
             if (obj->GetAABB().Intersects(rayOrigin, rayDirection, distanceToIntersection))
             {
                 //std::cout << "selected! " << obj->Name << "Distance: " << distanceToIntersection <<std::endl;
@@ -40,10 +41,10 @@ void EditorViewportInteractor::Update(std::weak_ptr<ICamera> cameraComponent)
                 break;
             }
         }
-        if(!found)
-        {
-            controller->SetSelectedObject(nullptr);
-        }
+        // if(!found)
+        // {
+        //     controller->SetSelectedObject(nullptr);
+        // }
     }
 }
 

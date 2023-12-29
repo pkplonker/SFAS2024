@@ -12,9 +12,21 @@ EditorCamera::EditorCamera(IInput* input)
 {
     this->input = input;
     transform = std::make_shared<Transform3D>();
-    transform->Position = Vec3(0, 2.5, -12);
+    auto x = EditorSettings::GetSetting<float>(key+"X");
+    auto y = EditorSettings::GetSetting<float>(key+"Y");
+    auto z = EditorSettings::GetSetting<float>(key+"Z");
+    transform->Position = Vec3(x,y,z);
     camera = std::make_shared<PerspectiveCamera>(transform, 1000, 1000);
     camera->SetFOV(80);
+}
+
+EditorCamera::~EditorCamera()
+{
+    auto pos = transform->Position;
+    EditorSettings::Set(key+"X",pos.X());
+    EditorSettings::Set(key+"Y",pos.Y());
+    EditorSettings::Set(key+"Z",pos.Z());
+
 }
 
 void EditorCamera::SetActiveCamera()

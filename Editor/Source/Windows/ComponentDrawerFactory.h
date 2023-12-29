@@ -2,12 +2,15 @@
 #include <memory>
 
 #include "CameraComponentDrawer.h"
+#include "DirectionalLightComponent.h"
+#include "DirectionalLightComponentDrawer.h"
 #include "MeshComponentDrawer.h"
 #include "SpriteComponent.h"
 #include "SpriteComponentDrawer.h"
 #include "Engine/Implementation/CameraComponent.h"
 #include "Engine/Implementation/MeshComponent.h"
 
+class DirectionalLightComponent;
 class ComponentDrawer;
 
 class ComponentDrawerFactory
@@ -28,6 +31,10 @@ public:
             if (std::shared_ptr<SpriteComponent> comp = std::dynamic_pointer_cast<SpriteComponent>(sharedComponent))
             {
                 return std::make_unique<SpriteComponentDrawer>(comp);
+            }
+            if (std::shared_ptr<DirectionalLightComponent> comp = std::dynamic_pointer_cast<DirectionalLightComponent>(sharedComponent))
+            {
+                return std::make_unique<DirectionalLightComponentDrawer>(comp);
             }
         }
 
