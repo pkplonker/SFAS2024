@@ -11,13 +11,16 @@
 #include <DDSTextureLoader.h>
 #include <memory>
 
+#include "DirectionalLightComponent.h"
 #include "DirectX11Material.h"
 #include "DirectX11Mesh.h"
 #include "IApplication.h"
 #include "RenderingStats.h"
 #include "ResourceManager.h"
+#include "SceneManager.h"
 #include "Engine/Implementation/Logging/Debug.h"
 #include "Implementation/Mesh.h"
+#include "Implementation/Scene.h"
 #include "Implementation/Vertex.h"
 
 struct
@@ -233,8 +236,6 @@ DirectX11Graphics::~DirectX11Graphics()
 }
 
 
-
-
 void DirectX11Graphics::RenderBucket(RenderingStats& stats, IShader* previousShader,
                                      std::map<IMaterial*, std::list<std::shared_ptr<IRenderable>>>::iterator bucket)
 {
@@ -368,17 +369,28 @@ void DirectX11Graphics::Update()
         Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
     }
 }
+
 void DirectX11Graphics::SetDirectionalLightBuffers()
 {
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     Context->Map(directionalLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     auto* data = static_cast<DirectionalLightBufferObject*>(mappedResource.pData);
-    data->color = Vec4(1,0,0,1);
-    data->dir = Vec4(0,1,0,1);     
+    data->color = Vec4(1, 0, 0, 1);
+    data->dir = Vec4(0, 1, 0, 1);
+    if (const auto scene = SceneManager::GetScene().lock())
+    {
+        auto dirLight = scene->GetDirectionalLight();
+        if (const auto& light = dirLight.lock())
+        {
+            data->color = light->GetColor();
+            data->dir = light->GetDirection();
+        }
+    }
     Context->Unmap(directionalLightBuffer, 0);
-    Context->PSSetConstantBuffers(2,1, &directionalLightBuffer);
-    Context->VSSetConstantBuffers(2,1, &directionalLightBuffer);
+    Context->PSSetConstantBuffers(2, 1, &directionalLightBuffer);
+    Context->VSSetConstantBuffers(2, 1, &directionalLightBuffer);
 }
+
 void DirectX11Graphics::UpdateRenderable(IMaterial* mat, const std::shared_ptr<IRenderable>& renderable)
 {
     RemoveRenderable(renderable);

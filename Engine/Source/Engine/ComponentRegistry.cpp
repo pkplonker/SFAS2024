@@ -13,3 +13,18 @@ void ComponentRegistry::RegisterComponents()
     RegisterComponent<CameraComponent>("Camera");
     RegisterComponent<DirectionalLightComponent>("Directional Light");
 }
+
+template <>
+void ComponentRegistry::RegisterComponent<DirectionalLightComponent>(const std::string& alias)
+{
+    componentCreators[alias] = [](std::any gameObject) -> std::shared_ptr<IComponent>
+    {
+        auto component = std::make_shared<DirectionalLightComponent>(
+            std::any_cast<std::shared_ptr<GameObject>>(gameObject));
+        if (const auto& scene = SceneManager::GetScene().lock())
+        {
+            scene->RegisterDirectionalLight(component);
+        }
+        return component;
+    };
+}

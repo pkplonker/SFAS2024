@@ -15,7 +15,7 @@ void DirectionalLightComponentDrawer::Draw()
     {
         if (auto lightComponent = std::dynamic_pointer_cast<DirectionalLightComponent>(sharedComponent))
         {
-            if (ImGui::CollapsingHeader("Directional Light Component", ImGuiTreeNodeFlags_DefaultOpen))
+            if (ImGui::CollapsingHeader("Directional Light", ImGuiTreeNodeFlags_DefaultOpen))
             {
                 if (ImGui::BeginPopupContextItem("DirectionalLightComponentContext"))
                 {

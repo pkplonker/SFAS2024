@@ -6,6 +6,9 @@
 #include <unordered_map>
 #include <vector>
 
+#include "DirectionalLightComponent.h"
+#include "SceneManager.h"
+#include "Implementation/Scene.h"
 #include "implementation/Logging/Debug.h"
 
 
@@ -23,6 +26,9 @@ public:
             return std::make_shared<T>(std::any_cast<std::shared_ptr<GameObject>>(gameObject));
         };
     }
+
+    template <>
+    static void RegisterComponent<DirectionalLightComponent>(const std::string& alias);
 
     static std::shared_ptr<IComponent> CreateComponent(const std::string& alias, std::shared_ptr<GameObject> gameObject)
     {

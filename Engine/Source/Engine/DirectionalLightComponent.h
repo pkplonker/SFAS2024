@@ -3,7 +3,7 @@
 #include "Math/Vector3.h"
 #include "Math/Vector4.h"
 
-class DirectionalLightComponent final : public IComponent
+class DirectionalLightComponent final : public IComponent, std::enable_shared_from_this<DirectionalLightComponent>
 {
 public:
     DirectionalLightComponent(std::weak_ptr<GameObject> object);

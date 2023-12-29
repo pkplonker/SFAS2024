@@ -6,7 +6,7 @@ struct Vec4
 {
     Vec4()
     {
-        vec = dx::XMFLOAT4(0);
+        vec = dx::XMFLOAT4(0,0,0,0);
     }
 
     Vec4(float x, float y, float z, float w)
@@ -30,7 +30,7 @@ struct Vec4
     {
     }
 
-    Vec4(Vec2 val, int z, int w) : Vec4(val.X(), val.Y(), z, w)
+    Vec4(Vec2 val, int z, int w) : Vec4(val.X(), val.Y(), static_cast<float>(z), static_cast<float>(w))
     {
     }
 
@@ -46,7 +46,7 @@ struct Vec4
     {
     }
 
-    Vec4(Vec3 val, int w) : Vec4(val.X(), val.Y(), val.Z(), w)
+    Vec4(Vec3 val, int w) : Vec4(val.X(), val.Y(), val.Z(), static_cast<float>(w))
     {
     }
 
@@ -128,6 +128,19 @@ struct Vec4
     bool operator==(const Vec4& vec4) const
     {
         return vec.x == vec4.vec.x && vec.y == vec4.vec.y && vec.z == vec4.vec.z && vec.w == vec4.vec.w;
+    }
+
+    Vec4 Normalise()
+    {
+        auto length = Length();
+        if (length == 0) return Vec4(0, 0, 0, 0);
+
+        return Vec4(vec.x / length, vec.y / length, vec.z / length, vec.w / length);
+    }
+
+    float Length()
+    {
+        return std::sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z + vec.w * vec.w);
     }
 
 private:

@@ -53,11 +53,9 @@ float4 PS_Main(PS_Input frag) : SV_TARGET
     float3 normalizedLightDirection = normalize(lightDirection.xyz);
     float3 normalizedNormal = normalize(frag.worldNormal);
     
-    // Basic diffuse lighting
     float diff = max(dot(normalizedNormal, normalizedLightDirection), 0.0);
-    float4 diffuseColor = diff * float4(1,1,1,1);
+    float4 diffuseColor = diff * lightColor;
 
-    // Combine with the existing color logic
     float4 finalColor = frag.color;  
     if(useTex)
     {
@@ -69,7 +67,6 @@ float4 PS_Main(PS_Input frag) : SV_TARGET
         finalColor = materialColor;
     }
 
-    // Apply lighting
     finalColor *= diffuseColor;
 
     return float4(finalColor.xyz,1);
