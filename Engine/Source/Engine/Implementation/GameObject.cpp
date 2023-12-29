@@ -1,6 +1,7 @@
-﻿#include "GameObject.h"
+#include "GameObject.h"
 
 #include <DirectXCollision.h>
+#include <iostream>
 #include <utility>
 
 #include "Helpers.h"
@@ -8,14 +9,16 @@
 #include "Transform3D.h"
 #include "DirectXMath.h"
 
-GameObject::GameObject() : boundingVolume(DirectX::BoundingBox())
+GameObject::GameObject() : aabb(DirectX::BoundingBox())
 {
     components = std::make_unique<std::vector<std::shared_ptr<IComponent>>>();
     transform = std::make_shared<Transform3D>();
     this->Name = GAMEOBJECT_DEFAULT_NAME;
     GenerateGUID();
-    boundingVolume.Center = Transform()->Position.vec;
-    boundingVolume.Extents = DirectX::XMFLOAT3(1,1,1);
+    aabb.Center = Transform()->Position.vec;
+    aabb.Extents = DirectX::XMFLOAT3(1, 1, 1);
+    originalAABB.Center = aabb.Center;
+    originalAABB.Extents = aabb.Extents;
 }
 
 GameObject::GameObject(std::unique_ptr<Transform3D> transform) : GameObject()
@@ -45,10 +48,12 @@ void GameObject::Init()
     transform->SetGameObject(shared_from_this());
 }
 
-DirectX::BoundingBox GameObject::GetBoundingVolume()
+DirectX::BoundingBox GameObject::GetAABB()
 {
-    boundingVolume.Center = Transform()->Position.vec;
-    return boundingVolume;
+    aabb.Center = Transform()->Position.vec;
+    auto result = Transform()->Scale * originalAABB.Extents;
+    aabb.Extents = result;
+    return aabb;
 }
 
 void GameObject::Update()

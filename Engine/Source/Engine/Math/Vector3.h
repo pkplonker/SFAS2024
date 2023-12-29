@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <DirectXMath.h>
 #include <sstream>
 
@@ -176,6 +176,16 @@ struct Vec3
     {
         os << "Vec3(x: " << obj.vec.x << ", y: " << obj.vec.y << ", Z: " << obj.vec.z << ")";
         return os;
+    }
+
+    Vec3&& operator*(const DirectX::XMFLOAT3& other) const
+    {
+        return Vec3(vec.x * other.x, vec.y * other.y, vec.z * other.z);
+    }
+
+    operator DirectX::XMFLOAT3() const
+    {
+        return vec;
     }
 
     dx::XMFLOAT3 vec{};

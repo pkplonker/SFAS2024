@@ -32,7 +32,7 @@ void EditorViewportInteractor::Update(std::weak_ptr<ICamera> cameraComponent)
         bool found = false;
         for (auto [guid, obj] : scene->GetObjects())
         {
-            if (obj->GetBoundingVolume().Intersects(rayOrigin, rayDirection, distanceToIntersection))
+            if (obj->GetAABB().Intersects(rayOrigin, rayDirection, distanceToIntersection))
             {
                 //std::cout << "selected! " << obj->Name << "Distance: " << distanceToIntersection <<std::endl;
                 controller->SetSelectedObject(obj);
