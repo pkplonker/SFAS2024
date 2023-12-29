@@ -233,15 +233,7 @@ DirectX11Graphics::~DirectX11Graphics()
 }
 
 
-void DirectX11Graphics::SetDirectionalLightBuffers()
-{
-    D3D11_MAPPED_SUBRESOURCE mappedResource;
-    Context->Map(directionalLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-    auto* data = static_cast<DirectionalLightBufferObject*>(mappedResource.pData);
-    Context->Unmap(directionalLightBuffer, 0);
-    Context->PSSetConstantBuffers(1, 1, &directionalLightBuffer);
-    Context->VSSetConstantBuffers(1, 1, &directionalLightBuffer);
-}
+
 
 void DirectX11Graphics::RenderBucket(RenderingStats& stats, IShader* previousShader,
                                      std::map<IMaterial*, std::list<std::shared_ptr<IRenderable>>>::iterator bucket)
@@ -376,7 +368,17 @@ void DirectX11Graphics::Update()
         Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
     }
 }
-
+void DirectX11Graphics::SetDirectionalLightBuffers()
+{
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    Context->Map(directionalLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    auto* data = static_cast<DirectionalLightBufferObject*>(mappedResource.pData);
+    data->color = Vec4(1,0,0,1);
+    data->dir = Vec4(0,1,0,1);     
+    Context->Unmap(directionalLightBuffer, 0);
+    Context->PSSetConstantBuffers(2,1, &directionalLightBuffer);
+    Context->VSSetConstantBuffers(2,1, &directionalLightBuffer);
+}
 void DirectX11Graphics::UpdateRenderable(IMaterial* mat, const std::shared_ptr<IRenderable>& renderable)
 {
     RemoveRenderable(renderable);
