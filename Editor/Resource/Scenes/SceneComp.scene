@@ -42,12 +42,12 @@
                     "material": {
                         "color": {
                             "a": 1.0,
-                            "b": 0.8492647409439087,
-                            "g": 0.8492647409439087,
-                            "r": 0.9166666865348816
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Fire.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMeshTest.fx",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
                         "skybox": false,
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
