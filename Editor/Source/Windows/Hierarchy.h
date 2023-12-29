@@ -13,7 +13,7 @@ const int RENAME_BUFFER_SIZE = 256;
 class Hierarchy : public EditorWindow
 {
 public:
-    Hierarchy() = default;
+    Hierarchy(IInput* input);
 
     void HandleContextMenu(const char* contextMenuName);
     void CreateUndoableGameObject(const std::string& name,
@@ -30,4 +30,5 @@ private:
     std::unique_ptr<ComponentDrawerFactory> factory;
     RenamingHelper renamingHelper;
     static inline const char* DragDropPayloadID = "HIERARCHY_GAMEOBJECT";
+    IInput* input;
 };

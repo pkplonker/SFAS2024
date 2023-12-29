@@ -49,7 +49,7 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, II
     const std::shared_ptr<TimeWindow> timeWindow = std::make_shared<TimeWindow>();
     renderables.try_emplace(timeWindow, EditorSettings::Get(IMGUI_SETTING_ID + timeWindow->GetName(), true));
 
-    hierarchy = std::make_shared<Hierarchy>();
+    hierarchy = std::make_shared<Hierarchy>(input);
     renderables.try_emplace(hierarchy, EditorSettings::Get(IMGUI_SETTING_ID + hierarchy->GetName(), true));
 
     const std::shared_ptr<Inspector> inspector = std::make_shared<Inspector>(hierarchy);

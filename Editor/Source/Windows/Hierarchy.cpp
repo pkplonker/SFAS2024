@@ -15,6 +15,10 @@
 #include "Engine/Implementation/Scene.h"
 #include "Logging/Debug.h"
 
+Hierarchy::Hierarchy(IInput* input) : input(input)
+{
+}
+
 void Hierarchy::HandleContextMenu(const char* contextMenuName)
 {
     if (ImGui::IsMouseReleased(ImGuiMouseButton_Right) && ImGui::IsWindowHovered(ImGuiHoveredFlags_None))
@@ -212,7 +216,7 @@ void Hierarchy::ProcessChildren(std::vector<std::shared_ptr<GameObject>>& object
                     SetSelectedObject(object);
                 }
 
-                if (ImGui::BeginPopupContextItem(("ObjectContextMenu##" + object->GetGUID()).c_str()))
+                if (ImGui::BeginPopupContextItem(("ObjectContextMenu##" + object->GetGUID()).c_str()) || input->IsKeyPress(Keys::Delete))
                 {
                     //SetSelectedObject(object);
                     ImGuiHelpers::UndoableMenuItemAction(
