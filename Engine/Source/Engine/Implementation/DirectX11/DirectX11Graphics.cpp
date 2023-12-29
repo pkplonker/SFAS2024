@@ -28,6 +28,12 @@ struct
     DirectX::XMFLOAT2 screenSize;
 } matrices;
 
+struct DirectionalLightBufferObject
+{
+    Vec4 dir = Vec4(0, -1, 0, 1);
+    Vec4 color = Vec4(1, 1, 1, 1);
+};
+
 DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
                                                     BackbufferView(nullptr), BackbufferTexture(nullptr), Mvp(nullptr),
                                                     vpMatrix(), FeatureLevel(D3D_FEATURE_LEVEL_11_0), hwnd(hwndIn),
@@ -181,6 +187,13 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         materialBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         materialBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
         Device->CreateBuffer(&materialBufferDesc, nullptr, &materialBuffer);
+
+        ZeroMemory(&directionalLightBufferDesc, sizeof(D3D11_BUFFER_DESC));
+        directionalLightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+        directionalLightBufferDesc.ByteWidth = sizeof(DirectionalLightBufferObject);
+        directionalLightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        directionalLightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+        Device->CreateBuffer(&directionalLightBufferDesc, nullptr, &directionalLightBuffer);
     }
 }
 
@@ -215,6 +228,19 @@ DirectX11Graphics::~DirectX11Graphics()
     if (shaderResourceView) shaderResourceView->Release();
     if (depthState) depthState->Release();
     if (skyDepthState) skyDepthState->Release();
+    if (directionalLightBuffer) directionalLightBuffer->Release();
+    if (materialBuffer) materialBuffer->Release();
+}
+
+
+void DirectX11Graphics::SetDirectionalLightBuffers()
+{
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    Context->Map(directionalLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    auto* data = static_cast<DirectionalLightBufferObject*>(mappedResource.pData);
+    Context->Unmap(directionalLightBuffer, 0);
+    Context->PSSetConstantBuffers(1, 1, &directionalLightBuffer);
+    Context->VSSetConstantBuffers(1, 1, &directionalLightBuffer);
 }
 
 void DirectX11Graphics::RenderBucket(RenderingStats& stats, IShader* previousShader,
@@ -243,7 +269,7 @@ void DirectX11Graphics::RenderBucket(RenderingStats& stats, IShader* previousSha
             stats.shaders++;
         }
         const auto renderObject = renderable->get();
-        if(renderObject==nullptr || !renderObject->IsEnabled()) continue;
+        if (renderObject == nullptr || !renderObject->IsEnabled()) continue;
 
         if (renderObject == nullptr)
         {
@@ -324,7 +350,7 @@ void DirectX11Graphics::Update()
         stats.viewportWidth = texWidth;
         stats.viewportHeight = texHeight;
         IShader* previousShader = nullptr;
-
+        SetDirectionalLightBuffers();
         for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
         {
             if (bucket->first == nullptr || !bucket->first->GetIsSkybox())
@@ -647,7 +673,8 @@ std::shared_ptr<IMeshRenderable> DirectX11Graphics::CreateMeshRenderable(IMateri
         if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) &&
             SUCCEEDED(Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
         {
-            Result = std::make_shared<DirectX11Mesh>(mesh->GetPath(),mesh->GetAABB(), Context, VertexBuffer, IndexBuffer, vertexStride,
+            Result = std::make_shared<DirectX11Mesh>(mesh->GetPath(), mesh->GetAABB(), Context, VertexBuffer,
+                                                     IndexBuffer, vertexStride,
                                                      vertexOffset, vertexCount, indexCount);
             AddRenderable(material, Result);
         }
@@ -693,7 +720,8 @@ std::shared_ptr<IMeshRenderable> DirectX11Graphics::CreateMeshRenderable(Mesh* m
         if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) &&
             SUCCEEDED(Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
         {
-            Result = std::make_shared<DirectX11Mesh>(mesh->GetPath(), mesh->GetAABB(), Context, VertexBuffer, IndexBuffer, vertexStride,
+            Result = std::make_shared<DirectX11Mesh>(mesh->GetPath(), mesh->GetAABB(), Context, VertexBuffer,
+                                                     IndexBuffer, vertexStride,
                                                      vertexOffset, vertexCount, indexCount);
             AddRenderable(ResourceManager::GetMaterial(), Result);
         }

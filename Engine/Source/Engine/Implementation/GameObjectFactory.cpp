@@ -1,5 +1,6 @@
 ﻿#include "GameObjectFactory.h"
 
+#include "DirectionalLightComponent.h"
 #include "IApplication.h"
 #include "Engine/Implementation/Logging/Debug.h"
 #include "IMaterial.h"
@@ -270,6 +271,18 @@ GameObjectFactory& GameObjectFactory::AddEmptySpriteRenderable()
     auto component = std::make_shared<SpriteComponent>(
         gameObject, nullptr,
         nullptr);
+    if (component != nullptr)
+    {
+        gameObject->AddComponent(std::move(component));
+        return *this;
+    }
+    return *this;
+}
+
+GameObjectFactory& GameObjectFactory::AddDirectionalLight()
+{
+    auto component = std::make_shared<DirectionalLightComponent>(
+        gameObject);
     if (component != nullptr)
     {
         gameObject->AddComponent(std::move(component));
