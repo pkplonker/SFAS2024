@@ -47,9 +47,22 @@ void MeshImporter::ProcessNode(aiNode* node, const aiScene* scene, Mesh* mesh)
 
 void MeshImporter::ProcessMesh(aiMesh* aiMesh, const aiScene* scene, Mesh* mesh)
 {
+    Vec3 minPoint(FLT_MAX, FLT_MAX, FLT_MAX);
+    Vec3 maxPoint(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+
     for (unsigned int i = 0; i < aiMesh->mNumVertices; i++)
     {
         Vertex vertex;
+        vertex.position = Vec3(aiMesh->mVertices[i].x, aiMesh->mVertices[i].y, aiMesh->mVertices[i].z);
+
+        minPoint.X(min(minPoint.X(), vertex.position.X()));
+        minPoint.Y(min(minPoint.Y(), vertex.position.Y()));
+        minPoint.Z(min(minPoint.Z(), vertex.position.Z()));
+        
+        maxPoint.X(max(maxPoint.X(), vertex.position.X()));
+        maxPoint.Y(max(maxPoint.Y(), vertex.position.Y()));
+        maxPoint.Z(max(maxPoint.Z(), vertex.position.Z()));
+        
         vertex.position = Vec3(aiMesh->mVertices[i].x, aiMesh->mVertices[i].y, aiMesh->mVertices[i].z);
         vertex.normal = Vec3(aiMesh->mNormals[i].x, aiMesh->mNormals[i].y, aiMesh->mNormals[i].z);
         //todo assuming one UV/color channel for now
@@ -61,13 +74,15 @@ void MeshImporter::ProcessMesh(aiMesh* aiMesh, const aiScene* scene, Mesh* mesh)
         {
             vertex.color = Vec4(aiMesh->mColors[0]->r, aiMesh->mColors[0]->g, aiMesh->mColors[0]->b,
                                 aiMesh->mColors[0]->a);
-        }else
+        }
+        else
         {
             vertex.color = Vec4(MESH_DEFAULT_COLOR);
         }
         mesh->GetVerts().push_back(vertex);
     }
-
+    Vec3 extents = (maxPoint - minPoint) * 0.5f;
+    mesh->GetAABB().Extents = extents;
     if (aiMesh->HasFaces())
     {
         for (unsigned int i = 0; i < aiMesh->mNumFaces; i++)

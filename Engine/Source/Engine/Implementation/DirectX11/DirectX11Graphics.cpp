@@ -646,7 +646,7 @@ std::shared_ptr<IMeshRenderable> DirectX11Graphics::CreateMeshRenderable(IMateri
         if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) &&
             SUCCEEDED(Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
         {
-            Result = std::make_shared<DirectX11Mesh>(mesh->GetPath(), Context, VertexBuffer, IndexBuffer, vertexStride,
+            Result = std::make_shared<DirectX11Mesh>(mesh->GetPath(),mesh->GetAABB(), Context, VertexBuffer, IndexBuffer, vertexStride,
                                                      vertexOffset, vertexCount, indexCount);
             AddRenderable(material, Result);
         }
@@ -692,7 +692,7 @@ std::shared_ptr<IMeshRenderable> DirectX11Graphics::CreateMeshRenderable(Mesh* m
         if (SUCCEEDED(Device->CreateBuffer(&vertexDescription, &resourceData, &VertexBuffer)) &&
             SUCCEEDED(Device->CreateBuffer(&indexDescription, &indexResourceData, &IndexBuffer)))
         {
-            Result = std::make_shared<DirectX11Mesh>(mesh->GetPath(), Context, VertexBuffer, IndexBuffer, vertexStride,
+            Result = std::make_shared<DirectX11Mesh>(mesh->GetPath(), mesh->GetAABB(), Context, VertexBuffer, IndexBuffer, vertexStride,
                                                      vertexOffset, vertexCount, indexCount);
             AddRenderable(ResourceManager::GetMaterial(), Result);
         }

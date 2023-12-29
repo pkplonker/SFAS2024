@@ -88,7 +88,4 @@ private:
     std::unique_ptr<std::vector<std::shared_ptr<IComponent>>> components{};
     std::shared_ptr<Transform3D> transform = std::make_shared<Transform3D>();
     std::string guid;
-    DirectX::BoundingBox aabb;
-    DirectX::BoundingBox originalAABB;
-
 };

@@ -8,17 +8,14 @@
 #include "Engine/IComponent.h"
 #include "Transform3D.h"
 #include "DirectXMath.h"
+#include "IRenderableComponent.h"
 
-GameObject::GameObject() : aabb(DirectX::BoundingBox())
+GameObject::GameObject()
 {
     components = std::make_unique<std::vector<std::shared_ptr<IComponent>>>();
     transform = std::make_shared<Transform3D>();
     this->Name = GAMEOBJECT_DEFAULT_NAME;
     GenerateGUID();
-    aabb.Center = Transform()->Position.vec;
-    aabb.Extents = DirectX::XMFLOAT3(1, 1, 1);
-    originalAABB.Center = aabb.Center;
-    originalAABB.Extents = aabb.Extents;
 }
 
 GameObject::GameObject(std::unique_ptr<Transform3D> transform) : GameObject()
@@ -50,10 +47,23 @@ void GameObject::Init()
 
 DirectX::BoundingBox GameObject::GetAABB()
 {
-    aabb.Center = Transform()->Position.vec;
-    auto result = Transform()->Scale * originalAABB.Extents;
-    aabb.Extents = result;
-    return aabb;
+    DirectX::BoundingBox result;
+    result.Extents = DirectX::XMFLOAT3(0, 0, 0);
+
+    result.Center = Transform()->Position.vec;
+
+    if (auto renderableComponent = GetComponent<IRenderableComponent>(); renderableComponent != nullptr)
+    {
+        if (auto renderable = renderableComponent->GetRenderable())
+        {
+            if (renderable->AllowInteraction())
+            {
+                Vec3 ext = Transform()->Scale * renderable->GetBounds().Extents;
+                result.Extents = ext;
+            }
+        }
+    }
+    return result;
 }
 
 void GameObject::Update()
