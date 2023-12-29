@@ -1,4 +1,4 @@
-﻿#include "MeshImporter.h"
+#include "MeshImporter.h"
 
 #include "Engine/Implementation/Logging/Debug.h"
 #include "Engine/Implementation/Mesh.h"
@@ -68,7 +68,7 @@ void MeshImporter::ProcessMesh(aiMesh* aiMesh, const aiScene* scene, Mesh* mesh)
         //todo assuming one UV/color channel for now
         if (aiMesh->HasTextureCoords(0))
         {
-            vertex.uv = Vec2(aiMesh->mTextureCoords[0]->x, aiMesh->mTextureCoords[0]->y);
+            vertex.uv = Vec2(aiMesh->mTextureCoords[0][i].x, 1-aiMesh->mTextureCoords[0][i].y);
         }
         if (aiMesh->HasVertexColors(0))
         {
