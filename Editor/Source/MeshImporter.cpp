@@ -65,7 +65,7 @@ void MeshImporter::ProcessMesh(aiMesh* aiMesh, const aiScene* scene, Mesh* mesh)
         {
             vertex.color = Vec4(MESH_DEFAULT_COLOR);
         }
-        mesh->Vertices.push_back(vertex);
+        mesh->GetVerts().push_back(vertex);
     }
 
     if (aiMesh->HasFaces())
@@ -75,7 +75,7 @@ void MeshImporter::ProcessMesh(aiMesh* aiMesh, const aiScene* scene, Mesh* mesh)
             aiFace face = aiMesh->mFaces[i];
             for (unsigned int j = 0; j < face.mNumIndices; j++)
             {
-                mesh->Indices.push_back(face.mIndices[j]);
+                mesh->GetIndices().push_back(face.mIndices[j]);
             }
         }
     }

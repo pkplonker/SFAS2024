@@ -12,13 +12,13 @@ bool MeshSerializer::Serialize(Mesh* mesh, std::string fullFilePath)
     // need to look at RAII. No finally block in C++ :/
     if (file.is_open())
     {
-        unsigned int numVertices = mesh->Vertices.size();
-        unsigned int numIndices = mesh->Indices.size();
+        unsigned int numVertices = mesh->GetVerts().size();
+        unsigned int numIndices = mesh->GetIndices().size();
 
         file.write(reinterpret_cast<char*>(&numVertices), sizeof(unsigned int));
         file.write(reinterpret_cast<char*>(&numIndices), sizeof(unsigned int));
-        file.write(reinterpret_cast<char*>(mesh->Vertices.data()), numVertices * sizeof(Vertex));
-        file.write(reinterpret_cast<char*>(mesh->Indices.data()), numIndices * sizeof(unsigned int));
+        file.write(reinterpret_cast<char*>(mesh->GetVerts().data()), numVertices * sizeof(Vertex));
+        file.write(reinterpret_cast<char*>(mesh->GetIndices().data()), numIndices * sizeof(unsigned int));
 
         file.close();
         return true;
@@ -40,11 +40,11 @@ Mesh* MeshSerializer::Deserialize(std::string fullFilePath)
         file.read(reinterpret_cast<char*>(&numVertices), sizeof(unsigned int));
         file.read(reinterpret_cast<char*>(&numIndices), sizeof(unsigned int));
 
-        mesh->Vertices.resize(numVertices);
-        mesh->Indices.resize(numIndices);
+        mesh->GetVerts().resize(numVertices);
+        mesh->GetIndices().resize(numIndices);
 
-        file.read(reinterpret_cast<char*>(mesh->Vertices.data()), numVertices * sizeof(Vertex));
-        file.read(reinterpret_cast<char*>(mesh->Indices.data()), numIndices * sizeof(unsigned int));
+        file.read(reinterpret_cast<char*>(mesh->GetVerts().data()), numVertices * sizeof(Vertex));
+        file.read(reinterpret_cast<char*>(mesh->GetIndices().data()), numIndices * sizeof(unsigned int));
 
         file.close();
 
