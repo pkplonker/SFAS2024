@@ -83,13 +83,21 @@ void Editor::Update()
     {
         editorCamera->Update();
     }
-    editorViewportInteractor->Update(editorCamera->camera);
     imguiController->Draw();
+    if(!imguiController->IsUsingGizmo())
+    {
+        editorViewportInteractor->Update(editorCamera->camera);
+
+    }
+
 }
 
 void Editor::Cleanup()
 {
     EditorSettings::SaveSettings();
+    imguiController->Save(EditorSettings::Get("LastScene",
+                            Helpers::WideStringToString(
+                                L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/TestScene2.scene")));
     game->Cleanup();
     imguiController->ShutDown();
 }
