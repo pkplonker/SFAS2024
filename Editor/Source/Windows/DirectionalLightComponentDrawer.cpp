@@ -55,6 +55,10 @@ void DirectionalLightComponentDrawer::Draw()
                 {
                     lightComponent->SetColor(static_cast<Vec4>(colorFloat));
                 }
+               if(ImGui::SliderFloat("Intensity",&lightComponent->intensity,0,10))
+               {
+                   
+               }
             }
         }
     }

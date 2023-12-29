@@ -10,6 +10,8 @@ public:
     Vec4 GetDirection();
     Vec4 GetColor();
     void SetColor(Vec4 col);
+    float intensity;
+
 private:
     Vec4 color;
 };

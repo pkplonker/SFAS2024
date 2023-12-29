@@ -14,6 +14,8 @@ cbuffer DirectionalLightBuffer : register(b2)
 {
     float4 lightDirection;
     float4 lightColor;
+	float lightIntensity;
+
 };
 
 
@@ -54,7 +56,7 @@ float4 PS_Main(PS_Input frag) : SV_TARGET
     float3 normalizedNormal = normalize(frag.worldNormal);
     
     float diff = max(dot(normalizedNormal, normalizedLightDirection), 0.0);
-    float4 diffuseColor = diff * lightColor;
+    float4 diffuseColor = diff * lightColor* lightIntensity;
 
     float4 finalColor = frag.color;  
     if(useTex)

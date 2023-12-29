@@ -33,8 +33,10 @@ struct
 
 struct DirectionalLightBufferObject
 {
-    Vec4 dir = Vec4(0, -1, 0, 1);
+    Vec4 direction = Vec4(0, -1, 0, 1);
     Vec4 color = Vec4(1, 1, 1, 1);
+    float intensity = 1;
+    float padding[3] = {0, 0, 0};
 };
 
 DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
@@ -376,14 +378,15 @@ void DirectX11Graphics::SetDirectionalLightBuffers()
     Context->Map(directionalLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     auto* data = static_cast<DirectionalLightBufferObject*>(mappedResource.pData);
     data->color = Vec4(1, 0, 0, 1);
-    data->dir = Vec4(0, 1, 0, 1);
+    data->direction = Vec4(0, 1, 0, 1);
     if (const auto scene = SceneManager::GetScene().lock())
     {
         auto dirLight = scene->GetDirectionalLight();
         if (const auto& light = dirLight.lock())
         {
             data->color = light->GetColor();
-            data->dir = light->GetDirection();
+            data->direction = light->GetDirection();
+            data->intensity = light->intensity;
         }
     }
     Context->Unmap(directionalLightBuffer, 0);

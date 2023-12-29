@@ -5,7 +5,7 @@
 #include "Implementation/Scene.h"
 
 DirectionalLightComponent::DirectionalLightComponent(const std::weak_ptr<GameObject> object) : IComponent(object),
-    color(Vec4(1, 1, 1, 1))
+    color(Vec4(1, 1, 1, 1)), intensity(1)
 {
 }
 
