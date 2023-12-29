@@ -323,6 +323,10 @@ void Hierarchy::Draw()
         {
             SetSelectedObject(nullptr);
         }
+        if (input->IsKeyPress(Keys::F2))
+        {
+           renamingHelper.RequestRename(sharedSelectedObject);
+        }
     }
 
     if (auto sharedScene = SceneManager::GetScene().lock())

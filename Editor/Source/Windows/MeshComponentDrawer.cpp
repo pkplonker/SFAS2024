@@ -116,17 +116,15 @@ void MeshComponentDrawer::ChangeMesh()
             {
                 originalMeshPath = meshRenderable->GetPath();
             }
-            if (meshRenderable)
-            {
-                UndoManager::Execute(Memento([comp,mesh]()
-                                             {
-                                                 comp->SetMesh(mesh);
-                                             }, [comp,originalMeshPath]()
-                                             {
-                                                 Mesh* mesh = ResourceManager::GetMesh(originalMeshPath);
-                                                 comp->SetMesh(mesh);
-                                             }, "Setting new mesh"));
-            }
+
+            UndoManager::Execute(Memento([comp,mesh]()
+                                         {
+                                             comp->SetMesh(mesh);
+                                         }, [comp,originalMeshPath]()
+                                         {
+                                             Mesh* mesh = ResourceManager::GetMesh(originalMeshPath);
+                                             comp->SetMesh(mesh);
+                                         }, "Setting new mesh"));
         }
     }
     else

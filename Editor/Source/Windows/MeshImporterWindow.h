@@ -11,7 +11,7 @@ public:
     MeshImporterWindow() = default;
 
     void Draw() override;
-    static void Load();
+    static void LoadAndRename();
     static std::string SanitisePath(std::string path);
     static void Load(std::string input, std::string output);
 

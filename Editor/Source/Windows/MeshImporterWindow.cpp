@@ -10,16 +10,25 @@
 void MeshImporterWindow::Draw()
 {
     ImGui::Begin(GetName().c_str());
-
-    if (ImGui::Button("Select File"))
+    if (ImGui::Button("Import"))
     {
-        Load();
+        const auto inputPath = FileDialog::OpenFileDialog();
+        if (inputPath.empty())
+        {
+            return;
+        }
+        Load(inputPath, inputPath);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Import & Name"))
+    {
+        LoadAndRename();
     }
 
     ImGui::End();
 }
 
-void MeshImporterWindow::Load()
+void MeshImporterWindow::LoadAndRename()
 {
     const auto inputPath = FileDialog::OpenFileDialog();
     if (inputPath.empty())
