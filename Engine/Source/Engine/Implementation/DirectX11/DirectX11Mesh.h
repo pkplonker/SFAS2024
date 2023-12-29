@@ -16,8 +16,7 @@ public:
 	void Update() override;
 	unsigned int GetVertsCount() override { return vertexCount; }
 	unsigned int GetTriangleCount() override { return indexCount/3; }
-	virtual DirectX::BoundingBox GetBounds() { return aabb; }
-	
+	DirectX::BoundingBox& GetBounds() override { return aabb; }
 private:
 	ID3D11DeviceContext* Context;
 	ID3D11Buffer* VertexBuffer;

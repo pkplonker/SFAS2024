@@ -13,6 +13,7 @@
                         "width": 2540.0
                     }
                 },
+                "guid": "{8096B90A-2FAD-4F2A-9C80-BA17B4995A63}",
                 "name": "Camera",
                 "transform": {
                     "position": {
@@ -34,8 +35,39 @@
             }
         ],
         [
+            "New Mesh",
+            {
+                "guid": "{ACB20410-D6AE-461A-8C4F-EF4DE0E96DBF}",
+                "meshComponent": {
+                    "material": {
+                        "mesh": ""
+                    },
+                    "mesh": ""
+                },
+                "name": "New Mesh",
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
             "Cube",
             {
+                "guid": "{D4A98687-0BBB-47AD-8463-3CC0B6CABA02}",
                 "meshComponent": {
                     "material": {
                         "color": {
@@ -53,13 +85,13 @@
                 "name": "Cube",
                 "transform": {
                     "position": {
-                        "x": 0.0,
+                        "x": -2.5505118370056152,
                         "y": 0.800000011920929,
                         "z": 0.0
                     },
                     "rotation": {
                         "x": 0.0,
-                        "y": 0.0,
+                        "y": -0.0,
                         "z": 0.0
                     },
                     "scale": {

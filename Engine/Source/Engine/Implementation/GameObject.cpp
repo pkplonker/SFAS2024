@@ -110,3 +110,17 @@ std::string GameObject::GenerateGUID()
     }
     return "";
 }
+
+bool GameObject::GetIsEnabled()
+{
+    return enabled;
+}
+
+void GameObject::SetIsEnabled(bool state)
+{
+    enabled = state;
+    for (auto component : *components)
+    {
+        component->SetIsEnabled(state);
+    }
+}

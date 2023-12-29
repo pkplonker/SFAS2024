@@ -22,7 +22,7 @@ public:
     {
         return material;
     }
-
+    void SetIsEnabled(bool state) override;
     virtual void SetMaterial(IMaterial* material);;
 
 protected:

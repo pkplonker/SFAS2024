@@ -11,8 +11,6 @@ public:
     void Draw() override;
     void ChangeMesh();
 
-
-
 private:
     std::weak_ptr<MeshComponent> component;
     MaterialDrawerHelper materialDrawerHelper;

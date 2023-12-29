@@ -48,6 +48,11 @@ struct Vec3
         DirectX::XMStoreFloat3(&vec, xmvector);
     }
 
+    Vec3(DirectX::XMFLOAT3 val)
+    {
+        vec = val;
+    }
+
     static Vec3 Zero()
     {
         return {0, 0, 0};

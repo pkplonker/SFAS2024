@@ -243,6 +243,7 @@ void DirectX11Graphics::RenderBucket(RenderingStats& stats, IShader* previousSha
             stats.shaders++;
         }
         const auto renderObject = renderable->get();
+        if(!renderObject->IsEnabled()) continue;
 
         if (renderObject == nullptr)
         {
