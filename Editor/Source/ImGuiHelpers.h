@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <utility>
 
@@ -300,11 +301,33 @@ public:
         ImGui::PopStyleColor();
     }
 
+    static bool ButtonWithState(const char* str, ImVec2 buttonSize, bool state, bool activeOnTrue = true)
+    {
+        bool style = state == activeOnTrue;
+        auto color = ImVec4(0.1372549086809158f, 0.1921568661928177f, 0.2627451121807098f,
+                            1.0f);
+        bool result = false;
+        if (style)
+        {
+            ImGui::PushStyleColor(ImGuiCol_Button, color);
+        }
+        if (ImGui::Button(str, buttonSize))
+        {
+            result = true;
+        }
+        if (style)
+        {
+            ImGui::PopStyleColor();
+        }
+        return result;
+    }
+
 private:
     bool IsClicked()
     {
         return ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left);
     }
+
 
     static inline bool isActivated = false;
     static inline bool wasActive = false;
