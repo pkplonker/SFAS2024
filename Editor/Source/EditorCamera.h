@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "CameraComponent.h"
 #include "ICamera.h"
 #include "IUpdateable.h"
 

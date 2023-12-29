@@ -162,6 +162,7 @@
     <ClCompile Include="Source\DefaultShapes.cpp" />
     <ClCompile Include="Source\EditorCamera.cpp" />
     <ClCompile Include="Source\EditorSettings.cpp" />
+    <ClCompile Include="Source\EditorViewportInteractor.cpp" />
     <ClCompile Include="Source\FileDialog.cpp" />
     <ClCompile Include="Source\FileOpener.cpp" />
     <ClCompile Include="Source\GizmoController.cpp" />
@@ -365,6 +366,7 @@
     <ClInclude Include="Source\DefaultShapes.h" />
     <ClInclude Include="Source\EditorCamera.h" />
     <ClInclude Include="Source\EditorSettings.h" />
+    <ClInclude Include="Source\EditorViewportInteractor.h" />
     <ClInclude Include="Source\FileDialog.h" />
     <ClInclude Include="Source\FileOpener.h" />
     <ClInclude Include="Source\GizmoController.h" />

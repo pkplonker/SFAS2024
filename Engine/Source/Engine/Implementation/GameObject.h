@@ -1,4 +1,5 @@
-﻿#pragma once
+#pragma once
+#include <DirectXCollision.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -35,6 +36,7 @@ public:
     }
 
     void Init();
+    DirectX::BoundingBox GetBoundingVolume();
 
     template <typename T>
     bool RemoveComponent(const std::shared_ptr<T>& component)
@@ -86,4 +88,5 @@ private:
     std::unique_ptr<std::vector<std::shared_ptr<IComponent>>> components{};
     std::shared_ptr<Transform3D> transform = std::make_shared<Transform3D>();
     std::string guid;
+    DirectX::BoundingBox boundingVolume;
 };

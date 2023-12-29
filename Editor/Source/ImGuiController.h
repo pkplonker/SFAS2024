@@ -29,14 +29,22 @@ public:
     void LoadScene(std::string path) const;
     void DrawMenu();
     void DrawViewport();
-    void AddWindow(const std::shared_ptr<EditorWindow>& shared);
+    void AddWindow(const std::shared_ptr<EditorWindow>& window);
+    void SetSelectedObject(const std::shared_ptr<GameObject>& obj);
     static void Save();
     void DrawWindows();
     void Draw();
     void ImGuiPostUpdate() const;
     void ShutDown();
     void Resize(int width, int height) override;
-
+    ImVec2 GetViewportPosition()
+    {
+        return gameViewportPosition;
+    }
+    ImVec2 GetViewportSize()
+    {
+        return gameViewportSize;
+    }
     bool IsViewportInFocus()
     {
         return viewportFocused;

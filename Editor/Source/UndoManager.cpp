@@ -1,4 +1,4 @@
-﻿#include "UndoManager.h"
+#include "UndoManager.h"
 
 #include <iostream>
 #include <ostream>

@@ -130,9 +130,14 @@ void ImGuiController::DrawViewport()
     ImGui::End();
 }
 
-void ImGuiController::AddWindow(const std::shared_ptr<EditorWindow>& shared)
+void ImGuiController::AddWindow(const std::shared_ptr<EditorWindow>& window)
 {
-    renderables.try_emplace(shared, EditorSettings::Get(IMGUI_SETTING_ID + shared->GetName(), true));
+    renderables.try_emplace(window, EditorSettings::Get(IMGUI_SETTING_ID + window->GetName(), true));
+}
+
+void ImGuiController::SetSelectedObject(const std::shared_ptr<GameObject>& obj)
+{
+    hierarchy->SetSelectedObject(obj);
 }
 
 

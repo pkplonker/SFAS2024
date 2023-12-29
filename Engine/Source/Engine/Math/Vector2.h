@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <DirectXMath.h>
-
+#include "sstream"
 #include "Implementation/XInput/DirectXInput.h"
 
 namespace dx = DirectX;
@@ -72,6 +72,12 @@ struct Vec2
     Vec2 operator+(const Vec2& other) const
     {
         return Vec2(this->X()+other.X(), this->Y()+other.Y());
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Vec2& obj)
+    {
+        os << "Vec2(x: " << obj.vec.x << ", y: " << obj.vec.y << ")";
+        return os;
     }
 
 private:

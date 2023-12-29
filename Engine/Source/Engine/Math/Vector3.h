@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <DirectXMath.h>
+#include <sstream>
 
 #include "Vector2.h"
 
@@ -10,7 +11,6 @@ struct Vec3
 {
     Vec3()
     {
-        vec = dx::XMFLOAT3(0);
         vec.x = 0;
         vec.y = 0;
         vec.z = 0;
@@ -172,6 +172,11 @@ struct Vec3
                     DirectX::XMVectorGetZ(resultVec));
     }
 
-private:
+    friend std::ostream& operator<<(std::ostream& os, const Vec3& obj)
+    {
+        os << "Vec3(x: " << obj.vec.x << ", y: " << obj.vec.y << ", Z: " << obj.vec.z << ")";
+        return os;
+    }
+
     dx::XMFLOAT3 vec{};
 };

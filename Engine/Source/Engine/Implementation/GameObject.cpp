@@ -1,17 +1,21 @@
 ﻿#include "GameObject.h"
+
+#include <DirectXCollision.h>
 #include <utility>
 
 #include "Helpers.h"
 #include "Engine/IComponent.h"
-#include "Engine/Implementation/Logging/Debug.h"
 #include "Transform3D.h"
+#include "DirectXMath.h"
 
-GameObject::GameObject()
+GameObject::GameObject() : boundingVolume(DirectX::BoundingBox())
 {
     components = std::make_unique<std::vector<std::shared_ptr<IComponent>>>();
     transform = std::make_shared<Transform3D>();
     this->Name = GAMEOBJECT_DEFAULT_NAME;
     GenerateGUID();
+    boundingVolume.Center = Transform()->Position.vec;
+    boundingVolume.Extents = DirectX::XMFLOAT3(1,1,1);
 }
 
 GameObject::GameObject(std::unique_ptr<Transform3D> transform) : GameObject()
@@ -39,6 +43,12 @@ GameObject::GameObject(std::string name) : GameObject()
 void GameObject::Init()
 {
     transform->SetGameObject(shared_from_this());
+}
+
+DirectX::BoundingBox GameObject::GetBoundingVolume()
+{
+    boundingVolume.Center = Transform()->Position.vec;
+    return boundingVolume;
 }
 
 void GameObject::Update()

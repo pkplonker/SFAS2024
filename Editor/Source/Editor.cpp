@@ -1,6 +1,7 @@
 #include "Editor.h"
 #include "EditorCamera.h"
 #include "EditorSettings.h"
+#include "EditorViewportInteractor.h"
 #include "Helpers.h"
 #include "Engine/IGraphics.h"
 #include "Engine/IInput.h"
@@ -69,7 +70,7 @@ bool Editor::Load()
     editorCamera->SetActiveCamera();
     imguiController = std::make_unique<ImGuiController>(dx11Graphics, game, Input,editorCamera);
     imguiController->AddWindow(std::make_shared<EditorCameraWindow>(editorCamera));
-
+    editorViewportInteractor = std::make_unique<EditorViewportInteractor>(Input,imguiController.get());
     return true;
 }
 
@@ -82,6 +83,7 @@ void Editor::Update()
     {
         editorCamera->Update();
     }
+    editorViewportInteractor->Update(editorCamera->camera);
     imguiController->Draw();
 }
 
