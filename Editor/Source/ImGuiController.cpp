@@ -214,7 +214,7 @@ void ImGuiController::DrawMenu()
         {
             if (ImGui::MenuItem("Import Mesh"))
             {
-                MeshImporterWindow::Load();
+                MeshImporterWindow::LoadAndRename();
             }
             ImGui::EndMenu();
         }
