@@ -10,6 +10,7 @@
 #include "functional"
 #include "UndoManager.h"
 #include "Engine/Math/Vector3.h"
+#include "Engine/Math/Vector4.h"
 
 class ImGuiHelpers
 {
@@ -37,9 +38,9 @@ public:
             }
         }
 
-        float fullWidth = ImGui::GetWindowWidth();
-        float labelWidth = ImGui::CalcTextSize(label.c_str()).x + ImGui::GetStyle().ItemSpacing.x;
-        float availableWidth = fullWidth - labelWidth - (ImGui::GetStyle().WindowPadding.x * 2);
+        const float fullWidth = ImGui::GetWindowWidth();
+        const float labelWidth = ImGui::CalcTextSize(label.c_str()).x + ImGui::GetStyle().ItemSpacing.x;
+        const float availableWidth = fullWidth - labelWidth - (ImGui::GetStyle().WindowPadding.x * 2);
         ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + availableWidth);
 
         if constexpr (std::is_same<StringType, std::wstring>::value)
@@ -68,12 +69,12 @@ public:
     //https://github.com/ocornut/imgui/discussions/3862
     static bool ButtonCenteredOnLine(const char* label, float alignment = 0.5f)
     {
-        ImGuiStyle& style = ImGui::GetStyle();
+        const ImGuiStyle& style = ImGui::GetStyle();
 
-        float size = ImGui::CalcTextSize(label).x + style.FramePadding.x * 2.0f;
-        float avail = ImGui::GetContentRegionAvail().x;
+        const float size = ImGui::CalcTextSize(label).x + style.FramePadding.x * 2.0f;
+        const float avail = ImGui::GetContentRegionAvail().x;
 
-        float off = (avail - size) * alignment;
+        const float off = (avail - size) * alignment;
         if (off > 0.0f)
             ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
 
@@ -196,13 +197,22 @@ public:
         T value = getValue();
 
         std::string key = std::string(label) + "_" + std::to_string(reinterpret_cast<uintptr_t>(&value));
-        
-        bool valueChanged = ImGui::ColorEdit3(label, reinterpret_cast<float*>(&value), flags);
+        auto originalVal = value;
+        bool valueChanged = false;
+        if constexpr (std::is_same<T, Vec3>::value)
+        {
+            valueChanged = ImGui::ColorEdit3(label, reinterpret_cast<float*>(&value), flags);
+        }
+        else if constexpr (std::is_same<T, Vec4>::value)
+        {
+            valueChanged = ImGui::ColorEdit4(label, reinterpret_cast<float*>(&value), flags);
+        }
+
         if (ImGui::IsItemActivated())
         {
-            colorEditStates[key] = getValue();
+            colorEditStates[key] = originalVal;
         }
-        
+
         if (valueChanged)
         {
             setValue(value);
@@ -221,6 +231,7 @@ public:
             }
         }
     }
+
 
 
     template <typename T>

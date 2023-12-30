@@ -50,13 +50,18 @@ void MaterialDrawerHelper::DrawMaterial()
                                       std::bind(&MaterialDrawerHelper::ChangeTexture, this));
 
 
-            auto color = mat->GetColor();
             ImGui::Text("Color:");
             ImGui::SameLine();
-            if (ImGui::ColorEdit4("", reinterpret_cast<float*>(&color), ImGuiColorEditFlags_Float))
-            {
-                mat->SetColor(color);
-            }
+            Vec4 color = static_cast<Vec4>(mat->GetColor());
+
+            ImGuiHelpers::UndoableColorEdit<Vec4>(
+                [&]() { return static_cast<Vec4>(mat->GetColor()); },
+                [mat](Vec4 newColor) { mat->SetColor(newColor); },
+                "##MaterialColor",
+                "Change Material Color",
+                ImGuiColorEditFlags_Float
+            );
+
             auto sb = mat->GetIsSkybox();
             if (ImGui::Checkbox("Is Skybox", &sb))
             {
