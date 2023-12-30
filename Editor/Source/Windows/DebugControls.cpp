@@ -12,16 +12,16 @@ void DebugControls::Draw()
     static bool drawBounds = true;
     if (ImGui::Checkbox("Draw Bounds", &drawBounds))
     {
-       
     }
-    if(drawBounds)
+    if (drawBounds)
     {
         if (const auto scene = SceneManager::GetScene().lock())
         {
             for (auto [GUID, gameObject] : scene->GetObjects())
             {
+                if (!gameObject->GetIsEnabled())continue;
                 const auto& bounds = gameObject->GetAABB();
-                //DebugDrawer::DrawBoundingBox(bounds);
+                DebugDrawer::DrawBoundingBox(bounds);
             }
         }
     }

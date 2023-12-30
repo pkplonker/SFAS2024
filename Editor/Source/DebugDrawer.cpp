@@ -1,7 +1,6 @@
 ﻿#include "DebugDrawer.h"
 
 #include <DirectXCollision.h>
-#include <DirectXColors.h>
 #include <DirectXMath.h>
 #include <VertexTypes.h>
 
@@ -9,38 +8,21 @@
 #include "DirectX11/DirectX11Graphics.h"
 #include "Logging/Debug.h"
 
-void DebugDrawer::DrawBoundingBox(const DirectX::BoundingBox& bounds)
+void DebugDrawer::DrawBoundingBox(const DirectX::BoundingBox& bounds, DirectX::XMVECTORF32 color)
 {
-    DirectX::XMFLOAT3 corners[8];
-    bounds.GetCorners(corners);
-
-    DirectX::XMVECTOR vectorCorners[8];
-    for (int i = 0; i < 8; ++i)
+    if (!init)
     {
-        vectorCorners[i] = XMLoadFloat3(&corners[i]);
+        Warning("Trying to draw volume before init");
+        return;
     }
 
-    lineBatch->Begin();
-
-    constexpr int edges[12][2] = {
-        {0, 1}, {1, 2}, {2, 3}, {3, 0},
-        {4, 5}, {5, 6}, {6, 7}, {7, 4},
-        {0, 4}, {1, 5}, {2, 6}, {3, 7}
-    };
-
-    for (const auto edge : edges)
-    {
-        const int startIndex = edge[0];
-        const int endIndex = edge[1];
-        lineBatch->DrawLine(DirectX::VertexPositionColor(vectorCorners[startIndex], DirectX::Colors::Red),
-                            DirectX::VertexPositionColor(vectorCorners[endIndex], DirectX::Colors::Red));
-    }
-
-    lineBatch->End();
+    drawData.push_back({bounds, color});
 }
 
 void DebugDrawer::Update()
 {
+    if (!init || drawData.empty()) return;
+
     if (const auto& cam = camera.lock())
     {
         context->OMSetBlendState(states->Opaque(), nullptr, 0xFFFFFFFF);
@@ -52,10 +34,37 @@ void DebugDrawer::Update()
         effect->Apply(context);
 
         context->IASetInputLayout(inputLayout);
-        DirectX::BoundingBox bounds2 = DirectX::BoundingBox();
-        bounds2.Center = DirectX::XMFLOAT3(0, 0, 0);
-        bounds2.Extents = DirectX::XMFLOAT3(5, 5, 5);
-        DrawBoundingBox(bounds2);
+        
+        lineBatch->Begin();
+
+        for (const auto& data : drawData)
+        {
+            DirectX::XMFLOAT3 corners[8];
+            data.bounds.GetCorners(corners);
+
+            DirectX::XMVECTOR vectorCorners[8];
+            for (int i = 0; i < 8; ++i)
+            {
+                vectorCorners[i] = XMLoadFloat3(&corners[i]);
+            }
+
+            constexpr int edges[12][2] = {
+                {0, 1}, {1, 2}, {2, 3}, {3, 0},
+                {4, 5}, {5, 6}, {6, 7}, {7, 4},
+                {0, 4}, {1, 5}, {2, 6}, {3, 7}
+            };
+
+            for (const auto edge : edges)
+            {
+                const int startIndex = edge[0];
+                const int endIndex = edge[1];
+                lineBatch->DrawLine(DirectX::VertexPositionColor(vectorCorners[startIndex], data.color),
+                                    DirectX::VertexPositionColor(vectorCorners[endIndex], data.color));
+            }
+        }
+
+        lineBatch->End();
+        drawData.clear();
     }
 }
 
@@ -85,6 +94,7 @@ DebugDrawer::DebugDrawer(const std::weak_ptr<ICamera> weakCam) : camera(weakCam)
             }
 
             CreateInputLayout(device, effect.get());
+            init = true;
         }
         else
         {
