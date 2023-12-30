@@ -1,5 +1,6 @@
 #pragma once
 #include <DirectXMath.h>
+#include <iostream>
 #include <sstream>
 
 #include "Vector2.h"

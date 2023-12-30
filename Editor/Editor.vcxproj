@@ -159,6 +159,7 @@
     <ClCompile Include="Packages\ImGuizmo\ImGradient.cpp" />
     <ClCompile Include="Packages\ImGuizmo\ImGuizmo.cpp" />
     <ClCompile Include="Packages\ImGuizmo\ImSequencer.cpp" />
+    <ClCompile Include="Source\DebugDrawer.cpp" />
     <ClCompile Include="Source\DefaultShapes.cpp" />
     <ClCompile Include="Source\EditorCamera.cpp" />
     <ClCompile Include="Source\EditorSettings.cpp" />
@@ -173,6 +174,7 @@
     <ClCompile Include="Source\Windows\BoundsDrawerHelper.cpp" />
     <ClCompile Include="Source\Windows\CameraComponentDrawer.cpp" />
     <ClCompile Include="Source\Windows\ComponentDrawer.cpp" />
+    <ClCompile Include="Source\Windows\DebugControls.cpp" />
     <ClCompile Include="Source\Windows\DirectionalLightComponentDrawer.cpp" />
     <ClCompile Include="Source\Windows\EditorCameraWindow.cpp" />
     <ClCompile Include="Source\Windows\InputStatsWindow.cpp">
@@ -364,6 +366,7 @@
     <ClInclude Include="Packages\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="Packages\ImGuizmo\ImSequencer.h" />
     <ClInclude Include="Packages\ImGuizmo\ImZoomSlider.h" />
+    <ClInclude Include="Source\DebugDrawer.h" />
     <ClInclude Include="Source\DefaultShapes.h" />
     <ClInclude Include="Source\EditorCamera.h" />
     <ClInclude Include="Source\EditorSettings.h" />
@@ -381,6 +384,7 @@
     <ClInclude Include="Source\Windows\CameraComponentDrawer.h" />
     <ClInclude Include="Source\Windows\ComponentDrawer.h" />
     <ClInclude Include="Source\Windows\ComponentDrawerFactory.h" />
+    <ClInclude Include="Source\Windows\DebugControls.h" />
     <ClInclude Include="Source\Windows\DirectionalLightComponentDrawer.h" />
     <ClInclude Include="Source\Windows\EditorCameraWindow.h" />
     <ClInclude Include="Source\Windows\InputStatsWindow.h" />

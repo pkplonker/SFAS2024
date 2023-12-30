@@ -238,6 +238,7 @@
     <ClInclude Include="Source\Engine\Implementation\XInput\DirectXInput.h" />
     <ClInclude Include="Source\Engine\IRenderable.h" />
     <ClInclude Include="Source\Engine\IRenderableComponent.h" />
+    <ClInclude Include="Source\Engine\IRenderStrategy.h" />
     <ClInclude Include="Source\Engine\IShader.h" />
     <ClInclude Include="Source\Engine\ITexture.h" />
     <ClInclude Include="Source\Engine\IUpdateable.h" />
@@ -587,6 +588,7 @@
     <ClCompile Include="Source\Engine\IRenderableComponent.cpp" />
     <ClCompile Include="Source\Engine\Implementation\OrthographicCamera.cpp" />
     <ClCompile Include="Source\Engine\Implementation\PerspectiveCamera.cpp" />
+    <ClCompile Include="Source\Engine\IRenderStrategy.cpp" />
     <ClCompile Include="Source\Engine\MeshSerializer.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>

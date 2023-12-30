@@ -367,7 +367,13 @@ void DirectX11Graphics::Update()
             RenderBucket(stats, previousShader, bucket);
         }
         currentStats = stats;
-
+        for (auto strategy : postRenderStrategies)
+        {
+            if (strategy != nullptr)
+            {
+                strategy->Update();
+            }
+        }
         Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
     }
 }

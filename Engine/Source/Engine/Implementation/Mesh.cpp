@@ -36,5 +36,4 @@ DirectX::BoundingBox Mesh::GetAABB()
 void Mesh::SetExtents(Vec3 extents)
 {
     aabb = DirectX::BoundingBox(DirectX::XMFLOAT3(0,0,0), extents);
-    std::cout << aabb.Extents.x<<std::endl;
 }

@@ -41,10 +41,10 @@ void EditorViewportInteractor::Update(std::weak_ptr<ICamera> cameraComponent)
                 break;
             }
         }
-        // if(!found)
-        // {
-        //     controller->SetSelectedObject(nullptr);
-        // }
+        if(!found)
+        {
+            controller->SetSelectedObject(nullptr);
+        }
     }
 }
 
