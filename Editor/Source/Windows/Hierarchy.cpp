@@ -145,13 +145,22 @@ void Hierarchy::CreateUndoableGameObject(
 void Hierarchy::SetSelectedObject(std::shared_ptr<GameObject> object)
 {
     std::weak_ptr<GameObject> previousObject = selectedObject;
+    auto shared = previousObject.lock();
+    if (shared != nullptr)
+    {
+        if (shared->GetGUID() == object->GetGUID())
+        {
+            return;
+        }
+    }
+
     UndoManager::Execute(Memento([this, object]()
                                  {
                                      selectedObject = object;
                                  }, [this, previousObject]()
                                  {
                                      selectedObject = previousObject;
-                                 }, "New selection"));
+                                 }, "New selection: " + object->Name));
 }
 
 auto Hierarchy::DeleteDo(std::vector<std::shared_ptr<GameObject>>& objectsToRemove, std::shared_ptr<GameObject> object)
@@ -316,8 +325,8 @@ void Hierarchy::Draw()
         if (input->IsKeyPress(Keys::Delete))
         {
             UndoManager::Execute(Memento(
-                                     DeleteDo(objectsToRemove, sharedSelectedObject),
-                                     DeleteUndo(sharedSelectedObject), "Deleting Object"));
+                DeleteDo(objectsToRemove, sharedSelectedObject),
+                DeleteUndo(sharedSelectedObject), "Deleting Object"));
         }
         if (input->IsKeyPress(Keys::Q))
         {
@@ -325,7 +334,7 @@ void Hierarchy::Draw()
         }
         if (input->IsKeyPress(Keys::F2))
         {
-           renamingHelper.RequestRename(sharedSelectedObject);
+            renamingHelper.RequestRename(sharedSelectedObject);
         }
     }
 

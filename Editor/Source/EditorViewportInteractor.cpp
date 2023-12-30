@@ -36,12 +36,20 @@ void EditorViewportInteractor::Update(std::weak_ptr<ICamera> cameraComponent)
             if (obj->GetAABB().Intersects(rayOrigin, rayDirection, distanceToIntersection))
             {
                 //std::cout << "selected! " << obj->Name << "Distance: " << distanceToIntersection <<std::endl;
-                controller->SetSelectedObject(obj);
-                found = true;
-                break;
+                const auto go = controller->GetSelectedObject().lock();
+                if (go!=nullptr && go->GetGUID() == obj->GetGUID())
+                {
+                    found = true;
+                }
+                else
+                {
+                    controller->SetSelectedObject(obj);
+                    found = true;
+                    break;
+                }
             }
         }
-        if(!found)
+        if (!found)
         {
             controller->SetSelectedObject(nullptr);
         }
