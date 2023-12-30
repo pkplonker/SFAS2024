@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <iostream>
+#include <map>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -151,11 +152,11 @@ public:
         bool valueChanged = false;
         if constexpr (std::is_same<T, float>::value)
         {
-            valueChanged = ImGui::DragFloat(label, reinterpret_cast<float*>(&value),speed,min,max);
+            valueChanged = ImGui::DragFloat(label, reinterpret_cast<float*>(&value), speed, min, max);
         }
         else if constexpr (std::is_same<T, int>::value)
         {
-            valueChanged = ImGui::DragInt(label, reinterpret_cast<int*>(&value),speed,min,max);
+            valueChanged = ImGui::DragInt(label, reinterpret_cast<int*>(&value), speed, min, max);
         }
 
         if (ImGui::IsItemActivated())
@@ -181,6 +182,46 @@ public:
             }
         }
     }
+
+    template <typename T>
+    static void UndoableColorEdit(
+        std::function<T()> getValue,
+        std::function<void(T)> setValue,
+        const char* label,
+        const std::string& actionDescription,
+        ImGuiColorEditFlags flags = ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoBorder)
+    {
+        static std::map<std::string, T> colorEditStates;
+
+        T value = getValue();
+
+        std::string key = std::string(label) + "_" + std::to_string(reinterpret_cast<uintptr_t>(&value));
+        
+        bool valueChanged = ImGui::ColorEdit3(label, reinterpret_cast<float*>(&value), flags);
+        if (ImGui::IsItemActivated())
+        {
+            colorEditStates[key] = getValue();
+        }
+        
+        if (valueChanged)
+        {
+            setValue(value);
+        }
+
+        if (ImGui::IsItemDeactivatedAfterEdit())
+        {
+            auto originalVal = colorEditStates[key];
+            if (value != originalVal)
+            {
+                UndoManager::Execute(
+                    Memento(
+                        [setValue, value] { setValue(value); },
+                        [setValue, originalVal] { setValue(originalVal); },
+                        actionDescription));
+            }
+        }
+    }
+
 
     template <typename T>
     static void UndoableMenuItemValue(
