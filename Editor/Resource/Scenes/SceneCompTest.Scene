@@ -261,7 +261,6 @@
                 },
                 "name": "Table",
                 "transform": {
-                    "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
                     "position": {
                         "x": -4.934811592102051,
                         "y": 2.939796209335327,
@@ -357,6 +356,13 @@
         [
             "Directional Light",
             {
+                "directionalLight": {
+                    "colorW": 0.0,
+                    "colorX": 1.0,
+                    "colorY": 1.0,
+                    "colorZ": 1.0,
+                    "intensity": 1.0
+                },
                 "guid": "{925F3940-6452-4363-9163-F8BB0187E781}",
                 "name": "Directional Light",
                 "transform": {

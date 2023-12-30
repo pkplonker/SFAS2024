@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <iostream>
+#include <map>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -9,6 +10,7 @@
 #include "functional"
 #include "UndoManager.h"
 #include "Engine/Math/Vector3.h"
+#include "Engine/Math/Vector4.h"
 
 class ImGuiHelpers
 {
@@ -36,9 +38,9 @@ public:
             }
         }
 
-        float fullWidth = ImGui::GetWindowWidth();
-        float labelWidth = ImGui::CalcTextSize(label.c_str()).x + ImGui::GetStyle().ItemSpacing.x;
-        float availableWidth = fullWidth - labelWidth - (ImGui::GetStyle().WindowPadding.x * 2);
+        const float fullWidth = ImGui::GetWindowWidth();
+        const float labelWidth = ImGui::CalcTextSize(label.c_str()).x + ImGui::GetStyle().ItemSpacing.x;
+        const float availableWidth = fullWidth - labelWidth - (ImGui::GetStyle().WindowPadding.x * 2);
         ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + availableWidth);
 
         if constexpr (std::is_same<StringType, std::wstring>::value)
@@ -67,12 +69,12 @@ public:
     //https://github.com/ocornut/imgui/discussions/3862
     static bool ButtonCenteredOnLine(const char* label, float alignment = 0.5f)
     {
-        ImGuiStyle& style = ImGui::GetStyle();
+        const ImGuiStyle& style = ImGui::GetStyle();
 
-        float size = ImGui::CalcTextSize(label).x + style.FramePadding.x * 2.0f;
-        float avail = ImGui::GetContentRegionAvail().x;
+        const float size = ImGui::CalcTextSize(label).x + style.FramePadding.x * 2.0f;
+        const float avail = ImGui::GetContentRegionAvail().x;
 
-        float off = (avail - size) * alignment;
+        const float off = (avail - size) * alignment;
         if (off > 0.0f)
             ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
 
@@ -143,7 +145,7 @@ public:
         std::function<T()> getValue,
         std::function<void(T)> setValue,
         const char* label,
-        const std::string& actionDescription)
+        const std::string& actionDescription, float min = FLT_MIN, float max = FLT_MAX, float speed = 1)
     {
         T value = getValue();
 
@@ -151,11 +153,11 @@ public:
         bool valueChanged = false;
         if constexpr (std::is_same<T, float>::value)
         {
-            valueChanged = ImGui::DragFloat(label, reinterpret_cast<float*>(&value));
+            valueChanged = ImGui::DragFloat(label, reinterpret_cast<float*>(&value), speed, min, max);
         }
         else if constexpr (std::is_same<T, int>::value)
         {
-            valueChanged = ImGui::DragInt(label, reinterpret_cast<int*>(&value));
+            valueChanged = ImGui::DragInt(label, reinterpret_cast<int*>(&value), speed, min, max);
         }
 
         if (ImGui::IsItemActivated())
@@ -181,6 +183,56 @@ public:
             }
         }
     }
+
+    template <typename T>
+    static void UndoableColorEdit(
+        std::function<T()> getValue,
+        std::function<void(T)> setValue,
+        const char* label,
+        const std::string& actionDescription,
+        ImGuiColorEditFlags flags = ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoBorder)
+    {
+        static std::map<std::string, T> colorEditStates;
+
+        T value = getValue();
+
+        std::string key = std::string(label) + "_" + std::to_string(reinterpret_cast<uintptr_t>(&value));
+        auto originalVal = value;
+        bool valueChanged = false;
+        if constexpr (std::is_same<T, Vec3>::value)
+        {
+            valueChanged = ImGui::ColorEdit3(label, reinterpret_cast<float*>(&value), flags);
+        }
+        else if constexpr (std::is_same<T, Vec4>::value)
+        {
+            valueChanged = ImGui::ColorEdit4(label, reinterpret_cast<float*>(&value), flags);
+        }
+
+        if (ImGui::IsItemActivated())
+        {
+            colorEditStates[key] = originalVal;
+        }
+
+        if (valueChanged)
+        {
+            setValue(value);
+        }
+
+        if (ImGui::IsItemDeactivatedAfterEdit())
+        {
+            auto originalVal = colorEditStates[key];
+            if (value != originalVal)
+            {
+                UndoManager::Execute(
+                    Memento(
+                        [setValue, value] { setValue(value); },
+                        [setValue, originalVal] { setValue(originalVal); },
+                        actionDescription));
+            }
+        }
+    }
+
+
 
     template <typename T>
     static void UndoableMenuItemValue(
@@ -301,8 +353,9 @@ public:
         ImGui::PopStyleColor();
     }
 
-    static bool ButtonWithState(const char* str, ImVec2 buttonSize, bool state, bool activeOnTrue = true, ImVec4 color = ImVec4(0.1372549086809158f, 0.1921568661928177f, 0.2627451121807098f,
-                            1.0f))
+    static bool ButtonWithState(const char* str, ImVec2 buttonSize, bool state, bool activeOnTrue = true,
+                                ImVec4 color = ImVec4(0.1372549086809158f, 0.1921568661928177f, 0.2627451121807098f,
+                                                      1.0f))
     {
         bool style = state == activeOnTrue;
         bool result = false;

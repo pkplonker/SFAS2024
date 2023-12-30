@@ -50,15 +50,23 @@ void DirectionalLightComponentDrawer::Draw()
 
                 ImGui::Text("Light Color");
                 ImGui::SameLine();
-                if (ImGui::ColorEdit3("Light Color", colorFloat,
-                                        ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoBorder))
-                {
-                    lightComponent->SetColor(static_cast<Vec4>(colorFloat));
-                }
-               if(ImGui::SliderFloat("Intensity",&lightComponent->intensity,0,10))
-               {
-                   
-               }
+                ImGuiHelpers::UndoableColorEdit<Vec4>(
+                    [&]() { return static_cast<Vec4>(lightComponent->GetColor()); },
+                    [lightComponent](Vec4 newColor) { lightComponent->SetColor(newColor); },
+                    "##LightColor",
+                    "Change Light Color"
+                );
+
+                auto& intensity = lightComponent->intensity;
+                ImGuiHelpers::UndoableDrag<float>(
+                    [&intensity]() { return intensity; },
+                    [lightComponent](float newValue) { lightComponent->intensity = newValue; },
+                    std::string("##Intensity").c_str(),
+                    "Changed Intensity",
+                    0,
+                    10,
+                    0.1f
+                );
             }
         }
     }

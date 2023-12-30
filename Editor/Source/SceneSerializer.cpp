@@ -2,6 +2,9 @@
 
 #include <fstream>
 #include <string>
+
+#include "ComponentRegistry.h"
+#include "DirectionalLightComponent.h"
 #include "json.hpp"
 #include "SceneManager.h"
 #include "SpriteComponent.h"
@@ -139,6 +142,10 @@ nlohmann::json SceneSerializer::SerializeGameObject(const std::shared_ptr<GameOb
     {
         serializedData["spriteComponent"] = SerializeSpriteComponent(spriteComponent);
     }
+    if (auto dirLightComponent = object->GetComponent<DirectionalLightComponent>())
+    {
+        serializedData["directionalLight"] = SerializeDirectionalLight(dirLightComponent);
+    }
 
     return std::make_pair(object->Name, serializedData);
 }
@@ -211,6 +218,18 @@ nlohmann::json SceneSerializer::SerializePerspectiveCamera(std::shared_ptr<Persp
     return serializedData;
 }
 
+nlohmann::json SceneSerializer::SerializeDirectionalLight(std::shared_ptr<DirectionalLightComponent> dirLight)
+{
+    nlohmann::json serializedData;
+    Vec4 color = dirLight->GetColor();
+    serializedData["colorX"] = color.X();
+    serializedData["colorY"] = color.Y();
+    serializedData["colorZ"] = color.Z();
+    serializedData["colorW"] = color.W();
+    serializedData["intensity"] = dirLight->intensity;
+    return serializedData;
+}
+
 std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
 {
     json sceneData;
@@ -247,7 +266,7 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
         {
             for (const json& objectData : objectsData)
             {
-                std::shared_ptr<GameObject> gameObject = DeserializeGameObject(objectData, parentsDict);
+                std::shared_ptr<GameObject> gameObject = DeserializeGameObject(objectData, parentsDict, scene);
                 if (gameObject)
                 {
                     if (!gameObjectDict.try_emplace(gameObject->GetGUID(), gameObject).second)
@@ -392,10 +411,33 @@ void SceneSerializer::DeserializeSpriteComponent(const std::shared_ptr<GameObjec
     }
 }
 
+void SceneSerializer::DeserializeDirectionalLight(const std::shared_ptr<GameObject>& gameObject,
+                                                  const nlohmann::json& data, std::shared_ptr<Scene> scene)
+{
+    auto directionalLightComponent = ComponentRegistry::CreateComponent("Directional Light",gameObject);
+    if(auto directionalLight = std::dynamic_pointer_cast<DirectionalLightComponent>(directionalLightComponent); directionalLight!=nullptr)
+    {
+        Vec4 color;
+
+        color.X(static_cast<float>(data["colorX"]));
+        color.Y(static_cast<float>(data["colorY"]));
+        color.Z(static_cast<float>(data["colorZ"]));
+        color.W(static_cast<float>(data["colorW"]));
+        directionalLight->intensity = static_cast<float>(data["intensity"]);
+        directionalLight->SetColor(color);
+        gameObject->AddComponent(std::move(directionalLight));
+        scene->RegisterDirectionalLight(gameObject->GetComponent<DirectionalLightComponent>());
+    }else
+    {
+        Warning("Failed to cast created dir light component")
+    }
+    
+}
+
 
 std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohmann::json& data,
                                                                    std::unordered_map<std::string, std::string>&
-                                                                   parentsDict)
+                                                                   parentsDict, std::shared_ptr<Scene> scene)
 {
     if (data.is_array() && data.size() == 2)
     {
@@ -448,6 +490,10 @@ std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohman
             if (objectProperties.contains("spriteComponent"))
             {
                 DeserializeSpriteComponent(newObject, objectProperties["spriteComponent"]);
+            }
+            if (objectProperties.contains("directionalLight"))
+            {
+                DeserializeDirectionalLight(newObject, objectProperties["directionalLight"], scene);
             }
 
             return newObject;
