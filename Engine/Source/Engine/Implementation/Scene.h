@@ -4,6 +4,7 @@
 #include "Engine/Implementation/GameObject.h"
 #include "Engine/IRenderable.h"
 
+class DirectionalLightComponent;
 class ImGuiController;
 
 class Scene : public IUpdateable, public Transform
@@ -17,6 +18,7 @@ public:
     }
 
     void AddObject(std::shared_ptr<GameObject> object);
+    void RegisterDirectionalLight(std::weak_ptr<DirectionalLightComponent> dirLightComponent);
     void RemoveObject(std::shared_ptr<GameObject> object);
     void RemoveObject(std::string guid);
     void RemoveRenderable(std::shared_ptr<IRenderable> object) const;
@@ -31,6 +33,8 @@ public:
         return DirectX::XMMatrixIdentity();
     }
 
+    std::weak_ptr<DirectionalLightComponent> GetDirectionalLight();
+
 private:
     std::unique_ptr<std::map<std::string, std::shared_ptr<GameObject>>> objects = std::make_unique<std::map<
         std::string, std::shared_ptr<
@@ -38,4 +42,7 @@ private:
     std::shared_ptr<ICamera> camera = {};
     std::weak_ptr<GameObject> selectedObject = {};
     IGraphics* graphics;
+    std::weak_ptr<DirectionalLightComponent> directionalLight;
 };
+
+

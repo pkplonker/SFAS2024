@@ -2,7 +2,6 @@ cbuffer cbChangedPerFrame : register(b0)
 {
     matrix mvp;
 	matrix worldMatrix;
-
 };
 
 cbuffer MaterialBuffer : register(b1)
@@ -10,6 +9,15 @@ cbuffer MaterialBuffer : register(b1)
     float4 materialColor;
 	bool useTex;
 };
+
+cbuffer DirectionalLightBuffer : register(b2)
+{
+    float4 lightDirection;
+    float4 lightColor;
+	float lightIntensity;
+
+};
+
 
 Texture2D colorMap : register(t0);
 SamplerState colorSample : register(s0);
@@ -28,6 +36,7 @@ struct PS_Input
     float4 color    : COLOR;
     float3 normal   : NORMAL;
     float2 uv       : TEXCOORD;
+	float3 worldNormal : NORMAL1;
 };
 
 PS_Input VS_Main(VS_Input vertex)
@@ -37,22 +46,30 @@ PS_Input VS_Main(VS_Input vertex)
     vsOut.color = vertex.color;
     vsOut.normal = vertex.normal;
     vsOut.uv = vertex.uv;
+	vsOut.worldNormal = mul(vertex.normal, (float3x3)worldMatrix);
     return vsOut;
 }
 
 float4 PS_Main(PS_Input frag) : SV_TARGET
 {
-     
-	float4 finalColor = frag.color;  
-	if(useTex)
-	{
-		finalColor = colorMap.Sample(colorSample, frag.uv);
-	}
+    float3 normalizedLightDirection = normalize(lightDirection.xyz);
+    float3 normalizedNormal = normalize(frag.worldNormal);
+    
+    float diff = max(dot(normalizedNormal, normalizedLightDirection), 0.0);
+    float4 diffuseColor = diff * lightColor* lightIntensity;
 
-	
+    float4 finalColor = frag.color;  
+    if(useTex)
+    {
+        finalColor = colorMap.Sample(colorSample, frag.uv);
+    }
+
     if(materialColor.x != 1.0f || materialColor.y != 1.0f || materialColor.z != 1.0f || materialColor.w != 1.0f )
     {
         finalColor = materialColor;
     }
-    return finalColor;
+
+    finalColor *= diffuseColor;
+
+    return float4(finalColor.xyz,1);
 }

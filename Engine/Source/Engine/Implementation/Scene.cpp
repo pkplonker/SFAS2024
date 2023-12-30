@@ -1,6 +1,7 @@
 ﻿#include "Scene.h"
 
 #include "CameraComponent.h"
+#include "DirectionalLightComponent.h"
 #include "MeshComponent.h"
 #include "SpriteComponent.h"
 #include "Engine/Implementation/Logging/Debug.h"
@@ -28,6 +29,7 @@ Scene::~Scene()
 
 void Scene::AddObject(std::shared_ptr<GameObject> object)
 {
+    if (object == nullptr)return;
     if (this->camera == nullptr)
     {
         auto cameraComponent = object->GetComponent<CameraComponent>();
@@ -46,6 +48,28 @@ void Scene::AddObject(std::shared_ptr<GameObject> object)
             graphics->UpdateRenderable(renderable->GetMaterial(), renderable->GetRenderable());
         }
     }
+}
+
+void Scene::RegisterDirectionalLight(std::weak_ptr<DirectionalLightComponent> dirLightComponent)
+{
+    
+        if (const auto lightComponent = dirLightComponent.lock())
+        {
+            if (directionalLight.lock() == nullptr)
+            {
+                this->directionalLight = lightComponent;
+            }
+            else
+            {
+                Warning("Secound directional light added, only the first light will be used.")
+            }
+        }
+    
+}
+
+std::weak_ptr<DirectionalLightComponent> Scene::GetDirectionalLight()
+{
+    return directionalLight;
 }
 
 void Scene::RemoveObject(std::shared_ptr<GameObject> object)

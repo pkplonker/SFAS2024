@@ -18,8 +18,9 @@ void GizmoController::ImGuiPreFrame()
     ImGuizmo::BeginFrame();
 }
 
-void GizmoController::Update(bool isInFocus, std::weak_ptr<GameObject> gameobject, ImVec2 size, ImVec2 position)
+bool GizmoController::Update(bool isInFocus, std::weak_ptr<GameObject> gameobject, ImVec2 size, ImVec2 position)
 {
+    bool isUsing = false;
     if (isInFocus && !(input->IsRightHeld() || input->IsRightPressed()))
     {
         if (input->IsKeyPress(Keys::W))
@@ -61,7 +62,7 @@ void GizmoController::Update(bool isInFocus, std::weak_ptr<GameObject> gameobjec
             ImGuizmo::Manipulate(&v.m[0][0], &p.m[0][0],
                                  currentOperation, currentMode, &w.m[0][0]);
 
-            bool isUsing = ImGuizmo::IsUsing();
+            isUsing = ImGuizmo::IsUsing();
 
             if (!wasUsing && isUsing)
             {
@@ -102,6 +103,7 @@ void GizmoController::Update(bool isInFocus, std::weak_ptr<GameObject> gameobjec
             wasUsing = isUsing;
         }
     }
+    return ImGuizmo::IsUsing();
 }
 
 
