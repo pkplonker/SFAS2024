@@ -13,6 +13,7 @@
 #include "../Editor.h"
 #include "../FileOpener.h"
 #include "../MessageBoxWrapper.h"
+#include "DirectX11/DirectX11Texture.h"
 
 MaterialDrawerHelper::MaterialDrawerHelper(std::weak_ptr<IRenderableComponent> component) : component(component)
 {
@@ -33,21 +34,57 @@ void MaterialDrawerHelper::DrawMaterial()
                 shaderPath = shader->GetPath();
             }
             std::vector<std::pair<std::string, std::function<void()>>> buttons;
-            buttons.emplace_back("Replace", std::bind(&MaterialDrawerHelper::ChangeShader, this));
 
+            buttons.emplace_back("Replace", std::bind(&MaterialDrawerHelper::ChangeShader, this));
             buttons.emplace_back("Modify", std::bind(&MaterialDrawerHelper::OpenShader, this));
             buttons.emplace_back("Reload", std::bind(&IShader::Reload, shader));
 
             ImGuiHelpers::WrappedText("Shader Path:", shaderPath, buttons);
-
             std::wstring texturePath;
-            if (const auto tex = mat->GetTexture())
+            ITexture* tex = mat->GetTexture();
+            if (tex != nullptr)
             {
                 texturePath = tex->GetPath();
             }
 
             ImGuiHelpers::WrappedText("Texture Path:", texturePath, "Replace",
                                       std::bind(&MaterialDrawerHelper::ChangeTexture, this));
+            if (tex != nullptr)
+            {
+                if (auto dxTex = dynamic_cast<DirectX11Texture*>(tex))
+                {
+                    ImGui::Separator();
+                    ImGui::Image(dxTex->GetTextureView(), ImVec2(200,200));
+
+                    if (ImGui::IsItemHovered())
+                    {
+                        ImGui::BeginTooltip();
+                        auto size = ImGui::GetWindowSize();
+                        auto factor = 0.9f;
+                        ImGui::Image(dxTex->GetTextureView(), ImVec2(size.x * factor, size.y * factor));
+                        ImGui::EndTooltip();
+                    }
+
+                    if (ImGui::IsItemClicked())
+                    {
+                        ImGui::OpenPopup("##TexturePopup");
+                    }
+
+                    if (ImGui::BeginPopupModal("##TexturePopup", nullptr, ImGuiWindowFlags_AlwaysAutoResize ))
+                    {
+                        auto size = ImGui::GetMainViewport()->Size;
+                        auto factor = 0.5f;
+                        ImGui::Image(dxTex->GetTextureView(), ImVec2(size.x * factor, size.y * factor));
+                        if (ImGui::IsItemClicked())
+                        {
+                            ImGui::CloseCurrentPopup();
+                        }
+                        ImGui::EndPopup();
+                    }
+                    ImGui::Separator();
+
+                }
+            }
 
 
             ImGui::Text("Color:");

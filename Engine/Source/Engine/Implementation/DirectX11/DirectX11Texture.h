@@ -15,7 +15,10 @@ public:
 	void Update() override;
 	float GetWidth() const override;
 	float GetHeight() const override;
-
+	ID3D11ShaderResourceView* GetTextureView()
+	{
+		return Texture;
+	}
 private:
 
 	ID3D11DeviceContext* Context;
