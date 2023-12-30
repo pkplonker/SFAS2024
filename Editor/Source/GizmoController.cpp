@@ -18,9 +18,8 @@ void GizmoController::ImGuiPreFrame()
     ImGuizmo::BeginFrame();
 }
 
-bool GizmoController::Update(bool isInFocus, std::weak_ptr<GameObject> gameobject, ImVec2 size, ImVec2 position)
+void GizmoController::HandleInput(bool isInFocus)
 {
-    bool isUsing = false;
     if (isInFocus && !(input->IsRightHeld() || input->IsRightPressed()))
     {
         if (input->IsKeyPress(Keys::W))
@@ -36,6 +35,12 @@ bool GizmoController::Update(bool isInFocus, std::weak_ptr<GameObject> gameobjec
             operation = Scale;
         }
     }
+}
+
+bool GizmoController::Update(bool isInFocus, std::weak_ptr<GameObject> gameobject, ImVec2 size, ImVec2 position)
+{
+    bool isUsing = false;
+    HandleInput(isInFocus);
 
     ImGuizmo::Enable(true);
     ImGuizmo::SetRect(position.x, position.y, size.x, size.y);
@@ -58,9 +63,9 @@ bool GizmoController::Update(bool isInFocus, std::weak_ptr<GameObject> gameobjec
         if (const auto& object = gameobject.lock())
         {
             DirectX::XMFLOAT4X4 w = ChangeMat(object->Transform()->GetWorldMatrix());
-
+            DirectX::XMFLOAT4X4 d;
             ImGuizmo::Manipulate(&v.m[0][0], &p.m[0][0],
-                                 currentOperation, currentMode, &w.m[0][0]);
+                                 currentOperation, currentMode, &w.m[0][0], &d.m[0][0]);
 
             isUsing = ImGuizmo::IsUsing();
 
@@ -71,14 +76,54 @@ bool GizmoController::Update(bool isInFocus, std::weak_ptr<GameObject> gameobjec
 
             if (isUsing)
             {
-                float t[3] = {};
-                float r[3] = {};
-                float s[3] = {};
+                // float t[3] = {};
+                // float r[3] = {};
+                // float s[3] = {};
+                //
+                // ImGuizmo::DecomposeMatrixToComponents(&w.m[0][0], t, r, s);
+                // object->Transform()->SetScale(s);
+                // object->Transform()->SetRotationEuler(r);
+                // object->Transform()->SetTranslation(t);
+                //object->Transform()->SetWorldMatrix(&w.m[0][0]);
+                DirectX::XMMATRIX deltaMatrix = DirectX::XMMATRIX(&d.m[0][0]);
+                DirectX::XMVECTOR deltaTranslation, deltaRotationQuat, deltaScale;
+                Vec3 translationChange;
+                Vec3 rotationChange;
+                Vec3 scaleChange;
 
-                ImGuizmo::DecomposeMatrixToComponents(&w.m[0][0], t, r, s);
-                object->Transform()->SetTranslation(t);
-                object->Transform()->SetRotationEuler(r);
-                object->Transform()->SetScale(s);
+                DirectX::XMMatrixDecompose(&deltaScale, &deltaRotationQuat, &deltaTranslation, deltaMatrix);
+                switch (operation)
+                {
+                case Translation:
+                    translationChange.X(DirectX::XMVectorGetX(deltaTranslation));
+                    translationChange.Y(DirectX::XMVectorGetY(deltaTranslation));
+                    translationChange.Z(DirectX::XMVectorGetZ(deltaTranslation));
+                    object->Transform()->Translate(translationChange);
+                    break;
+                case Rotation:
+                    DirectX::XMFLOAT3 eulerRotationRadians;
+                    DirectX::XMStoreFloat3(&eulerRotationRadians,
+                                           DirectX::XMQuaternionRotationRollPitchYawFromVector(deltaRotationQuat));
+
+                // Convert radians to degrees
+                    rotationChange.X(eulerRotationRadians.x * 180.0f / DirectX::XM_PI*4);
+                    rotationChange.Y(eulerRotationRadians.y * 180.0f / DirectX::XM_PI*4);
+                    rotationChange.Z(eulerRotationRadians.z * 180.0f / DirectX::XM_PI*4);
+
+                // Apply rotation change
+                    object->Transform()->Rotate(rotationChange);
+                    break;
+                case Scale:
+                    // Extract scale change
+                    scaleChange.X(DirectX::XMVectorGetX(deltaScale));
+                    scaleChange.Y(DirectX::XMVectorGetY(deltaScale));
+                    scaleChange.Z(DirectX::XMVectorGetZ(deltaScale));
+
+                // Apply scale change
+                    object->Transform()->ApplyScale(scaleChange);
+                    break;
+                default: ;
+                }
             }
 
             if (wasUsing && !isUsing)
@@ -90,11 +135,11 @@ bool GizmoController::Update(bool isInFocus, std::weak_ptr<GameObject> gameobjec
                 UndoManager::Execute(Memento(
                                          [object, finalMatrix]()
                                          {
-                                             //object->Transform()->SetWorldMatrix(finalMatrix);
+                                             object->Transform()->SetWorldMatrix(finalMatrix);
                                          },
                                          [object, operationInitialMatrix]()
                                          {
-                                             //object->Transform()->SetWorldMatrix(operationInitialMatrix);
+                                             object->Transform()->SetWorldMatrix(operationInitialMatrix);
                                          },
                                          "Modified transform"
                                      ), false);
