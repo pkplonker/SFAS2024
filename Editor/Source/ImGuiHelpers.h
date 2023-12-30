@@ -143,7 +143,7 @@ public:
         std::function<T()> getValue,
         std::function<void(T)> setValue,
         const char* label,
-        const std::string& actionDescription)
+        const std::string& actionDescription, float min = FLT_MIN, float max = FLT_MAX, float speed = 1)
     {
         T value = getValue();
 
@@ -151,11 +151,11 @@ public:
         bool valueChanged = false;
         if constexpr (std::is_same<T, float>::value)
         {
-            valueChanged = ImGui::DragFloat(label, reinterpret_cast<float*>(&value));
+            valueChanged = ImGui::DragFloat(label, reinterpret_cast<float*>(&value),speed,min,max);
         }
         else if constexpr (std::is_same<T, int>::value)
         {
-            valueChanged = ImGui::DragInt(label, reinterpret_cast<int*>(&value));
+            valueChanged = ImGui::DragInt(label, reinterpret_cast<int*>(&value),speed,min,max);
         }
 
         if (ImGui::IsItemActivated())
@@ -301,8 +301,9 @@ public:
         ImGui::PopStyleColor();
     }
 
-    static bool ButtonWithState(const char* str, ImVec2 buttonSize, bool state, bool activeOnTrue = true, ImVec4 color = ImVec4(0.1372549086809158f, 0.1921568661928177f, 0.2627451121807098f,
-                            1.0f))
+    static bool ButtonWithState(const char* str, ImVec2 buttonSize, bool state, bool activeOnTrue = true,
+                                ImVec4 color = ImVec4(0.1372549086809158f, 0.1921568661928177f, 0.2627451121807098f,
+                                                      1.0f))
     {
         bool style = state == activeOnTrue;
         bool result = false;
