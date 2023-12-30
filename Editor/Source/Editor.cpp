@@ -1,4 +1,6 @@
 #include "Editor.h"
+
+#include "DebugDrawer.h"
 #include "EditorCamera.h"
 #include "EditorSettings.h"
 #include "EditorViewportInteractor.h"
@@ -71,6 +73,8 @@ bool Editor::Load()
     imguiController = std::make_unique<ImGuiController>(dx11Graphics, game, Input,editorCamera);
     imguiController->AddWindow(std::make_shared<EditorCameraWindow>(editorCamera));
     editorViewportInteractor = std::make_unique<EditorViewportInteractor>(Input,imguiController.get());
+    debugDrawer = std::make_shared<DebugDrawer>(editorCamera);
+    Graphics->AddRenderStrategy(debugDrawer);
     return true;
 }
 
@@ -87,9 +91,7 @@ void Editor::Update()
     if(!imguiController->IsUsingGizmo())
     {
         editorViewportInteractor->Update(editorCamera->camera);
-
     }
-
 }
 
 void Editor::Cleanup()

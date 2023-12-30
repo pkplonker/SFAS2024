@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "DebugDrawer.h"
 #include "EditorCamera.h"
 #include "Game.h"
 #include "imgui.h"
@@ -48,4 +49,5 @@ private:
     std::shared_ptr<EditorCamera> editorCamera;
     std::unique_ptr<UndoManager> undomanager;
     std::unique_ptr<EditorViewportInteractor> editorViewportInteractor;
+    std::shared_ptr<DebugDrawer> debugDrawer;
 };
