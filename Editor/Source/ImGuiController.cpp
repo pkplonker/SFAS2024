@@ -17,6 +17,7 @@
 #include "SceneSerializer.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 #include "Logging/BufferSink.h"
+#include "Windows/DebugControls.h"
 #include "Windows/Hierarchy.h"
 #include "Windows/InputStatsWindow.h"
 #include "Windows/TimeWindow.h"
@@ -80,6 +81,9 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, II
     const std::shared_ptr<ObjectControlWindow> objectControl = std::make_shared<ObjectControlWindow>(gizmoController);
     renderables.try_emplace(objectControl, EditorSettings::Get(IMGUI_SETTING_ID + objectControl->GetName(), true));
 
+    const std::shared_ptr<DebugControls> debugControls = std::make_shared<DebugControls>();
+    renderables.try_emplace(debugControls, EditorSettings::Get(IMGUI_SETTING_ID + debugControls->GetName(), true));
+    
     settingsWindow = new SettingsWindow();
 
     ImGuiTheme::ApplyTheme(0);

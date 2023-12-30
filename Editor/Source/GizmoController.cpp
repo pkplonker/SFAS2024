@@ -105,21 +105,17 @@ bool GizmoController::Update(bool isInFocus, std::weak_ptr<GameObject> gameobjec
                     DirectX::XMStoreFloat3(&eulerRotationRadians,
                                            DirectX::XMQuaternionRotationRollPitchYawFromVector(deltaRotationQuat));
 
-                // Convert radians to degrees
                     rotationChange.X(eulerRotationRadians.x * 180.0f / DirectX::XM_PI*4);
                     rotationChange.Y(eulerRotationRadians.y * 180.0f / DirectX::XM_PI*4);
                     rotationChange.Z(eulerRotationRadians.z * 180.0f / DirectX::XM_PI*4);
 
-                // Apply rotation change
                     object->Transform()->Rotate(rotationChange);
                     break;
                 case Scale:
-                    // Extract scale change
                     scaleChange.X(DirectX::XMVectorGetX(deltaScale));
                     scaleChange.Y(DirectX::XMVectorGetY(deltaScale));
                     scaleChange.Z(DirectX::XMVectorGetZ(deltaScale));
-
-                // Apply scale change
+                    
                     object->Transform()->ApplyScale(scaleChange);
                     break;
                 default: ;
