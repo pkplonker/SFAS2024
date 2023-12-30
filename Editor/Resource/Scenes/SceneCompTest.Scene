@@ -1,6 +1,44 @@
 {
     "objects": [
         [
+            "New Cube",
+            {
+                "guid": "{185D9992-6414-457A-BCB8-F94A4062D5D9}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
+                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/boing.fx",
+                        "skybox": false
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
+                },
+                "name": "New Cube",
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
             "Bottle1",
             {
                 "guid": "{1C4775EB-1A6E-411A-A325-9EA8351B2346}",
@@ -503,7 +541,8 @@
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Terrain.smesh",
                         "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false
+                        "skybox": false,
+                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\Cat.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Terrain.smesh"
                 },
@@ -518,6 +557,45 @@
                         "x": 0.0,
                         "y": -0.0,
                         "z": -0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "New Cube",
+            {
+                "guid": "{E3018105-3FE0-421A-9BA8-D98792BCA0CF}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
+                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/boing.fx",
+                        "skybox": false
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
+                },
+                "name": "New Cube",
+                "transform": {
+                    "parent": "{185D9992-6414-457A-BCB8-F94A4062D5D9}",
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
                     },
                     "scale": {
                         "x": 1.0,

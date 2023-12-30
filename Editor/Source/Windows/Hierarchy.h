@@ -23,6 +23,8 @@ public:
     auto DeleteUndo(std::shared_ptr<GameObject> object);
     void ProcessChildren(std::vector<std::shared_ptr<GameObject>>& objectsToRemove, ImGuiTreeNodeFlags baseFlags,
                          std::set<std::weak_ptr<Transform>, Transform::TransformCompare> children);
+    void DeleteObjects(std::vector<std::shared_ptr<GameObject>> objectsToRemove,
+                       std::shared_ptr<GameObject> sharedSelectedObject);
     void Draw() override;
     std::string GetName() override { return HIERARCHY; }
     std::weak_ptr<GameObject> GetSelectedObject();

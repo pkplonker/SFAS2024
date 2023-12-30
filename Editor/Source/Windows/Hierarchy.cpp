@@ -290,6 +290,14 @@ void Hierarchy::ProcessChildren(std::vector<std::shared_ptr<GameObject>>& object
 }
 
 
+void Hierarchy::DeleteObjects(std::vector<std::shared_ptr<GameObject>> objectsToRemove,
+                              const std::shared_ptr<GameObject> sharedSelectedObject)
+{
+    UndoManager::Execute(Memento(
+        DeleteDo(objectsToRemove, sharedSelectedObject),
+        DeleteUndo(sharedSelectedObject), "Deleting Object"));
+}
+
 void Hierarchy::Draw()
 {
     std::vector<std::shared_ptr<GameObject>> objectsToRemove;
@@ -324,9 +332,7 @@ void Hierarchy::Draw()
     {
         if (input->IsKeyPress(Keys::Delete))
         {
-            UndoManager::Execute(Memento(
-                DeleteDo(objectsToRemove, sharedSelectedObject),
-                DeleteUndo(sharedSelectedObject), "Deleting Object"));
+            DeleteObjects(objectsToRemove, sharedSelectedObject);
         }
         if (input->IsKeyPress(Keys::Q))
         {
@@ -345,7 +351,7 @@ void Hierarchy::Draw()
         ProcessChildren(objectsToRemove, flags, children);
         for (const auto& object : objectsToRemove)
         {
-            if (selectedObject.lock()->GetGUID() == object->GetGUID())
+            if (selectedObject.lock() != nullptr && selectedObject.lock()->GetGUID() == object->GetGUID())
             {
                 selectedObject = std::make_shared<GameObject>();
             }
