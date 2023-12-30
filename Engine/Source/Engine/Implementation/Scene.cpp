@@ -52,19 +52,17 @@ void Scene::AddObject(std::shared_ptr<GameObject> object)
 
 void Scene::RegisterDirectionalLight(std::weak_ptr<DirectionalLightComponent> dirLightComponent)
 {
-    
-        if (const auto lightComponent = dirLightComponent.lock())
+    if (const auto lightComponent = dirLightComponent.lock())
+    {
+        if (directionalLight.lock() == nullptr)
         {
-            if (directionalLight.lock() == nullptr)
-            {
-                this->directionalLight = lightComponent;
-            }
-            else
-            {
-                Warning("Secound directional light added, only the first light will be used.")
-            }
+            this->directionalLight = lightComponent;
         }
-    
+        else
+        {
+            Warning("Secound directional light added, only the first light will be used.")
+        }
+    }
 }
 
 std::weak_ptr<DirectionalLightComponent> Scene::GetDirectionalLight()

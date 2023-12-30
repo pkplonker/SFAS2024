@@ -357,6 +357,13 @@
         [
             "Directional Light",
             {
+                "directionalLight": {
+                    "colorW": 1.0,
+                    "colorX": 1.0,
+                    "colorY": 1.0,
+                    "colorZ": 1.0,
+                    "intensity": 0.9380000233650208
+                },
                 "guid": "{925F3940-6452-4363-9163-F8BB0187E781}",
                 "name": "Directional Light",
                 "transform": {

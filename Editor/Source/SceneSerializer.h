@@ -4,6 +4,7 @@
 
 #include "Engine/Implementation/MeshComponent.h"
 
+class DirectionalLightComponent;
 class SpriteComponent;
 class CameraComponent;
 class OrthographicCamera;
@@ -27,6 +28,7 @@ public:
     static nlohmann::json SerializeCameraComponent(std::shared_ptr<CameraComponent> camera);
     static nlohmann::json SerializeOrthographicCamera(std::shared_ptr<OrthographicCamera> camera);
     static nlohmann::json SerializePerspectiveCamera(std::shared_ptr<PerspectiveCamera> camera);
+    static nlohmann::json SerializeDirectionalLight(std::shared_ptr<DirectionalLightComponent> dirLight);
 
     static std::shared_ptr<Scene> Deserialize(std::string path);
     static IMaterial* DeserializeMaterial(const nlohmann::json& data, std::string texturePath, std::string shaderPath);
@@ -34,7 +36,10 @@ public:
     static void DeserializeMeshComponent(const std::shared_ptr<GameObject>& shared, const nlohmann::json& value);
     static void DeserializeSpriteComponent(const std::shared_ptr<GameObject>& shared, const nlohmann::json& value);
 
-    static std::shared_ptr<GameObject> DeserializeGameObject(const nlohmann::json& data, std::unordered_map<std::string, std::string>& parentsDict);
+    static void DeserializeDirectionalLight(const std::shared_ptr<GameObject>& gameObject, const nlohmann::json& data,
+                                            std::shared_ptr<Scene> scene);
+    static std::shared_ptr<GameObject> DeserializeGameObject(const nlohmann::json& data,
+                                                             std::unordered_map<std::string, std::string>& parentsDict, std::shared_ptr<Scene> scene);
     static std::shared_ptr<Transform3D> DeserializeTransform(const nlohmann::json& data, std::string& parentGuid);
     static std::shared_ptr<CameraComponent> DeserializeCameraComponent(std::shared_ptr<GameObject> gameObject,
                                                                        const nlohmann::json& data);
