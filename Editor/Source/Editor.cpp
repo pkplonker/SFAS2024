@@ -73,14 +73,14 @@ bool Editor::Load()
     imguiController = std::make_unique<ImGuiController>(dx11Graphics, game, Input,editorCamera);
     imguiController->AddWindow(std::make_shared<EditorCameraWindow>(editorCamera));
     editorViewportInteractor = std::make_unique<EditorViewportInteractor>(Input,imguiController.get());
-    DebugDrawer::Init(editorCamera);
+    debugDrawer = std::make_shared<DebugDrawer>(editorCamera);
+    Graphics->AddRenderStrategy(debugDrawer);
     return true;
 }
 
 void Editor::Update()
 {
     game->Update();
-    DebugDrawer::Update();
     undomanager->Update();
     imguiController->ImGuiPreFrame();
     if (imguiController->IsViewportInFocus())

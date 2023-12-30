@@ -22,16 +22,16 @@ void DebugDrawer::DrawBoundingBox(const DirectX::BoundingBox& bounds)
 
     lineBatch->Begin();
 
-    const int edges[12][2] = {
+    constexpr int edges[12][2] = {
         {0, 1}, {1, 2}, {2, 3}, {3, 0},
         {4, 5}, {5, 6}, {6, 7}, {7, 4},
         {0, 4}, {1, 5}, {2, 6}, {3, 7}
     };
 
-    for (int i = 0; i < 12; ++i)
+    for (const auto edge : edges)
     {
-        int startIndex = edges[i][0];
-        int endIndex = edges[i][1];
+        const int startIndex = edge[0];
+        const int endIndex = edge[1];
         lineBatch->DrawLine(DirectX::VertexPositionColor(vectorCorners[startIndex], DirectX::Colors::Red),
                             DirectX::VertexPositionColor(vectorCorners[endIndex], DirectX::Colors::Red));
     }
@@ -50,7 +50,7 @@ void DebugDrawer::Update()
         effect->SetView(cam->GetViewMatrix());
         effect->SetProjection(cam->GetProjectionMatrix());
         effect->Apply(context);
-        
+
         context->IASetInputLayout(inputLayout);
         DirectX::BoundingBox bounds2 = DirectX::BoundingBox();
         bounds2.Center = DirectX::XMFLOAT3(0, 0, 0);
@@ -59,9 +59,8 @@ void DebugDrawer::Update()
     }
 }
 
-void DebugDrawer::Init(const std::weak_ptr<EditorCamera>& weakCam)
+DebugDrawer::DebugDrawer(const std::weak_ptr<ICamera> weakCam) : camera(weakCam)
 {
-    camera = weakCam;
     auto graphics = IApplication::GetGraphics();
     if (graphics)
     {
@@ -101,11 +100,16 @@ void DebugDrawer::CreateInputLayout(ID3D11Device* device, DirectX::BasicEffect* 
 
     effect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
 
-   HRESULT hr =  device->CreateInputLayout(DirectX::VertexPositionColor::InputElements,
-                              DirectX::VertexPositionColor::InputElementCount,
-                              shaderByteCode, byteCodeLength,
-                              &inputLayout);
-    if (FAILED(hr)) {
+    HRESULT hr = device->CreateInputLayout(DirectX::VertexPositionColor::InputElements,
+                                           DirectX::VertexPositionColor::InputElementCount,
+                                           shaderByteCode, byteCodeLength,
+                                           &inputLayout);
+    if (FAILED(hr))
+    {
         Error("Failed to create debug input layout")
     }
+}
+
+DebugDrawer::~DebugDrawer()
+{
 }

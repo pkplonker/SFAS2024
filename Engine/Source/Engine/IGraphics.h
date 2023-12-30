@@ -3,7 +3,9 @@
 #include <map>
 #include <list>
 #include <memory>
+#include <vector>
 
+#include "IRenderStrategy.h"
 #include "IResizeHandler.h"
 #include "RenderingStats.h"
 #include "Implementation/DirectX11/DirectX11Shader.h"
@@ -44,8 +46,11 @@ public:
     virtual bool TryUpdateShader(IShader* shader, const char* vsentry, const char* vsshader,
                                  const char* psentry, const char* psshader) = 0;
     RenderingStats currentStats;
-
+    void AddRenderStrategy(std::shared_ptr<IRenderStrategy> strategy);
+    void RemoveRenderStrategy(std::shared_ptr<IRenderStrategy> strategy);
 protected:
     std::map<IMaterial*, std::list<std::shared_ptr<IRenderable>>> Renderables;
     std::list<ITexture*> Textures;
+    std::vector<std::shared_ptr<IRenderStrategy>> postRenderStrategies;
+
 };
