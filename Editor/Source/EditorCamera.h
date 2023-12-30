@@ -10,6 +10,7 @@ class EditorCamera : public ICamera, public std::enable_shared_from_this<EditorC
 {
 public:
     EditorCamera(IInput* input);
+    ~EditorCamera() override;
     void SetActiveCamera();
     std::shared_ptr<Transform3D> GetTransform() override;
     void SetTransform(std::shared_ptr<Transform3D> transform) override;
@@ -47,4 +48,6 @@ private:
     float xMoveSpeed = 1.0f;
     float yMoveSpeed = 1.0f;
     float scrollSpeed = 1.0f;
+    std::string key = "EDITOR_CAMERA_";
+
 };

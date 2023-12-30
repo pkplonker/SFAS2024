@@ -47,10 +47,7 @@ void GameObject::Init()
 
 DirectX::BoundingBox GameObject::GetAABB()
 {
-    DirectX::BoundingBox result;
-    result.Extents = DirectX::XMFLOAT3(0, 0, 0);
-
-    result.Center = Transform()->Position.vec;
+    DirectX::XMFLOAT3 extents = DirectX::XMFLOAT3(0,0,0);
 
     if (auto renderableComponent = GetComponent<IRenderableComponent>(); renderableComponent != nullptr)
     {
@@ -58,12 +55,13 @@ DirectX::BoundingBox GameObject::GetAABB()
         {
             if (renderable->AllowInteraction())
             {
-                Vec3 ext = Transform()->Scale * renderable->GetBounds().Extents;
-                result.Extents = ext;
+                auto initialExtents = renderable->GetBounds().Extents;
+                Vec3 ext = Transform()->Scale * initialExtents;
+                extents = DirectX::XMFLOAT3(ext.X(),ext.Y(),ext.Z());
             }
         }
     }
-    return result;
+    return DirectX::BoundingBox(Transform()->Position.vec,extents);
 }
 
 void GameObject::Update()

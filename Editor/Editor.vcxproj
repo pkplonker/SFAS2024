@@ -173,7 +173,7 @@
     <ClCompile Include="Source\Windows\BoundsDrawerHelper.cpp" />
     <ClCompile Include="Source\Windows\CameraComponentDrawer.cpp" />
     <ClCompile Include="Source\Windows\ComponentDrawer.cpp" />
-    <ClCompile Include="Source\Windows\ComponentDrawerFactory.cpp" />
+    <ClCompile Include="Source\Windows\DirectionalLightComponentDrawer.cpp" />
     <ClCompile Include="Source\Windows\EditorCameraWindow.cpp" />
     <ClCompile Include="Source\Windows\InputStatsWindow.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
@@ -381,6 +381,7 @@
     <ClInclude Include="Source\Windows\CameraComponentDrawer.h" />
     <ClInclude Include="Source\Windows\ComponentDrawer.h" />
     <ClInclude Include="Source\Windows\ComponentDrawerFactory.h" />
+    <ClInclude Include="Source\Windows\DirectionalLightComponentDrawer.h" />
     <ClInclude Include="Source\Windows\EditorCameraWindow.h" />
     <ClInclude Include="Source\Windows\InputStatsWindow.h" />
     <ClInclude Include="Source\Windows\Inspector.h" />

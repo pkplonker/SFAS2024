@@ -14,7 +14,8 @@ public:
     std::vector<unsigned int>& GetIndices();
     void SetIndices(std::vector<unsigned int> indices);
     std::string GetPath() { return path; }
-    DirectX::BoundingBox GetAABB() { return aabb; }
+    DirectX::BoundingBox GetAABB();
+    void SetExtents(Vec3 vec3);
 
 protected:
     std::string path;

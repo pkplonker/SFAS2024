@@ -26,10 +26,18 @@ void Inspector::Draw()
         {
             renamingHelper.RequestRename(gameobject);
         }
+        ImGui::SameLine();
         renamingHelper.DrawRenamePopup();
         ImGui::SameLine();
 
         ImGui::Text(gameobject->GetGUID().c_str());
+        auto state = gameobject->GetIsEnabled();
+        ImGui::SameLine();
+
+        if (ImGuiHelpers::ButtonWithState(state ? "Disable" : "Enable", ImVec2(50, 20), state,false,ImVec4(0.8f,0,0,1)))
+        {
+            gameobject->SetIsEnabled(!state);
+        }
 
         if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
         {

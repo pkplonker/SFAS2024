@@ -1,6 +1,326 @@
 {
     "objects": [
         [
+            "Bottle1",
+            {
+                "guid": "{1C4775EB-1A6E-411A-A325-9EA8351B2346}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bottle1.smesh",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
+                        "skybox": false,
+                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bottle1.smesh"
+                },
+                "name": "Bottle1",
+                "transform": {
+                    "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
+                    "position": {
+                        "x": 0.43185409903526306,
+                        "y": 3.729560613632202,
+                        "z": -4.317113876342773
+                    },
+                    "rotation": {
+                        "x": -94.1180191040039,
+                        "y": -0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 4.0,
+                        "y": 4.0,
+                        "z": 4.0
+                    }
+                }
+            }
+        ],
+        [
+            "Cup",
+            {
+                "guid": "{30E71215-4D91-470D-AD2C-06D672740CD3}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Cup.smesh",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
+                        "skybox": false,
+                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Cup.smesh"
+                },
+                "name": "Cup",
+                "transform": {
+                    "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
+                    "position": {
+                        "x": -0.5933404564857483,
+                        "y": 3.5733728408813477,
+                        "z": -5.157597541809082
+                    },
+                    "rotation": {
+                        "x": -83.09757995605469,
+                        "y": -0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 2.0,
+                        "y": 2.0,
+                        "z": 4.0
+                    }
+                }
+            }
+        ],
+        [
+            "Barrel",
+            {
+                "guid": "{32CA0A0C-7527-486F-AC8C-C329FEC9CF9C}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell.smesh",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
+                        "skybox": false,
+                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell.smesh"
+                },
+                "name": "Barrel",
+                "transform": {
+                    "parent": "{AEEB717D-3319-44B5-B922-2D0CB1449578}",
+                    "position": {
+                        "x": -7.631878852844238,
+                        "y": 2.2786474227905273,
+                        "z": -3.5538077354431152
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 3.0,
+                        "y": 3.0,
+                        "z": 3.0
+                    }
+                }
+            }
+        ],
+        [
+            "Plate",
+            {
+                "guid": "{34007A8A-BE74-4B29-8F1B-C6861C7957D6}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Plate.smesh",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
+                        "skybox": false,
+                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Plate.smesh"
+                },
+                "name": "Plate",
+                "transform": {
+                    "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
+                    "position": {
+                        "x": 0.0,
+                        "y": 3.175492763519287,
+                        "z": -5.43427848815918
+                    },
+                    "rotation": {
+                        "x": -91.8795166015625,
+                        "y": -0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 3.5,
+                        "y": 3.499999523162842,
+                        "z": 3.499999523162842
+                    }
+                }
+            }
+        ],
+        [
+            "Bottle2",
+            {
+                "guid": "{39214A2F-BD4C-425F-AAC4-00D357E66B5A}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bottle2.smesh",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
+                        "skybox": false,
+                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bottle2.smesh"
+                },
+                "name": "Bottle2",
+                "transform": {
+                    "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
+                    "position": {
+                        "x": -0.3484046757221222,
+                        "y": 3.6887900829315186,
+                        "z": -4.226522445678711
+                    },
+                    "rotation": {
+                        "x": -86.2001953125,
+                        "y": -0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 4.0,
+                        "y": 3.999945640563965,
+                        "z": 3.999945640563965
+                    }
+                }
+            }
+        ],
+        [
+            "Crate1",
+            {
+                "guid": "{3AAD112F-5395-493D-B7B3-437DAB4670FA}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Crate1.smesh",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
+                        "skybox": false,
+                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Crate1.smesh"
+                },
+                "name": "Crate1",
+                "transform": {
+                    "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
+                    "position": {
+                        "x": -0.36354386806488037,
+                        "y": 2.48360013961792,
+                        "z": -7.798708438873291
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -0.0,
+                        "z": 8.857160568237305
+                    },
+                    "scale": {
+                        "x": 3.0000016689300537,
+                        "y": 3.0000016689300537,
+                        "z": 3.0
+                    }
+                }
+            }
+        ],
+        [
+            "Table",
+            {
+                "guid": "{70E7F8B6-EC42-4DC6-AA9D-AEA185C6588E}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Table.smesh",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
+                        "skybox": false,
+                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Table.smesh"
+                },
+                "name": "Table",
+                "transform": {
+                    "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
+                    "position": {
+                        "x": 0.0,
+                        "y": 2.939796209335327,
+                        "z": -4.801431179046631
+                    },
+                    "rotation": {
+                        "x": -90.29290008544922,
+                        "y": 0.6367486119270325,
+                        "z": 2.6682071663231e-08
+                    },
+                    "scale": {
+                        "x": 3.9999070167541504,
+                        "y": 3.99983549118042,
+                        "z": 3.9999606609344482
+                    }
+                }
+            }
+        ],
+        [
+            "Barrel2",
+            {
+                "guid": "{77ED40AD-57FE-4AF7-A543-26392BBB7775}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell2.smesh",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
+                        "skybox": false,
+                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell2.smesh"
+                },
+                "name": "Barrel2",
+                "transform": {
+                    "parent": "{AEEB717D-3319-44B5-B922-2D0CB1449578}",
+                    "position": {
+                        "x": -9.913932800292969,
+                        "y": 2.82301664352417,
+                        "z": -3.536602258682251
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -0.0,
+                        "z": -26.588478088378906
+                    },
+                    "scale": {
+                        "x": 3.0000007152557373,
+                        "y": 3.0000007152557373,
+                        "z": 3.0
+                    }
+                }
+            }
+        ],
+        [
             "Camera",
             {
                 "cameraComponent": {
@@ -35,6 +355,70 @@
             }
         ],
         [
+            "Directional Light",
+            {
+                "guid": "{925F3940-6452-4363-9163-F8BB0187E781}",
+                "name": "Directional Light",
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 10.123026847839355,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 154.0,
+                        "y": 140.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Barrel3",
+            {
+                "guid": "{A162262C-5ACE-4D82-8C5A-59D15B41C8C9}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell.smesh",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
+                        "skybox": false,
+                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell.smesh"
+                },
+                "name": "Barrel3",
+                "transform": {
+                    "parent": "{AEEB717D-3319-44B5-B922-2D0CB1449578}",
+                    "position": {
+                        "x": -8.599287033081055,
+                        "y": 2.4618961811065674,
+                        "z": -4.560481071472168
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -0.0,
+                        "z": -17.55978775024414
+                    },
+                    "scale": {
+                        "x": 2.9999630451202393,
+                        "y": 2.9999825954437256,
+                        "z": 2.999987840652466
+                    }
+                }
+            }
+        ],
+        [
             "Fire",
             {
                 "guid": "{ACB20410-D6AE-461A-8C4F-EF4DE0E96DBF}",
@@ -55,6 +439,31 @@
                 },
                 "name": "Fire",
                 "transform": {
+                    "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
+                    "position": {
+                        "x": -4.0,
+                        "y": 2.0,
+                        "z": -3.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Barrels",
+            {
+                "guid": "{AEEB717D-3319-44B5-B922-2D0CB1449578}",
+                "name": "Barrels",
+                "transform": {
                     "position": {
                         "x": 0.0,
                         "y": 0.0,
@@ -74,28 +483,28 @@
             }
         ],
         [
-            "Cube",
+            "Terrain",
             {
-                "guid": "{D4A98687-0BBB-47AD-8463-3CC0B6CABA02}",
+                "guid": "{C0A3D52D-05F6-4821-BC64-8CB217D834FD}",
                 "meshComponent": {
                     "material": {
                         "color": {
                             "a": 1.0,
-                            "b": 0.43739601969718933,
-                            "g": 0.44607841968536377,
-                            "r": 0.15087947249412537
+                            "b": 0.35921281576156616,
+                            "g": 0.47046101093292236,
+                            "r": 0.4852941036224365
                         },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Terrain.smesh",
                         "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
                         "skybox": false
                     },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Terrain.smesh"
                 },
-                "name": "Cube",
+                "name": "Terrain",
                 "transform": {
                     "position": {
-                        "x": -2.5505118370056152,
-                        "y": 0.800000011920929,
+                        "x": 0.0,
+                        "y": -1.7737367153167725,
                         "z": 0.0
                     },
                     "rotation": {
@@ -107,6 +516,125 @@
                         "x": 1.0,
                         "y": 1.0,
                         "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Props",
+            {
+                "guid": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
+                        "skybox": false,
+                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                    },
+                    "mesh": ""
+                },
+                "name": "Props",
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Crate2",
+            {
+                "guid": "{EEF663E3-6223-4972-A01F-22A0A5C8B547}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Crate2.smesh",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
+                        "skybox": false,
+                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Crate2.smesh"
+                },
+                "name": "Crate2",
+                "transform": {
+                    "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
+                    "position": {
+                        "x": -7.003708362579346,
+                        "y": 2.757992744445801,
+                        "z": -0.84326171875
+                    },
+                    "rotation": {
+                        "x": -17.36884117126465,
+                        "y": -0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 4.0,
+                        "y": 3.9999921321868896,
+                        "z": 3.9999921321868896
+                    }
+                }
+            }
+        ],
+        [
+            "Bucket",
+            {
+                "guid": "{FD95BB93-DC97-4175-BDF1-286C221AE122}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bucket.smesh",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
+                        "skybox": false,
+                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bucket.smesh"
+                },
+                "name": "Bucket",
+                "transform": {
+                    "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
+                    "position": {
+                        "x": -3.0734446048736572,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 10.0,
+                        "y": 10.0,
+                        "z": 10.0
                     }
                 }
             }

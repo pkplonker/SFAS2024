@@ -22,6 +22,7 @@ private:
     {
         // Darcula style by ice1000 from ImThemes
         ImGuiStyle& style = ImGui::GetStyle();
+        style.WindowPadding = ImVec2(10, 10);
 
         style.Alpha = 1.0f;
         style.DisabledAlpha = 0.6000000238418579f;
