@@ -3,11 +3,23 @@
 #include <memory>
 #include <set>
 
+struct Transform;
 class GameObject;
 
 struct Transform : std::enable_shared_from_this<Transform>
 {
+    struct TransformCompare
+    {
+        bool operator()(const std::weak_ptr<Transform>& lhs, const std::weak_ptr<Transform>& rhs) const
+        {
+            return lhs.lock().get() < rhs.lock().get();
+        }
+    };
     virtual ~Transform() = default;
+    std::weak_ptr<GameObject> GetGameObject()
+    {
+        return gameobject;
+    }
 
     Transform()
     {
@@ -38,24 +50,24 @@ struct Transform : std::enable_shared_from_this<Transform>
         }
     }
 
+    std::set<std::weak_ptr<Transform>, TransformCompare> GetChildren()
+    {
+        return children;
+    }
+
     bool HasChildren() const
     {
         return children.size() > 0;
     }
 
-    struct TransformCompare
-    {
-        bool operator()(const std::weak_ptr<Transform>& lhs, const std::weak_ptr<Transform>& rhs) const
-        {
-            return lhs.lock().get() < rhs.lock().get();
-        }
-    };
+    
+
 
     std::weak_ptr<Transform> parent;
     std::set<std::weak_ptr<Transform>, TransformCompare> children;
     std::weak_ptr<GameObject> gameobject;
 
-    virtual DirectX::XMMATRIX GetWorldMatrix()=0;
+    virtual DirectX::XMMATRIX GetWorldMatrix() =0;
 
 private:
     void AddChild(const std::shared_ptr<Transform>& child)

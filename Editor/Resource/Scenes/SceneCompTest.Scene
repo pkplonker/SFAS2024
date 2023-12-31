@@ -1,44 +1,6 @@
 {
     "objects": [
         [
-            "New Cube",
-            {
-                "guid": "{185D9992-6414-457A-BCB8-F94A4062D5D9}",
-                "meshComponent": {
-                    "material": {
-                        "color": {
-                            "a": 1.0,
-                            "b": 1.0,
-                            "g": 1.0,
-                            "r": 1.0
-                        },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
-                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/boing.fx",
-                        "skybox": false
-                    },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
-                },
-                "name": "New Cube",
-                "transform": {
-                    "position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            }
-        ],
-        [
             "Bottle1",
             {
                 "guid": "{1C4775EB-1A6E-411A-A325-9EA8351B2346}",
@@ -424,6 +386,44 @@
             }
         ],
         [
+            "New Cube",
+            {
+                "guid": "{9F70B9F4-661F-4704-BBB3-D4F0F4E855C0}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
+                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/boing.fx",
+                        "skybox": false
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
+                },
+                "name": "New Cube",
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 2.1694507598876953,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
             "Barrel3",
             {
                 "guid": "{A162262C-5ACE-4D82-8C5A-59D15B41C8C9}",
@@ -528,6 +528,44 @@
             }
         ],
         [
+            "New Cube",
+            {
+                "guid": "{B30A1D88-DBC5-4681-9F6F-CD4BC7277866}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
+                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/boing.fx",
+                        "skybox": false
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
+                },
+                "name": "New Cube",
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
             "Terrain",
             {
                 "guid": "{C0A3D52D-05F6-4821-BC64-8CB217D834FD}",
@@ -550,52 +588,13 @@
                 "transform": {
                     "position": {
                         "x": 0.0,
-                        "y": -1.7737367153167725,
+                        "y": -26.16069793701172,
                         "z": 15.702970504760742
                     },
                     "rotation": {
                         "x": 0.0,
                         "y": -0.0,
                         "z": -0.0
-                    },
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            }
-        ],
-        [
-            "New Cube",
-            {
-                "guid": "{E3018105-3FE0-421A-9BA8-D98792BCA0CF}",
-                "meshComponent": {
-                    "material": {
-                        "color": {
-                            "a": 1.0,
-                            "b": 1.0,
-                            "g": 1.0,
-                            "r": 1.0
-                        },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
-                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/boing.fx",
-                        "skybox": false
-                    },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
-                },
-                "name": "New Cube",
-                "transform": {
-                    "parent": "{185D9992-6414-457A-BCB8-F94A4062D5D9}",
-                    "position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
                     },
                     "scale": {
                         "x": 1.0,

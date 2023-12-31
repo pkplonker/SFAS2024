@@ -163,29 +163,31 @@ void Hierarchy::SetSelectedObject(std::shared_ptr<GameObject> object)
                                  }, "New selection: " + object->Name));
 }
 
-auto Hierarchy::DeleteDo(std::vector<std::shared_ptr<GameObject>>& objectsToRemove, std::shared_ptr<GameObject> object)
+void Hierarchy::DeleteDo(std::vector<std::shared_ptr<GameObject>>& objectsToRemove, std::shared_ptr<GameObject> object)
 {
-    return [&objectsToRemove, object]()
+    auto children = object->Transform()->GetChildren();
+    objectsToRemove.emplace_back(object);
+    for (auto child : children)
     {
-        objectsToRemove.emplace_back(object);
-    };
+        if (const auto childShared = child.lock())
+        {
+            DeleteDo(objectsToRemove, childShared->GetGameObject().lock());
+        }
+    }
 }
 
-auto Hierarchy::DeleteUndo(std::shared_ptr<GameObject> object)
+void Hierarchy::DeleteUndo(std::vector<std::shared_ptr<GameObject>>& objectsToRemove)
 {
-    return [object]()
+    if (const auto scene = SceneManager::GetScene().lock())
     {
-        if (const auto scene = SceneManager::GetScene().lock())
+        for (auto object : objectsToRemove)
         {
             scene->AddObject(object);
-
-            //setting to scene as default and then attempting to set to old
             const auto oldParent = object->Transform()->parent;
             object->Transform()->SetParentWeak(scene);
             object->Transform()->SetParentWeak(oldParent);
-            // need to add back to renderables
         }
-    };
+    }
 }
 
 void Hierarchy::ProcessChildren(std::vector<std::shared_ptr<GameObject>>& objectsToRemove, ImGuiTreeNodeFlags baseFlags,
@@ -251,13 +253,21 @@ void Hierarchy::ProcessChildren(std::vector<std::shared_ptr<GameObject>>& object
                 }
                 if (ImGui::BeginPopupContextItem(("ObjectContextMenu##" + object->GetGUID()).c_str()))
                 {
-                    //SetSelectedObject(object);
+                    auto objectsToRemoveCopy = std::make_shared<std::vector<std::shared_ptr<GameObject>>>();
                     ImGuiHelpers::UndoableMenuItemAction(
                         "Delete",
-                        DeleteDo(objectsToRemove, object),
-                        DeleteUndo(object),
+                        [this, &objectsToRemove, object, objectsToRemoveCopy]()
+                        {
+                            DeleteDo(objectsToRemove, object);
+                            *objectsToRemoveCopy = objectsToRemove;
+                        },
+                        [this, objectsToRemoveCopy]()
+                        {
+                            DeleteUndo(*objectsToRemoveCopy);
+                        },
                         "Deleting object"
                     );
+
 
                     std::string originalName = object->Name;
                     ImGuiHelpers::UndoableMenuItemAction(
@@ -293,9 +303,9 @@ void Hierarchy::ProcessChildren(std::vector<std::shared_ptr<GameObject>>& object
 void Hierarchy::DeleteObjects(std::vector<std::shared_ptr<GameObject>> objectsToRemove,
                               const std::shared_ptr<GameObject> sharedSelectedObject)
 {
-    UndoManager::Execute(Memento(
-        DeleteDo(objectsToRemove, sharedSelectedObject),
-        DeleteUndo(sharedSelectedObject), "Deleting Object"));
+    // UndoManager::Execute(Memento(
+    //     DeleteDo(objectsToRemove, sharedSelectedObject),
+    //     DeleteUndo(sharedSelectedObject), "Deleting Object"));
 }
 
 void Hierarchy::Draw()
@@ -330,10 +340,10 @@ void Hierarchy::Draw()
         ImGuiTreeNodeFlags_SpanAvailWidth;
     if (const auto sharedSelectedObject = selectedObject.lock())
     {
-        if (input->IsKeyPress(Keys::Delete))
-        {
-            DeleteObjects(objectsToRemove, sharedSelectedObject);
-        }
+        // if (input->IsKeyPress(Keys::Delete))
+        // {
+        //     DeleteObjects(objectsToRemove, sharedSelectedObject);
+        // }
         if (input->IsKeyPress(Keys::Q))
         {
             SetSelectedObject(nullptr);

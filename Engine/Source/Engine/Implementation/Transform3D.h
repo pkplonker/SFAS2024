@@ -189,6 +189,7 @@ struct Transform3D : Transform
         Scale.Z(Scale.Z() + vec3.Z());
     }
 
+
     Vec3 Position = {};
     Vec3 Rotation = {};
     Vec3 Scale = {};

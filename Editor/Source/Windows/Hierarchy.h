@@ -19,10 +19,11 @@ public:
     void CreateUndoableGameObject(const std::string& name,
                                   std::function<std::shared_ptr<GameObject>(GameObjectFactory&)> createObjectFunc, const std::string& actionDescription);
     void SetSelectedObject(std::shared_ptr<GameObject> object);
-    auto DeleteDo(std::vector<std::shared_ptr<GameObject>>& objectsToRemove, std::shared_ptr<GameObject> object);
-    auto DeleteUndo(std::shared_ptr<GameObject> object);
+    void DeleteDo(std::vector<std::shared_ptr<GameObject>>& objectsToRemove, std::shared_ptr<GameObject> object);
+    void DeleteUndo(std::vector<std::shared_ptr<GameObject>>& objectsToRemove);
     void ProcessChildren(std::vector<std::shared_ptr<GameObject>>& objectsToRemove, ImGuiTreeNodeFlags baseFlags,
                          std::set<std::weak_ptr<Transform>, Transform::TransformCompare> children);
+    void InitialDelete(std::vector<std::shared_ptr<GameObject>>& objectsToRemove, std::shared_ptr<GameObject> object);
     void DeleteObjects(std::vector<std::shared_ptr<GameObject>> objectsToRemove,
                        std::shared_ptr<GameObject> sharedSelectedObject);
     void Draw() override;
