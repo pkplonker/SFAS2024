@@ -53,6 +53,19 @@ void UndoManager::Update()
     }
 }
 
+void UndoManager::Clear()
+{
+    while (!commands.empty())
+    {
+        commands.pop();
+    }
+    while (!redoCommands.empty())
+    {
+        redoCommands.pop();
+    }
+    commandStrings.clear();
+}
+
 std::vector<std::string> UndoManager::GetCommandDescriptions()
 {
     if (!init) return std::vector<std::string>();

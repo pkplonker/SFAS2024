@@ -99,7 +99,8 @@ void Editor::Cleanup()
     {
         const auto& path = s->GetPath();
         EditorSettings::Set("LastScene", path);
-        imguiController->Save(path);
+        imguiController->SaveExistingScene();
+        
     }
     EditorSettings::SaveSettings();
 

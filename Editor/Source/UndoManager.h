@@ -19,6 +19,8 @@ public:
     {
     }
 
+    static void Clear();
+
     static std::vector<std::string> GetCommandDescriptions();
 
 private:
