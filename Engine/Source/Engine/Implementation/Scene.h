@@ -27,7 +27,8 @@ public:
     std::map<std::string, std::shared_ptr<GameObject>>& GetObjects() const;
     std::shared_ptr<ICamera> GetActiveCamera();
     bool TryFindObject(const std::string& string, std::weak_ptr<GameObject>& object) const;
-    
+    std::shared_ptr<GameObject> GetGameObject(const std::string& string) const;
+
 
     DirectX::XMMATRIX GetWorldMatrix() override
     {

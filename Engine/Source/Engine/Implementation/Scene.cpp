@@ -159,3 +159,12 @@ bool Scene::TryFindObject(const std::string& string, std::weak_ptr<GameObject>& 
     }
     return false;
 }
+
+std::shared_ptr<GameObject> Scene::GetGameObject(const std::string& string) const
+{
+    if (objects->contains(string))
+    {
+        return (*objects)[string];
+    }
+    return nullptr;
+}
