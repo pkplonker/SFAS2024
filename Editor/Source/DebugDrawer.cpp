@@ -41,7 +41,7 @@ void DebugDrawer::DrawGridInternal()
     int xdivs = 1 * scaleFactor;
     int ydivs = 1 * scaleFactor;
     float col = 0.99f;
-    DirectX::XMVECTOR color = {col, col, col, 0.5f};
+    DirectX::XMVECTOR color = {col, col, col, 0.02f};
     xdivs = std::max<int>(1, xdivs);
     ydivs = std::max<int>(1, ydivs);
 
