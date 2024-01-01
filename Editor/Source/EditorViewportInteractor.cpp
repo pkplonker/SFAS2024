@@ -24,7 +24,7 @@ void EditorViewportInteractor::Update(std::weak_ptr<ICamera> cameraComponent)
 
     std::cout << "mousePos:" << input->GetMousePosition() << std::endl;
 
-    ScreenPointToRay(input->GetMousePosition(), viewportSize.x, viewportSize.y, cameraComponent, rayOrigin,
+    ScreenPointToRay(input->GetMousePosition(), static_cast<int>(viewportSize.x), static_cast<int>(viewportSize.y), cameraComponent, rayOrigin,
                      rayDirection, viewportPosition);
     if (const auto scene = SceneManager::GetScene().lock())
     {

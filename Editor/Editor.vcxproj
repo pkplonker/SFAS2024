@@ -268,6 +268,7 @@
     <ClCompile Include="Source\Editor.cpp" />
     <ClCompile Include="Source\Windows\MaterialDrawerHelper.cpp" />
     <ClCompile Include="Source\Windows\ObjectControlWindow.cpp" />
+    <ClCompile Include="Source\Windows\SceneSettings.cpp" />
     <ClCompile Include="Source\Windows\SettingsWindow.cpp" />
     <ClCompile Include="Source\Windows\TimeWindow.cpp" />
     <ClCompile Include="Source\Windows\LoggerWindow.cpp" />
@@ -393,6 +394,7 @@
     <ClInclude Include="Source\Windows\MaterialDrawerHelper.h" />
     <ClInclude Include="Source\Windows\ObjectControlWindow.h" />
     <ClInclude Include="Source\Windows\RenamingHelper.h" />
+    <ClInclude Include="Source\Windows\SceneSettings.h" />
     <ClInclude Include="Source\Windows\SettingsWindow.h" />
     <ClInclude Include="Source\Windows\TimeWindow.h" />
     <ClInclude Include="Source\Windows\EditorWindow.h" />

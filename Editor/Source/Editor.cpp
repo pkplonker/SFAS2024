@@ -50,7 +50,7 @@ bool Editor::IsValid()
 bool Editor::Load()
 {
     game->Load();
-    
+
     sceneSerializer = std::make_unique<SceneSerializer>(dx11Graphics);
     dx11Graphics->SetRenderToTexture(true, 1, 1);
     ResourceManager::Init(dx11Graphics);
@@ -58,8 +58,8 @@ bool Editor::Load()
         EditorSettings::Get("LastScene",
                             Helpers::WideStringToString(
                                 L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/TestScene2.scene")));
-    
-    
+
+
     SceneManager::OnSceneChangedEvent.Subscribe([this]()
     {
         if (auto scene = SceneManager::GetScene().lock())
@@ -70,9 +70,9 @@ bool Editor::Load()
     undomanager = std::make_unique<UndoManager>(Input);
     editorCamera = std::make_shared<EditorCamera>(Input);
     editorCamera->SetActiveCamera();
-    imguiController = std::make_unique<ImGuiController>(dx11Graphics, game, Input,editorCamera);
+    imguiController = std::make_unique<ImGuiController>(dx11Graphics, game, Input, editorCamera);
     imguiController->AddWindow(std::make_shared<EditorCameraWindow>(editorCamera));
-    editorViewportInteractor = std::make_unique<EditorViewportInteractor>(Input,imguiController.get());
+    editorViewportInteractor = std::make_unique<EditorViewportInteractor>(Input, imguiController.get());
     debugDrawer = std::make_shared<DebugDrawer>(editorCamera);
     Graphics->AddRenderStrategy(debugDrawer);
     return true;
@@ -83,11 +83,11 @@ void Editor::Update()
     game->Update();
     undomanager->Update();
     imguiController->ImGuiPreFrame();
-   
-        editorCamera->Update(imguiController->IsViewportInFocus(),imguiController->GetSelectedObject());
-    
+
+    editorCamera->Update(imguiController->IsViewportInFocus(), imguiController->GetSelectedObject());
+
     imguiController->Draw();
-    if(!imguiController->IsUsingGizmo())
+    if (!imguiController->IsUsingGizmo())
     {
         editorViewportInteractor->Update(editorCamera->camera);
     }
@@ -95,10 +95,14 @@ void Editor::Update()
 
 void Editor::Cleanup()
 {
+    if (const auto s = SceneManager::GetScene().lock())
+    {
+        const auto& path = s->GetPath();
+        EditorSettings::Set("LastScene", path);
+        imguiController->Save(path);
+    }
     EditorSettings::SaveSettings();
-    imguiController->Save(EditorSettings::Get("LastScene",
-                            Helpers::WideStringToString(
-                                L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/TestScene2.scene")));
+
     game->Cleanup();
     imguiController->ShutDown();
 }

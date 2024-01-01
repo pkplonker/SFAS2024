@@ -13,6 +13,7 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 #include "imgui_internal.h"
+#include "MessageBoxWrapper.h"
 #include "SceneManager.h"
 #include "SceneSerializer.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
@@ -26,6 +27,7 @@
 #include "Windows/MeshImporterWindow.h"
 #include "Windows/ObjectControlWindow.h"
 #include "Windows/RenderStatWindow.h"
+#include "Windows/SceneSettings.h"
 #include "Windows/SettingsWindow.h"
 #include "Windows/UndoWindow.h"
 
@@ -83,7 +85,10 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, II
 
     const std::shared_ptr<DebugControls> debugControls = std::make_shared<DebugControls>();
     renderables.try_emplace(debugControls, EditorSettings::Get(IMGUI_SETTING_ID + debugControls->GetName(), true));
-    
+
+    const std::shared_ptr<SceneSettings> sceneSettings = std::make_shared<SceneSettings>();
+    renderables.try_emplace(sceneSettings, EditorSettings::Get(IMGUI_SETTING_ID + sceneSettings->GetName(), true));
+
     settingsWindow = new SettingsWindow();
 
     ImGuiTheme::ApplyTheme(0);
@@ -168,22 +173,55 @@ void ImGuiController::Save()
     SceneSerializer::Serialize(FileDialog::SaveFileDialog());
 }
 
+bool showConfirmDialog = false;
+std::string pendingSavePath;
+
 void ImGuiController::Save(std::string path)
 {
     SceneSerializer::Serialize(path);
 }
 
-void ImGuiController::LoadScene() const
+void ImGuiController::SaveExistingScene()
 {
+    if (const auto scene = SceneManager::GetScene().lock())
+    {
+        if (MessageBoxWrapper::ShowSaveConfirmation())
+        {
+            Save(scene->GetPath());
+        }
+    }
+}
+
+void ImGuiController::LoadScene()
+{
+    SaveExistingScene();
+
     LoadScene(FileDialog::OpenFileDialog());
 }
 
-void ImGuiController::LoadScene(std::string path) const
+void ImGuiController::LoadScene(std::string path) 
 {
     if (path != "")
     {
+        SaveExistingScene();
         SceneManager::SetScene(SceneSerializer::Deserialize(path));
         EditorSettings::Set("LastScene", path);
+    }
+}
+
+void ImGuiController::New()
+{
+    std::string type = "scene";
+    
+    SaveExistingScene();
+    auto path = FileDialog::CreateNewFileDialog(type);
+    if (path != "")
+    {
+        SceneManager::SetScene(new Scene(IApplication::GetGraphics(), path));
+        if (const auto scene = SceneManager::GetScene().lock())
+        {
+            Save(scene->GetPath());
+        }
     }
 }
 
@@ -193,11 +231,15 @@ void ImGuiController::DrawMenu()
     {
         if (ImGui::BeginMenu("File"))
         {
+            if (ImGui::MenuItem("New", "Ctrl+N"))
+            {
+                New();
+            }
             if (ImGui::MenuItem("Save", "Ctrl+S"))
             {
                 Save();
             }
-            if (ImGui::MenuItem("Load", "Ctrl+O"))
+            if (ImGui::MenuItem("Open", "Ctrl+O"))
             {
                 LoadScene();
             }

@@ -254,7 +254,7 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
         return nullptr;
     }
 
-    std::shared_ptr<Scene> scene = std::make_shared<Scene>(graphics);
+    std::shared_ptr<Scene> scene = std::make_shared<Scene>(graphics,path);
     std::unordered_map<std::string, std::shared_ptr<GameObject>> gameObjectDict;
     std::unordered_map<std::string, std::string> parentsDict;
 

@@ -9,7 +9,7 @@
 #include "Engine/IApplication.h"
 class SpriteComponent;
 
-Scene::Scene(IGraphics* graphics)
+Scene::Scene(IGraphics* graphics, std::string path) : filePath(path)
 {
     objects = std::make_unique<std::map<std::string, std::shared_ptr<GameObject>>>();
     this->graphics = graphics;

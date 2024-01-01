@@ -25,8 +25,9 @@ public:
     std::weak_ptr<GameObject> GetSelectedObject();
     void ImGuiPreFrame();
     void ViewPortActiveWindowCheck();
-    void LoadScene() const;
-    void LoadScene(std::string path) const;
+    void LoadScene();
+    void LoadScene(std::string path);
+    void New();
     void DrawMenu();
     void DrawViewport();
     void AddWindow(const std::shared_ptr<EditorWindow>& window);
@@ -37,6 +38,7 @@ public:
     }
     static void Save();
     void Save(std::string path);
+    void SaveExistingScene();
     void DrawWindows();
     void Draw();
     void ImGuiPostUpdate() const;

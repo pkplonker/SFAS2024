@@ -10,7 +10,7 @@ class ImGuiController;
 class Scene : public IUpdateable, public Transform
 {
 public:
-    Scene(IGraphics* graphics);
+    Scene(IGraphics* graphics,std::string filePath);
     ~Scene() override;
 
     void SetScene()
@@ -36,6 +36,7 @@ public:
     }
 
     std::weak_ptr<DirectionalLightComponent> GetDirectionalLight();
+    std::string GetPath() { return filePath; }
 
 private:
     std::unique_ptr<std::map<std::string, std::shared_ptr<GameObject>>> objects = std::make_unique<std::map<
@@ -45,4 +46,5 @@ private:
     std::weak_ptr<GameObject> selectedObject = {};
     IGraphics* graphics;
     std::weak_ptr<DirectionalLightComponent> directionalLight;
+    std::string filePath;
 };
