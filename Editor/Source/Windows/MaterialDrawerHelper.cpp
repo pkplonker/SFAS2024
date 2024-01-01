@@ -54,8 +54,11 @@ void MaterialDrawerHelper::DrawMaterial()
                 if (auto dxTex = dynamic_cast<DirectX11Texture*>(tex))
                 {
                     ImGui::Separator();
-                    ImGui::Image(dxTex->GetTextureView(), ImVec2(200,200));
-
+                    ImGui::Image(dxTex->GetTextureView(), ImVec2(200, 200));
+                    std::stringstream stream;
+                    stream << std::fixed << std::setprecision(2) << "Texture size:" << dxTex->GetWidth() << " * " << dxTex
+                        ->GetHeight();
+                    ImGui::Text(stream.str().c_str());
                     if (ImGui::IsItemHovered())
                     {
                         ImGui::BeginTooltip();
@@ -70,7 +73,7 @@ void MaterialDrawerHelper::DrawMaterial()
                         ImGui::OpenPopup("##TexturePopup");
                     }
 
-                    if (ImGui::BeginPopupModal("##TexturePopup", nullptr, ImGuiWindowFlags_AlwaysAutoResize ))
+                    if (ImGui::BeginPopupModal("##TexturePopup", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                     {
                         auto size = ImGui::GetMainViewport()->Size;
                         auto factor = 0.5f;
@@ -82,7 +85,6 @@ void MaterialDrawerHelper::DrawMaterial()
                         ImGui::EndPopup();
                     }
                     ImGui::Separator();
-
                 }
             }
 
