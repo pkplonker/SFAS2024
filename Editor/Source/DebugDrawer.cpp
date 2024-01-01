@@ -114,11 +114,18 @@ void DebugDrawer::Update()
                 }
             }
         }
+        lineBatch->End();
+
         if (drawGrid)
         {
+            lineBatch->Begin();
+
+            context->OMSetBlendState(states->Opaque(), nullptr, 0xFFFFFFFF);
+            context->OMSetDepthStencilState(states->DepthDefault(), 0);
+            context->RSSetState(states->CullNone());
             DrawGridInternal();
+            lineBatch->End();
         }
-        lineBatch->End();
         drawData.clear();
     }
 }
