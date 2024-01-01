@@ -3,6 +3,7 @@
 #include "EditorSettings.h"
 #include "EngineTime.h"
 #include "IInput.h"
+#include "imgui.h"
 #include "PerspectiveCamera.h"
 #include "SceneManager.h"
 #include "Transform3D.h"
@@ -12,10 +13,10 @@ EditorCamera::EditorCamera(IInput* input)
 {
     this->input = input;
     transform = std::make_shared<Transform3D>();
-    auto x = EditorSettings::GetSetting<float>(key+"X");
-    auto y = EditorSettings::GetSetting<float>(key+"Y");
-    auto z = EditorSettings::GetSetting<float>(key+"Z");
-    transform->Position = Vec3(x,y,z);
+    auto x = EditorSettings::GetSetting<float>(key + "X");
+    auto y = EditorSettings::GetSetting<float>(key + "Y");
+    auto z = EditorSettings::GetSetting<float>(key + "Z");
+    transform->Position = Vec3(x, y, z);
     camera = std::make_shared<PerspectiveCamera>(transform, 1000, 1000);
     camera->SetFOV(80);
 }
@@ -23,10 +24,9 @@ EditorCamera::EditorCamera(IInput* input)
 EditorCamera::~EditorCamera()
 {
     auto pos = transform->Position;
-    EditorSettings::Set(key+"X",pos.X());
-    EditorSettings::Set(key+"Y",pos.Y());
-    EditorSettings::Set(key+"Z",pos.Z());
-
+    EditorSettings::Set(key + "X", pos.X());
+    EditorSettings::Set(key + "Y", pos.Y());
+    EditorSettings::Set(key + "Z", pos.Z());
 }
 
 void EditorCamera::SetActiveCamera()
@@ -124,43 +124,58 @@ void EditorCamera::MouseInput()
     }
 }
 
-void EditorCamera::KeyboardInput()
+void EditorCamera::KeyboardInput(std::weak_ptr<GameObject> gameObject)
 {
-    if (!input->IsRightHeld()) return;
+    if (input->IsRightHeld())
+    {
+        speed = EditorSettings::Get("Editor_Cam_MOVESPEED", 1.0f, "Move Speed", "Editor Camera");
+        multiplier = EditorSettings::Get("Editor_Cam_MULTIPLIER_MOVESPEED", 1.0f, "Move Speed Multiplier",
+                                         "Editor Camera");
 
-    speed = EditorSettings::Get("Editor_Cam_MOVESPEED", 1.0f, "Move Speed", "Editor Camera");
-    multiplier = EditorSettings::Get("Editor_Cam_MULTIPLIER_MOVESPEED", 1.0f, "Move Speed Multiplier", "Editor Camera");
+        auto currentSpeedMultiplier = input->IsKeyDown(LeftShift) ? multiplier : 1;
 
-    auto currentSpeedMultiplier = input->IsKeyDown(LeftShift) ? multiplier : 1;
+        DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(
+            DirectX::XMConvertToRadians(transform->Rotation.X()),
+            DirectX::XMConvertToRadians(transform->Rotation.Y()),
+            DirectX::XMConvertToRadians(transform->Rotation.Z()));
 
-    DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(
-        DirectX::XMConvertToRadians(transform->Rotation.X()),
-        DirectX::XMConvertToRadians(transform->Rotation.Y()),
-        DirectX::XMConvertToRadians(transform->Rotation.Z()));
-    
-    auto moveSpeed = speed * currentSpeedMultiplier;
-    
-    if (input->IsKeyDown(W))
-    {
-        transform->Position = transform->Position + ((Vec3::Forward() * rotationMatrix) * moveSpeed);
+        auto moveSpeed = speed * currentSpeedMultiplier;
+
+        if (input->IsKeyDown(W))
+        {
+            transform->Position = transform->Position + ((Vec3::Forward() * rotationMatrix) * moveSpeed);
+        }
+        if (input->IsKeyDown(A))
+        {
+            transform->Position = transform->Position + ((Vec3::Left() * rotationMatrix) * moveSpeed);
+        }
+        if (input->IsKeyDown(S))
+        {
+            transform->Position = transform->Position + ((Vec3::Back() * rotationMatrix) * moveSpeed);
+        }
+        if (input->IsKeyDown(D))
+        {
+            transform->Position = transform->Position + ((Vec3::Right() * rotationMatrix) * moveSpeed);
+        }
     }
-    if (input->IsKeyDown(A))
+
+
+    if (input->IsKeyPress(Keys::Z))
     {
-        transform->Position = transform->Position + ((Vec3::Left() * rotationMatrix) * moveSpeed);
+        if (const auto& go = gameObject.lock())
+        {
+
+        }
     }
-    if (input->IsKeyDown(S))
-    {
-        transform->Position = transform->Position + ((Vec3::Back() * rotationMatrix) * moveSpeed);
-    }
-    if (input->IsKeyDown(D))
-    {
-        transform->Position = transform->Position + ((Vec3::Right() * rotationMatrix) * moveSpeed);
-    }
+
 }
 
 
-void EditorCamera::Update()
+void EditorCamera::Update(bool viewportActive, std::weak_ptr<GameObject> gameObject)
 {
-    MouseInput();
-    KeyboardInput();
+    if (viewportActive)
+    {
+        MouseInput();
+        KeyboardInput(gameObject);
+    }
 }

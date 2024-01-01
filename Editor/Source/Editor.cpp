@@ -83,10 +83,9 @@ void Editor::Update()
     game->Update();
     undomanager->Update();
     imguiController->ImGuiPreFrame();
-    if (imguiController->IsViewportInFocus())
-    {
-        editorCamera->Update();
-    }
+   
+        editorCamera->Update(imguiController->IsViewportInFocus(),imguiController->GetSelectedObject());
+    
     imguiController->Draw();
     if(!imguiController->IsUsingGizmo())
     {

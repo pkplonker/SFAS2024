@@ -146,7 +146,7 @@ void Hierarchy::SetSelectedObject(std::shared_ptr<GameObject> object)
 {
     std::weak_ptr<GameObject> previousObject = selectedObject;
     auto shared = previousObject.lock();
-    if (shared != nullptr)
+    if (shared != nullptr && object != nullptr)
     {
         if (shared->GetGUID() == object->GetGUID())
         {

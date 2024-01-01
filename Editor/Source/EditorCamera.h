@@ -6,7 +6,7 @@
 class IInput;
 class PerspectiveCamera;
 
-class EditorCamera : public ICamera, public std::enable_shared_from_this<EditorCamera>, public IUpdateable
+class EditorCamera : public ICamera, public std::enable_shared_from_this<EditorCamera>
 {
 public:
     EditorCamera(IInput* input);
@@ -21,8 +21,8 @@ public:
     void SetWidth(float getHeight) override;
     void SetFov(int fov);
     void MouseInput();
-    void KeyboardInput();
-    void Update() override;
+    void KeyboardInput(std::weak_ptr<GameObject> gameObject);
+    void Update(bool viewportActive, std::weak_ptr<GameObject> gameObject);
     std::shared_ptr<PerspectiveCamera> camera;
     float speed;
     float xSpeed;
