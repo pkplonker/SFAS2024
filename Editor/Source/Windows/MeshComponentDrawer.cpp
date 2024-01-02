@@ -16,6 +16,7 @@
 #include "BoundsDrawerHelper.h"
 #include "MaterialDrawerHelper.h"
 #include "ResourceManager.h"
+#include "SceneManager.h"
 #include "../MessageBoxWrapper.h"
 #include "../Editor.h"
 #include "../External/IconsMaterialDesign.h"
@@ -73,9 +74,13 @@ void MeshComponentDrawer::Draw()
                     ImGui::EndPopup();
                 }
             }
+            std::string scenePath = "";
+            if(const auto scene = SceneManager::GetScene().lock())
+            {
+                scenePath = scene->GetPath();
+            }
 
-
-            ImGuiHelpers::WrappedText("", meshComponent->GetMeshPath() ==""? "Mesh" : meshComponent->GetMeshPath(), ICON_MD_FIND_REPLACE,
+            ImGuiHelpers::WrappedText("", meshComponent->GetMeshPath() ==""? "Mesh" : std::filesystem::relative(meshComponent->GetMeshPath(), scenePath).string(), ICON_MD_FIND_REPLACE,
                                       std::bind(&MeshComponentDrawer::ChangeMesh, this),true);
 
             materialDrawerHelper.DrawMaterial();

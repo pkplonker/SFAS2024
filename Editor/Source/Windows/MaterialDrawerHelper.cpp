@@ -7,6 +7,7 @@
 #include "imgui.h"
 #include "IRenderableComponent.h"
 #include "ResourceManager.h"
+#include "SceneManager.h"
 #include "Logging/Debug.h"
 #include "../ImGuiHelpers.h"
 #include "../FileDialog.h"
@@ -23,6 +24,7 @@ MaterialDrawerHelper::MaterialDrawerHelper(std::weak_ptr<IRenderableComponent> c
 void MaterialDrawerHelper::DrawMaterial()
 {
     ImGui::Separator();
+    ImGui::Text("Material Details");
     if (auto comp = component.lock())
     {
         const auto mat = comp->GetMaterial();
@@ -39,8 +41,13 @@ void MaterialDrawerHelper::DrawMaterial()
             buttons.emplace_back(ImGuiHelpers::ButtonData(ICON_MD_FIND_REPLACE, std::bind(&MaterialDrawerHelper::ChangeShader, this),true));
             buttons.emplace_back(ImGuiHelpers::ButtonData(ICON_MD_EDIT_DOCUMENT, std::bind(&MaterialDrawerHelper::OpenShader, this),true));
             buttons.emplace_back(ImGuiHelpers::ButtonData(ICON_MD_REFRESH, std::bind(&IShader::Reload, shader),true));
+            std::string scenePath = "";
+            if(const auto scene = SceneManager::GetScene().lock())
+            {
+                scenePath = scene->GetPath();
+            }
             
-            ImGuiHelpers::WrappedText("", shaderPath == L"" ? L"Shader" : shaderPath, buttons);
+            ImGuiHelpers::WrappedText("", shaderPath == L"" ? L"Shader" : Helpers::StringToWstring(std::filesystem::relative(shaderPath, scenePath).string()), buttons);
 
             std::wstring texturePath;
             ITexture* tex = mat->GetTexture();
@@ -49,7 +56,7 @@ void MaterialDrawerHelper::DrawMaterial()
                 texturePath = tex->GetPath();
             }
 
-            ImGuiHelpers::WrappedText("", texturePath == L"" ? L"Texture" : texturePath,ICON_MD_FIND_REPLACE,
+            ImGuiHelpers::WrappedText("", texturePath == L"" ? L"Texture" : Helpers::StringToWstring(std::filesystem::relative(texturePath, scenePath).string()),ICON_MD_FIND_REPLACE,
                                       std::bind(&MaterialDrawerHelper::ChangeTexture, this));
             
             
