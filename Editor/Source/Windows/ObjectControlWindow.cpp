@@ -13,31 +13,38 @@ ObjectControlWindow::ObjectControlWindow(std::shared_ptr<GizmoController> gizmoC
 
 void ObjectControlWindow::Draw()
 {
-    auto buttonSize = ImVec2(40, 20);
-    auto flags = ImGuiWindowFlags_NoDecoration;
-    ImGui::Begin("ObjectControl", nullptr, flags);
+    auto buttonSize = ImVec2(45, 20);
+    ImGui::Begin("ObjectControl", nullptr, ImGuiWindowFlags_NoDecoration);
 
-    if (ImGuiHelpers::ButtonWithState("Translation", buttonSize, gizmoController->GetGizmoOperation() == Translation))
+    if (ImGuiHelpers::ButtonWithState("Translate", ImVec2(80, 20), gizmoController->GetGizmoOperation() == Translation,
+                                      true, false))
     {
         gizmoController->SetGizmoOpertion(Translation);
     }
     ImGui::SameLine();
-    if (ImGuiHelpers::ButtonWithState("Rotation", buttonSize, gizmoController->GetGizmoOperation() == Rotation))
+    if (ImGuiHelpers::ButtonWithState("Rotate", ImVec2(60, 20), gizmoController->GetGizmoOperation() == Rotation,
+                                      true, false))
     {
         gizmoController->SetGizmoOpertion(Rotation);
     }
+
     ImGui::SameLine();
-    if (ImGuiHelpers::ButtonWithState("Scale", buttonSize, gizmoController->GetGizmoOperation() == Scale))
+    ImGui::Spacing();
+    ImGui::SameLine();
+    ImGui::Spacing();
+    ImGui::SameLine();
+
+    if (ImGuiHelpers::ButtonWithState("Scale", buttonSize, gizmoController->GetGizmoOperation() == Scale, true, false))
     {
         gizmoController->SetGizmoOpertion(Scale);
     }
     ImGui::SameLine();
-    if (ImGuiHelpers::ButtonWithState("World", buttonSize, gizmoController->GetMode() == World))
+    if (ImGuiHelpers::ButtonWithState("World", buttonSize, gizmoController->GetMode() == World, true, false))
     {
         gizmoController->SetMode(World);
     }
     ImGui::SameLine();
-    if (ImGuiHelpers::ButtonWithState("Local", buttonSize, gizmoController->GetMode() == Local))
+    if (ImGuiHelpers::ButtonWithState("Local", buttonSize, gizmoController->GetMode() == Local, true, false))
     {
         gizmoController->SetMode(Local);
     }

@@ -372,6 +372,8 @@
     <ClInclude Include="Source\EditorCamera.h" />
     <ClInclude Include="Source\EditorSettings.h" />
     <ClInclude Include="Source\EditorViewportInteractor.h" />
+    <ClInclude Include="Source\External\IconsFontAwesome6.h" />
+    <ClInclude Include="Source\External\IconsMaterialDesign.h" />
     <ClInclude Include="Source\FileDialog.h" />
     <ClInclude Include="Source\FileOpener.h" />
     <ClInclude Include="Source\GizmoController.h" />

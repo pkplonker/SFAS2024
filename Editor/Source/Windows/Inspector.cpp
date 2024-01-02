@@ -21,20 +21,16 @@ void Inspector::Draw()
     if (const auto gameobject = hierarchy->GetSelectedObject().lock())
     {
         ImGui::Text(gameobject->Name.c_str());
-        ImGui::SameLine();
-        if (ImGui::Button("...##renamebutton"))
+        ImGui::Text(gameobject->GetGUID().c_str());
+        if (ImGuiHelpers::DrawIconButton(ICON_MD_EDIT "##renamebutton",true))
         {
             renamingHelper.RequestRename(gameobject);
         }
-        ImGui::SameLine();
         renamingHelper.DrawRenamePopup();
-        ImGui::SameLine();
 
-        ImGui::Text(gameobject->GetGUID().c_str());
+        ImGui::SameLine();
         auto state = gameobject->GetIsEnabled();
-        ImGui::SameLine();
-
-        if (ImGuiHelpers::ButtonWithState(state ? "Disable" : "Enable", ImVec2(50, 20), state,false,ImVec4(0.8f,0,0,1)))
+        if (ImGuiHelpers::ButtonWithState(state ? ICON_MD_TOGGLE_ON :ICON_MD_TOGGLE_OFF, ImVec2(50, 20), state,false,true,ImVec4(0.8f,0,0,1)))
         {
             gameobject->SetIsEnabled(!state);
         }
@@ -83,7 +79,7 @@ void Inspector::Draw()
         ImGuiHelpers::SpacedSeperator();
 
 
-        if (ImGuiHelpers::ButtonCenteredOnLine("Add Component"))
+        if (ImGuiHelpers::ButtonCenteredOnLine(ICON_MD_ADD_BOX,true))
         {
             Trace("Pressed")
             ImGui::OpenPopup("AddComponentPopup");

@@ -8,66 +8,97 @@
 #include "Helpers.h"
 #include "imgui.h"
 #include "functional"
+#include "ImGuiController.h"
 #include "UndoManager.h"
 #include "Engine/Math/Vector3.h"
 #include "Engine/Math/Vector4.h"
+#include "../External/IconsMaterialDesign.h"
 
 class ImGuiHelpers
 {
 public:
-    template <typename StringType>
-    static void WrappedText(std::string label, StringType content,
-                            const std::vector<std::pair<std::string, std::function<void()>>>& buttons)
+    struct ButtonData
     {
-        ImGui::Text(label.c_str());
+        const char* label;
+        std::function<void()> callback;
+        bool icon = false;
+
+        ButtonData(): label(nullptr), callback(nullptr)
+        {
+        }
+
+        ButtonData(const char* label, std::function<void()> callback, bool icon = false): label(label),
+            callback(callback), icon(icon)
+        {
+        }
+    };
+
+    template <typename StringType>
+    static void WrappedText(const char* label, StringType content,
+                            const std::vector<ButtonData>& buttons)
+    {
+        ImGui::AlignTextToFramePadding();
+
+        ImGui::TextWrapped(label);
         ImGui::SameLine();
 
-        for (const auto& [buttonText, callback] : buttons)
+        for (const auto& button : buttons)
         {
-            if (callback != nullptr)
+            if (button.callback != nullptr)
             {
                 std::ostringstream oss;
-                oss << buttonText << "##" << label;
+                oss << button.label << "##" << label;
 
                 std::string buttonId = oss.str();
-                if (ImGui::Button(buttonId.c_str()))
+                if (!button.icon)
                 {
-                    callback();
+                    if (ImGui::Button(buttonId.c_str()))
+                    {
+                        button.callback();
+                    }
                 }
+                else
+                {
+                    if (DrawIconButton(button.label))
+                    {
+                        button.callback();
+                    }
+                }
+
                 ImGui::SameLine();
             }
         }
 
         const float fullWidth = ImGui::GetWindowWidth();
-        const float labelWidth = ImGui::CalcTextSize(label.c_str()).x + ImGui::GetStyle().ItemSpacing.x;
+        const float labelWidth = ImGui::CalcTextSize(label).x + ImGui::GetStyle().ItemSpacing.x;
         const float availableWidth = fullWidth - labelWidth - (ImGui::GetStyle().WindowPadding.x * 2);
         ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + availableWidth);
+        ImGui::AlignTextToFramePadding();
 
         if constexpr (std::is_same<StringType, std::wstring>::value)
         {
-            ImGui::TextUnformatted(Helpers::WideStringToString(std::move(content)).c_str());
+            ImGui::TextWrapped(Helpers::WideStringToString(std::move(content)).c_str());
         }
-        else
+        if constexpr (std::is_same<StringType, std::string>::value)
         {
-            ImGui::TextUnformatted(content.c_str());
+            ImGui::TextWrapped(content.c_str());
         }
 
         ImGui::PopTextWrapPos();
     }
 
     template <typename StringType>
-    static void WrappedText(std::string label, StringType content,
-                            const std::string& singleButtonText, const std::function<void()>& singleButtonCallback)
+    static void WrappedText(const char* label, StringType content,
+                            const char* singleButtonText, const std::function<void()>& singleButtonCallback,
+                            bool icon = true)
     {
-        std::vector<std::pair<std::string, std::function<void()>>> buttons = {
-            {singleButtonText, singleButtonCallback}
-        };
-
+        auto data = ButtonData(singleButtonText, singleButtonCallback, icon);
+        std::vector buttons = {{data}};
         WrappedText(label, content, buttons);
     }
 
     //https://github.com/ocornut/imgui/discussions/3862
-    static bool ButtonCenteredOnLine(const char* label, float alignment = 0.5f)
+    static bool ButtonCenteredOnLine(const char* label, bool icon = true, float alignment = 0.5f)
     {
         const ImGuiStyle& style = ImGui::GetStyle();
 
@@ -78,7 +109,7 @@ public:
         if (off > 0.0f)
             ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
 
-        return ImGui::Button(label);
+        return DrawIconButton(label, true);
     }
 
     static void SpacedSeperator(int firstGap = 1, int secondGap = 1)
@@ -92,6 +123,25 @@ public:
         {
             ImGui::NewLine();
         }
+    }
+
+    static inline float padding = 20;
+    static inline float ypadding = 20;
+
+    static bool DrawIconButton(const char* iconId, const bool large = true)
+    {
+        const float iconSize = large ? ImGuiController::GetLargeFontSize() : ImGuiController::GetSmallFontSize();
+        const float oldPaddingY = ImGui::GetStyle().FramePadding.y;
+        const float ypadding = large ? 20.0f : 10.0f;
+        const float padding = large ? 8.0f : 6.0f;
+
+        ImGui::PushFont(large ? ImGuiController::LargeIcons() : ImGuiController::SmallIcons());
+        ImGui::GetStyle().FramePadding.y = ypadding;
+        const bool pressed = ImGui::Button(iconId, ImVec2(iconSize + padding, iconSize + padding));
+        ImGui::GetStyle().FramePadding.y = oldPaddingY;
+        ImGui::PopFont();
+
+        return pressed;
     }
 
     template <typename T>
@@ -233,7 +283,6 @@ public:
     }
 
 
-
     template <typename T>
     static void UndoableMenuItemValue(
         const std::string& label,
@@ -354,6 +403,7 @@ public:
     }
 
     static bool ButtonWithState(const char* str, ImVec2 buttonSize, bool state, bool activeOnTrue = true,
+                                bool icon = true,
                                 ImVec4 color = ImVec4(0.1372549086809158f, 0.1921568661928177f, 0.2627451121807098f,
                                                       1.0f))
     {
@@ -363,10 +413,21 @@ public:
         {
             ImGui::PushStyleColor(ImGuiCol_Button, color);
         }
-        if (ImGui::Button(str, buttonSize))
+        if (icon)
         {
-            result = true;
+            if (DrawIconButton(str))
+            {
+                result = true;
+            }
         }
+        else
+        {
+            if (ImGui::Button(str, buttonSize))
+            {
+                result = true;
+            }
+        }
+
         if (style)
         {
             ImGui::PopStyleColor();

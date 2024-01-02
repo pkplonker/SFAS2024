@@ -14,6 +14,7 @@
 #include "../FileOpener.h"
 #include "../MessageBoxWrapper.h"
 #include "DirectX11/DirectX11Texture.h"
+#include "../External/IconsMaterialDesign.h"
 
 MaterialDrawerHelper::MaterialDrawerHelper(std::weak_ptr<IRenderableComponent> component) : component(component)
 {
@@ -33,13 +34,14 @@ void MaterialDrawerHelper::DrawMaterial()
             {
                 shaderPath = shader->GetPath();
             }
-            std::vector<std::pair<std::string, std::function<void()>>> buttons;
+            std::vector<ImGuiHelpers::ButtonData> buttons;
 
-            buttons.emplace_back("Replace", std::bind(&MaterialDrawerHelper::ChangeShader, this));
-            buttons.emplace_back("Modify", std::bind(&MaterialDrawerHelper::OpenShader, this));
-            buttons.emplace_back("Reload", std::bind(&IShader::Reload, shader));
+            buttons.emplace_back(ImGuiHelpers::ButtonData(ICON_MD_FIND_REPLACE, std::bind(&MaterialDrawerHelper::ChangeShader, this),true));
+            buttons.emplace_back(ImGuiHelpers::ButtonData(ICON_MD_EDIT_DOCUMENT, std::bind(&MaterialDrawerHelper::OpenShader, this),true));
+            buttons.emplace_back(ImGuiHelpers::ButtonData(ICON_MD_REFRESH, std::bind(&IShader::Reload, shader),true));
+            
+            ImGuiHelpers::WrappedText("", shaderPath == L"" ? L"Shader" : shaderPath, buttons);
 
-            ImGuiHelpers::WrappedText("Shader Path:", shaderPath, buttons);
             std::wstring texturePath;
             ITexture* tex = mat->GetTexture();
             if (tex != nullptr)
@@ -47,8 +49,10 @@ void MaterialDrawerHelper::DrawMaterial()
                 texturePath = tex->GetPath();
             }
 
-            ImGuiHelpers::WrappedText("Texture Path:", texturePath, "Replace",
+            ImGuiHelpers::WrappedText("", texturePath == L"" ? L"Texture" : texturePath,ICON_MD_FIND_REPLACE,
                                       std::bind(&MaterialDrawerHelper::ChangeTexture, this));
+            
+            
             if (tex != nullptr)
             {
                 if (auto dxTex = dynamic_cast<DirectX11Texture*>(tex))

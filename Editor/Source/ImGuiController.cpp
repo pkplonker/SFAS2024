@@ -30,8 +30,32 @@
 #include "Windows/SceneSettings.h"
 #include "Windows/SettingsWindow.h"
 #include "Windows/UndoWindow.h"
-
+#include "External\IconsMaterialDesign.h"
 const std::string IMGUI_SETTING_ID = "IMGUI_WINDOW";
+
+void ImGuiController::LoadIconFonts()
+{
+    ImGuiIO& io = ImGui::GetIO();
+    io.Fonts->AddFontDefault();
+    
+    static const ImWchar icons_ranges[] = {ICON_MIN_MD, ICON_MAX_16_MD, 0};
+
+    ImFontConfig smallIconsConfig;
+    smallIconsConfig.MergeMode = true;
+    smallIconsConfig.PixelSnapH = true;
+    smallIcons = io.Fonts->AddFontFromFileTTF(FONT_ICON_FILE_NAME_MD, smallFontSize, &smallIconsConfig,
+                                              icons_ranges);
+    largeIcons = io.Fonts->AddFontDefault();
+    ImFontConfig largeIconsConfig;
+    largeIconsConfig.MergeMode = true;
+    largeIconsConfig.PixelSnapH = true;
+
+    largeIcons = io.Fonts->AddFontFromFileTTF(FONT_ICON_FILE_NAME_MD, largeFontSize, &largeIconsConfig,
+                                              icons_ranges);
+
+    io.Fonts->Build();
+}
+
 
 ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, IInput* input,
                                  std::shared_ptr<EditorCamera> camera) :
@@ -92,6 +116,7 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, II
     settingsWindow = new SettingsWindow();
 
     ImGuiTheme::ApplyTheme(0);
+    LoadIconFonts();
     Trace("Imgui setup complete")
 }
 
@@ -199,7 +224,7 @@ void ImGuiController::LoadScene()
     LoadScene(FileDialog::OpenFileDialog());
 }
 
-void ImGuiController::LoadScene(std::string path) 
+void ImGuiController::LoadScene(std::string path)
 {
     if (path != "")
     {
@@ -212,7 +237,7 @@ void ImGuiController::LoadScene(std::string path)
 void ImGuiController::New()
 {
     std::string type = "scene";
-    
+
     SaveExistingScene();
     auto path = FileDialog::CreateNewFileDialog(type);
     if (path != "")

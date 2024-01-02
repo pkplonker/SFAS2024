@@ -1,6 +1,7 @@
 ﻿#include "UndoWindow.h"
 
 #include "imgui.h"
+#include "../ImGuiHelpers.h"
 #include "../UndoManager.h"
 
 UndoWindow::UndoWindow()
@@ -11,17 +12,17 @@ void UndoWindow::Draw()
 {
     ImGui::Begin(UNDO_WINDOW.c_str());
     
-    if (ImGui::Button("Undo"))
+    if (ImGuiHelpers::DrawIconButton(ICON_MD_UNDO))
     {
         UndoManager::Undo();
     }
     ImGui::SameLine();
-    if (ImGui::Button("Redo"))
+    if (ImGuiHelpers::DrawIconButton(ICON_MD_REDO))
     {
         UndoManager::Redo();
     }
     ImGui::SameLine();
-    if (ImGui::Button("Clear"))
+    if (ImGuiHelpers::DrawIconButton(ICON_MD_DELETE))
     {
         UndoManager::Clear();
     }
