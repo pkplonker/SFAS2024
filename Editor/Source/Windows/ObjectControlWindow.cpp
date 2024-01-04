@@ -29,15 +29,14 @@ void ObjectControlWindow::Draw()
     }
 
     ImGui::SameLine();
-    ImGui::Spacing();
-    ImGui::SameLine();
-    ImGui::Spacing();
-    ImGui::SameLine();
-
     if (ImGuiHelpers::ButtonWithState("Scale", buttonSize, gizmoController->GetGizmoOperation() == Scale, true, false))
     {
         gizmoController->SetGizmoOpertion(Scale);
     }
+    ImGui::SameLine();
+    ImGui::Spacing();
+    ImGui::SameLine();
+    ImGui::Spacing();
     ImGui::SameLine();
     if (ImGuiHelpers::ButtonWithState("World", buttonSize, gizmoController->GetMode() == World, true, false))
     {
