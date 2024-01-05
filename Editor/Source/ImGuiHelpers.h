@@ -22,13 +22,15 @@ public:
         const char* label;
         std::function<void()> callback;
         bool icon = false;
+        std::string identifier;
 
         ButtonData(): label(nullptr), callback(nullptr)
         {
         }
 
-        ButtonData(const char* label, std::function<void()> callback, bool icon = false): label(label),
-            callback(callback), icon(icon)
+        ButtonData(const char* label, std::function<void()> callback, std::string identifier = "",
+                   bool icon = false): label(label),
+                                       callback(callback), icon(icon), identifier(identifier)
         {
         }
     };
@@ -44,22 +46,22 @@ public:
 
         for (const auto& button : buttons)
         {
+            std::stringstream ss;
+            ss << button.label << "##" << button.identifier;
+            std::string combinedStr = ss.str();
+            const char* finalLabel = combinedStr.c_str();
             if (button.callback != nullptr)
             {
-                std::ostringstream oss;
-                oss << button.label << "##" << label;
-
-                std::string buttonId = oss.str();
-                if (!button.icon)
+                if (button.icon)
                 {
-                    if (ImGui::Button(buttonId.c_str()))
+                    if (DrawIconButton(finalLabel))
                     {
                         button.callback();
                     }
                 }
                 else
                 {
-                    if (DrawIconButton(button.label))
+                    if (ImGui::Button(finalLabel))
                     {
                         button.callback();
                     }
@@ -90,9 +92,9 @@ public:
     template <typename StringType>
     static void WrappedText(const char* label, StringType content,
                             const char* singleButtonText, const std::function<void()>& singleButtonCallback,
-                            bool icon = true)
+                                    std::string identifier = "", bool icon = true)
     {
-        auto data = ButtonData(singleButtonText, singleButtonCallback, icon);
+        auto data = ButtonData(singleButtonText, singleButtonCallback,identifier, icon);
         std::vector buttons = {{data}};
         WrappedText(label, content, buttons);
     }

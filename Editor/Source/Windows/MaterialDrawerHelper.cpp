@@ -38,16 +38,26 @@ void MaterialDrawerHelper::DrawMaterial()
             }
             std::vector<ImGuiHelpers::ButtonData> buttons;
 
-            buttons.emplace_back(ImGuiHelpers::ButtonData(ICON_MD_FIND_REPLACE, std::bind(&MaterialDrawerHelper::ChangeShader, this),true));
-            buttons.emplace_back(ImGuiHelpers::ButtonData(ICON_MD_EDIT_DOCUMENT, std::bind(&MaterialDrawerHelper::OpenShader, this),true));
-            buttons.emplace_back(ImGuiHelpers::ButtonData(ICON_MD_REFRESH, std::bind(&IShader::Reload, shader),true));
+
+            buttons.emplace_back(ImGuiHelpers::ButtonData(
+                ICON_MD_FIND_REPLACE, std::bind(&MaterialDrawerHelper::ChangeShader, this),
+                Helpers::WideStringToString(shaderPath), true));
+            buttons.emplace_back(ImGuiHelpers::ButtonData(
+                ICON_MD_EDIT_DOCUMENT, std::bind(&MaterialDrawerHelper::OpenShader, this),
+                Helpers::WideStringToString(shaderPath), true));
+            buttons.emplace_back(ImGuiHelpers::ButtonData(
+                ICON_MD_REFRESH, std::bind(&IShader::Reload, shader), Helpers::WideStringToString(shaderPath), true));
+
             std::string scenePath = "";
-            if(const auto scene = SceneManager::GetScene().lock())
+            if (const auto scene = SceneManager::GetScene().lock())
             {
                 scenePath = scene->GetPath();
             }
-            
-            ImGuiHelpers::WrappedText("", shaderPath == L"" ? L"Shader" : Helpers::StringToWstring(std::filesystem::relative(shaderPath, scenePath).string()), buttons);
+
+            ImGuiHelpers::WrappedText("", shaderPath == L""
+                                              ? L"Shader"
+                                              : Helpers::StringToWstring(
+                                                  std::filesystem::relative(shaderPath, scenePath).string()), buttons);
 
             std::wstring texturePath;
             ITexture* tex = mat->GetTexture();
@@ -56,10 +66,14 @@ void MaterialDrawerHelper::DrawMaterial()
                 texturePath = tex->GetPath();
             }
 
-            ImGuiHelpers::WrappedText("", texturePath == L"" ? L"Texture" : Helpers::StringToWstring(std::filesystem::relative(texturePath, scenePath).string()),ICON_MD_FIND_REPLACE,
-                                      std::bind(&MaterialDrawerHelper::ChangeTexture, this));
-            
-            
+            ImGuiHelpers::WrappedText(
+                "", texturePath == L""
+                        ? L"Texture"
+                        : Helpers::StringToWstring(std::filesystem::relative(texturePath, scenePath).string()),
+                ICON_MD_FIND_REPLACE,
+                std::bind(&MaterialDrawerHelper::ChangeTexture, this));
+
+
             if (tex != nullptr)
             {
                 if (auto dxTex = dynamic_cast<DirectX11Texture*>(tex))
@@ -67,7 +81,8 @@ void MaterialDrawerHelper::DrawMaterial()
                     ImGui::Separator();
                     ImGui::Image(dxTex->GetTextureView(), ImVec2(200, 200));
                     std::stringstream stream;
-                    stream << std::fixed << std::setprecision(2) << "Texture size:" << dxTex->GetWidth() << " * " << dxTex
+                    stream << std::fixed << std::setprecision(2) << "Texture size:" << dxTex->GetWidth() << " * " <<
+                        dxTex
                         ->GetHeight();
                     ImGui::Text(stream.str().c_str());
                     if (ImGui::IsItemHovered())

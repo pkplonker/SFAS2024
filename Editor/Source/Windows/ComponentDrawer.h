@@ -8,4 +8,5 @@ public:
 	virtual ~ComponentDrawer();
 	virtual void Draw() = 0;
 protected:
+	
 };

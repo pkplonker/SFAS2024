@@ -80,8 +80,8 @@ void MeshComponentDrawer::Draw()
                 scenePath = scene->GetPath();
             }
 
-            ImGuiHelpers::WrappedText("", meshComponent->GetMeshPath() ==""? "Mesh" : std::filesystem::relative(meshComponent->GetMeshPath(), scenePath).string(), ICON_MD_FIND_REPLACE,
-                                      std::bind(&MeshComponentDrawer::ChangeMesh, this),true);
+             ImGuiHelpers::WrappedText("", meshComponent->GetMeshPath() ==""? "Mesh" : std::filesystem::relative(meshComponent->GetMeshPath(), scenePath).string(), ICON_MD_FIND_REPLACE,
+                                       std::bind(&MeshComponentDrawer::ChangeMesh, this),meshComponent->GetMeshPath(), true);
 
             materialDrawerHelper.DrawMaterial();
             if (const auto& renderable = meshComponent->GetRenderable())
