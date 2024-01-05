@@ -37,6 +37,10 @@ public:
 
     std::weak_ptr<DirectionalLightComponent> GetDirectionalLight();
     std::string GetPath() { return filePath; }
+    Vec3 GetAmbientLightColor();
+    float GetAmbientLightIntensity();
+    void SetAmbientLightColor(Vec3 value);
+    void SetAmbientLightIntensity(float value);
 
 private:
     std::unique_ptr<std::map<std::string, std::shared_ptr<GameObject>>> objects = std::make_unique<std::map<
@@ -47,4 +51,6 @@ private:
     IGraphics* graphics;
     std::weak_ptr<DirectionalLightComponent> directionalLight;
     std::string filePath;
+    Vec3 ambientLightColor;
+    float ambientLightIntensity;
 };

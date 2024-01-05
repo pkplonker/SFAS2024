@@ -1,7 +1,9 @@
 cbuffer cbChangedPerFrame : register(b0)
 {
     matrix mvp;
-	matrix worldMatrix;
+    matrix worldMatrix;
+	float3 ambientLightColor;
+	float ambientLightIntensity;
 };
 
 cbuffer MaterialBuffer : register(b1)
@@ -15,7 +17,6 @@ cbuffer DirectionalLightBuffer : register(b2)
     float4 lightDirection;
     float4 lightColor;
 	float lightIntensity;
-
 };
 
 
@@ -54,22 +55,19 @@ float4 PS_Main(PS_Input frag) : SV_TARGET
 {
     float3 normalizedLightDirection = normalize(lightDirection.xyz);
     float3 normalizedNormal = normalize(frag.worldNormal);
-    
+
     float diff = max(dot(normalizedNormal, normalizedLightDirection), 0.0);
-    float4 diffuseColor = diff * lightColor* lightIntensity;
+    float4 diffuseColor = diff * lightColor * lightIntensity;
 
-    float4 finalColor = frag.color;  
-    if(useTex)
-    {
-        finalColor = colorMap.Sample(colorSample, frag.uv);
-    }
+    float3 ambient = ambientLightColor * ambientLightIntensity;
 
-    if(materialColor.x != 1.0f || materialColor.y != 1.0f || materialColor.z != 1.0f || materialColor.w != 1.0f )
-    {
-        finalColor = materialColor;
-    }
+    float4 baseColor = useTex ? colorMap.Sample(colorSample, frag.uv) : frag.color;
 
-    finalColor *= diffuseColor;
+    baseColor *= materialColor;
 
-    return float4(finalColor.xyz,1);
+    float4 finalColor = baseColor * (diffuseColor + float4(ambient, 0));
+
+    return float4(finalColor.xyz, 1);
 }
+
+

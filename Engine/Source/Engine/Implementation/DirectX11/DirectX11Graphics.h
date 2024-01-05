@@ -61,6 +61,8 @@ public:
 	void UpdateRenderToTextureResources(int newWidth, int newHeight);
 	bool TryUpdateShader(IShader* shader, const char* vsentry, const char* vsshader, const char* psentry,
 	                     const char* psshader) override;
+	void AmbientLightBufferUpdate();
+
 protected:
 
 	virtual void SetMatrixBuffers(std::weak_ptr<Transform3D> transform);

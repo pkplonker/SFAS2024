@@ -27,9 +27,10 @@ struct
 {
     DirectX::XMMATRIX mvp;
     DirectX::XMMATRIX worldMatrix;
-    DirectX::XMFLOAT3 camForward;
-    DirectX::XMFLOAT2 screenSize;
+    DirectX::XMFLOAT3 ambientLightColor;
+    float ambientLightIntensity;
 } matrices;
+
 
 struct DirectionalLightBufferObject
 {
@@ -972,6 +973,19 @@ bool DirectX11Graphics::TryUpdateShader(IShader* iShader, const char* vsentry, c
     return true;
 }
 
+void DirectX11Graphics::AmbientLightBufferUpdate()
+{
+    if (const auto& scene = SceneManager::GetScene().lock())
+    {
+        matrices.ambientLightColor = scene->GetAmbientLightColor();
+        matrices.ambientLightIntensity = scene->GetAmbientLightIntensity();
+    }else
+    {
+        matrices.ambientLightColor = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+        matrices.ambientLightIntensity = 1.0f;
+    }
+}
+
 void DirectX11Graphics::SetMatrixBuffers(const std::weak_ptr<Transform3D> transform)
 {
     if (std::shared_ptr<Transform3D> trans = transform.lock())
@@ -992,18 +1006,12 @@ void DirectX11Graphics::SetMatrixBuffers(const std::weak_ptr<Transform3D> transf
 
         matrices.mvp = mvp;
         matrices.worldMatrix = world;
-        matrices.camForward = camera->GetCameraForward();
+        AmbientLightBufferUpdate();
 
-        if (renderToTexture)
-        {
-            matrices.screenSize = DirectX::XMFLOAT2(static_cast<float>(texWidth), static_cast<float>(texHeight));
-        }
-        else
-        {
-            matrices.screenSize = DirectX::XMFLOAT2(static_cast<float>(width), static_cast<float>(height));
-        }
+
         Context->UpdateSubresource(Mvp, 0, 0, &matrices, 0, 0);
         Context->VSSetConstantBuffers(0, 1, &Mvp);
+        Context->PSSetConstantBuffers(0, 1, &Mvp);
     }
 }
 
