@@ -102,6 +102,12 @@ bool SceneSerializer::Serialize(std::string path)
             objectsData.push_back(SerializeGameObject(object));
         }
 
+        auto color = sharedScene->GetAmbientLightColor();
+        sceneData["Ambient Light"]["ColorX"] = color.X();
+        sceneData["Ambient Light"]["ColorY"] = color.Y();
+        sceneData["Ambient Light"]["ColorZ"] = color.Z();
+        sceneData["Ambient Light"]["Intensity"] = sharedScene->GetAmbientLightIntensity();
+
         sceneData["objects"] = objectsData;
 
         WriteToFile(sceneData, path);
@@ -254,12 +260,18 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
         return nullptr;
     }
 
-    std::shared_ptr<Scene> scene = std::make_shared<Scene>(graphics,path);
+    std::shared_ptr<Scene> scene = std::make_shared<Scene>(graphics, path);
     std::unordered_map<std::string, std::shared_ptr<GameObject>> gameObjectDict;
     std::unordered_map<std::string, std::string> parentsDict;
 
     if (sceneData.contains("objects"))
     {
+        if (sceneData.contains("Ambient Light"))
+        {
+            scene->SetAmbientLightColor(Vec3(sceneData["Ambient Light"]["ColorX"], sceneData["Ambient Light"]["ColorY"],
+                                             sceneData["Ambient Light"]["ColorZ"]));
+            scene->SetAmbientLightIntensity(sceneData["Ambient Light"]["Intensity"]);
+        }
         const json& objectsData = sceneData["objects"];
 
         if (objectsData.is_array())
@@ -414,8 +426,9 @@ void SceneSerializer::DeserializeSpriteComponent(const std::shared_ptr<GameObjec
 void SceneSerializer::DeserializeDirectionalLight(const std::shared_ptr<GameObject>& gameObject,
                                                   const nlohmann::json& data, std::shared_ptr<Scene> scene)
 {
-    auto directionalLightComponent = ComponentRegistry::CreateComponent("Directional Light",gameObject);
-    if(auto directionalLight = std::dynamic_pointer_cast<DirectionalLightComponent>(directionalLightComponent); directionalLight!=nullptr)
+    auto directionalLightComponent = ComponentRegistry::CreateComponent("Directional Light", gameObject);
+    if (auto directionalLight = std::dynamic_pointer_cast<DirectionalLightComponent>(directionalLightComponent);
+        directionalLight != nullptr)
     {
         Vec4 color;
 
@@ -427,11 +440,11 @@ void SceneSerializer::DeserializeDirectionalLight(const std::shared_ptr<GameObje
         directionalLight->SetColor(color);
         gameObject->AddComponent(std::move(directionalLight));
         scene->RegisterDirectionalLight(gameObject->GetComponent<DirectionalLightComponent>());
-    }else
+    }
+    else
     {
         Warning("Failed to cast created dir light component")
     }
-    
 }
 
 
