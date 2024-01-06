@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <memory>
 
+#include "PointLightComponent.h"
 #include "Engine/Implementation/GameObject.h"
 #include "Engine/IRenderable.h"
 
@@ -41,6 +42,8 @@ public:
     float GetAmbientLightIntensity();
     void SetAmbientLightColor(Vec3 value);
     void SetAmbientLightIntensity(float value);
+    void RegisterLight(const std::shared_ptr<ILight>& shared);
+    void DeregisterLight(const std::shared_ptr<ILight>& shared);
 
 private:
     std::unique_ptr<std::map<std::string, std::shared_ptr<GameObject>>> objects = std::make_unique<std::map<
@@ -53,4 +56,5 @@ private:
     std::string filePath;
     Vec3 ambientLightColor;
     float ambientLightIntensity;
+    std:: vector<std::shared_ptr<ILight>> lights;
 };

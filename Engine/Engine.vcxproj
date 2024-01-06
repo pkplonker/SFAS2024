@@ -223,6 +223,7 @@
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Shader.h" />
     <ClInclude Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.h" />
     <ClInclude Include="Source\Engine\Implementation\Helpers.h" />
+    <ClInclude Include="Source\Engine\Implementation\ILight.h" />
     <ClInclude Include="Source\Engine\Implementation\Logging\BufferSink.h" />
     <ClInclude Include="Source\Engine\Implementation\Logging\ConsoleSink.h" />
     <ClInclude Include="Source\Engine\Implementation\Logging\Debug.h" />
@@ -230,7 +231,9 @@
     <ClInclude Include="Source\Engine\Implementation\Logging\ISink.h" />
     <ClInclude Include="Source\Engine\Implementation\Mesh.h" />
     <ClInclude Include="Source\Engine\Implementation\MeshComponent.h" />
+    <ClInclude Include="Source\Engine\Implementation\PointLightComponent.h" />
     <ClInclude Include="Source\Engine\Implementation\Scene.h" />
+    <ClInclude Include="Source\Engine\Implementation\SpotLightComponent.h" />
     <ClInclude Include="Source\Engine\Implementation\SpriteComponent.h" />
     <ClInclude Include="Source\Engine\Implementation\TestComponent.h" />
     <ClInclude Include="Source\Engine\Implementation\Transform.h" />
@@ -276,6 +279,7 @@
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Shader.cpp" />
     <ClCompile Include="Source\Engine\Implementation\DirectX11\DirectX11Texture.cpp" />
     <ClCompile Include="Source\Engine\Implementation\Helpers.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\ILight.cpp" />
     <ClCompile Include="Source\Engine\Implementation\Logging\BufferSink.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -578,7 +582,9 @@
     </ClCompile>
     <ClCompile Include="Source\Engine\Implementation\Mesh.cpp" />
     <ClCompile Include="Source\Engine\Implementation\MeshComponent.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\PointLightComponent.cpp" />
     <ClCompile Include="Source\Engine\Implementation\Scene.cpp" />
+    <ClCompile Include="Source\Engine\Implementation\SpotLightComponent.cpp" />
     <ClCompile Include="Source\Engine\Implementation\SpriteComponent.cpp" />
     <ClCompile Include="Source\Engine\Implementation\TestComponent.cpp" />
     <ClCompile Include="Source\Engine\Implementation\Transform.cpp" />

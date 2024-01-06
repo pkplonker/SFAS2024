@@ -251,7 +251,7 @@ void DirectX11Graphics::CreateLightBuffer()
     ZeroMemory(&bufferDesc, sizeof(D3D11_BUFFER_DESC));
 
     bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    bufferDesc.ByteWidth = sizeof(LightBufferData);
+    bufferDesc.ByteWidth = sizeof(lightBufferData);
     bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     bufferDesc.MiscFlags = 0;
