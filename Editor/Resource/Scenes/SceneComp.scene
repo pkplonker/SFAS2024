@@ -7,6 +7,30 @@
     },
     "objects": [
         [
+            "Spot light",
+            {
+                "guid": "{0D7B0237-D028-4DE7-A614-885C9BE7831D}",
+                "name": "Spot light",
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
             "Bottle1",
             {
                 "guid": "{1C4775EB-1A6E-411A-A325-9EA8351B2346}",
@@ -562,6 +586,30 @@
                         "x": 0.0,
                         "y": -0.0,
                         "z": -0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Point Light",
+            {
+                "guid": "{C57CD799-809D-4C74-971D-85F181826483}",
+                "name": "Point Light",
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
                     },
                     "scale": {
                         "x": 1.0,
