@@ -26,11 +26,11 @@ class DirectX11Graphics : public IGraphics
 public:
 
 	DirectX11Graphics(HWND hwndIn);
-	void CreateLightBuffer();
 	~DirectX11Graphics() override;
 
 	void SetDirectionalLightBuffers();
 	void Update() override;
+	void SetLightBuffers();
 	void UpdateRenderable(IMaterial* mat, const std::shared_ptr<IRenderable>& renderable) override;
 	void RemoveRenderable(const std::shared_ptr<IRenderable>& renderable) override;
 	void PostUpdate() override;
@@ -101,4 +101,6 @@ private:
 	ID3D11DepthStencilState* depthState;
 	ID3D11DepthStencilState* skyDepthState;
 	ID3D11Buffer* lightBuffer = nullptr;
+	D3D11_BUFFER_DESC lightBufferDesc;
+
 };

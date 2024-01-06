@@ -44,6 +44,7 @@ public:
     void SetAmbientLightIntensity(float value);
     void RegisterLight(const std::shared_ptr<ILight>& shared);
     void DeregisterLight(const std::shared_ptr<ILight>& shared);
+    std:: vector<std::shared_ptr<ILight>> GetLights(){return lights;}
 
 private:
     std::unique_ptr<std::map<std::string, std::shared_ptr<GameObject>>> objects = std::make_unique<std::map<

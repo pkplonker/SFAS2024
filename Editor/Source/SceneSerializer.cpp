@@ -521,7 +521,7 @@ void SceneSerializer::DeserializeSpotLight(const std::shared_ptr<GameObject>& ga
         spotLight->SetInnerCone(static_cast<float>(data["innerCone"]));
         spotLight->SetOuterCone(static_cast<float>(data["outerCone"]));
         gameObject->AddComponent(std::move(spotLight));
-        scene->RegisterLight(gameObject->GetComponent<PointLightComponent>());
+        scene->RegisterLight(gameObject->GetComponent<SpotLightComponent>());
     }
     else
     {

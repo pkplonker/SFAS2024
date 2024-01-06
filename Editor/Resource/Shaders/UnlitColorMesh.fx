@@ -5,7 +5,6 @@ struct BaseLight
 {
     float4 color;
     float intensity;
-    int type; // 0 for Point Light, 1 for Spotlight
 };
 
 struct PointLight
@@ -19,9 +18,12 @@ struct Spotlight
 {
     BaseLight base;
     float3 position;
+	float padding;
     float3 direction;
     float innerCone;
     float outerCone;
+    float padding2[3];
+
 };
 
 cbuffer cbChangedPerFrame : register(b0)

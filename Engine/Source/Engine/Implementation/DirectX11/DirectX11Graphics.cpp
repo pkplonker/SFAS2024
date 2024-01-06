@@ -21,6 +21,7 @@
 #include "Engine/Implementation/Logging/Debug.h"
 #include "Implementation/Mesh.h"
 #include "Implementation/Scene.h"
+#include "Implementation/SpotLightComponent.h"
 #include "Implementation/Vertex.h"
 
 struct
@@ -42,38 +43,38 @@ struct DirectionalLightBufferObject
 
 struct BaseLight
 {
-    DirectX::XMFLOAT4 color;
+    Vec3 color;
     float intensity;
-    int type;
-    float padding;
 };
 
 struct PointLight
 {
     BaseLight base;
-    DirectX::XMFLOAT3 position;
+    Vec3 position;
     float padding;
 };
 
 struct Spotlight
 {
     BaseLight base;
-    DirectX::XMFLOAT3 position;
-    DirectX::XMFLOAT3 direction;
+    Vec3 position;
+    float padding;
+    Vec3 direction;
     float innerCone;
     float outerCone;
+    float padding2[3];
 };
 
 #define MAX_POINT_LIGHTS 10
 #define MAX_SPOTLIGHTS 10
 
-struct
+struct LightBufferObject
 {
     PointLight pointLights[MAX_POINT_LIGHTS];
     Spotlight spotlights[MAX_SPOTLIGHTS];
     int pointLightCount;
     int spotlightCount;
-} lightBufferData;
+};
 
 DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
                                                     BackbufferView(nullptr), BackbufferTexture(nullptr), Mvp(nullptr),
@@ -242,27 +243,21 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         {
             Error("Failed to create dir light buffer")
         }
+        
+        ZeroMemory(&lightBufferDesc, sizeof(D3D11_BUFFER_DESC));
+        lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+        lightBufferDesc.ByteWidth = sizeof(DirectionalLightBufferObject);
+        lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        lightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+        hr = Device->CreateBuffer(&lightBufferDesc, nullptr, &lightBuffer);
+        if (FAILED(hr))
+        {
+            Error("Failed to create light buffer")
+        }
     }
 }
 
-void DirectX11Graphics::CreateLightBuffer()
-{
-    D3D11_BUFFER_DESC bufferDesc;
-    ZeroMemory(&bufferDesc, sizeof(D3D11_BUFFER_DESC));
-
-    bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    bufferDesc.ByteWidth = sizeof(lightBufferData);
-    bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    bufferDesc.MiscFlags = 0;
-    bufferDesc.StructureByteStride = 0;
-
-    HRESULT hr = Device->CreateBuffer(&bufferDesc, nullptr, &lightBuffer);
-    if (FAILED(hr))
-    {
-        Error("Failed to create light buffer")
-    }
-}
 
 DirectX11Graphics::~DirectX11Graphics()
 {
@@ -409,6 +404,7 @@ void DirectX11Graphics::Update()
         stats.viewportHeight = texHeight;
         IShader* previousShader = nullptr;
         SetDirectionalLightBuffers();
+        SetLightBuffers();
         for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
         {
             if (bucket->first == nullptr || !bucket->first->GetIsSkybox())
@@ -461,6 +457,54 @@ void DirectX11Graphics::SetDirectionalLightBuffers()
     Context->Unmap(directionalLightBuffer, 0);
     Context->PSSetConstantBuffers(2, 1, &directionalLightBuffer);
     Context->VSSetConstantBuffers(2, 1, &directionalLightBuffer);
+}
+
+
+void DirectX11Graphics::SetLightBuffers()
+{
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    Context->Map(lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    LightBufferObject* data = static_cast<LightBufferObject*>(mappedResource.pData);
+
+    data->pointLightCount = 0;
+    data->spotlightCount = 0;
+
+    if (const auto scene = SceneManager::GetScene().lock())
+    {
+        auto lights = scene->GetLights();
+        for (auto& light : lights)
+        {
+            if (auto pointLight = std::dynamic_pointer_cast<PointLightComponent>(light))
+            {
+                if (data->pointLightCount < MAX_POINT_LIGHTS)
+                {
+                    data->pointLights[data->pointLightCount].base.color = pointLight->GetColor();
+                    data->pointLights[data->pointLightCount].base.intensity = pointLight->GetIntensity();
+                    data->pointLights[data->pointLightCount].position = pointLight->GetPosition();
+                    data->pointLightCount++;
+                }
+            }
+            else if (auto spotLight = std::dynamic_pointer_cast<SpotLightComponent>(light))
+            {
+                if (data->spotlightCount < MAX_SPOTLIGHTS)
+                {
+                    data->spotlights[data->spotlightCount].base.color = spotLight->GetColor();
+                    data->spotlights[data->spotlightCount].base.intensity = spotLight->GetIntensity();
+                    data->spotlights[data->spotlightCount].position = spotLight->GetPosition();
+                    data->spotlights[data->spotlightCount].direction = spotLight->GetDirection();
+                    data->spotlights[data->spotlightCount].innerCone = spotLight->GetInnerCone();
+                    data->spotlights[data->spotlightCount].outerCone = spotLight->GetOuterCone();
+                    data->spotlightCount++;
+                }
+            }
+        }
+    }
+    std::cout << "Setting " << data->pointLightCount << " point lights"<<std::endl;
+    std::cout << "Setting " << data->spotlightCount << " spot lights"<<std::endl;
+
+    Context->Unmap(lightBuffer, 0);
+    Context->PSSetConstantBuffers(3, 1, &lightBuffer);
+    Context->VSSetConstantBuffers(3, 1, &lightBuffer);
 }
 
 void DirectX11Graphics::UpdateRenderable(IMaterial* mat, const std::shared_ptr<IRenderable>& renderable)

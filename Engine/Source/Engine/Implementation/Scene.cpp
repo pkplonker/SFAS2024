@@ -93,6 +93,7 @@ void Scene::SetAmbientLightIntensity(float value)
 
 void Scene::RegisterLight(const std::shared_ptr<ILight>& light)
 {
+    if (light == nullptr)return;
     auto it = std::find(lights.begin(), lights.end(), light);
 
     if (it == lights.end())
