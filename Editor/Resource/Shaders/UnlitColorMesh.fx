@@ -1,3 +1,29 @@
+#define MAX_POINT_LIGHTS 10
+#define MAX_SPOTLIGHTS 10
+
+struct BaseLight
+{
+    float4 color;
+    float intensity;
+    int type; // 0 for Point Light, 1 for Spotlight
+};
+
+struct PointLight
+{
+    BaseLight base;
+    float3 position;
+    float padding;
+};
+
+struct Spotlight
+{
+    BaseLight base;
+    float3 position;
+    float3 direction;
+    float innerCone;
+    float outerCone;
+};
+
 cbuffer cbChangedPerFrame : register(b0)
 {
     matrix mvp;
@@ -17,6 +43,15 @@ cbuffer DirectionalLightBuffer : register(b2)
     float4 lightDirection;
     float4 lightColor;
 	float lightIntensity;
+};
+
+
+cbuffer LightBuffer : register(b3)
+{ 
+    PointLight pointLights[MAX_POINT_LIGHTS];
+    Spotlight spotlights[MAX_SPOTLIGHTS];
+    int pointLightCount;
+    int spotlightCount;
 };
 
 

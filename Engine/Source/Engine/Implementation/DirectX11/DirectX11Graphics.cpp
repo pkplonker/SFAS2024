@@ -40,6 +40,41 @@ struct DirectionalLightBufferObject
     float padding[3] = {0, 0, 0};
 };
 
+struct BaseLight
+{
+    DirectX::XMFLOAT4 color;
+    float intensity;
+    int type;
+    float padding;
+};
+
+struct PointLight
+{
+    BaseLight base;
+    DirectX::XMFLOAT3 position;
+    float padding;
+};
+
+struct Spotlight
+{
+    BaseLight base;
+    DirectX::XMFLOAT3 position;
+    DirectX::XMFLOAT3 direction;
+    float innerCone;
+    float outerCone;
+};
+
+#define MAX_POINT_LIGHTS 10
+#define MAX_SPOTLIGHTS 10
+
+struct
+{
+    PointLight pointLights[MAX_POINT_LIGHTS];
+    Spotlight spotlights[MAX_SPOTLIGHTS];
+    int pointLightCount;
+    int spotlightCount;
+} lightBufferData;
+
 DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
                                                     BackbufferView(nullptr), BackbufferTexture(nullptr), Mvp(nullptr),
                                                     vpMatrix(), FeatureLevel(D3D_FEATURE_LEVEL_11_0), hwnd(hwndIn),
@@ -192,14 +227,40 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         materialBufferDesc.ByteWidth = sizeof(MaterialBufferObject);
         materialBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         materialBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-        Device->CreateBuffer(&materialBufferDesc, nullptr, &materialBuffer);
-
+        HRESULT hr = Device->CreateBuffer(&materialBufferDesc, nullptr, &materialBuffer);
+        if (FAILED(hr))
+        {
+            Error("Failed to create material buffer")
+        }
         ZeroMemory(&directionalLightBufferDesc, sizeof(D3D11_BUFFER_DESC));
         directionalLightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
         directionalLightBufferDesc.ByteWidth = sizeof(DirectionalLightBufferObject);
         directionalLightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         directionalLightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-        Device->CreateBuffer(&directionalLightBufferDesc, nullptr, &directionalLightBuffer);
+        hr = Device->CreateBuffer(&directionalLightBufferDesc, nullptr, &directionalLightBuffer);
+        if (FAILED(hr))
+        {
+            Error("Failed to create dir light buffer")
+        }
+    }
+}
+
+void DirectX11Graphics::CreateLightBuffer()
+{
+    D3D11_BUFFER_DESC bufferDesc;
+    ZeroMemory(&bufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+    bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    bufferDesc.ByteWidth = sizeof(LightBufferData);
+    bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    bufferDesc.MiscFlags = 0;
+    bufferDesc.StructureByteStride = 0;
+
+    HRESULT hr = Device->CreateBuffer(&bufferDesc, nullptr, &lightBuffer);
+    if (FAILED(hr))
+    {
+        Error("Failed to create light buffer")
     }
 }
 
@@ -236,6 +297,7 @@ DirectX11Graphics::~DirectX11Graphics()
     if (skyDepthState) skyDepthState->Release();
     if (directionalLightBuffer) directionalLightBuffer->Release();
     if (materialBuffer) materialBuffer->Release();
+    if (lightBuffer) lightBuffer->Release();
 }
 
 
@@ -979,7 +1041,8 @@ void DirectX11Graphics::AmbientLightBufferUpdate()
     {
         matrices.ambientLightColor = scene->GetAmbientLightColor();
         matrices.ambientLightIntensity = scene->GetAmbientLightIntensity();
-    }else
+    }
+    else
     {
         matrices.ambientLightColor = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
         matrices.ambientLightIntensity = 1.0f;

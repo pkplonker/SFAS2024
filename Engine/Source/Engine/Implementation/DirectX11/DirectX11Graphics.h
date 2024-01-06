@@ -26,6 +26,7 @@ class DirectX11Graphics : public IGraphics
 public:
 
 	DirectX11Graphics(HWND hwndIn);
+	void CreateLightBuffer();
 	~DirectX11Graphics() override;
 
 	void SetDirectionalLightBuffers();
@@ -99,4 +100,5 @@ private:
 	D3D11_BUFFER_DESC directionalLightBufferDesc;
 	ID3D11DepthStencilState* depthState;
 	ID3D11DepthStencilState* skyDepthState;
+	ID3D11Buffer* lightBuffer = nullptr;
 };
