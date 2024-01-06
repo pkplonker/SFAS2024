@@ -7,30 +7,6 @@
     },
     "objects": [
         [
-            "Spot light",
-            {
-                "guid": "{0D7B0237-D028-4DE7-A614-885C9BE7831D}",
-                "name": "Spot light",
-                "transform": {
-                    "position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            }
-        ],
-        [
             "Bottle1",
             {
                 "guid": "{1C4775EB-1A6E-411A-A325-9EA8351B2346}",
@@ -56,6 +32,38 @@
                         "x": 0.6666814684867859,
                         "y": 3.0986404418945313,
                         "z": -4.317113876342773
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Spot Light",
+            {
+                "guid": "{2F927551-64B1-4A7D-94FB-403990EE9C1E}",
+                "name": "Spot Light",
+                "spotLight": {
+                    "colorX": 1.0,
+                    "colorY": 1.0,
+                    "colorZ": 0.0,
+                    "innerCone": 1.7000000476837158,
+                    "intensity": 0.6000000238418579,
+                    "outerCone": 9.199999809265137
+                },
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
                     },
                     "rotation": {
                         "x": 0.0,
@@ -596,10 +604,25 @@
             }
         ],
         [
-            "Point Light",
+            "Props",
             {
-                "guid": "{C57CD799-809D-4C74-971D-85F181826483}",
-                "name": "Point Light",
+                "guid": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
+                        "skybox": false,
+                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                    },
+                    "mesh": ""
+                },
+                "name": "Props",
                 "transform": {
                     "position": {
                         "x": 0.0,
@@ -620,25 +643,16 @@
             }
         ],
         [
-            "Props",
+            "Point Light",
             {
-                "guid": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
-                "meshComponent": {
-                    "material": {
-                        "color": {
-                            "a": 1.0,
-                            "b": 1.0,
-                            "g": 1.0,
-                            "r": 1.0
-                        },
-                        "mesh": "",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
-                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
-                    },
-                    "mesh": ""
+                "guid": "{EC5587DB-0A4F-4F46-8BFD-FA71566ECC02}",
+                "name": "Point Light",
+                "pointLight": {
+                    "colorX": 1.0,
+                    "colorY": 0.0,
+                    "colorZ": 1.0,
+                    "intensity": 6.300000190734863
                 },
-                "name": "Props",
                 "transform": {
                     "position": {
                         "x": 0.0,

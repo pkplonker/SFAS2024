@@ -89,6 +89,7 @@ nlohmann::json SceneSerializer::SerializeSpriteComponent(const std::shared_ptr<S
     return serializedData;
 }
 
+
 bool SceneSerializer::Serialize(std::string path)
 {
     json sceneData;
@@ -152,6 +153,15 @@ nlohmann::json SceneSerializer::SerializeGameObject(const std::shared_ptr<GameOb
     {
         serializedData["directionalLight"] = SerializeDirectionalLight(dirLightComponent);
     }
+    if (auto spotLight = object->GetComponent<SpotLightComponent>())
+    {
+        serializedData["spotLight"] = SerializeSpotLight(spotLight);
+    }
+    if (auto pointLight = object->GetComponent<PointLightComponent>())
+    {
+        serializedData["pointLight"] = SerializePointLight(pointLight);
+    }
+
 
     return std::make_pair(object->Name, serializedData);
 }
@@ -233,6 +243,30 @@ nlohmann::json SceneSerializer::SerializeDirectionalLight(std::shared_ptr<Direct
     serializedData["colorZ"] = color.Z();
     serializedData["colorW"] = color.W();
     serializedData["intensity"] = dirLight->intensity;
+    return serializedData;
+}
+
+nlohmann::json SceneSerializer::SerializeSpotLight(const std::shared_ptr<SpotLightComponent>& spotLight)
+{
+    nlohmann::json serializedData;
+    Vec4 color = spotLight->GetColor();
+    serializedData["colorX"] = color.X();
+    serializedData["colorY"] = color.Y();
+    serializedData["colorZ"] = color.Z();
+    serializedData["intensity"] = spotLight->GetIntensity();
+    serializedData["innerCone"] = spotLight->GetInnerCone();
+    serializedData["outerCone"] = spotLight->GetOuterCone();
+    return serializedData;
+}
+
+nlohmann::json SceneSerializer::SerializePointLight(const std::shared_ptr<PointLightComponent>& pointLight)
+{
+    nlohmann::json serializedData;
+    Vec4 color = pointLight->GetColor();
+    serializedData["colorX"] = color.X();
+    serializedData["colorY"] = color.Y();
+    serializedData["colorZ"] = color.Z();
+    serializedData["intensity"] = pointLight->GetIntensity();
     return serializedData;
 }
 
@@ -447,6 +481,53 @@ void SceneSerializer::DeserializeDirectionalLight(const std::shared_ptr<GameObje
     }
 }
 
+void SceneSerializer::DeserializePointLight(const std::shared_ptr<GameObject>& gameObject,
+                                            const nlohmann::json& data, std::shared_ptr<Scene> scene)
+{
+    auto pointLightComponent = ComponentRegistry::CreateComponent("Point Light", gameObject);
+    if (auto pointLight = std::dynamic_pointer_cast<PointLightComponent>(pointLightComponent);
+        pointLight != nullptr)
+    {
+        Vec3 color;
+
+        color.X(static_cast<float>(data["colorX"]));
+        color.Y(static_cast<float>(data["colorY"]));
+        color.Z(static_cast<float>(data["colorZ"]));
+        pointLight->SetIntensity(static_cast<float>(data["intensity"]));
+        pointLight->SetColor(color);
+        gameObject->AddComponent(std::move(pointLight));
+        scene->RegisterLight(gameObject->GetComponent<PointLightComponent>());
+    }
+    else
+    {
+        Warning("Failed to cast created point light component")
+    }
+}
+
+void SceneSerializer::DeserializeSpotLight(const std::shared_ptr<GameObject>& gameObject,
+                                           const nlohmann::json& data, std::shared_ptr<Scene> scene)
+{
+    auto spotLightComponent = ComponentRegistry::CreateComponent("Spot Light", gameObject);
+    if (auto spotLight = std::dynamic_pointer_cast<SpotLightComponent>(spotLightComponent);
+        spotLight != nullptr)
+    {
+        Vec3 color;
+
+        color.X(static_cast<float>(data["colorX"]));
+        color.Y(static_cast<float>(data["colorY"]));
+        color.Z(static_cast<float>(data["colorZ"]));
+        spotLight->SetIntensity(static_cast<float>(data["intensity"]));
+        spotLight->SetColor(color);
+        spotLight->SetInnerCone(static_cast<float>(data["innerCone"]));
+        spotLight->SetOuterCone(static_cast<float>(data["outerCone"]));
+        gameObject->AddComponent(std::move(spotLight));
+        scene->RegisterLight(gameObject->GetComponent<PointLightComponent>());
+    }
+    else
+    {
+        Warning("Failed to cast created point light component")
+    }
+}
 
 std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohmann::json& data,
                                                                    std::unordered_map<std::string, std::string>&
@@ -507,6 +588,14 @@ std::shared_ptr<GameObject> SceneSerializer::DeserializeGameObject(const nlohman
             if (objectProperties.contains("directionalLight"))
             {
                 DeserializeDirectionalLight(newObject, objectProperties["directionalLight"], scene);
+            }
+            if (objectProperties.contains("spotLight"))
+            {
+                DeserializeSpotLight(newObject, objectProperties["spotLight"], scene);
+            }
+            if (objectProperties.contains("pointLight"))
+            {
+                DeserializePointLight(newObject, objectProperties["pointLight"], scene);
             }
 
             return newObject;
