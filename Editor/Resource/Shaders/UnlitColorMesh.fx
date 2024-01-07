@@ -50,10 +50,10 @@ cbuffer DirectionalLightBuffer : register(b2)
 
 cbuffer LightBuffer : register(b3)
 { 
+	int pointLightCount;
+    int spotlightCount;
     PointLight pointLights[MAX_POINT_LIGHTS];
     Spotlight spotLights[MAX_SPOTLIGHTS];
-    int pointLightCount;
-    int spotlightCount;
 };
 
 
@@ -90,21 +90,25 @@ PS_Input VS_Main(VS_Input vertex)
 
 float4 PS_Main(PS_Input frag) : SV_TARGET
 {
+    float3 viewDir = normalize(cameraPosition - frag.position.xyz);
     float3 normalizedLightDirection = normalize(lightDirection.xyz);
     float3 normalizedNormal = normalize(frag.worldNormal);
 
     float diff = max(dot(normalizedNormal, normalizedLightDirection), 0.0);
-    float4 diffuseColor = diff * lightColor * lightIntensity;
+    float3 diffuseColor = diff * lightColor.xyz * lightIntensity;
+
+    float3 reflectDir = reflect(-normalizedLightDirection, normalizedNormal);
+    float specStrength = pow(max(dot(viewDir, reflectDir), 0.0), 16);
+    float3 specularColor = specStrength * float3(1.0, 1.0, 1.0) * lightIntensity;
 
     float3 ambient = ambientLightColor * ambientLightIntensity;
 
     float4 baseColor = useTex ? colorMap.Sample(colorSample, frag.uv) : frag.color;
-
     baseColor *= materialColor;
 
-    float4 finalColor = baseColor * (diffuseColor + float4(ambient, 0));
+    float3 finalColor = baseColor.xyz * (ambient + diffuseColor + specularColor);
 
-    return float4(spotLights[0].base.color.xyz, 1);
+    return float4(finalColor, 1);
 }
 
 

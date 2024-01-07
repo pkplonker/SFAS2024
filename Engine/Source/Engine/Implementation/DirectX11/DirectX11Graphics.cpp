@@ -74,11 +74,11 @@ struct Spotlight
 
 struct LightBufferObject
 {
-    PointLight pointLights[MAX_POINT_LIGHTS];
-    Spotlight spotlights[MAX_SPOTLIGHTS];
     int pointLightCount;
     int spotlightCount;
     float padding[2];
+    PointLight pointLights[MAX_POINT_LIGHTS];
+    Spotlight spotlights[MAX_SPOTLIGHTS];
 };
 
 DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
@@ -500,7 +500,6 @@ void DirectX11Graphics::SetLightBuffers()
                     data->spotlights[data->spotlightCount].direction = spotLight->GetDirection();
                     data->spotlights[data->spotlightCount].innerCone = spotLight->GetInnerCone();
                     data->spotlights[data->spotlightCount].outerCone = spotLight->GetOuterCone();
-                    std::cout <<data->spotlights[data->spotlightCount].base.color<<std::endl;
                     data->spotlightCount++;
 
                 }
@@ -1117,8 +1116,9 @@ void DirectX11Graphics::SetMatrixBuffers(const std::weak_ptr<Transform3D> transf
         mvp = DirectX::XMMatrixTranspose(mvp);
         if (camera)
         {
-            matrices.viewMatrix = camera->GetViewMatrix();
-            matrices.projection = camera->GetProjectionMatrix();
+
+            matrices.viewMatrix = DirectX::XMMatrixTranspose(camera->GetViewMatrix());
+            matrices.projection = DirectX::XMMatrixTranspose(camera->GetProjectionMatrix());
             matrices.cameraPosition = camera->GetTransform()->Position;
         }
 
