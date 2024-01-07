@@ -30,8 +30,12 @@ cbuffer cbChangedPerFrame : register(b0)
 {
     matrix mvp;
     matrix worldMatrix;
+	matrix viewMatrix;
+    matrix projectionMatrix;
 	float3 ambientLightColor;
 	float ambientLightIntensity;
+	float3 cameraPosition;
+    float padding;
 };
 
 cbuffer MaterialBuffer : register(b1)

@@ -79,7 +79,7 @@ private:
 	ID3D11Texture2D* BackbufferTexture = nullptr;
 	ID3D11DepthStencilView* DepthStencilView = nullptr;
 	ID3D11BlendState* BlendState = nullptr;
-	ID3D11Buffer* Mvp = nullptr;
+	ID3D11Buffer* standardBuffer = nullptr;
 	DirectX::XMMATRIX vpMatrix;
 	D3D_FEATURE_LEVEL FeatureLevel;
 	HWND hwnd;

@@ -28,8 +28,12 @@ struct
 {
     DirectX::XMMATRIX mvp;
     DirectX::XMMATRIX worldMatrix;
+    DirectX::XMMATRIX viewMatrix;
+    DirectX::XMMATRIX projection;
     DirectX::XMFLOAT3 ambientLightColor;
     float ambientLightIntensity;
+    Vec3 cameraPosition;
+    float padding;
 } matrices;
 
 
@@ -77,7 +81,8 @@ struct LightBufferObject
 };
 
 DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
-                                                    BackbufferView(nullptr), BackbufferTexture(nullptr), Mvp(nullptr),
+                                                    BackbufferView(nullptr), BackbufferTexture(nullptr),
+                                                    standardBuffer(nullptr),
                                                     vpMatrix(), FeatureLevel(D3D_FEATURE_LEVEL_11_0), hwnd(hwndIn),
                                                     width(0), height(0), texWidth(0), texHeight(0),
                                                     renderToTexture(false)
@@ -148,7 +153,7 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         constDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         constDesc.ByteWidth = sizeof(matrices);
         constDesc.Usage = D3D11_USAGE_DEFAULT;
-        hr = Device->CreateBuffer(&constDesc, 0, &Mvp);
+        hr = Device->CreateBuffer(&constDesc, 0, &standardBuffer);
 
         if (FAILED(hr))
         {
@@ -243,7 +248,7 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         {
             Error("Failed to create dir light buffer")
         }
-        
+
         ZeroMemory(&lightBufferDesc, sizeof(D3D11_BUFFER_DESC));
         lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
         lightBufferDesc.ByteWidth = sizeof(DirectionalLightBufferObject);
@@ -499,8 +504,8 @@ void DirectX11Graphics::SetLightBuffers()
             }
         }
     }
-    std::cout << "Setting " << data->pointLightCount << " point lights"<<std::endl;
-    std::cout << "Setting " << data->spotlightCount << " spot lights"<<std::endl;
+    std::cout << "Setting " << data->pointLightCount << " point lights" << std::endl;
+    std::cout << "Setting " << data->spotlightCount << " spot lights" << std::endl;
 
     Context->Unmap(lightBuffer, 0);
     Context->PSSetConstantBuffers(3, 1, &lightBuffer);
@@ -1109,16 +1114,21 @@ void DirectX11Graphics::SetMatrixBuffers(const std::weak_ptr<Transform3D> transf
 
         world = DirectX::XMMatrixTranspose(world);
         mvp = DirectX::XMMatrixTranspose(mvp);
-
+        if (camera)
+        {
+            matrices.viewMatrix = camera->GetViewMatrix();
+            matrices.projection = camera->GetProjectionMatrix();
+            matrices.cameraPosition = camera->GetTransform()->Position;
+        }
 
         matrices.mvp = mvp;
         matrices.worldMatrix = world;
         AmbientLightBufferUpdate();
 
 
-        Context->UpdateSubresource(Mvp, 0, 0, &matrices, 0, 0);
-        Context->VSSetConstantBuffers(0, 1, &Mvp);
-        Context->PSSetConstantBuffers(0, 1, &Mvp);
+        Context->UpdateSubresource(standardBuffer, 0, 0, &matrices, 0, 0);
+        Context->VSSetConstantBuffers(0, 1, &standardBuffer);
+        Context->PSSetConstantBuffers(0, 1, &standardBuffer);
     }
 }
 
