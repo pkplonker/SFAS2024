@@ -78,6 +78,7 @@ struct LightBufferObject
     Spotlight spotlights[MAX_SPOTLIGHTS];
     int pointLightCount;
     int spotlightCount;
+    float padding[2];
 };
 
 DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
@@ -112,13 +113,13 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
     HRESULT hr = S_OK;
     unsigned int creationFlags = 0;
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
     creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
-#endif
+//#endif
 
     for (unsigned int count = 0; count < totalDriverTypes; ++count)
     {
-        hr = D3D11CreateDeviceAndSwapChain(nullptr, driverTypes[count], NULL, creationFlags, NULL, 0, D3D11_SDK_VERSION,
+        hr = D3D11CreateDeviceAndSwapChain(nullptr, driverTypes[count], nullptr, creationFlags, nullptr, 0, D3D11_SDK_VERSION,
                                            &sd, &SwapChain, &Device, &FeatureLevel, &Context);
 
         if (SUCCEEDED(hr))
@@ -129,7 +130,7 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
 
     if (SUCCEEDED(hr))
     {
-        hr = SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&BackbufferTexture);
+        hr = SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<LPVOID*>(&BackbufferTexture));
     }
 
     if (SUCCEEDED(hr))
@@ -153,7 +154,7 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         constDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         constDesc.ByteWidth = sizeof(matrices);
         constDesc.Usage = D3D11_USAGE_DEFAULT;
-        hr = Device->CreateBuffer(&constDesc, 0, &standardBuffer);
+        hr = Device->CreateBuffer(&constDesc, nullptr, &standardBuffer);
 
         if (FAILED(hr))
         {
@@ -251,7 +252,7 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
 
         ZeroMemory(&lightBufferDesc, sizeof(D3D11_BUFFER_DESC));
         lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-        lightBufferDesc.ByteWidth = sizeof(DirectionalLightBufferObject);
+        lightBufferDesc.ByteWidth = sizeof(LightBufferObject);
         lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         lightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
@@ -499,13 +500,13 @@ void DirectX11Graphics::SetLightBuffers()
                     data->spotlights[data->spotlightCount].direction = spotLight->GetDirection();
                     data->spotlights[data->spotlightCount].innerCone = spotLight->GetInnerCone();
                     data->spotlights[data->spotlightCount].outerCone = spotLight->GetOuterCone();
+                    std::cout <<data->spotlights[data->spotlightCount].base.color<<std::endl;
                     data->spotlightCount++;
+
                 }
             }
         }
     }
-    std::cout << "Setting " << data->pointLightCount << " point lights" << std::endl;
-    std::cout << "Setting " << data->spotlightCount << " spot lights" << std::endl;
 
     Context->Unmap(lightBuffer, 0);
     Context->PSSetConstantBuffers(3, 1, &lightBuffer);

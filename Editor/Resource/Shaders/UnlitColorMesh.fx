@@ -11,18 +11,15 @@ struct PointLight
 {
     BaseLight base;
     float3 position;
-    float padding;
 };
 
 struct Spotlight
 {
     BaseLight base;
     float3 position;
-	float padding;
     float3 direction;
     float innerCone;
     float outerCone;
-    float padding2[3];
 
 };
 
@@ -35,7 +32,6 @@ cbuffer cbChangedPerFrame : register(b0)
 	float3 ambientLightColor;
 	float ambientLightIntensity;
 	float3 cameraPosition;
-    float padding;
 };
 
 cbuffer MaterialBuffer : register(b1)
@@ -55,7 +51,7 @@ cbuffer DirectionalLightBuffer : register(b2)
 cbuffer LightBuffer : register(b3)
 { 
     PointLight pointLights[MAX_POINT_LIGHTS];
-    Spotlight spotlights[MAX_SPOTLIGHTS];
+    Spotlight spotLights[MAX_SPOTLIGHTS];
     int pointLightCount;
     int spotlightCount;
 };
@@ -108,7 +104,7 @@ float4 PS_Main(PS_Input frag) : SV_TARGET
 
     float4 finalColor = baseColor * (diffuseColor + float4(ambient, 0));
 
-    return float4(finalColor.xyz, 1);
+    return float4(spotLights[0].base.color.xyz, 1);
 }
 
 

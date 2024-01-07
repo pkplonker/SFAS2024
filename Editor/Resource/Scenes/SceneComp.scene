@@ -54,7 +54,7 @@
                 "spotLight": {
                     "colorX": 1.0,
                     "colorY": 1.0,
-                    "colorZ": 0.0,
+                    "colorZ": 0.9882352948188782,
                     "innerCone": 1.7000000476837158,
                     "intensity": 0.6000000238418579,
                     "outerCone": 9.199999809265137
@@ -649,7 +649,7 @@
                 "name": "Point Light",
                 "pointLight": {
                     "colorX": 1.0,
-                    "colorY": 0.0,
+                    "colorY": 1.0,
                     "colorZ": 1.0,
                     "intensity": 6.300000190734863
                 },
