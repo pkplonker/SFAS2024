@@ -153,7 +153,10 @@ void Hierarchy::SetSelectedObject(std::shared_ptr<GameObject> object)
             return;
         }
     }
-
+    if(object==nullptr) // quick hack fix
+    {
+        return;
+    }
     UndoManager::Execute(Memento([this, object]()
                                  {
                                      selectedObject = object;

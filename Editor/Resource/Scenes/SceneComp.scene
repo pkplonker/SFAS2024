@@ -3,7 +3,7 @@
         "ColorX": 1.0,
         "ColorY": 1.0,
         "ColorZ": 1.0,
-        "Intensity": 0.20000000298023224
+        "Intensity": 0.5
     },
     "objects": [
         [
@@ -47,23 +47,61 @@
             }
         ],
         [
+            "New Cube",
+            {
+                "guid": "{23F4C879-FCE1-4341-87BB-32B882E036C5}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
+                        "skybox": false
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
+                },
+                "name": "New Cube",
+                "transform": {
+                    "position": {
+                        "x": -4.239045143127441,
+                        "y": 11.23572826385498,
+                        "z": -4.923818111419678
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -0.0,
+                        "z": -0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
             "Spot Light",
             {
                 "guid": "{2F927551-64B1-4A7D-94FB-403990EE9C1E}",
                 "name": "Spot Light",
                 "spotLight": {
-                    "colorX": 1.0,
-                    "colorY": 1.0,
-                    "colorZ": 0.9882352948188782,
-                    "innerCone": 1.7000000476837158,
-                    "intensity": 0.6000000238418579,
-                    "outerCone": 9.199999809265137
+                    "colorX": 0.0,
+                    "colorY": 0.0,
+                    "colorZ": 0.0,
+                    "innerCone": 0.0,
+                    "intensity": 0.0,
+                    "outerCone": 0.0
                 },
                 "transform": {
                     "position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "x": -4.516131401062012,
+                        "y": 5.373508453369141,
+                        "z": -4.5951385498046875
                     },
                     "rotation": {
                         "x": 0.0,
@@ -396,7 +434,7 @@
             "Directional Light",
             {
                 "directionalLight": {
-                    "colorW": 1.0,
+                    "colorW": 0.0,
                     "colorX": 1.0,
                     "colorY": 1.0,
                     "colorZ": 1.0,
@@ -406,13 +444,13 @@
                 "name": "Directional Light",
                 "transform": {
                     "position": {
-                        "x": 0.0,
-                        "y": 10.123026847839355,
-                        "z": 0.0
+                        "x": -3.004079580307007,
+                        "y": 11.980422019958496,
+                        "z": -8.741937637329102
                     },
                     "rotation": {
-                        "x": 180.0,
-                        "y": 140.0,
+                        "x": -16.822460174560547,
+                        "y": 0.0,
                         "z": 0.0
                     },
                     "scale": {
@@ -549,7 +587,7 @@
                 "transform": {
                     "position": {
                         "x": 0.0,
-                        "y": -1.7737367153167725,
+                        "y": 0.4337158203125,
                         "z": 15.702970504760742
                     },
                     "rotation": {
@@ -587,9 +625,9 @@
                 "name": "Props",
                 "transform": {
                     "position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "x": -23.13327407836914,
+                        "y": 4.068063259124756,
+                        "z": 18.114219665527344
                     },
                     "rotation": {
                         "x": 0.0,
@@ -611,20 +649,20 @@
                 "name": "Point Light",
                 "pointLight": {
                     "colorX": 1.0,
-                    "colorY": 1.0,
+                    "colorY": 0.9960784316062927,
                     "colorZ": 1.0,
-                    "intensity": 6.300000190734863
+                    "intensity": 1.0
                 },
                 "transform": {
                     "position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "x": -0.9834905862808228,
+                        "y": 12.671462059020996,
+                        "z": 46.81135559082031
                     },
                     "rotation": {
                         "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "y": 5.145975112915039,
+                        "z": -51.93132400512695
                     },
                     "scale": {
                         "x": 1.0,

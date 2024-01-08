@@ -14,77 +14,30 @@
 #include "DirectionalLightComponent.h"
 #include "DirectX11Material.h"
 #include "DirectX11Mesh.h"
-#include "IApplication.h"
 #include "RenderingStats.h"
 #include "ResourceManager.h"
 #include "SceneManager.h"
 #include "Engine/Implementation/Logging/Debug.h"
 #include "Implementation/Mesh.h"
 #include "Implementation/Scene.h"
-#include "Implementation/SpotLightComponent.h"
 #include "Implementation/Vertex.h"
+using namespace DirectX;
 
-struct
+struct PerFrameConstantBufferData
 {
-    DirectX::XMMATRIX mvp;
-    DirectX::XMMATRIX worldMatrix;
-    DirectX::XMMATRIX viewMatrix;
-    DirectX::XMMATRIX projection;
-    DirectX::XMFLOAT3 ambientLightColor;
-    float ambientLightIntensity;
-    Vec3 cameraPosition;
-    float padding;
-} matrices;
-
-
-struct DirectionalLightBufferObject
-{
-    Vec4 direction = Vec4(0, -1, 0, 1);
-    Vec4 color = Vec4(1, 1, 1, 1);
-    float intensity = 1;
-    float padding[3] = {0, 0, 0};
+    XMMATRIX ViewProjectionMatrix;
 };
 
-struct BaseLight
+struct PerObjectConstantBufferData
 {
-    Vec3 color;
-    float intensity;
+    XMMATRIX WorldMatrix;
+    XMMATRIX InverseTransposeWorldMatrix;
+    XMMATRIX WorldViewProjectionMatrix;
 };
 
-struct PointLight
-{
-    BaseLight base;
-    Vec3 position;
-    float padding;
-};
+#define MAX_LIGHTS 8
 
-struct Spotlight
-{
-    BaseLight base;
-    Vec3 position;
-    float padding;
-    Vec3 direction;
-    float innerCone;
-    float outerCone;
-    float padding2[3];
-};
-
-#define MAX_POINT_LIGHTS 10
-#define MAX_SPOTLIGHTS 10
-
-struct LightBufferObject
-{
-    int pointLightCount;
-    int spotlightCount;
-    float padding[2];
-    PointLight pointLights[MAX_POINT_LIGHTS];
-    Spotlight spotlights[MAX_SPOTLIGHTS];
-};
-
-DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nullptr), SwapChain(nullptr),
-                                                    BackbufferView(nullptr), BackbufferTexture(nullptr),
-                                                    standardBuffer(nullptr),
-                                                    vpMatrix(), FeatureLevel(D3D_FEATURE_LEVEL_11_0), hwnd(hwndIn),
+DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : FeatureLevel(D3D_FEATURE_LEVEL_11_0), hwnd(hwndIn),
                                                     width(0), height(0), texWidth(0), texHeight(0),
                                                     renderToTexture(false)
 {
@@ -113,13 +66,14 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
     HRESULT hr = S_OK;
     unsigned int creationFlags = 0;
 
-//#ifdef _DEBUG
+#ifdef _DEBUG
     creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
-//#endif
+#endif
 
     for (unsigned int count = 0; count < totalDriverTypes; ++count)
     {
-        hr = D3D11CreateDeviceAndSwapChain(nullptr, driverTypes[count], nullptr, creationFlags, nullptr, 0, D3D11_SDK_VERSION,
+        hr = D3D11CreateDeviceAndSwapChain(nullptr, driverTypes[count], nullptr, creationFlags, nullptr, 0,
+                                           D3D11_SDK_VERSION,
                                            &sd, &SwapChain, &Device, &FeatureLevel, &Context);
 
         if (SUCCEEDED(hr))
@@ -149,39 +103,45 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
     }
     else
     {
-        D3D11_BUFFER_DESC constDesc;
-        ZeroMemory(&constDesc, sizeof(constDesc));
-        constDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-        constDesc.ByteWidth = sizeof(matrices);
-        constDesc.Usage = D3D11_USAGE_DEFAULT;
-        hr = Device->CreateBuffer(&constDesc, nullptr, &standardBuffer);
+        D3D11_BUFFER_DESC constantBufferDesc;
+        ZeroMemory(&constantBufferDesc, sizeof(D3D11_BUFFER_DESC));
+        constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        constantBufferDesc.ByteWidth = sizeof(PerFrameConstantBufferData);
+        constantBufferDesc.CPUAccessFlags = 0;
+        constantBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 
+        hr = Device->CreateBuffer(&constantBufferDesc, nullptr, &perFrameConstantBuffer);
         if (FAILED(hr))
         {
-            MessageBox(nullptr, "Graphics Failed to create MVP Buffer", "Error!", MB_ICONEXCLAMATION | MB_OK);
+            MessageBoxA(nullptr, "Failed to create constant buffer for per-frame data.", "Error", MB_OK | MB_ICONERROR);
+            return;
+        }
+        constantBufferDesc.ByteWidth = sizeof(PerObjectConstantBufferData);
+
+        hr = Device->CreateBuffer(&constantBufferDesc, nullptr, &perObjectConstantBuffer);
+        if (FAILED(hr))
+        {
+            MessageBoxA(nullptr, "Failed to create constant buffer for per-object data.", "Error",
+                        MB_OK | MB_ICONERROR);
+            return;
+        }
+        constantBufferDesc.ByteWidth = sizeof(MaterialProperties);
+
+        hr = Device->CreateBuffer(&constantBufferDesc, nullptr, &lightPropertiesConstantBuffer);
+        if (FAILED(hr))
+        {
+            MessageBoxA(nullptr, "Failed to create constant buffer for material properties.", "Error",
+                        MB_OK | MB_ICONERROR);
+            return;
         }
 
-        if (camera == nullptr)
+        constantBufferDesc.ByteWidth = sizeof(LightProperties);
+        hr = Device->CreateBuffer(&constantBufferDesc, nullptr, &materialPropertiesConstantBuffer);
+        if (FAILED(hr))
         {
-            DirectX::XMVECTOR EyePosition = DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f);
-            DirectX::XMVECTOR FocusPoint = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
-            DirectX::XMVECTOR UpDirection = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-            DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(EyePosition, FocusPoint, UpDirection);
-            float fovAngleY = DirectX::XM_PIDIV4;
-            float aspectRatio = static_cast<float>(width) / height;
-            float nearZ = 0.1f;
-            float farZ = 2000.0f;
-            DirectX::XMMATRIX projection = DirectX::XMMatrixPerspectiveFovLH(
-                fovAngleY,
-                aspectRatio,
-                nearZ,
-                farZ
-            );
-            vpMatrix = XMMatrixMultiply(view, projection);
-        }
-        else
-        {
-            vpMatrix = camera->GetViewProjectionMatrix();
+            MessageBoxA(nullptr, "Failed to create constant buffer for light properties.", "Error",
+                        MB_OK | MB_ICONERROR);
+            return;
         }
 
         D3D11_BLEND_DESC Desc;
@@ -228,39 +188,6 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : Device(nullptr), Context(nul
         Device->CreateDepthStencilView(depthStencil, &depthViewDesc, &DepthStencilView);
 
         Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
-
-        ZeroMemory(&materialBufferDesc, sizeof(D3D11_BUFFER_DESC));
-        materialBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-        materialBufferDesc.ByteWidth = sizeof(MaterialBufferObject);
-        materialBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-        materialBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-        HRESULT hr = Device->CreateBuffer(&materialBufferDesc, nullptr, &materialBuffer);
-        if (FAILED(hr))
-        {
-            Error("Failed to create material buffer")
-        }
-        ZeroMemory(&directionalLightBufferDesc, sizeof(D3D11_BUFFER_DESC));
-        directionalLightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-        directionalLightBufferDesc.ByteWidth = sizeof(DirectionalLightBufferObject);
-        directionalLightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-        directionalLightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-        hr = Device->CreateBuffer(&directionalLightBufferDesc, nullptr, &directionalLightBuffer);
-        if (FAILED(hr))
-        {
-            Error("Failed to create dir light buffer")
-        }
-
-        ZeroMemory(&lightBufferDesc, sizeof(D3D11_BUFFER_DESC));
-        lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-        lightBufferDesc.ByteWidth = sizeof(LightBufferObject);
-        lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-        lightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-
-        hr = Device->CreateBuffer(&lightBufferDesc, nullptr, &lightBuffer);
-        if (FAILED(hr))
-        {
-            Error("Failed to create light buffer")
-        }
     }
 }
 
@@ -296,9 +223,6 @@ DirectX11Graphics::~DirectX11Graphics()
     if (shaderResourceView) shaderResourceView->Release();
     if (depthState) depthState->Release();
     if (skyDepthState) skyDepthState->Release();
-    if (directionalLightBuffer) directionalLightBuffer->Release();
-    if (materialBuffer) materialBuffer->Release();
-    if (lightBuffer) lightBuffer->Release();
 }
 
 
@@ -337,16 +261,7 @@ void DirectX11Graphics::RenderBucket(RenderingStats& stats, IShader* previousSha
         stats.tris += renderObject->GetTriangleCount();
         stats.verts += renderObject->GetVertsCount();
         stats.drawCalls++;
-        {
-            // Currently setting the material buffer per object, which is no doubt inefficient. This likely needs splitting to be grouped, shader->texture->material values?
-            D3D11_MAPPED_SUBRESOURCE mappedResource;
-            Context->Map(materialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-            auto* data = static_cast<MaterialBufferObject*>(mappedResource.pData);
-            bucket->first->UpdateMaterialBuffer(data);
-            Context->Unmap(materialBuffer, 0);
-            Context->PSSetConstantBuffers(1, 1, &materialBuffer);
-            Context->VSSetConstantBuffers(1, 1, &materialBuffer);
-        }
+
         const std::weak_ptr<Transform3D> transform = (*renderable)->GetTransform();
         SetMatrixBuffers(transform);
         Context->OMSetBlendState(BlendState, nullptr, ~0U);
@@ -377,10 +292,6 @@ void DirectX11Graphics::Update()
         //clear depth stencil for main frame regardless of target
         Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH, 1, 0);
         Context->ClearDepthStencilView(activedepthView, D3D11_CLEAR_DEPTH, 1, 0);
-        if (camera != nullptr)
-        {
-            vpMatrix = camera->GetViewProjectionMatrix();
-        }
 
         if (renderToTexture)
         {
@@ -409,8 +320,13 @@ void DirectX11Graphics::Update()
         stats.viewportWidth = texWidth;
         stats.viewportHeight = texHeight;
         IShader* previousShader = nullptr;
-        SetDirectionalLightBuffers();
-        SetLightBuffers();
+        PerFrameConstantBufferData constantBufferData;
+
+        if (camera)
+        {
+            constantBufferData.ViewProjectionMatrix = camera->GetViewProjectionMatrix();
+        }
+        Context->UpdateSubresource(perFrameConstantBuffer, 0, nullptr, &constantBufferData, 0, 0);
         for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
         {
             if (bucket->first == nullptr || !bucket->first->GetIsSkybox())
@@ -441,75 +357,6 @@ void DirectX11Graphics::Update()
         }
         Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
     }
-}
-
-void DirectX11Graphics::SetDirectionalLightBuffers()
-{
-    D3D11_MAPPED_SUBRESOURCE mappedResource;
-    Context->Map(directionalLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-    auto* data = static_cast<DirectionalLightBufferObject*>(mappedResource.pData);
-    data->color = Vec4(1, 0, 0, 1);
-    data->direction = Vec4(0, 1, 0, 1);
-    if (const auto scene = SceneManager::GetScene().lock())
-    {
-        auto dirLight = scene->GetDirectionalLight();
-        if (const auto& light = dirLight.lock())
-        {
-            data->color = light->GetColor();
-            data->direction = light->GetDirection();
-            data->intensity = light->intensity;
-        }
-    }
-    Context->Unmap(directionalLightBuffer, 0);
-    Context->PSSetConstantBuffers(2, 1, &directionalLightBuffer);
-    Context->VSSetConstantBuffers(2, 1, &directionalLightBuffer);
-}
-
-
-void DirectX11Graphics::SetLightBuffers()
-{
-    D3D11_MAPPED_SUBRESOURCE mappedResource;
-    Context->Map(lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-    LightBufferObject* data = static_cast<LightBufferObject*>(mappedResource.pData);
-
-    data->pointLightCount = 0;
-    data->spotlightCount = 0;
-
-    if (const auto scene = SceneManager::GetScene().lock())
-    {
-        auto lights = scene->GetLights();
-        for (auto& light : lights)
-        {
-            if (auto pointLight = std::dynamic_pointer_cast<PointLightComponent>(light))
-            {
-                if (data->pointLightCount < MAX_POINT_LIGHTS)
-                {
-                    data->pointLights[data->pointLightCount].base.color = pointLight->GetColor();
-                    data->pointLights[data->pointLightCount].base.intensity = pointLight->GetIntensity();
-                    data->pointLights[data->pointLightCount].position = pointLight->GetPosition();
-                    data->pointLightCount++;
-                }
-            }
-            else if (auto spotLight = std::dynamic_pointer_cast<SpotLightComponent>(light))
-            {
-                if (data->spotlightCount < MAX_SPOTLIGHTS)
-                {
-                    data->spotlights[data->spotlightCount].base.color = spotLight->GetColor();
-                    data->spotlights[data->spotlightCount].base.intensity = spotLight->GetIntensity();
-                    data->spotlights[data->spotlightCount].position = spotLight->GetPosition();
-                    data->spotlights[data->spotlightCount].direction = spotLight->GetDirection();
-                    data->spotlights[data->spotlightCount].innerCone = spotLight->GetInnerCone();
-                    data->spotlights[data->spotlightCount].outerCone = spotLight->GetOuterCone();
-                    data->spotlightCount++;
-
-                }
-            }
-        }
-    }
-
-    Context->Unmap(lightBuffer, 0);
-    Context->PSSetConstantBuffers(3, 1, &lightBuffer);
-    Context->VSSetConstantBuffers(3, 1, &lightBuffer);
 }
 
 void DirectX11Graphics::UpdateRenderable(IMaterial* mat, const std::shared_ptr<IRenderable>& renderable)
@@ -557,7 +404,7 @@ ITexture* DirectX11Graphics::CreateTexture(const wchar_t* filepath)
 
     if (IsValid())
     {
-        HRESULT hr = DirectX::CreateDDSTextureFromFile(Device, filepath, nullptr, &Texture);
+        HRESULT hr = CreateDDSTextureFromFile(Device, filepath, nullptr, &Texture);
 
         if (SUCCEEDED(hr))
         {
@@ -1084,52 +931,34 @@ bool DirectX11Graphics::TryUpdateShader(IShader* iShader, const char* vsentry, c
     return true;
 }
 
-void DirectX11Graphics::AmbientLightBufferUpdate()
-{
-    if (const auto& scene = SceneManager::GetScene().lock())
-    {
-        matrices.ambientLightColor = scene->GetAmbientLightColor();
-        matrices.ambientLightIntensity = scene->GetAmbientLightIntensity();
-    }
-    else
-    {
-        matrices.ambientLightColor = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
-        matrices.ambientLightIntensity = 1.0f;
-    }
-}
 
 void DirectX11Graphics::SetMatrixBuffers(const std::weak_ptr<Transform3D> transform)
 {
     if (std::shared_ptr<Transform3D> trans = transform.lock())
     {
-        DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(trans->Position.X(), trans->Position.Y(),
-                                                                     trans->Position.Z());
-        DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationRollPitchYaw(
-            DirectX::XMConvertToRadians(trans->Rotation.X())
-            , DirectX::XMConvertToRadians(trans->Rotation.Y()), DirectX::XMConvertToRadians(trans->Rotation.Z()));
-        DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(trans->Scale.X(), trans->Scale.Y(), trans->Scale.Z());
+        XMMATRIX translation = XMMatrixTranslation(trans->Position.X(), trans->Position.Y(),
+                                                   trans->Position.Z());
+        XMMATRIX rotation = XMMatrixRotationRollPitchYaw(
+            XMConvertToRadians(trans->Rotation.X())
+            , XMConvertToRadians(trans->Rotation.Y()), XMConvertToRadians(trans->Rotation.Z()));
+        XMMATRIX scale = XMMatrixScaling(trans->Scale.X(), trans->Scale.Y(), trans->Scale.Z());
 
-        DirectX::XMMATRIX world = scale * rotation * translation;
-        DirectX::XMMATRIX mvp = DirectX::XMMatrixMultiply(world, vpMatrix);
+        XMMATRIX model = scale * rotation * translation;
 
-        world = DirectX::XMMatrixTranspose(world);
-        mvp = DirectX::XMMatrixTranspose(mvp);
-        if (camera)
+
+        PerObjectConstantBufferData perObjectConstantBufferData;
+        perObjectConstantBufferData.WorldMatrix = model;
+        perObjectConstantBufferData.InverseTransposeWorldMatrix = XMMatrixTranspose(XMMatrixInverse(nullptr, model));
+        perObjectConstantBufferData.WorldViewProjectionMatrix = model * camera->GetViewProjectionMatrix();
+
+        Context->UpdateSubresource(perObjectConstantBuffer, 0, nullptr, &perObjectConstantBufferData, 0, 0);
+        if (const auto& scene = SceneManager::GetScene().lock())
         {
-
-            matrices.viewMatrix = DirectX::XMMatrixTranspose(camera->GetViewMatrix());
-            matrices.projection = DirectX::XMMatrixTranspose(camera->GetProjectionMatrix());
-            matrices.cameraPosition = camera->GetTransform()->Position;
+            lightProperties.GlobalAmbient = scene->GetAmbientLightColor();
         }
 
-        matrices.mvp = mvp;
-        matrices.worldMatrix = world;
-        AmbientLightBufferUpdate();
-
-
-        Context->UpdateSubresource(standardBuffer, 0, 0, &matrices, 0, 0);
-        Context->VSSetConstantBuffers(0, 1, &standardBuffer);
-        Context->PSSetConstantBuffers(0, 1, &standardBuffer);
+        Context->UpdateSubresource(perObjectConstantBuffer, 0, 0, &perObjectConstantBufferData, 0, 0);
+        Context->VSSetConstantBuffers(0, 1, &perObjectConstantBuffer);
     }
 }
 
