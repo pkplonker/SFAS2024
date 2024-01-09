@@ -7,7 +7,7 @@ class SpotLightComponent : public ILight, public IComponent
 {
 public:
     SpotLightComponent(std::weak_ptr<GameObject> gameObject);
-
+~SpotLightComponent() override;
     Vec3 GetPosition() const;
     void SetPosition(const Vec3& value);
 
@@ -19,6 +19,7 @@ public:
 
     float GetOuterCone() const;
     void SetOuterCone(float value);
+    ILight::Light& GetLight() override;
 
 protected:
     float innerCone = 1.0f;

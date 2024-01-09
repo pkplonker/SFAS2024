@@ -92,9 +92,9 @@ public:
     template <typename StringType>
     static void WrappedText(const char* label, StringType content,
                             const char* singleButtonText, const std::function<void()>& singleButtonCallback,
-                                    std::string identifier = "", bool icon = true)
+                            std::string identifier = "", bool icon = true)
     {
-        auto data = ButtonData(singleButtonText, singleButtonCallback,identifier, icon);
+        auto data = ButtonData(singleButtonText, singleButtonCallback, identifier, icon);
         std::vector buttons = {{data}};
         WrappedText(label, content, buttons);
     }
@@ -259,6 +259,14 @@ public:
         {
             valueChanged = ImGui::ColorEdit4(label, reinterpret_cast<float*>(&value), flags);
         }
+        else if constexpr (std::is_same<T, DirectX::XMFLOAT3>::value)
+        {
+            valueChanged = ImGui::ColorEdit3(label, reinterpret_cast<float*>(&value), flags);
+        }
+        else if constexpr (std::is_same<T, DirectX::XMFLOAT4>::value)
+        {
+            valueChanged = ImGui::ColorEdit4(label, reinterpret_cast<float*>(&value), flags);
+        }
 
         if (ImGui::IsItemActivated())
         {
@@ -273,7 +281,7 @@ public:
         if (ImGui::IsItemDeactivatedAfterEdit())
         {
             auto originalVal = colorEditStates[key];
-            if (value != originalVal)
+            if (valueChanged )
             {
                 UndoManager::Execute(
                     Memento(

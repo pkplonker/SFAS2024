@@ -275,24 +275,33 @@ nlohmann::json SceneSerializer::SerializeDirectionalLight(std::shared_ptr<Direct
 nlohmann::json SceneSerializer::SerializeSpotLight(const std::shared_ptr<SpotLightComponent>& spotLight)
 {
     nlohmann::json serializedData;
-    Vec4 color = spotLight->GetColor();
-    serializedData["colorX"] = color.X();
-    serializedData["colorY"] = color.Y();
-    serializedData["colorZ"] = color.Z();
-    serializedData["intensity"] = spotLight->GetIntensity();
-    serializedData["innerCone"] = spotLight->GetInnerCone();
-    serializedData["outerCone"] = spotLight->GetOuterCone();
+    auto color = spotLight->GetLight().Color;
+    serializedData["colorX"] = color.x;
+    serializedData["colorY"] = color.y;
+    serializedData["colorZ"] = color.z;
+    serializedData["colorZ"] = color.z;
+    serializedData["colorW"] = color.w;
+
+    serializedData["SpotAngle"] = spotLight->GetLight().SpotAngle;
+    serializedData["ConstantAttenuation"] = spotLight->GetLight().ConstantAttenuation;
+    serializedData["LinearAttenuation"] = spotLight->GetLight().LinearAttenuation;
+    serializedData["QuadraticAttenuation"] = spotLight->GetLight().QuadraticAttenuation;
+
     return serializedData;
 }
 
 nlohmann::json SceneSerializer::SerializePointLight(const std::shared_ptr<PointLightComponent>& pointLight)
 {
     nlohmann::json serializedData;
-    Vec4 color = pointLight->GetColor();
-    serializedData["colorX"] = color.X();
-    serializedData["colorY"] = color.Y();
-    serializedData["colorZ"] = color.Z();
-    serializedData["intensity"] = pointLight->GetIntensity();
+    auto color = pointLight->GetLight().Color;
+    serializedData["colorX"] = color.x;
+    serializedData["colorY"] = color.y;
+    serializedData["colorZ"] = color.z;
+    serializedData["colorW"] = color.w;
+
+    serializedData["ConstantAttenuation"] = pointLight->GetLight().ConstantAttenuation;
+    serializedData["LinearAttenuation"] = pointLight->GetLight().LinearAttenuation;
+    serializedData["QuadraticAttenuation"] = pointLight->GetLight().QuadraticAttenuation;
     return serializedData;
 }
 
@@ -541,13 +550,30 @@ void SceneSerializer::DeserializePointLight(const std::shared_ptr<GameObject>& g
     if (auto pointLight = std::dynamic_pointer_cast<PointLightComponent>(pointLightComponent);
         pointLight != nullptr)
     {
-        Vec3 color;
-
-        color.X(static_cast<float>(data["colorX"]));
-        color.Y(static_cast<float>(data["colorY"]));
-        color.Z(static_cast<float>(data["colorZ"]));
-        pointLight->SetIntensity(static_cast<float>(data["intensity"]));
-        pointLight->SetColor(color);
+        auto& light = pointLight->GetLight();
+        if (data.contains("colorW"))
+        {
+            light.Color = DirectX::XMFLOAT4(static_cast<float>(data["colorX"]), static_cast<float>(data["colorY"]),
+                                            static_cast<float>(data["colorZ"]), static_cast<float>(data["colorW"]));
+        }
+        if (data.contains("ConstantAttenuation"))
+        {
+            light.ConstantAttenuation = static_cast<float>(data["ConstantAttenuation"]);
+        }
+        if (data.contains("LinearAttenuation"))
+        {
+            light.LinearAttenuation = static_cast<float>(data["LinearAttenuation"]);
+        }
+        if (data.contains("QuadraticAttenuation"))
+        {
+            light.QuadraticAttenuation = static_cast<float>(data["QuadraticAttenuation"]);
+        }
+        if (data.contains("directionX"))
+        {
+            light.Direction = DirectX::XMFLOAT4(static_cast<float>(data["directionX"]),
+                                                static_cast<float>(data["directionY"]),
+                                                static_cast<float>(data["directionZ"]), 1.0f);
+        }
         gameObject->AddComponent(std::move(pointLight));
         scene->RegisterLight(gameObject->GetComponent<PointLightComponent>());
     }
@@ -564,18 +590,39 @@ void SceneSerializer::DeserializeSpotLight(const std::shared_ptr<GameObject>& ga
     if (auto spotLight = std::dynamic_pointer_cast<SpotLightComponent>(spotLightComponent);
         spotLight != nullptr)
     {
-        Vec3 color;
+        auto& light = spotLight->GetLight();
+        if (data.contains("SpotAngle"))
+        {
+            light.SpotAngle = static_cast<float>(data["SpotAngle"]);
+        }
+        if (data.contains("colorW"))
+        {
+            light.Color = DirectX::XMFLOAT4(static_cast<float>(data["colorX"]), static_cast<float>(data["colorY"]),
+                                            static_cast<float>(data["colorZ"]), static_cast<float>(data["colorW"]));
+        }
 
-        color.X(static_cast<float>(data["colorX"]));
-        color.Y(static_cast<float>(data["colorY"]));
-        color.Z(static_cast<float>(data["colorZ"]));
-        spotLight->SetIntensity(static_cast<float>(data["intensity"]));
-        spotLight->SetColor(color);
-        spotLight->SetInnerCone(static_cast<float>(data["innerCone"]));
-        spotLight->SetOuterCone(static_cast<float>(data["outerCone"]));
+        if (data.contains("ConstantAttenuation"))
+        {
+            light.ConstantAttenuation = static_cast<float>(data["ConstantAttenuation"]);
+        }
+        if (data.contains("LinearAttenuation"))
+        {
+            light.LinearAttenuation = static_cast<float>(data["LinearAttenuation"]);
+        }
+        if (data.contains("QuadraticAttenuation"))
+        {
+            light.QuadraticAttenuation = static_cast<float>(data["QuadraticAttenuation"]);
+        }
+        if (data.contains("directionX"))
+        {
+            light.Direction = DirectX::XMFLOAT4(static_cast<float>(data["directionX"]),
+                                                static_cast<float>(data["directionY"]),
+                                                static_cast<float>(data["directionZ"]), 1.0f);
+        }
         gameObject->AddComponent(std::move(spotLight));
         scene->RegisterLight(gameObject->GetComponent<SpotLightComponent>());
     }
+
     else
     {
         Warning("Failed to cast created point light component")

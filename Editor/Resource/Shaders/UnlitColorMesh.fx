@@ -222,7 +222,10 @@ LightingResult ComputeLighting( float4 P, float3 N )
 float4 PS_Main( VertexShaderOutput IN ) : SV_TARGET
 {
     LightingResult lit = ComputeLighting( IN.PositionWS, normalize(IN.NormalWS) );
-    
+    //LightingResult lit;
+	//lit.Diffuse = float4(0,0,0,0);
+	//lit.Specular = float4(0,0,0,0);
+
     float4 emissive = material.Emissive;
     float4 ambient = material.Ambient * GlobalAmbient;
     float4 diffuse = material.Diffuse * lit.Diffuse;

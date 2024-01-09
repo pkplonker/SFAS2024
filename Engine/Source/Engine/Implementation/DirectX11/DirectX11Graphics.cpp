@@ -332,6 +332,33 @@ void DirectX11Graphics::Update()
             constantBufferData.ViewProjectionMatrix = camera->GetViewProjectionMatrix();
         }
         Context->UpdateSubresource(perFrameConstantBuffer, 0, nullptr, &constantBufferData, 0, 0);
+
+        if (camera != nullptr)
+        {
+            auto pos = camera->GetTransform()->Position;
+            lightProperties.EyePosition = XMFLOAT4(pos.X(), pos.Y(), pos.Z(), 1);
+        }
+
+        if (const auto& scene = SceneManager::GetScene().lock())
+        {
+            lightProperties.GlobalAmbient = XMFLOAT4(scene->GetAmbientLightColor().vec.x,
+                                                     scene->GetAmbientLightColor().vec.y,
+                                                     scene->GetAmbientLightColor().vec.z, 1.0f);
+            int count = 0;
+            for (auto light : scene->GetLights())
+            {
+                
+                lightProperties.Lights[count] = light->GetLight();
+                count++;
+                if (count == MAX_LIGHTS)
+                {
+                    break;
+                }
+            }
+        }
+        Context->UpdateSubresource(lightPropertiesConstantBuffer, 0, nullptr, &lightProperties, 0, 0);
+        Context->PSSetConstantBuffers(1, 1, &lightPropertiesConstantBuffer);
+
         for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
         {
             if (bucket->first == nullptr)
@@ -944,21 +971,7 @@ void DirectX11Graphics::SetMatrixBuffers(const std::weak_ptr<Transform3D> transf
         perObjectConstantBufferData.WorldMatrix = model;
         perObjectConstantBufferData.InverseTransposeWorldMatrix = XMMatrixTranspose(XMMatrixInverse(nullptr, model));
         perObjectConstantBufferData.WorldViewProjectionMatrix = model * camera->GetViewProjectionMatrix();
-
         Context->UpdateSubresource(perObjectConstantBuffer, 0, nullptr, &perObjectConstantBufferData, 0, 0);
-        if (const auto& scene = SceneManager::GetScene().lock())
-        {
-            lightProperties.GlobalAmbient = XMFLOAT4(scene->GetAmbientLightColor().vec.x,
-                                                     scene->GetAmbientLightColor().vec.y,
-                                                     scene->GetAmbientLightColor().vec.z, 1.0f);
-            if (camera != nullptr)
-            {
-                auto pos = camera->GetTransform()->Position;
-                lightProperties.EyePosition = XMFLOAT4(pos.X(), pos.Y(), pos.Z(), 1);
-            }
-        }
-
-        Context->UpdateSubresource(perObjectConstantBuffer, 0, 0, &perObjectConstantBufferData, 0, 0);
         Context->VSSetConstantBuffers(0, 1, &perObjectConstantBuffer);
     }
 }

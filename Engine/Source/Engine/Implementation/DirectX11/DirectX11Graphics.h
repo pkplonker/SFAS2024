@@ -12,6 +12,7 @@
 #include "RenderingStats.h"
 #include "Engine/ICamera.h"
 #include "Engine/Math/Vector4.h"
+#include "Implementation/ILight.h"
 
 struct Vec4;
 struct Transform3D;
@@ -23,44 +24,11 @@ struct ID3D11Texture2D;
 struct ID3D11Buffer;
 struct ID3D11BlendState;
 enum D3D_FEATURE_LEVEL;
-
 struct MaterialProps;
 #define MAX_LIGHTS 8
 
 
-enum LightType
-{
-    DirectionalLight = 0,
-    PointLight = 1,
-    SpotLight = 2
-};
 
-struct Light
-{
-    Light()
-        : Position(0.0f, 0.0f, 0.0f, 1.0f)
-          , Direction(0.0f, 0.0f, 1.0f, 0.0f)
-          , Color(1.0f, 1.0f, 1.0f, 1.0f)
-          , SpotAngle(DirectX::XM_PIDIV2)
-          , ConstantAttenuation(1.0f)
-          , LinearAttenuation(0.0f)
-          , QuadraticAttenuation(0.0f)
-          , LightType(DirectionalLight)
-          , Enabled(0)
-    {
-    }
-
-    DirectX::XMFLOAT4 Position;
-    DirectX::XMFLOAT4 Direction;
-    DirectX::XMFLOAT4 Color;
-    float SpotAngle;
-    float ConstantAttenuation;
-    float LinearAttenuation;
-    float QuadraticAttenuation;
-    int LightType;
-    int Enabled;
-    int Padding[2];
-};
 
 struct LightProperties
 {
@@ -69,13 +37,10 @@ struct LightProperties
           , GlobalAmbient(0.2f, 0.2f, 0.8f, 1.0f)
     {
     }
-
     DirectX::XMFLOAT4 EyePosition;
-    //----------------------------------- (16 byte boundary)
     DirectX::XMFLOAT4 GlobalAmbient;
-    //----------------------------------- (16 byte boundary)
-    Light Lights[MAX_LIGHTS]; // 80 * 8 bytes
-}; // Total:                                  672 bytes (42 * 16)
+    ILight::Light Lights[MAX_LIGHTS]; 
+}; 
 
 class DirectX11Graphics : public IGraphics
 {

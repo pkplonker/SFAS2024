@@ -36,31 +36,40 @@ void PointLightComponentDrawer::Draw()
 
                     ImGui::EndPopup();
                 }
-                auto color = static_cast<Vec4>(lightComponent->GetColor());
-                float colorFloat[3];
-                colorFloat[0] = color.X();
-                colorFloat[1] = color.Y();
-                colorFloat[2] = color.Z();
+                
 
                 ImGui::Text("Light Color");
                 ImGui::SameLine();
-                ImGuiHelpers::UndoableColorEdit<Vec3>(
-                    [&]() { return static_cast<Vec3>(lightComponent->GetColor()); },
-                    [lightComponent](Vec3 newColor) { lightComponent->SetColor(newColor); },
+                ImGuiHelpers::UndoableColorEdit<DirectX::XMFLOAT4>(
+                    [&]() { return lightComponent->GetLight().Color; },
+                    [lightComponent](DirectX::XMFLOAT4 newValue) { lightComponent->GetLight().Color = newValue; },
                     "##LightColor",
                     "Change Light Color"
                 );
-                ImGui::Text("Light Intensity");
+                
+                ImGui::Text("Constant Attenuation");
                 ImGui::SameLine();
-                auto intensity = lightComponent->GetIntensity();
                 ImGuiHelpers::UndoableDrag<float>(
-                    [&intensity]() { return intensity; },
-                    [lightComponent](float newValue) { lightComponent->SetIntensity(newValue); },
-                    std::string("##Intensity").c_str(),
-                    "Changed Intensity",
-                    0,
-                    10,
-                    0.1f
+                    [&]() { return lightComponent->GetLight().ConstantAttenuation; },
+                    [lightComponent](float newValue) { lightComponent->GetLight().ConstantAttenuation = newValue; },
+                    "##LightColor",
+                    "Change Light ConstantAttenuation",0,10,0.01f
+                );
+                ImGui::Text("Linear Attenuation");
+                ImGui::SameLine();
+                ImGuiHelpers::UndoableDrag<float>(
+                    [&]() { return lightComponent->GetLight().LinearAttenuation; },
+                    [lightComponent](float newValue) { lightComponent->GetLight().LinearAttenuation = newValue; },
+                    "##Linear Attenuation",
+                    "Change Light Linear Attenuation",0,10,0.01f
+                );
+                ImGui::Text("Quadratic Attenuation");
+                ImGui::SameLine();
+                ImGuiHelpers::UndoableDrag<float>(
+                    [&]() { return lightComponent->GetLight().QuadraticAttenuation; },
+                    [lightComponent](float newValue) { lightComponent->GetLight().QuadraticAttenuation = newValue; },
+                    "##Quadratic Attenuation",
+                    "Change Light Quadratic Attenuation",0,10,0.01f
                 );
             }
         }
