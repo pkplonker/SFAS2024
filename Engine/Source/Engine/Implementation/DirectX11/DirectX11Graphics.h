@@ -24,9 +24,9 @@ struct ID3D11BlendState;
 enum D3D_FEATURE_LEVEL;
 #define MAX_LIGHTS 8
 
-struct _Material
+struct MaterialProps
 {
-    _Material()
+    MaterialProps()
         : Emissive(0.0f, 0.0f, 0.0f, 1.0f)
           , Ambient(0.1f, 0.1f, 0.1f, 1.0f)
           , Diffuse(1.0f, 1.0f, 1.0f, 1.0f)
@@ -54,7 +54,7 @@ struct _Material
 
 struct MaterialProperties
 {
-    _Material Material;
+    MaterialProps Material;
 };
 
 enum LightType

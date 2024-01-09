@@ -8,7 +8,7 @@ cbuffer PerObject : register( b0 )
 struct AppData
 {
     float4 Position : POSITION;
-	float4 color    : COLOR;
+	float4 Color    : COLOR;
     float3 Normal   : NORMAL;
     float2 TexCoord : TEXCOORD;
 };
@@ -19,6 +19,7 @@ struct VertexShaderOutput
     float3 NormalWS     : TEXCOORD2;
     float2 TexCoord     : TEXCOORD0;
     float4 Position     : SV_Position;
+	float4 Color : COLOR;
 };
 
 VertexShaderOutput VS_Main( AppData IN )
@@ -29,7 +30,7 @@ VertexShaderOutput VS_Main( AppData IN )
     OUT.PositionWS = mul( WorldMatrix, IN.Position );
     OUT.NormalWS = mul( (float3x3)InverseTransposeWorldMatrix, IN.Normal );
     OUT.TexCoord = IN.TexCoord;
-
+	OUT.Color = IN.Color;
     return OUT;
 }
 
@@ -43,7 +44,7 @@ VertexShaderOutput VS_Main( AppData IN )
 Texture2D Texture : register(t0);
 sampler Sampler : register(s0);
 
-struct _Material
+struct Material
 {
     float4  Emissive;       // 16 bytes
     //----------------------------------- (16 byte boundary)
@@ -61,7 +62,7 @@ struct _Material
 
 cbuffer MaterialProperties : register(b0)
 {
-    _Material Material;
+    Material material;
 };
 
 struct Light
@@ -108,7 +109,7 @@ float4 DoSpecular( Light light, float3 V, float3 L, float3 N )
     float3 H = normalize( L + V );
     float NdotH = max( 0, dot( N, H ) );
 
-    return light.Color * pow( RdotV, Material.SpecularPower );
+    return light.Color * pow( RdotV, material.SpecularPower );
 }
 
 float DoAttenuation( Light light, float d )
@@ -216,25 +217,19 @@ LightingResult ComputeLighting( float4 P, float3 N )
     return totalResult;
 }
 
-struct PixelShaderInput
-{
-    float4 PositionWS   : TEXCOORD1;
-    float3 NormalWS     : TEXCOORD2;
-    float2 TexCoord     : TEXCOORD0;
-};
 
-float4 PS_Main( PixelShaderInput IN ) : SV_TARGET
+float4 PS_Main( VertexShaderOutput IN ) : SV_TARGET
 {
     LightingResult lit = ComputeLighting( IN.PositionWS, normalize(IN.NormalWS) );
     
-    float4 emissive = Material.Emissive;
-    float4 ambient = Material.Ambient * GlobalAmbient;
-    float4 diffuse = Material.Diffuse * lit.Diffuse;
-    float4 specular = Material.Specular * lit.Specular;
+    float4 emissive = material.Emissive;
+    float4 ambient = material.Ambient * GlobalAmbient;
+    float4 diffuse = material.Diffuse * lit.Diffuse;
+    float4 specular = material.Specular * lit.Specular;
 
-    float4 texColor = { 1, 1, 1, 1 };
+    float4 texColor = IN.Color;
     
-    if ( Material.UseTexture )
+    if ( material.UseTexture )
     {
         texColor = Texture.Sample( Sampler, IN.TexCoord );
     }

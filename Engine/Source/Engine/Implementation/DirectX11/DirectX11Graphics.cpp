@@ -127,7 +127,7 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : FeatureLevel(D3D_FEATURE_LEV
         }
         constantBufferDesc.ByteWidth = sizeof(MaterialProperties);
 
-        hr = Device->CreateBuffer(&constantBufferDesc, nullptr, &lightPropertiesConstantBuffer);
+        hr = Device->CreateBuffer(&constantBufferDesc, nullptr, &materialPropertiesConstantBuffer);
         if (FAILED(hr))
         {
             MessageBoxA(nullptr, "Failed to create constant buffer for material properties.", "Error",
@@ -136,7 +136,7 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : FeatureLevel(D3D_FEATURE_LEV
         }
 
         constantBufferDesc.ByteWidth = sizeof(LightProperties);
-        hr = Device->CreateBuffer(&constantBufferDesc, nullptr, &materialPropertiesConstantBuffer);
+        hr = Device->CreateBuffer(&constantBufferDesc, nullptr, &lightPropertiesConstantBuffer);
         if (FAILED(hr))
         {
             MessageBoxA(nullptr, "Failed to create constant buffer for light properties.", "Error",
@@ -233,15 +233,21 @@ void DirectX11Graphics::RenderBucket(RenderingStats& stats, IShader* previousSha
     {
         return;
     }
-    bucket->first->GetIsSkybox()
-        ? Context->OMSetDepthStencilState(skyDepthState, 1)
-        : Context->OMSetDepthStencilState(depthState, 1);
+    Context->OMSetDepthStencilState(depthState, 1);
 
     if (!bucket->first->Update())
     {
         return;
     }
     stats.materials++;
+
+    MaterialProps materialProperties;
+    auto mat = bucket->first;
+    materialProperties.UseTexture = true;
+
+    Context->UpdateSubresource(materialPropertiesConstantBuffer, 0, nullptr, &materialProperties, 0, 0);
+    Context->PSSetConstantBuffers(0, 1, &materialPropertiesConstantBuffer);
+
 
     for (auto renderable = bucket->second.begin(); renderable != bucket->second.end(); ++renderable)
     {
@@ -329,18 +335,7 @@ void DirectX11Graphics::Update()
         Context->UpdateSubresource(perFrameConstantBuffer, 0, nullptr, &constantBufferData, 0, 0);
         for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
         {
-            if (bucket->first == nullptr || !bucket->first->GetIsSkybox())
-            {
-                continue;
-            }
-
-            Context->OMSetDepthStencilState(skyDepthState, 1);
-
-            RenderBucket(stats, previousShader, bucket);
-        }
-        for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
-        {
-            if (bucket->first == nullptr || bucket->first->GetIsSkybox())
+            if (bucket->first == nullptr)
             {
                 continue;
             }
