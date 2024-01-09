@@ -1,16 +1,34 @@
 ﻿#pragma once
 #include "Engine/Math/Vector4.h"
+#include "Implementation/DirectX11/DirectX11Graphics.h"
 class ITexture;
 class IShader;
 
 const float MATERIAL_DEFAULT_COLOR = 1.0f;
 
-struct MaterialBufferObject
+struct MaterialProperties
 {
-    Vec4 color;
-    bool useTex = false;
-    float padding[3]{0, 0, 0};
+    MaterialProperties()
+        : Emissive(0.2f, 0.2f, 0.2f, 1.0f)
+          , Ambient(0.1f, 0.1f, 0.1f, 1.0f)
+          , Diffuse(1.0f, 1.0f, 1.0f, 1.0f)
+          , Specular(1.0f, 1.0f, 1.0f, 1.0f)
+          , SpecularPower(32.0f)
+          , UseTexture(false)
+          , Color(1.0f, 1.0f, 1.0f, 1.0f)
+    {
+    }
+
+    Vec4 Emissive;
+    Vec4 Ambient;
+    Vec4 Diffuse;
+    Vec4 Specular;
+    float SpecularPower;
+    int UseTexture;
+    float Padding[2];
+    Vec4 Color;
 };
+
 
 class IMaterial
 {
@@ -24,12 +42,13 @@ public:
     virtual ITexture* GetTexture() { return texture; }
     virtual Vec4 GetColor() { return color; }
     virtual void SetColor(Vec4 value) { color = value; }
-    void UpdateMaterialBuffer(MaterialBufferObject* data);
     virtual bool GetIsSkybox() =0;
     virtual void SetIsSkyBox(bool val) =0;
+    MaterialProperties GetMaterialProperties();
 
 protected:
     IShader* shader = {};
     ITexture* texture = {};
     Vec4 color = MATERIAL_DEFAULT_COLOR;
+    MaterialProperties materialProperties;
 };

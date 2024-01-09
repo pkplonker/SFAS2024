@@ -241,9 +241,8 @@ void DirectX11Graphics::RenderBucket(RenderingStats& stats, IShader* previousSha
     }
     stats.materials++;
 
-    MaterialProps materialProperties;
-    auto mat = bucket->first;
-    materialProperties.UseTexture = true;
+    MaterialProperties materialProperties;
+    materialProperties = bucket->first->GetMaterialProperties();
 
     Context->UpdateSubresource(materialPropertiesConstantBuffer, 0, nullptr, &materialProperties, 0, 0);
     Context->PSSetConstantBuffers(0, 1, &materialPropertiesConstantBuffer);
@@ -949,7 +948,9 @@ void DirectX11Graphics::SetMatrixBuffers(const std::weak_ptr<Transform3D> transf
         Context->UpdateSubresource(perObjectConstantBuffer, 0, nullptr, &perObjectConstantBufferData, 0, 0);
         if (const auto& scene = SceneManager::GetScene().lock())
         {
-            lightProperties.GlobalAmbient = scene->GetAmbientLightColor();
+            lightProperties.GlobalAmbient = XMFLOAT4(scene->GetAmbientLightColor().vec.x,
+                                                     scene->GetAmbientLightColor().vec.y,
+                                                     scene->GetAmbientLightColor().vec.z, 1.0f);
         }
 
         Context->UpdateSubresource(perObjectConstantBuffer, 0, 0, &perObjectConstantBufferData, 0, 0);

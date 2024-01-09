@@ -2,7 +2,7 @@
 
 #include "ResourceManager.h"
 
-IMaterial::IMaterial(Vec4 color)
+IMaterial::IMaterial(Vec4 color) : materialProperties(MaterialProperties())
 {
     SetShader(ResourceManager::GetShader());
     this->color = color;
@@ -12,8 +12,8 @@ IMaterial::~IMaterial()
 {
 }
 
-void IMaterial::UpdateMaterialBuffer(MaterialBufferObject* data)
+MaterialProperties IMaterial::GetMaterialProperties()
 {
-    data->color = color;
-    data->useTex = texture != nullptr;
+    materialProperties.UseTexture = texture != nullptr;
+    return materialProperties;
 }

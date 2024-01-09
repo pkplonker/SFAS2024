@@ -57,6 +57,7 @@ struct Material
     float   SpecularPower;  // 4 bytes
     bool    UseTexture;     // 4 bytes
     float2  Padding;        // 8 bytes
+	float4  Color;
     //----------------------------------- (16 byte boundary)
 };  // Total:               // 80 bytes ( 5 * 16 )
 
@@ -227,7 +228,7 @@ float4 PS_Main( VertexShaderOutput IN ) : SV_TARGET
     float4 diffuse = material.Diffuse * lit.Diffuse;
     float4 specular = material.Specular * lit.Specular;
 
-    float4 texColor = IN.Color;
+    float4 texColor = IN.Color * material.Color;
     
     if ( material.UseTexture )
     {
@@ -237,5 +238,6 @@ float4 PS_Main( VertexShaderOutput IN ) : SV_TARGET
     float4 finalColor = ( emissive + ambient + diffuse + specular ) * texColor;
 
     return finalColor;
-	//return float4(1,0,0,1);
+	return float4(1,0,0,1);
+	return float4(1,0,0,1);
 }

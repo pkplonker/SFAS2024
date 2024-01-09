@@ -8,6 +8,7 @@
 #include <DirectXMath.h>
 #include <memory>
 
+#include "IMaterial.h"
 #include "RenderingStats.h"
 #include "Engine/ICamera.h"
 #include "Engine/Math/Vector4.h"
@@ -22,40 +23,10 @@ struct ID3D11Texture2D;
 struct ID3D11Buffer;
 struct ID3D11BlendState;
 enum D3D_FEATURE_LEVEL;
+
+struct MaterialProps;
 #define MAX_LIGHTS 8
 
-struct MaterialProps
-{
-    MaterialProps()
-        : Emissive(0.0f, 0.0f, 0.0f, 1.0f)
-          , Ambient(0.1f, 0.1f, 0.1f, 1.0f)
-          , Diffuse(1.0f, 1.0f, 1.0f, 1.0f)
-          , Specular(1.0f, 1.0f, 1.0f, 1.0f)
-          , SpecularPower(128.0f)
-          , UseTexture(false)
-    {
-    }
-
-    DirectX::XMFLOAT4 Emissive;
-    //----------------------------------- (16 byte boundary)
-    DirectX::XMFLOAT4 Ambient;
-    //----------------------------------- (16 byte boundary)
-    DirectX::XMFLOAT4 Diffuse;
-    //----------------------------------- (16 byte boundary)
-    DirectX::XMFLOAT4 Specular;
-    //----------------------------------- (16 byte boundary)
-    float SpecularPower;
-    // Add some padding complete the 16 byte boundary.
-    int UseTexture;
-    // Add some padding to complete the 16 byte boundary.
-    float Padding[2];
-    //----------------------------------- (16 byte boundary)
-}; // Total:                                80 bytes (5 * 16)
-
-struct MaterialProperties
-{
-    MaterialProps Material;
-};
 
 enum LightType
 {
@@ -80,22 +51,16 @@ struct Light
     }
 
     DirectX::XMFLOAT4 Position;
-    //----------------------------------- (16 byte boundary)
     DirectX::XMFLOAT4 Direction;
-    //----------------------------------- (16 byte boundary)
     DirectX::XMFLOAT4 Color;
-    //----------------------------------- (16 byte boundary)
     float SpotAngle;
     float ConstantAttenuation;
     float LinearAttenuation;
     float QuadraticAttenuation;
-    //----------------------------------- (16 byte boundary)
     int LightType;
     int Enabled;
-    // Add some padding to make this struct size a multiple of 16 bytes.
     int Padding[2];
-    //----------------------------------- (16 byte boundary)
-}; // Total:                              80 bytes ( 5 * 16 )
+};
 
 struct LightProperties
 {
@@ -105,9 +70,9 @@ struct LightProperties
     {
     }
 
-    Vec4 EyePosition;
+    DirectX::XMFLOAT4 EyePosition;
     //----------------------------------- (16 byte boundary)
-    Vec4 GlobalAmbient;
+    DirectX::XMFLOAT4 GlobalAmbient;
     //----------------------------------- (16 byte boundary)
     Light Lights[MAX_LIGHTS]; // 80 * 8 bytes
 }; // Total:                                  672 bytes (42 * 16)
