@@ -232,12 +232,12 @@ float4 PS_Main( VertexShaderOutput IN ) : SV_TARGET
     
     if ( material.UseTexture )
     {
-        texColor = Texture.Sample( Sampler, IN.TexCoord );
+        texColor = Texture.Sample( Sampler, IN.TexCoord )* material.Color;
     }
 
     float4 finalColor = ( emissive + ambient + diffuse + specular ) * texColor;
 
     return finalColor;
-	return float4(1,0,0,1);
+	return ambient * texColor;
 	return float4(1,0,0,1);
 }

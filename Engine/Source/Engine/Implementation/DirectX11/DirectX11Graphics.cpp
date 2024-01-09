@@ -951,6 +951,11 @@ void DirectX11Graphics::SetMatrixBuffers(const std::weak_ptr<Transform3D> transf
             lightProperties.GlobalAmbient = XMFLOAT4(scene->GetAmbientLightColor().vec.x,
                                                      scene->GetAmbientLightColor().vec.y,
                                                      scene->GetAmbientLightColor().vec.z, 1.0f);
+            if (camera != nullptr)
+            {
+                auto pos = camera->GetTransform()->Position;
+                lightProperties.EyePosition = XMFLOAT4(pos.X(), pos.Y(), pos.Z(), 1);
+            }
         }
 
         Context->UpdateSubresource(perObjectConstantBuffer, 0, 0, &perObjectConstantBufferData, 0, 0);

@@ -60,12 +60,11 @@ nlohmann::json SceneSerializer::SerializeMaterial(const std::shared_ptr<IRendera
         {
             serializedData["texture"] = Helpers::WideStringToString(texture->GetPath());
         }
-        auto color = material->GetColor();
+        auto color = material->GetMaterialProperties().Color;
         serializedData["color"]["r"] = color.X();
         serializedData["color"]["g"] = color.Y();
         serializedData["color"]["b"] = color.Z();
         serializedData["color"]["a"] = color.W();
-        serializedData["skybox"] = material->GetIsSkybox();
     }
     return serializedData;
 }
@@ -382,15 +381,10 @@ IMaterial* SceneSerializer::DeserializeMaterial(const nlohmann::json& data, std:
     }
     if (data.contains("color"))
     {
-        material->SetColor(Vec4(static_cast<float>(data["color"]["r"]),
-                                static_cast<float>(data["color"]["g"]),
-                                static_cast<float>(data["color"]["b"]),
-                                static_cast<float>(data["color"]["a"]))
-        );
-    }
-    if (data.contains("skybox"))
-    {
-        material->SetIsSkyBox(data["skybox"]);
+        material->GetMaterialProperties().Color = Vec4(static_cast<float>(data["color"]["r"]),
+                                                       static_cast<float>(data["color"]["g"]),
+                                                       static_cast<float>(data["color"]["b"]),
+                                                       static_cast<float>(data["color"]["a"]));
     }
     return material;
 }

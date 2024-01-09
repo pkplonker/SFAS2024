@@ -12,7 +12,7 @@ IMaterial::~IMaterial()
 {
 }
 
-MaterialProperties IMaterial::GetMaterialProperties()
+MaterialProperties& IMaterial::GetMaterialProperties()
 {
     materialProperties.UseTexture = texture != nullptr;
     return materialProperties;

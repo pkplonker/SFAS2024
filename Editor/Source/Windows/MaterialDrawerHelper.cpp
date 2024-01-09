@@ -117,21 +117,66 @@ void MaterialDrawerHelper::DrawMaterial()
 
             ImGui::Text("Color:");
             ImGui::SameLine();
-            Vec4 color = static_cast<Vec4>(mat->GetColor());
-
             ImGuiHelpers::UndoableColorEdit<Vec4>(
-                [&]() { return static_cast<Vec4>(mat->GetColor()); },
-                [mat](Vec4 newColor) { mat->SetColor(newColor); },
+                [&]() { return mat->GetMaterialProperties().Color; },
+                [mat](Vec4 newValue) { mat->GetMaterialProperties().Color = newValue; },
                 "##MaterialColor",
                 "Change Material Color",
                 ImGuiColorEditFlags_Float
             );
+            
+            ImGui::Text("Emissive:");
+            ImGui::SameLine();
+            ImGuiHelpers::UndoableColorEdit<Vec4>(
+               [&]() { return mat->GetMaterialProperties().Emissive; },
+               [mat](Vec4 newValue) { mat->GetMaterialProperties().Emissive = newValue; },
+               "##MaterialEmissive",
+               "Change MaterialEmissive",
+               ImGuiColorEditFlags_Float
+           );
 
-            auto sb = mat->GetIsSkybox();
-            if (ImGui::Checkbox("Is Skybox", &sb))
-            {
-                mat->SetIsSkyBox(sb);
-            }
+            ImGui::Text("Ambient:");
+            ImGui::SameLine();
+            ImGuiHelpers::UndoableColorEdit<Vec4>(
+               [&]() { return mat->GetMaterialProperties().Ambient; },
+               [mat](Vec4 newValue) { mat->GetMaterialProperties().Ambient = newValue; },
+               "##MaterialAmbient",
+               "Change Material Ambient",
+               ImGuiColorEditFlags_Float
+           );
+            
+            ImGui::Text("Diffuse:");
+            ImGui::SameLine();
+            ImGuiHelpers::UndoableColorEdit<Vec4>(
+               [&]() { return mat->GetMaterialProperties().Diffuse; },
+               [mat](Vec4 newValue) { mat->GetMaterialProperties().Diffuse = newValue; },
+               "##MaterialDiffuse",
+               "Change Material Diffuse",
+               ImGuiColorEditFlags_Float
+           );
+
+            ImGui::Text("Specular:");
+            ImGui::SameLine();
+            ImGuiHelpers::UndoableColorEdit<Vec4>(
+               [&]() { return mat->GetMaterialProperties().Specular; },
+               [mat](Vec4 newValue) { mat->GetMaterialProperties().Specular = newValue; },
+               "##MaterialSpecular",
+               "Change Material Specular",
+               ImGuiColorEditFlags_Float
+           );
+            ImGui::Text("Specular Power");
+            ImGui::SameLine();
+            auto power = mat->GetMaterialProperties().SpecularPower;
+            ImGuiHelpers::UndoableDrag<float>(
+                [&power]() { return power; },
+                [mat](float newValue) { mat->GetMaterialProperties().SpecularPower = newValue; },
+                std::string("##Specular Power").c_str(),
+                "Changed Specular Power",
+                0.01,
+                256,
+                0.1f
+            );
+            
         }
         else
         {
@@ -171,8 +216,7 @@ void MaterialDrawerHelper::ChangeShader()
                 [comp, shader, originalMaterial]()
                 {
                     auto material = Editor::GetGraphics()->CreateMaterial(shader, (*originalMaterial)->GetTexture());
-                    material->SetColor((*originalMaterial)->GetColor());
-                    material->SetIsSkyBox((*originalMaterial)->GetIsSkybox());
+                    material->GetMaterialProperties().Color = (*originalMaterial)->GetMaterialProperties().Color;
                     comp->SetMaterial(material);
                 },
                 [comp, originalMaterial]()
@@ -218,8 +262,7 @@ void MaterialDrawerHelper::ChangeTexture()
                 [comp, texture, originalMaterial]()
                 {
                     auto material = Editor::GetGraphics()->CreateMaterial((*originalMaterial)->GetShader(), texture);
-                    material->SetColor((*originalMaterial)->GetColor());
-                    material->SetIsSkyBox((*originalMaterial)->GetIsSkybox());
+                    material->GetMaterialProperties().Color = (*originalMaterial)->GetMaterialProperties().Color;
                     comp->SetMaterial(material);
                 },
                 [comp, originalMaterial]()

@@ -20,7 +20,6 @@
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bottle1.smesh",
                         "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bottle1.smesh"
@@ -54,13 +53,12 @@
                     "material": {
                         "color": {
                             "a": 1.0,
-                            "b": 1.0,
-                            "g": 1.0,
+                            "b": 0.0,
+                            "g": 0.0,
                             "r": 1.0
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
                 },
@@ -130,7 +128,6 @@
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Cup.smesh",
                         "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Cup.smesh"
@@ -170,7 +167,6 @@
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell.smesh",
                         "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell.smesh"
@@ -210,7 +206,6 @@
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Plate.smesh",
                         "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Plate.smesh"
@@ -250,7 +245,6 @@
                         },
                         "mesh": "",
                         "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": ""
@@ -290,7 +284,6 @@
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Crate1.smesh",
                         "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Crate1.smesh"
@@ -330,7 +323,6 @@
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Table.smesh",
                         "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Table.smesh"
@@ -370,7 +362,6 @@
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell2.smesh",
                         "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell2.smesh"
@@ -475,7 +466,6 @@
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell.smesh",
                         "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell.smesh"
@@ -515,7 +505,6 @@
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Fire.smesh",
                         "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Fire.smesh"
@@ -578,8 +567,7 @@
                             "r": 0.4852941036224365
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Terrain.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Terrain.smesh"
                 },
@@ -617,7 +605,6 @@
                         },
                         "mesh": "",
                         "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": ""
@@ -686,7 +673,6 @@
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Crate2.smesh",
                         "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Crate2.smesh"
@@ -726,7 +712,6 @@
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bucket.smesh",
                         "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bucket.smesh"

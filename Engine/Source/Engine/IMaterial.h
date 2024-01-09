@@ -9,13 +9,13 @@ const float MATERIAL_DEFAULT_COLOR = 1.0f;
 struct MaterialProperties
 {
     MaterialProperties()
-        : Emissive(0.2f, 0.2f, 0.2f, 1.0f)
-          , Ambient(0.1f, 0.1f, 0.1f, 1.0f)
+        : Emissive(1.0f, 1.0f, 1.0f, 1.0f)
+          , Ambient(1.0f, 1.0f, 1.0f, 1.0f)
           , Diffuse(1.0f, 1.0f, 1.0f, 1.0f)
           , Specular(1.0f, 1.0f, 1.0f, 1.0f)
           , SpecularPower(32.0f)
           , UseTexture(false)
-          , Color(1.0f, 1.0f, 1.0f, 1.0f)
+          , Color(MATERIAL_DEFAULT_COLOR,MATERIAL_DEFAULT_COLOR,MATERIAL_DEFAULT_COLOR,MATERIAL_DEFAULT_COLOR)
     {
     }
 
@@ -40,11 +40,7 @@ public:
     virtual void SetTexture(ITexture* value) { this->texture = value; }
     virtual IShader* GetShader() { return shader; }
     virtual ITexture* GetTexture() { return texture; }
-    virtual Vec4 GetColor() { return color; }
-    virtual void SetColor(Vec4 value) { color = value; }
-    virtual bool GetIsSkybox() =0;
-    virtual void SetIsSkyBox(bool val) =0;
-    MaterialProperties GetMaterialProperties();
+    MaterialProperties& GetMaterialProperties();
 
 protected:
     IShader* shader = {};
