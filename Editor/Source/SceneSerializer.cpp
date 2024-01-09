@@ -60,11 +60,38 @@ nlohmann::json SceneSerializer::SerializeMaterial(const std::shared_ptr<IRendera
         {
             serializedData["texture"] = Helpers::WideStringToString(texture->GetPath());
         }
+        //todo do this better
         auto color = material->GetMaterialProperties().Color;
         serializedData["color"]["r"] = color.X();
         serializedData["color"]["g"] = color.Y();
         serializedData["color"]["b"] = color.Z();
         serializedData["color"]["a"] = color.W();
+
+        auto Emissive = material->GetMaterialProperties().Emissive;
+        serializedData["Emissive"]["r"] = Emissive.X();
+        serializedData["Emissive"]["g"] = Emissive.Y();
+        serializedData["Emissive"]["b"] = Emissive.Z();
+        serializedData["Emissive"]["a"] = Emissive.W();
+
+        auto Ambient = material->GetMaterialProperties().Ambient;
+        serializedData["Ambient"]["r"] = Ambient.X();
+        serializedData["Ambient"]["g"] = Ambient.Y();
+        serializedData["Ambient"]["b"] = Ambient.Z();
+        serializedData["Ambient"]["a"] = Ambient.W();
+
+        auto Diffuse = material->GetMaterialProperties().Diffuse;
+        serializedData["Diffuse"]["r"] = Diffuse.X();
+        serializedData["Diffuse"]["g"] = Diffuse.Y();
+        serializedData["Diffuse"]["b"] = Diffuse.Z();
+        serializedData["Diffuse"]["a"] = Diffuse.W();
+
+        auto Specular = material->GetMaterialProperties().Specular;
+        serializedData["Specular"]["r"] = Specular.X();
+        serializedData["Specular"]["g"] = Specular.Y();
+        serializedData["Specular"]["b"] = Specular.Z();
+        serializedData["Specular"]["a"] = Specular.W();
+
+        serializedData["SpecularPower"] = material->GetMaterialProperties().SpecularPower;
     }
     return serializedData;
 }
@@ -385,6 +412,38 @@ IMaterial* SceneSerializer::DeserializeMaterial(const nlohmann::json& data, std:
                                                        static_cast<float>(data["color"]["g"]),
                                                        static_cast<float>(data["color"]["b"]),
                                                        static_cast<float>(data["color"]["a"]));
+        if (data.contains("Emissive"))
+        {
+            material->GetMaterialProperties().Emissive = Vec4(static_cast<float>(data["Emissive"]["r"]),
+                                                              static_cast<float>(data["Emissive"]["g"]),
+                                                              static_cast<float>(data["Emissive"]["b"]),
+                                                              static_cast<float>(data["Emissive"]["a"]));
+        }
+        if (data.contains("Ambient"))
+        {
+            material->GetMaterialProperties().Ambient = Vec4(static_cast<float>(data["Ambient"]["r"]),
+                                                             static_cast<float>(data["Ambient"]["g"]),
+                                                             static_cast<float>(data["Ambient"]["b"]),
+                                                             static_cast<float>(data["Ambient"]["a"]));
+        }
+        if (data.contains("Diffuse"))
+        {
+            material->GetMaterialProperties().Diffuse = Vec4(static_cast<float>(data["Diffuse"]["r"]),
+                                                             static_cast<float>(data["Diffuse"]["g"]),
+                                                             static_cast<float>(data["Diffuse"]["b"]),
+                                                             static_cast<float>(data["Diffuse"]["a"]));
+        }
+        if (data.contains("Specular"))
+        {
+            material->GetMaterialProperties().Specular = Vec4(static_cast<float>(data["Specular"]["r"]),
+                                                              static_cast<float>(data["Specular"]["g"]),
+                                                              static_cast<float>(data["Specular"]["b"]),
+                                                              static_cast<float>(data["Specular"]["a"]));
+        }
+        if (data.contains("SpecularPower"))
+        {
+            material->GetMaterialProperties().SpecularPower = static_cast<float>(data["SpecularPower"]);
+        }
     }
     return material;
 }
