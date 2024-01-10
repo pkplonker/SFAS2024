@@ -168,6 +168,18 @@ struct Transform3D : Transform
         return Vec3(x, y, z).Normalise();
     }
 
+    DirectX::XMFLOAT4 GetDirectionXm()
+    {
+        float pitch = DirectX::XMConvertToRadians(Rotation.X());
+        float yaw = DirectX::XMConvertToRadians(Rotation.Y());
+
+        float x = cos(yaw) * cos(pitch);
+        float y = sin(pitch);
+        float z = sin(yaw) * cos(pitch);
+        auto result =Vec3(x, y, z).Normalise();
+        return DirectX::XMFLOAT4(result.vec.x, result.vec.y, result.vec.z,0);
+    }
+
 
     Vec3 Position = {};
     Vec3 Rotation = {};

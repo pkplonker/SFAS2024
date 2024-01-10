@@ -1,3 +1,5 @@
+// https://www.3dgep.com/texturing-lighting-directx-11/#Materials_Properties
+
 cbuffer PerObject : register( b0 )
 {
     matrix WorldMatrix;
@@ -46,20 +48,15 @@ sampler Sampler : register(s0);
 
 struct Material
 {
-    float4  Emissive;       // 16 bytes
-    //----------------------------------- (16 byte boundary)
-    float4  Ambient;        // 16 bytes
-    //------------------------------------(16 byte boundary)
-    float4  Diffuse;        // 16 bytes
-    //----------------------------------- (16 byte boundary)
-    float4  Specular;       // 16 bytes
-    //----------------------------------- (16 byte boundary)
-    float   SpecularPower;  // 4 bytes
-    bool    UseTexture;     // 4 bytes
-    float2  Padding;        // 8 bytes
+    float4  Emissive;       
+    float4  Ambient;        
+    float4  Diffuse;        
+    float4  Specular;       
+    float   SpecularPower;  
+    bool    UseTexture;     
+    float2  Padding;        
 	float4  Color;
-    //----------------------------------- (16 byte boundary)
-};  // Total:               // 80 bytes ( 5 * 16 )
+};
 
 cbuffer MaterialProperties : register(b0)
 {
@@ -68,31 +65,24 @@ cbuffer MaterialProperties : register(b0)
 
 struct Light
 {
-    float4      Position;               // 16 bytes
-    //----------------------------------- (16 byte boundary)
-    float4      Direction;              // 16 bytes
-    //----------------------------------- (16 byte boundary)
-    float4      Color;                  // 16 bytes
-    //----------------------------------- (16 byte boundary)
-    float       SpotAngle;              // 4 bytes
-    float       ConstantAttenuation;    // 4 bytes
-    float       LinearAttenuation;      // 4 bytes
-    float       QuadraticAttenuation;   // 4 bytes
-    //----------------------------------- (16 byte boundary)
-    int         LightType;              // 4 bytes
-    bool        Enabled;                // 4 bytes
-    int2        Padding;                // 8 bytes
-    //----------------------------------- (16 byte boundary)
-};  // Total:                           // 80 bytes (5 * 16 byte boundary)
+    float4      Position;               
+    float4      Direction;              
+    float4      Color;                  
+    float       SpotAngle;              
+    float       ConstantAttenuation;    
+    float       LinearAttenuation;      
+    float       QuadraticAttenuation;  
+    int         LightType;            
+    bool        Enabled;          
+    int2        Padding;    
+};
 
 cbuffer LightProperties : register(b1)
 {
-    float4 EyePosition;                 // 16 bytes
-    //----------------------------------- (16 byte boundary)
-    float4 GlobalAmbient;               // 16 bytes
-    //----------------------------------- (16 byte boundary)
-    Light Lights[MAX_LIGHTS];           // 80 * 8 = 640 bytes
-};  // Total:                           // 672 bytes (42 * 16 byte boundary)
+    float4 EyePosition;                
+    float4 GlobalAmbient;              
+    Light Lights[MAX_LIGHTS];          
+};                       
 
 float4 DoDiffuse( Light light, float3 L, float3 N )
 {
@@ -110,7 +100,7 @@ float4 DoSpecular( Light light, float3 V, float3 L, float3 N )
     float3 H = normalize( L + V );
     float NdotH = max( 0, dot( N, H ) );
 
-    return light.Color * pow( RdotV, material.SpecularPower );
+    return light.Color * pow( NdotH, material.SpecularPower );
 }
 
 float DoAttenuation( Light light, float d )
@@ -205,7 +195,7 @@ LightingResult ComputeLighting( float4 P, float3 N )
         case SPOT_LIGHT:
             {
                 result = DoSpotLight( Lights[i], V, P, N );
-				return DoSpotLight( Lights[i], V, P, N );
+				//return DoSpotLight( Lights[i], V, P, N );
             }
             break;
         }

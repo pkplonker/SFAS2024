@@ -5,6 +5,7 @@
 
 SpotLightComponent::SpotLightComponent(std::weak_ptr<GameObject> gameObject): IComponent(gameObject)
 {
+    light.LightType = SpotLight;
 }
 
 SpotLightComponent::~SpotLightComponent()
@@ -59,6 +60,7 @@ ILight::Light& SpotLightComponent::GetLight()
 {
     auto pos = gameObject.lock()->Transform()->Position;
     light.Position = DirectX::XMFLOAT4(pos.X(), pos.Y(), pos.Z(), 1);
+    light.Direction = gameObject.lock()->Transform()->GetDirectionXm();
     light.Enabled = gameObject.lock()->GetIsEnabled();
 
     return light;

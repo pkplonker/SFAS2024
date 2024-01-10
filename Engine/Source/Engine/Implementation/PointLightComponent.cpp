@@ -30,8 +30,7 @@ ILight::Light& PointLightComponent::GetLight()
 {
     auto vec = gameObject.lock()->Transform()->Position;
     light.Position = DirectX::XMFLOAT4(vec.X(), vec.Y(), vec.Z(), 1);
-    vec = gameObject.lock()->Transform()->GetDirection();
-    light.Direction = DirectX::XMFLOAT4(vec.X(), vec.Y(), vec.Z(), 1);
+    light.Direction = gameObject.lock()->Transform()->GetDirectionXm();
     light.Enabled = gameObject.lock()->GetIsEnabled();
     return light;
 }
