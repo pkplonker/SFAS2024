@@ -18,11 +18,6 @@ void SceneSettings::Draw()
             "Ambient Light Color##LightColor",
             "Changed Ambient Light Color"
         );
-        ImGuiHelpers::UndoableDrag<float>(
-           [sharedScene]() -> float { return sharedScene->GetAmbientLightIntensity(); },
-           [sharedScene](float value) { sharedScene->SetAmbientLightIntensity(value); },
-           "Ambient Light Intensity",  "Ambient Light Intensity"
-       );
     }
     ImGui::End();
 }

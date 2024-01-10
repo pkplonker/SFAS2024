@@ -345,6 +345,12 @@ void DirectX11Graphics::Update()
                                                      scene->GetAmbientLightColor().vec.y,
                                                      scene->GetAmbientLightColor().vec.z, 1.0f);
             int count = 0;
+            const auto dirLight = scene->GetDirectionalLight();
+            if(const auto dirLightShared = dirLight.lock())
+            {
+                lightProperties.Lights[count] = dirLightShared->GetLight();
+                count++;
+            }
             for (auto light : scene->GetLights())
             {
                 

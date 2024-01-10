@@ -39,9 +39,7 @@ public:
     std::weak_ptr<DirectionalLightComponent> GetDirectionalLight();
     std::string GetPath() { return filePath; }
     Vec3 GetAmbientLightColor();
-    float GetAmbientLightIntensity();
     void SetAmbientLightColor(Vec3 value);
-    void SetAmbientLightIntensity(float value);
     void RegisterLight(const std::shared_ptr<ILight>& shared);
     void DeregisterLight(const std::shared_ptr<ILight>& shared);
     std:: vector<std::shared_ptr<ILight>> GetLights(){return lights;}
@@ -56,6 +54,5 @@ private:
     std::weak_ptr<DirectionalLightComponent> directionalLight;
     std::string filePath;
     Vec3 ambientLightColor;
-    float ambientLightIntensity;
     std:: vector<std::shared_ptr<ILight>> lights;
 };

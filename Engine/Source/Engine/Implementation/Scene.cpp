@@ -9,8 +9,7 @@
 #include "Engine/IApplication.h"
 class SpriteComponent;
 
-Scene::Scene(IGraphics* graphics, std::string path) : filePath(path), ambientLightColor(Vec3(1.0f, 1.0f, 1.0f)),
-                                                      ambientLightIntensity(1)
+Scene::Scene(IGraphics* graphics, std::string path) : filePath(path), ambientLightColor(Vec3(1.0f, 1.0f, 1.0f))                                                      
 {
     objects = std::make_unique<std::map<std::string, std::shared_ptr<GameObject>>>();
     this->graphics = graphics;
@@ -76,20 +75,12 @@ Vec3 Scene::GetAmbientLightColor()
     return ambientLightColor;
 }
 
-float Scene::GetAmbientLightIntensity()
-{
-    return ambientLightIntensity;
-}
 
 void Scene::SetAmbientLightColor(Vec3 value)
 {
     ambientLightColor = value;
 }
 
-void Scene::SetAmbientLightIntensity(float value)
-{
-    ambientLightIntensity = value;
-}
 
 void Scene::RegisterLight(const std::shared_ptr<ILight>& light)
 {
