@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <memory>
 
+#include "PointLightComponent.h"
 #include "Engine/Implementation/GameObject.h"
 #include "Engine/IRenderable.h"
 
@@ -10,7 +11,7 @@ class ImGuiController;
 class Scene : public IUpdateable, public Transform
 {
 public:
-    Scene(IGraphics* graphics);
+    Scene(IGraphics* graphics,std::string filePath);
     ~Scene() override;
 
     void SetScene()
@@ -27,7 +28,8 @@ public:
     std::map<std::string, std::shared_ptr<GameObject>>& GetObjects() const;
     std::shared_ptr<ICamera> GetActiveCamera();
     bool TryFindObject(const std::string& string, std::weak_ptr<GameObject>& object) const;
-    
+    std::shared_ptr<GameObject> GetGameObject(const std::string& string) const;
+
 
     DirectX::XMMATRIX GetWorldMatrix() override
     {
@@ -35,6 +37,12 @@ public:
     }
 
     std::weak_ptr<DirectionalLightComponent> GetDirectionalLight();
+    std::string GetPath() { return filePath; }
+    Vec3 GetAmbientLightColor();
+    void SetAmbientLightColor(Vec3 value);
+    void RegisterLight(const std::shared_ptr<ILight>& shared);
+    void DeregisterLight(const std::shared_ptr<ILight>& shared);
+    std:: vector<std::shared_ptr<ILight>> GetLights(){return lights;}
 
 private:
     std::unique_ptr<std::map<std::string, std::shared_ptr<GameObject>>> objects = std::make_unique<std::map<
@@ -44,4 +52,7 @@ private:
     std::weak_ptr<GameObject> selectedObject = {};
     IGraphics* graphics;
     std::weak_ptr<DirectionalLightComponent> directionalLight;
+    std::string filePath;
+    Vec3 ambientLightColor;
+    std:: vector<std::shared_ptr<ILight>> lights;
 };

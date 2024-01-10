@@ -1,5 +1,4 @@
 #pragma once
-#include "Engine/IComponent.h"
 
 class ComponentDrawer
 {
@@ -8,4 +7,5 @@ public:
 	virtual ~ComponentDrawer();
 	virtual void Draw() = 0;
 protected:
+	
 };

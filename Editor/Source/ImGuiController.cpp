@@ -13,6 +13,7 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 #include "imgui_internal.h"
+#include "MessageBoxWrapper.h"
 #include "SceneManager.h"
 #include "SceneSerializer.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
@@ -26,10 +27,35 @@
 #include "Windows/MeshImporterWindow.h"
 #include "Windows/ObjectControlWindow.h"
 #include "Windows/RenderStatWindow.h"
+#include "Windows/SceneSettings.h"
 #include "Windows/SettingsWindow.h"
 #include "Windows/UndoWindow.h"
-
+#include "External\IconsMaterialDesign.h"
 const std::string IMGUI_SETTING_ID = "IMGUI_WINDOW";
+
+void ImGuiController::LoadIconFonts()
+{
+    ImGuiIO& io = ImGui::GetIO();
+    io.Fonts->AddFontDefault();
+
+    static const ImWchar icons_ranges[] = {ICON_MIN_MD, ICON_MAX_16_MD, 0};
+
+    ImFontConfig smallIconsConfig;
+    smallIconsConfig.MergeMode = true;
+    smallIconsConfig.PixelSnapH = true;
+    smallIcons = io.Fonts->AddFontFromFileTTF(FONT_ICON_FILE_NAME_MD, smallFontSize, &smallIconsConfig,
+                                              icons_ranges);
+    largeIcons = io.Fonts->AddFontDefault();
+    ImFontConfig largeIconsConfig;
+    largeIconsConfig.MergeMode = true;
+    largeIconsConfig.PixelSnapH = true;
+
+    largeIcons = io.Fonts->AddFontFromFileTTF(FONT_ICON_FILE_NAME_MD, largeFontSize, &largeIconsConfig,
+                                              icons_ranges);
+
+    io.Fonts->Build();
+}
+
 
 ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, IInput* input,
                                  std::shared_ptr<EditorCamera> camera) :
@@ -83,10 +109,14 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, II
 
     const std::shared_ptr<DebugControls> debugControls = std::make_shared<DebugControls>();
     renderables.try_emplace(debugControls, EditorSettings::Get(IMGUI_SETTING_ID + debugControls->GetName(), true));
-    
+
+    const std::shared_ptr<SceneSettings> sceneSettings = std::make_shared<SceneSettings>();
+    renderables.try_emplace(sceneSettings, EditorSettings::Get(IMGUI_SETTING_ID + sceneSettings->GetName(), true));
+
     settingsWindow = new SettingsWindow();
 
     ImGuiTheme::ApplyTheme(0);
+    LoadIconFonts();
     Trace("Imgui setup complete")
 }
 
@@ -163,27 +193,76 @@ void ImGuiController::ImGuiPostUpdate() const
     }
 }
 
-void ImGuiController::Save()
+void ImGuiController::SaveAs()
 {
     SceneSerializer::Serialize(FileDialog::SaveFileDialog());
 }
+
+void ImGuiController::Save()
+{
+    if (const auto scene = SceneManager::GetScene().lock())
+    {
+        auto path = scene->GetPath();
+        if (path != "")
+        {
+            SceneSerializer::Serialize(path);
+        }
+        else
+        {
+            SaveAs();
+        }
+    }
+}
+
+bool showConfirmDialog = false;
+std::string pendingSavePath;
 
 void ImGuiController::Save(std::string path)
 {
     SceneSerializer::Serialize(path);
 }
 
-void ImGuiController::LoadScene() const
+void ImGuiController::SaveExistingScene()
 {
+    if (const auto scene = SceneManager::GetScene().lock())
+    {
+        if (MessageBoxWrapper::ShowSaveConfirmation())
+        {
+            Save(scene->GetPath());
+        }
+    }
+}
+
+void ImGuiController::LoadScene()
+{
+    SaveExistingScene();
+
     LoadScene(FileDialog::OpenFileDialog());
 }
 
-void ImGuiController::LoadScene(std::string path) const
+void ImGuiController::LoadScene(std::string path)
 {
     if (path != "")
     {
+        SaveExistingScene();
         SceneManager::SetScene(SceneSerializer::Deserialize(path));
         EditorSettings::Set("LastScene", path);
+    }
+}
+
+void ImGuiController::New()
+{
+    std::string type = "scene";
+
+    SaveExistingScene();
+    auto path = FileDialog::CreateNewFileDialog(type);
+    if (path != "")
+    {
+        SceneManager::SetScene(new Scene(IApplication::GetGraphics(), path));
+        if (const auto scene = SceneManager::GetScene().lock())
+        {
+            Save(scene->GetPath());
+        }
     }
 }
 
@@ -193,11 +272,19 @@ void ImGuiController::DrawMenu()
     {
         if (ImGui::BeginMenu("File"))
         {
+            if (ImGui::MenuItem("New", "Ctrl+N"))
+            {
+                New();
+            }
             if (ImGui::MenuItem("Save", "Ctrl+S"))
             {
                 Save();
             }
-            if (ImGui::MenuItem("Load", "Ctrl+O"))
+            if (ImGui::MenuItem("Save As", "Ctrl+Shft+S"))
+            {
+                SaveAs();
+            }
+            if (ImGui::MenuItem("Open", "Ctrl+O"))
             {
                 LoadScene();
             }
@@ -268,6 +355,22 @@ void ImGuiController::Draw()
     DrawWindows();
     DrawViewport();
     DrawMenu();
+    if (input->IsKeyDown(Keys::LeftControl) && input->IsKeyPress(Keys::S))
+    {
+        Save();
+    }
+    if (input->IsKeyDown(Keys::LeftControl) && input->IsKeyDown(Keys::LeftShift) && input->IsKeyPress(Keys::S))
+    {
+        SaveAs();
+    }
+    if (input->IsKeyDown(Keys::LeftControl) && input->IsKeyPress(Keys::O))
+    {
+        LoadScene();
+    }
+    if (input->IsKeyDown(Keys::LeftControl) && input->IsKeyPress(Keys::N))
+    {
+        New();
+    }
 }
 
 

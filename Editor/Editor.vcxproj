@@ -268,7 +268,10 @@
     <ClCompile Include="Source\Editor.cpp" />
     <ClCompile Include="Source\Windows\MaterialDrawerHelper.cpp" />
     <ClCompile Include="Source\Windows\ObjectControlWindow.cpp" />
+    <ClCompile Include="Source\Windows\PointLightComponentDrawer.cpp" />
+    <ClCompile Include="Source\Windows\SceneSettings.cpp" />
     <ClCompile Include="Source\Windows\SettingsWindow.cpp" />
+    <ClCompile Include="Source\Windows\SpotLightComponentDrawer.cpp" />
     <ClCompile Include="Source\Windows\TimeWindow.cpp" />
     <ClCompile Include="Source\Windows\LoggerWindow.cpp" />
     <ClCompile Include="Source\Windows\MeshImporterWindow.cpp" />
@@ -371,6 +374,8 @@
     <ClInclude Include="Source\EditorCamera.h" />
     <ClInclude Include="Source\EditorSettings.h" />
     <ClInclude Include="Source\EditorViewportInteractor.h" />
+    <ClInclude Include="Source\External\IconsFontAwesome6.h" />
+    <ClInclude Include="Source\External\IconsMaterialDesign.h" />
     <ClInclude Include="Source\FileDialog.h" />
     <ClInclude Include="Source\FileOpener.h" />
     <ClInclude Include="Source\GizmoController.h" />
@@ -392,8 +397,11 @@
     <ClInclude Include="Source\Windows\Hierarchy.h" />
     <ClInclude Include="Source\Windows\MaterialDrawerHelper.h" />
     <ClInclude Include="Source\Windows\ObjectControlWindow.h" />
+    <ClInclude Include="Source\Windows\PointLightComponentDrawer.h" />
     <ClInclude Include="Source\Windows\RenamingHelper.h" />
+    <ClInclude Include="Source\Windows\SceneSettings.h" />
     <ClInclude Include="Source\Windows\SettingsWindow.h" />
+    <ClInclude Include="Source\Windows\SpotLightComponentDrawer.h" />
     <ClInclude Include="Source\Windows\TimeWindow.h" />
     <ClInclude Include="Source\Windows\EditorWindow.h" />
     <ClInclude Include="Source\ImGuiController.h" />

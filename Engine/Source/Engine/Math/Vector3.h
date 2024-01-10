@@ -194,5 +194,18 @@ struct Vec3
         return vec;
     }
 
+    Vec3 Normalise()
+    {
+        auto length = Length();
+        if (length == 0) return Vec3(0, 0, 0);
+
+        return Vec3(vec.x / length, vec.y / length, vec.z / length);
+    }
+
+    float Length()
+    {
+        return std::sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+    }
+
     dx::XMFLOAT3 vec{};
 };

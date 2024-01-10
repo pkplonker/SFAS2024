@@ -7,8 +7,10 @@
 #include "MeshComponent.h"
 #include "OrthographicCamera.h"
 #include "PerspectiveCamera.h"
+#include "PointLightComponent.h"
 #include "ResourceManager.h"
 #include "SceneManager.h"
+#include "SpotLightComponent.h"
 #include "SpriteComponent.h"
 #include "Engine/IRenderable.h"
 #include "Engine/Implementation/CameraComponent.h"
@@ -282,6 +284,30 @@ GameObjectFactory& GameObjectFactory::AddEmptySpriteRenderable()
 GameObjectFactory& GameObjectFactory::AddDirectionalLight()
 {
     auto component = std::make_shared<DirectionalLightComponent>(
+        gameObject);
+    if (component != nullptr)
+    {
+        gameObject->AddComponent(std::move(component));
+        return *this;
+    }
+    return *this;
+}
+
+GameObjectFactory& GameObjectFactory::AddSpotLight()
+{
+    auto component = std::make_shared<SpotLightComponent>(
+        gameObject);
+    if (component != nullptr)
+    {
+        gameObject->AddComponent(std::move(component));
+        return *this;
+    }
+    return *this;
+}
+
+GameObjectFactory& GameObjectFactory::AddPointLight()
+{
+    auto component = std::make_shared<PointLightComponent>(
         gameObject);
     if (component != nullptr)
     {

@@ -241,6 +241,44 @@
             }
         ],
         [
+            "New Cube",
+            {
+                "guid": "{4DAC5B59-E0EA-4382-B6FF-09AE318F6BDA}",
+                "meshComponent": {
+                    "material": {
+                        "color": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
+                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/boing.fx",
+                        "skybox": false
+                    },
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
+                },
+                "name": "New Cube",
+                "transform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 7.322433948516846,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
             "Table",
             {
                 "guid": "{70E7F8B6-EC42-4DC6-AA9D-AEA185C6588E}",
@@ -629,9 +667,9 @@
                 "transform": {
                     "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
                     "position": {
-                        "x": -1.8108940124511719,
-                        "y": 2.5547561645507813,
-                        "z": -3.5069189071655273
+                        "x": -3.0734446048736572,
+                        "y": 2.398859977722168,
+                        "z": 0.0
                     },
                     "rotation": {
                         "x": 0.0,

@@ -16,8 +16,10 @@
 #include "BoundsDrawerHelper.h"
 #include "MaterialDrawerHelper.h"
 #include "ResourceManager.h"
+#include "SceneManager.h"
 #include "../MessageBoxWrapper.h"
 #include "../Editor.h"
+#include "../External/IconsMaterialDesign.h"
 
 MeshComponentDrawer::~MeshComponentDrawer()
 {
@@ -52,15 +54,13 @@ void MeshComponentDrawer::Draw()
                         },
                         [cachedComponent]()
                         {
-                            if (auto go = cachedComponent->GetGameObject().lock())
+                            if (const auto go = cachedComponent->GetGameObject().lock())
                             {
                                 go->AddComponent(cachedComponent);
 
-                                auto renderable = std::dynamic_pointer_cast<IRenderableComponent>(cachedComponent);
-                                if (renderable)
+                                if (const auto renderable = std::dynamic_pointer_cast<IRenderableComponent>(cachedComponent))
                                 {
-                                    auto graphics = IApplication::GetGraphics();
-                                    if (graphics != nullptr)
+                                    if (const auto graphics = IApplication::GetGraphics(); graphics != nullptr)
                                     {
                                         graphics->UpdateRenderable(renderable->GetMaterial(),
                                                                    renderable->GetRenderable());
@@ -74,10 +74,14 @@ void MeshComponentDrawer::Draw()
                     ImGui::EndPopup();
                 }
             }
+            std::string scenePath = "";
+            if(const auto scene = SceneManager::GetScene().lock())
+            {
+                scenePath = scene->GetPath();
+            }
 
-
-            ImGuiHelpers::WrappedText("Mesh Path:", meshComponent->GetMeshPath(), "Replace",
-                                      std::bind(&MeshComponentDrawer::ChangeMesh, this));
+             ImGuiHelpers::WrappedText("", meshComponent->GetMeshPath() ==""? "Mesh" : std::filesystem::relative(meshComponent->GetMeshPath(), scenePath).string(), ICON_MD_FIND_REPLACE,
+                                       std::bind(&MeshComponentDrawer::ChangeMesh, this),meshComponent->GetMeshPath(), true);
 
             materialDrawerHelper.DrawMaterial();
             if (const auto& renderable = meshComponent->GetRenderable())

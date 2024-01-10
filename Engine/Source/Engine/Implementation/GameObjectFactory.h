@@ -72,6 +72,8 @@ public:
     GameObjectFactory& AddOrthoCamera();
     GameObjectFactory& AddEmptySpriteRenderable();
     GameObjectFactory& AddDirectionalLight();
+    GameObjectFactory& AddSpotLight();
+    GameObjectFactory& AddPointLight();
 
 #pragma endregion
 

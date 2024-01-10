@@ -7,6 +7,7 @@
 #include "imgui.h"
 #include "IRenderableComponent.h"
 #include "ResourceManager.h"
+#include "SceneManager.h"
 #include "Logging/Debug.h"
 #include "../ImGuiHelpers.h"
 #include "../FileDialog.h"
@@ -14,6 +15,7 @@
 #include "../FileOpener.h"
 #include "../MessageBoxWrapper.h"
 #include "DirectX11/DirectX11Texture.h"
+#include "../External/IconsMaterialDesign.h"
 
 MaterialDrawerHelper::MaterialDrawerHelper(std::weak_ptr<IRenderableComponent> component) : component(component)
 {
@@ -22,6 +24,7 @@ MaterialDrawerHelper::MaterialDrawerHelper(std::weak_ptr<IRenderableComponent> c
 void MaterialDrawerHelper::DrawMaterial()
 {
     ImGui::Separator();
+    ImGui::Text("Material Details");
     if (auto comp = component.lock())
     {
         const auto mat = comp->GetMaterial();
@@ -33,13 +36,29 @@ void MaterialDrawerHelper::DrawMaterial()
             {
                 shaderPath = shader->GetPath();
             }
-            std::vector<std::pair<std::string, std::function<void()>>> buttons;
+            std::vector<ImGuiHelpers::ButtonData> buttons;
 
-            buttons.emplace_back("Replace", std::bind(&MaterialDrawerHelper::ChangeShader, this));
-            buttons.emplace_back("Modify", std::bind(&MaterialDrawerHelper::OpenShader, this));
-            buttons.emplace_back("Reload", std::bind(&IShader::Reload, shader));
 
-            ImGuiHelpers::WrappedText("Shader Path:", shaderPath, buttons);
+            buttons.emplace_back(ImGuiHelpers::ButtonData(
+                ICON_MD_FIND_REPLACE, std::bind(&MaterialDrawerHelper::ChangeShader, this),
+                Helpers::WideStringToString(shaderPath), true));
+            buttons.emplace_back(ImGuiHelpers::ButtonData(
+                ICON_MD_EDIT_DOCUMENT, std::bind(&MaterialDrawerHelper::OpenShader, this),
+                Helpers::WideStringToString(shaderPath), true));
+            buttons.emplace_back(ImGuiHelpers::ButtonData(
+                ICON_MD_REFRESH, std::bind(&IShader::Reload, shader), Helpers::WideStringToString(shaderPath), true));
+
+            std::string scenePath = "";
+            if (const auto scene = SceneManager::GetScene().lock())
+            {
+                scenePath = scene->GetPath();
+            }
+
+            ImGuiHelpers::WrappedText("", shaderPath == L""
+                                              ? L"Shader"
+                                              : Helpers::StringToWstring(
+                                                  std::filesystem::relative(shaderPath, scenePath).string()), buttons);
+
             std::wstring texturePath;
             ITexture* tex = mat->GetTexture();
             if (tex != nullptr)
@@ -47,15 +66,25 @@ void MaterialDrawerHelper::DrawMaterial()
                 texturePath = tex->GetPath();
             }
 
-            ImGuiHelpers::WrappedText("Texture Path:", texturePath, "Replace",
-                                      std::bind(&MaterialDrawerHelper::ChangeTexture, this));
+            ImGuiHelpers::WrappedText(
+                "", texturePath == L""
+                        ? L"Texture"
+                        : Helpers::StringToWstring(std::filesystem::relative(texturePath, scenePath).string()),
+                ICON_MD_FIND_REPLACE,
+                std::bind(&MaterialDrawerHelper::ChangeTexture, this));
+
+
             if (tex != nullptr)
             {
                 if (auto dxTex = dynamic_cast<DirectX11Texture*>(tex))
                 {
                     ImGui::Separator();
-                    ImGui::Image(dxTex->GetTextureView(), ImVec2(200,200));
-
+                    ImGui::Image(dxTex->GetTextureView(), ImVec2(200, 200));
+                    std::stringstream stream;
+                    stream << std::fixed << std::setprecision(2) << "Texture size:" << dxTex->GetWidth() << " * " <<
+                        dxTex
+                        ->GetHeight();
+                    ImGui::Text(stream.str().c_str());
                     if (ImGui::IsItemHovered())
                     {
                         ImGui::BeginTooltip();
@@ -70,7 +99,7 @@ void MaterialDrawerHelper::DrawMaterial()
                         ImGui::OpenPopup("##TexturePopup");
                     }
 
-                    if (ImGui::BeginPopupModal("##TexturePopup", nullptr, ImGuiWindowFlags_AlwaysAutoResize ))
+                    if (ImGui::BeginPopupModal("##TexturePopup", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                     {
                         auto size = ImGui::GetMainViewport()->Size;
                         auto factor = 0.5f;
@@ -82,28 +111,72 @@ void MaterialDrawerHelper::DrawMaterial()
                         ImGui::EndPopup();
                     }
                     ImGui::Separator();
-
                 }
             }
 
 
             ImGui::Text("Color:");
             ImGui::SameLine();
-            Vec4 color = static_cast<Vec4>(mat->GetColor());
-
             ImGuiHelpers::UndoableColorEdit<Vec4>(
-                [&]() { return static_cast<Vec4>(mat->GetColor()); },
-                [mat](Vec4 newColor) { mat->SetColor(newColor); },
+                [&]() { return mat->GetMaterialProperties().Color; },
+                [mat](Vec4 newValue) { mat->GetMaterialProperties().Color = newValue; },
                 "##MaterialColor",
                 "Change Material Color",
                 ImGuiColorEditFlags_Float
             );
+            
+            ImGui::Text("Emissive:");
+            ImGui::SameLine();
+            ImGuiHelpers::UndoableColorEdit<Vec4>(
+               [&]() { return mat->GetMaterialProperties().Emissive; },
+               [mat](Vec4 newValue) { mat->GetMaterialProperties().Emissive = newValue; },
+               "##MaterialEmissive",
+               "Change MaterialEmissive",
+               ImGuiColorEditFlags_Float
+           );
 
-            auto sb = mat->GetIsSkybox();
-            if (ImGui::Checkbox("Is Skybox", &sb))
-            {
-                mat->SetIsSkyBox(sb);
-            }
+            ImGui::Text("Ambient:");
+            ImGui::SameLine();
+            ImGuiHelpers::UndoableColorEdit<Vec4>(
+               [&]() { return mat->GetMaterialProperties().Ambient; },
+               [mat](Vec4 newValue) { mat->GetMaterialProperties().Ambient = newValue; },
+               "##MaterialAmbient",
+               "Change Material Ambient",
+               ImGuiColorEditFlags_Float
+           );
+            
+            ImGui::Text("Diffuse:");
+            ImGui::SameLine();
+            ImGuiHelpers::UndoableColorEdit<Vec4>(
+               [&]() { return mat->GetMaterialProperties().Diffuse; },
+               [mat](Vec4 newValue) { mat->GetMaterialProperties().Diffuse = newValue; },
+               "##MaterialDiffuse",
+               "Change Material Diffuse",
+               ImGuiColorEditFlags_Float
+           );
+
+            ImGui::Text("Specular:");
+            ImGui::SameLine();
+            ImGuiHelpers::UndoableColorEdit<Vec4>(
+               [&]() { return mat->GetMaterialProperties().Specular; },
+               [mat](Vec4 newValue) { mat->GetMaterialProperties().Specular = newValue; },
+               "##MaterialSpecular",
+               "Change Material Specular",
+               ImGuiColorEditFlags_Float
+           );
+            ImGui::Text("Specular Power");
+            ImGui::SameLine();
+            auto power = mat->GetMaterialProperties().SpecularPower;
+            ImGuiHelpers::UndoableDrag<float>(
+                [&power]() { return power; },
+                [mat](float newValue) { mat->GetMaterialProperties().SpecularPower = newValue; },
+                std::string("##Specular Power").c_str(),
+                "Changed Specular Power",
+                0.01,
+                256,
+                0.1f
+            );
+            
         }
         else
         {
@@ -143,8 +216,7 @@ void MaterialDrawerHelper::ChangeShader()
                 [comp, shader, originalMaterial]()
                 {
                     auto material = Editor::GetGraphics()->CreateMaterial(shader, (*originalMaterial)->GetTexture());
-                    material->SetColor((*originalMaterial)->GetColor());
-                    material->SetIsSkyBox((*originalMaterial)->GetIsSkybox());
+                    material->GetMaterialProperties().Color = (*originalMaterial)->GetMaterialProperties().Color;
                     comp->SetMaterial(material);
                 },
                 [comp, originalMaterial]()
@@ -190,8 +262,7 @@ void MaterialDrawerHelper::ChangeTexture()
                 [comp, texture, originalMaterial]()
                 {
                     auto material = Editor::GetGraphics()->CreateMaterial((*originalMaterial)->GetShader(), texture);
-                    material->SetColor((*originalMaterial)->GetColor());
-                    material->SetIsSkyBox((*originalMaterial)->GetIsSkybox());
+                    material->GetMaterialProperties().Color = (*originalMaterial)->GetMaterialProperties().Color;
                     comp->SetMaterial(material);
                 },
                 [comp, originalMaterial]()
