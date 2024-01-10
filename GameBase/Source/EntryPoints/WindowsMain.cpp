@@ -7,7 +7,8 @@
 #include "Engine/Implementation/XInput/DirectXInput.h"
 #include "Engine/IRenderable.h"
 #include "Engine/IApplication.h"
-
+#include "SceneSerializer.h"
+#include "Engine/ResourceManager.h"
 const char WindowClassName[] = "Star";
 const char WindowTitle[] = "Stuart Heath SFAS24 - WIP";
 const int WindowWidth = 1920;
@@ -15,6 +16,8 @@ const int WindowHeight = 1080;
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 IApplication* GetApplication(IGraphics* Graphics, IInput* Input);
+
+std::unique_ptr<SceneSerializer> sceneSerializer;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -58,6 +61,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	IGraphics* Graphics = new DirectX11Graphics(hwnd);
 	IInput* Input = new DirectXInput(hwnd);
 	IApplication* Application = GetApplication(Graphics, Input);
+	ResourceManager::Init(Graphics);
+	sceneSerializer = std::make_unique<SceneSerializer>(Graphics);
+
 	if (Graphics && Graphics->IsValid() && Application)
 	{
 		Application->Load();
