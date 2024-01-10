@@ -169,7 +169,6 @@
     <ClCompile Include="Source\GizmoController.cpp" />
     <ClCompile Include="Source\Memento.cpp" />
     <ClCompile Include="Source\MeshImporter.cpp" />
-    <ClCompile Include="Source\SceneSerializer.cpp" />
     <ClCompile Include="Source\UndoManager.cpp" />
     <ClCompile Include="Source\Windows\BoundsDrawerHelper.cpp" />
     <ClCompile Include="Source\Windows\CameraComponentDrawer.cpp" />
@@ -383,7 +382,6 @@
     <ClInclude Include="Source\ImGuiTheme.h" />
     <ClInclude Include="Source\Memento.h" />
     <ClInclude Include="Source\MeshImporter.h" />
-    <ClInclude Include="Source\SceneSerializer.h" />
     <ClInclude Include="Source\UndoManager.h" />
     <ClInclude Include="Source\Windows\BoundsDrawerHelper.h" />
     <ClInclude Include="Source\Windows\CameraComponentDrawer.h" />

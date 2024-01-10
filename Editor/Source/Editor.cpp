@@ -49,7 +49,6 @@ bool Editor::IsValid()
 
 bool Editor::Load()
 {
-    game->Load();
 
     sceneSerializer = std::make_unique<SceneSerializer>(dx11Graphics);
     dx11Graphics->SetRenderToTexture(true, 1, 1);
@@ -75,6 +74,8 @@ bool Editor::Load()
     editorViewportInteractor = std::make_unique<EditorViewportInteractor>(Input, imguiController.get());
     debugDrawer = std::make_shared<DebugDrawer>(editorCamera);
     Graphics->AddRenderStrategy(debugDrawer);
+    //game->Load();
+
     return true;
 }
 
