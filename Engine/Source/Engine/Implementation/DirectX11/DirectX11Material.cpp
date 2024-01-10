@@ -31,13 +31,3 @@ bool DirectX11Material::Update()
 DirectX11Material::~DirectX11Material()
 {
 }
-
-bool DirectX11Material::GetIsSkybox()
-{
-    return isSkybox;
-}
-
-void DirectX11Material::SetIsSkyBox(bool val)
-{
-    isSkybox = val;
-}

@@ -1,15 +1,15 @@
 ﻿#pragma once
 #include "IComponent.h"
+#include "Implementation/ILight.h"
 #include "Math/Vector3.h"
 #include "Math/Vector4.h"
 
-class DirectionalLightComponent final : public IComponent, std::enable_shared_from_this<DirectionalLightComponent>
+class DirectionalLightComponent final : public ILight, public IComponent, std::enable_shared_from_this<DirectionalLightComponent>
 {
 public:
     DirectionalLightComponent(std::weak_ptr<GameObject> object);
     Vec4 GetDirection();
-    Vec4 GetColor();
-    void SetColor(Vec4 col);
+    ILight::Light& GetLight() override;
     float intensity;
 
 private:

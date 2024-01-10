@@ -1,114 +1,68 @@
-#define MAX_POINT_LIGHTS 10
-#define MAX_SPOTLIGHTS 10
-
-struct BaseLight
+cbuffer PerObject : register(b0)
 {
-    float4 color;
-    float intensity;
-};
-
-struct PointLight
-{
-    BaseLight base;
-    float3 position;
-};
-
-struct Spotlight
-{
-    BaseLight base;
-    float3 position;
-    float3 direction;
-    float innerCone;
-    float outerCone;
-
-};
-
-cbuffer cbChangedPerFrame : register(b0)
-{
-    matrix mvp;
-    matrix worldMatrix;
-	matrix viewMatrix;
-    matrix projectionMatrix;
-	float3 ambientLightColor;
-	float ambientLightIntensity;
-	float3 cameraPosition;
-};
-
-cbuffer MaterialBuffer : register(b1)
-{
-    float4 materialColor;
-	bool useTex;
-};
-
-cbuffer DirectionalLightBuffer : register(b2)
-{
-    float4 lightDirection;
-    float4 lightColor;
-	float lightIntensity;
-};
-
-
-cbuffer LightBuffer : register(b3)
-{ 
-	int pointLightCount;
-    int spotlightCount;
-    PointLight pointLights[MAX_POINT_LIGHTS];
-    Spotlight spotLights[MAX_SPOTLIGHTS];
-};
-
-
-Texture2D colorMap : register(t0);
-SamplerState colorSample : register(s0);
-
-struct VS_Input
-{
-    float4 position : POSITION;
-    float4 color    : COLOR;
-    float3 normal   : NORMAL;
-    float2 uv       : TEXCOORD;
-};
-
-struct PS_Input
-{
-    float4 position : SV_POSITION;
-    float4 color    : COLOR;
-    float3 normal   : NORMAL;
-    float2 uv       : TEXCOORD;
-	float3 worldNormal : NORMAL1;
-};
-
-PS_Input VS_Main(VS_Input vertex)
-{
-    PS_Input vsOut;
-    vsOut.position = mul(vertex.position, mvp);
-    vsOut.color = vertex.color;
-    vsOut.normal = vertex.normal;
-    vsOut.uv = vertex.uv;
-	vsOut.worldNormal = mul(vertex.normal, (float3x3)worldMatrix);
-    return vsOut;
+    matrix WorldMatrix;
+    matrix InverseTransposeWorldMatrix;
+    matrix WorldViewProjectionMatrix;
 }
 
-float4 PS_Main(PS_Input frag) : SV_TARGET
+struct AppData
 {
-    float3 viewDir = normalize(cameraPosition - frag.position.xyz);
-    float3 normalizedLightDirection = normalize(lightDirection.xyz);
-    float3 normalizedNormal = normalize(frag.worldNormal);
+    float4 Position : POSITION;
+	float4 Color    : COLOR;
+    float3 Normal   : NORMAL;
+    float2 TexCoord : TEXCOORD;
+};
 
-    float diff = max(dot(normalizedNormal, normalizedLightDirection), 0.0);
-    float3 diffuseColor = diff * lightColor.xyz * lightIntensity;
+struct VertexShaderOutput
+{
+    float4 PositionWS   : TEXCOORD1;
+    float3 NormalWS     : TEXCOORD2;
+    float2 TexCoord     : TEXCOORD0;
+    float4 Position     : SV_Position;
+	float4 Color : COLOR;
+};
 
-    float3 reflectDir = reflect(-normalizedLightDirection, normalizedNormal);
-    float specStrength = pow(max(dot(viewDir, reflectDir), 0.0), 16);
-    float3 specularColor = specStrength * float3(1.0, 1.0, 1.0) * lightIntensity;
+VertexShaderOutput VS_Main(AppData IN)
+{
+    VertexShaderOutput OUT;
 
-    float3 ambient = ambientLightColor * ambientLightIntensity;
-
-    float4 baseColor = useTex ? colorMap.Sample(colorSample, frag.uv) : frag.color;
-    baseColor *= materialColor;
-
-    float3 finalColor = baseColor.xyz * (ambient + diffuseColor + specularColor);
-
-    return float4(finalColor, 1);
+    OUT.Position = mul(WorldViewProjectionMatrix, IN.Position);
+    OUT.PositionWS = mul(WorldMatrix, IN.Position);
+    OUT.NormalWS = mul((float3x3)InverseTransposeWorldMatrix, IN.Normal);
+    OUT.TexCoord = IN.TexCoord;
+	OUT.Color = IN.Color;
+    return OUT;
 }
 
+Texture2D Texture : register(t0);
+sampler Sampler : register(s0);
 
+struct Material
+{
+    float4 Emissive;    // Emissive color
+    float4 Ambient;     // Ambient color
+    float4 Diffuse;     // Diffuse color
+    float4 Specular;    // Specular color
+    float SpecularPower;
+    bool UseTexture;    // Whether to use a texture
+    float2 Padding;
+	float4 Color;       // Material color
+};
+
+cbuffer MaterialProperties : register(b0)
+{
+    Material material;
+};
+
+float4 PS_Main(VertexShaderOutput IN) : SV_TARGET
+{
+    float4 texColor = IN.Color * material.Color;
+    
+    if (material.UseTexture)
+    {
+        texColor *= Texture.Sample(Sampler, IN.TexCoord);
+    }
+
+    float4 finalColor = material.Emissive + material.Ambient + texColor;
+    return finalColor;
+}

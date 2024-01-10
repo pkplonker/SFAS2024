@@ -7,6 +7,8 @@
 DirectionalLightComponent::DirectionalLightComponent(const std::weak_ptr<GameObject> object) : IComponent(object),
     color(Vec4(1, 1, 1, 1)), intensity(1)
 {
+    light.LightType = DirectionalLight;
+
 }
 
 Vec4 DirectionalLightComponent::GetDirection()
@@ -19,12 +21,12 @@ Vec4 DirectionalLightComponent::GetDirection()
     return result.Normalise();
 }
 
-Vec4 DirectionalLightComponent::GetColor()
+ILight::Light& DirectionalLightComponent::GetLight()
 {
-    return color;
+    auto vec = gameObject.lock()->Transform()->Position;
+    vec = gameObject.lock()->Transform()->GetDirection();
+    light.Direction = DirectX::XMFLOAT4(vec.X(), vec.Y(), vec.Z(), 1);
+    light.Enabled = gameObject.lock()->GetIsEnabled();
+    return light;
 }
 
-void DirectionalLightComponent::SetColor(Vec4 col)
-{
-    this->color = col;
-}

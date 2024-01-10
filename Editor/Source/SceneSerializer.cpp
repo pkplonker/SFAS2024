@@ -60,12 +60,38 @@ nlohmann::json SceneSerializer::SerializeMaterial(const std::shared_ptr<IRendera
         {
             serializedData["texture"] = Helpers::WideStringToString(texture->GetPath());
         }
-        auto color = material->GetColor();
+        //todo do this better
+        auto color = material->GetMaterialProperties().Color;
         serializedData["color"]["r"] = color.X();
         serializedData["color"]["g"] = color.Y();
         serializedData["color"]["b"] = color.Z();
         serializedData["color"]["a"] = color.W();
-        serializedData["skybox"] = material->GetIsSkybox();
+
+        auto Emissive = material->GetMaterialProperties().Emissive;
+        serializedData["Emissive"]["r"] = Emissive.X();
+        serializedData["Emissive"]["g"] = Emissive.Y();
+        serializedData["Emissive"]["b"] = Emissive.Z();
+        serializedData["Emissive"]["a"] = Emissive.W();
+
+        auto Ambient = material->GetMaterialProperties().Ambient;
+        serializedData["Ambient"]["r"] = Ambient.X();
+        serializedData["Ambient"]["g"] = Ambient.Y();
+        serializedData["Ambient"]["b"] = Ambient.Z();
+        serializedData["Ambient"]["a"] = Ambient.W();
+
+        auto Diffuse = material->GetMaterialProperties().Diffuse;
+        serializedData["Diffuse"]["r"] = Diffuse.X();
+        serializedData["Diffuse"]["g"] = Diffuse.Y();
+        serializedData["Diffuse"]["b"] = Diffuse.Z();
+        serializedData["Diffuse"]["a"] = Diffuse.W();
+
+        auto Specular = material->GetMaterialProperties().Specular;
+        serializedData["Specular"]["r"] = Specular.X();
+        serializedData["Specular"]["g"] = Specular.Y();
+        serializedData["Specular"]["b"] = Specular.Z();
+        serializedData["Specular"]["a"] = Specular.W();
+
+        serializedData["SpecularPower"] = material->GetMaterialProperties().SpecularPower;
     }
     return serializedData;
 }
@@ -107,7 +133,6 @@ bool SceneSerializer::Serialize(std::string path)
         sceneData["Ambient Light"]["ColorX"] = color.X();
         sceneData["Ambient Light"]["ColorY"] = color.Y();
         sceneData["Ambient Light"]["ColorZ"] = color.Z();
-        sceneData["Ambient Light"]["Intensity"] = sharedScene->GetAmbientLightIntensity();
 
         sceneData["objects"] = objectsData;
 
@@ -237,36 +262,49 @@ nlohmann::json SceneSerializer::SerializePerspectiveCamera(std::shared_ptr<Persp
 nlohmann::json SceneSerializer::SerializeDirectionalLight(std::shared_ptr<DirectionalLightComponent> dirLight)
 {
     nlohmann::json serializedData;
-    Vec4 color = dirLight->GetColor();
-    serializedData["colorX"] = color.X();
-    serializedData["colorY"] = color.Y();
-    serializedData["colorZ"] = color.Z();
-    serializedData["colorW"] = color.W();
-    serializedData["intensity"] = dirLight->intensity;
+    auto color = dirLight->GetLight().Color;
+    serializedData["colorX"] = color.x;
+    serializedData["colorY"] = color.y;
+    serializedData["colorZ"] = color.z;
+    serializedData["colorW"] = color.w;
+
+    serializedData["SpotAngle"] = dirLight->GetLight().SpotAngle;
+    serializedData["ConstantAttenuation"] = dirLight->GetLight().ConstantAttenuation;
+    serializedData["LinearAttenuation"] = dirLight->GetLight().LinearAttenuation;
+    serializedData["QuadraticAttenuation"] = dirLight->GetLight().QuadraticAttenuation;
+
     return serializedData;
 }
 
 nlohmann::json SceneSerializer::SerializeSpotLight(const std::shared_ptr<SpotLightComponent>& spotLight)
 {
     nlohmann::json serializedData;
-    Vec4 color = spotLight->GetColor();
-    serializedData["colorX"] = color.X();
-    serializedData["colorY"] = color.Y();
-    serializedData["colorZ"] = color.Z();
-    serializedData["intensity"] = spotLight->GetIntensity();
-    serializedData["innerCone"] = spotLight->GetInnerCone();
-    serializedData["outerCone"] = spotLight->GetOuterCone();
+    auto color = spotLight->GetLight().Color;
+    serializedData["colorX"] = color.x;
+    serializedData["colorY"] = color.y;
+    serializedData["colorZ"] = color.z;
+    serializedData["colorW"] = color.w;
+
+    serializedData["SpotAngle"] = spotLight->GetLight().SpotAngle;
+    serializedData["ConstantAttenuation"] = spotLight->GetLight().ConstantAttenuation;
+    serializedData["LinearAttenuation"] = spotLight->GetLight().LinearAttenuation;
+    serializedData["QuadraticAttenuation"] = spotLight->GetLight().QuadraticAttenuation;
+
     return serializedData;
 }
 
 nlohmann::json SceneSerializer::SerializePointLight(const std::shared_ptr<PointLightComponent>& pointLight)
 {
     nlohmann::json serializedData;
-    Vec4 color = pointLight->GetColor();
-    serializedData["colorX"] = color.X();
-    serializedData["colorY"] = color.Y();
-    serializedData["colorZ"] = color.Z();
-    serializedData["intensity"] = pointLight->GetIntensity();
+    auto color = pointLight->GetLight().Color;
+    serializedData["colorX"] = color.x;
+    serializedData["colorY"] = color.y;
+    serializedData["colorZ"] = color.z;
+    serializedData["colorW"] = color.w;
+
+    serializedData["ConstantAttenuation"] = pointLight->GetLight().ConstantAttenuation;
+    serializedData["LinearAttenuation"] = pointLight->GetLight().LinearAttenuation;
+    serializedData["QuadraticAttenuation"] = pointLight->GetLight().QuadraticAttenuation;
     return serializedData;
 }
 
@@ -304,7 +342,6 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
         {
             scene->SetAmbientLightColor(Vec3(sceneData["Ambient Light"]["ColorX"], sceneData["Ambient Light"]["ColorY"],
                                              sceneData["Ambient Light"]["ColorZ"]));
-            scene->SetAmbientLightIntensity(sceneData["Ambient Light"]["Intensity"]);
         }
         const json& objectsData = sceneData["objects"];
 
@@ -382,15 +419,42 @@ IMaterial* SceneSerializer::DeserializeMaterial(const nlohmann::json& data, std:
     }
     if (data.contains("color"))
     {
-        material->SetColor(Vec4(static_cast<float>(data["color"]["r"]),
-                                static_cast<float>(data["color"]["g"]),
-                                static_cast<float>(data["color"]["b"]),
-                                static_cast<float>(data["color"]["a"]))
-        );
-    }
-    if (data.contains("skybox"))
-    {
-        material->SetIsSkyBox(data["skybox"]);
+        material->GetMaterialProperties().Color = Vec4(static_cast<float>(data["color"]["r"]),
+                                                       static_cast<float>(data["color"]["g"]),
+                                                       static_cast<float>(data["color"]["b"]),
+                                                       static_cast<float>(data["color"]["a"]));
+        if (data.contains("Emissive"))
+        {
+            material->GetMaterialProperties().Emissive = Vec4(static_cast<float>(data["Emissive"]["r"]),
+                                                              static_cast<float>(data["Emissive"]["g"]),
+                                                              static_cast<float>(data["Emissive"]["b"]),
+                                                              static_cast<float>(data["Emissive"]["a"]));
+        }
+        if (data.contains("Ambient"))
+        {
+            material->GetMaterialProperties().Ambient = Vec4(static_cast<float>(data["Ambient"]["r"]),
+                                                             static_cast<float>(data["Ambient"]["g"]),
+                                                             static_cast<float>(data["Ambient"]["b"]),
+                                                             static_cast<float>(data["Ambient"]["a"]));
+        }
+        if (data.contains("Diffuse"))
+        {
+            material->GetMaterialProperties().Diffuse = Vec4(static_cast<float>(data["Diffuse"]["r"]),
+                                                             static_cast<float>(data["Diffuse"]["g"]),
+                                                             static_cast<float>(data["Diffuse"]["b"]),
+                                                             static_cast<float>(data["Diffuse"]["a"]));
+        }
+        if (data.contains("Specular"))
+        {
+            material->GetMaterialProperties().Specular = Vec4(static_cast<float>(data["Specular"]["r"]),
+                                                              static_cast<float>(data["Specular"]["g"]),
+                                                              static_cast<float>(data["Specular"]["b"]),
+                                                              static_cast<float>(data["Specular"]["a"]));
+        }
+        if (data.contains("SpecularPower"))
+        {
+            material->GetMaterialProperties().SpecularPower = static_cast<float>(data["SpecularPower"]);
+        }
     }
     return material;
 }
@@ -464,14 +528,30 @@ void SceneSerializer::DeserializeDirectionalLight(const std::shared_ptr<GameObje
     if (auto directionalLight = std::dynamic_pointer_cast<DirectionalLightComponent>(directionalLightComponent);
         directionalLight != nullptr)
     {
-        Vec4 color;
-
-        color.X(static_cast<float>(data["colorX"]));
-        color.Y(static_cast<float>(data["colorY"]));
-        color.Z(static_cast<float>(data["colorZ"]));
-        color.W(static_cast<float>(data["colorW"]));
-        directionalLight->intensity = static_cast<float>(data["intensity"]);
-        directionalLight->SetColor(color);
+        auto& light = directionalLight->GetLight();
+        if (data.contains("colorW"))
+        {
+            light.Color = DirectX::XMFLOAT4(static_cast<float>(data["colorX"]), static_cast<float>(data["colorY"]),
+                                            static_cast<float>(data["colorZ"]), static_cast<float>(data["colorW"]));
+        }
+        if (data.contains("ConstantAttenuation"))
+        {
+            light.ConstantAttenuation = static_cast<float>(data["ConstantAttenuation"]);
+        }
+        if (data.contains("LinearAttenuation"))
+        {
+            light.LinearAttenuation = static_cast<float>(data["LinearAttenuation"]);
+        }
+        if (data.contains("QuadraticAttenuation"))
+        {
+            light.QuadraticAttenuation = static_cast<float>(data["QuadraticAttenuation"]);
+        }
+        if (data.contains("directionX"))
+        {
+            light.Direction = DirectX::XMFLOAT4(static_cast<float>(data["directionX"]),
+                                                static_cast<float>(data["directionY"]),
+                                                static_cast<float>(data["directionZ"]), 1.0f);
+        }
         gameObject->AddComponent(std::move(directionalLight));
         scene->RegisterDirectionalLight(gameObject->GetComponent<DirectionalLightComponent>());
     }
@@ -488,13 +568,30 @@ void SceneSerializer::DeserializePointLight(const std::shared_ptr<GameObject>& g
     if (auto pointLight = std::dynamic_pointer_cast<PointLightComponent>(pointLightComponent);
         pointLight != nullptr)
     {
-        Vec3 color;
-
-        color.X(static_cast<float>(data["colorX"]));
-        color.Y(static_cast<float>(data["colorY"]));
-        color.Z(static_cast<float>(data["colorZ"]));
-        pointLight->SetIntensity(static_cast<float>(data["intensity"]));
-        pointLight->SetColor(color);
+        auto& light = pointLight->GetLight();
+        if (data.contains("colorW"))
+        {
+            light.Color = DirectX::XMFLOAT4(static_cast<float>(data["colorX"]), static_cast<float>(data["colorY"]),
+                                            static_cast<float>(data["colorZ"]), static_cast<float>(data["colorW"]));
+        }
+        if (data.contains("ConstantAttenuation"))
+        {
+            light.ConstantAttenuation = static_cast<float>(data["ConstantAttenuation"]);
+        }
+        if (data.contains("LinearAttenuation"))
+        {
+            light.LinearAttenuation = static_cast<float>(data["LinearAttenuation"]);
+        }
+        if (data.contains("QuadraticAttenuation"))
+        {
+            light.QuadraticAttenuation = static_cast<float>(data["QuadraticAttenuation"]);
+        }
+        if (data.contains("directionX"))
+        {
+            light.Direction = DirectX::XMFLOAT4(static_cast<float>(data["directionX"]),
+                                                static_cast<float>(data["directionY"]),
+                                                static_cast<float>(data["directionZ"]), 1.0f);
+        }
         gameObject->AddComponent(std::move(pointLight));
         scene->RegisterLight(gameObject->GetComponent<PointLightComponent>());
     }
@@ -511,18 +608,39 @@ void SceneSerializer::DeserializeSpotLight(const std::shared_ptr<GameObject>& ga
     if (auto spotLight = std::dynamic_pointer_cast<SpotLightComponent>(spotLightComponent);
         spotLight != nullptr)
     {
-        Vec3 color;
+        auto& light = spotLight->GetLight();
+        if (data.contains("SpotAngle"))
+        {
+            light.SpotAngle = static_cast<float>(data["SpotAngle"]);
+        }
+        if (data.contains("colorW"))
+        {
+            light.Color = DirectX::XMFLOAT4(static_cast<float>(data["colorX"]), static_cast<float>(data["colorY"]),
+                                            static_cast<float>(data["colorZ"]), static_cast<float>(data["colorW"]));
+        }
 
-        color.X(static_cast<float>(data["colorX"]));
-        color.Y(static_cast<float>(data["colorY"]));
-        color.Z(static_cast<float>(data["colorZ"]));
-        spotLight->SetIntensity(static_cast<float>(data["intensity"]));
-        spotLight->SetColor(color);
-        spotLight->SetInnerCone(static_cast<float>(data["innerCone"]));
-        spotLight->SetOuterCone(static_cast<float>(data["outerCone"]));
+        if (data.contains("ConstantAttenuation"))
+        {
+            light.ConstantAttenuation = static_cast<float>(data["ConstantAttenuation"]);
+        }
+        if (data.contains("LinearAttenuation"))
+        {
+            light.LinearAttenuation = static_cast<float>(data["LinearAttenuation"]);
+        }
+        if (data.contains("QuadraticAttenuation"))
+        {
+            light.QuadraticAttenuation = static_cast<float>(data["QuadraticAttenuation"]);
+        }
+        if (data.contains("directionX"))
+        {
+            light.Direction = DirectX::XMFLOAT4(static_cast<float>(data["directionX"]),
+                                                static_cast<float>(data["directionY"]),
+                                                static_cast<float>(data["directionZ"]), 1.0f);
+        }
         gameObject->AddComponent(std::move(spotLight));
         scene->RegisterLight(gameObject->GetComponent<SpotLightComponent>());
     }
+
     else
     {
         Warning("Failed to cast created point light component")

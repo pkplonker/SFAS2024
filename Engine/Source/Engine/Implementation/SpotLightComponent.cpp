@@ -1,7 +1,19 @@
 ﻿#include "SpotLightComponent.h"
 
+#include "Scene.h"
+#include "SceneManager.h"
+
 SpotLightComponent::SpotLightComponent(std::weak_ptr<GameObject> gameObject): IComponent(gameObject)
 {
+    light.LightType = SpotLight;
+}
+
+SpotLightComponent::~SpotLightComponent()
+{
+    if (auto scene = SceneManager::GetScene().lock())
+    {
+        scene->DeregisterLight(shared_from_this());
+    }
 }
 
 Vec3 SpotLightComponent::GetPosition() const
@@ -42,4 +54,14 @@ float SpotLightComponent::GetOuterCone() const
 void SpotLightComponent::SetOuterCone(float value)
 {
     outerCone = value;
+}
+
+ILight::Light& SpotLightComponent::GetLight()
+{
+    auto pos = gameObject.lock()->Transform()->Position;
+    light.Position = DirectX::XMFLOAT4(pos.X(), pos.Y(), pos.Z(), 1);
+    light.Direction = gameObject.lock()->Transform()->GetDirectionXm();
+    light.Enabled = gameObject.lock()->GetIsEnabled();
+
+    return light;
 }

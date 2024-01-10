@@ -12,8 +12,7 @@ public:
     DirectX11Material(IShader* shader, ITexture* texture);
     bool Update() override;
     ~DirectX11Material() override;
-    bool GetIsSkybox() override;
-    void SetIsSkyBox(bool val) override;
+
 
 private:
     bool isSkybox = false;
