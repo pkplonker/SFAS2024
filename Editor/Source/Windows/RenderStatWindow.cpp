@@ -4,6 +4,7 @@
 #include "IApplication.h"
 #include "IGraphics.h"
 #include "imgui.h"
+#include "ResourceManager.h"
 
 void RenderStatWindow::Draw()
 {
@@ -19,10 +20,20 @@ void RenderStatWindow::Draw()
     ImGui::SameLine();
     ImGui::Text("Vertices: %u", stats.verts);
     ImGui::Separator();
-    
+
     ImGui::Text("Screen Size: %u x %u", stats.width, stats.height);
     ImGui::Text("Viewport Size: %u x %u", stats.viewportWidth, stats.viewportHeight);
     ImGui::Text("FPS: %u", EngineTime::GetFPS());
+    if (ImGui::Button("Reload Shaders"))
+    {
+        for (auto shader : ResourceManager::GetShaders())
+        {
+            if (shader != nullptr)
+            {
+                shader->Reload();
+            }
+        }
+    }
     ImGui::SameLine();
     ImGui::End();
 }

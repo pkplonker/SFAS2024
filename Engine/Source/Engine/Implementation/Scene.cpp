@@ -9,7 +9,7 @@
 #include "Engine/IApplication.h"
 class SpriteComponent;
 
-Scene::Scene(IGraphics* graphics, std::string path) : filePath(path)
+Scene::Scene(IGraphics* graphics, std::string path) : filePath(path), ambientLightColor(Vec3(1.0f, 1.0f, 1.0f))                                                      
 {
     objects = std::make_unique<std::map<std::string, std::shared_ptr<GameObject>>>();
     this->graphics = graphics;
@@ -69,6 +69,35 @@ std::weak_ptr<DirectionalLightComponent> Scene::GetDirectionalLight()
 {
     return directionalLight;
 }
+
+Vec3 Scene::GetAmbientLightColor()
+{
+    return ambientLightColor;
+}
+
+
+void Scene::SetAmbientLightColor(Vec3 value)
+{
+    ambientLightColor = value;
+}
+
+
+void Scene::RegisterLight(const std::shared_ptr<ILight>& light)
+{
+    if (light == nullptr)return;
+    auto it = std::find(lights.begin(), lights.end(), light);
+
+    if (it == lights.end())
+    {
+        lights.push_back(light);
+    }
+}
+
+void Scene::DeregisterLight(const std::shared_ptr<ILight>& light)
+{
+    std::erase(lights, light);
+}
+
 
 void Scene::RemoveObject(std::shared_ptr<GameObject> object)
 {

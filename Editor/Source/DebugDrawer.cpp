@@ -38,16 +38,15 @@ void DebugDrawer::DrawGridInternal()
     DirectX::XMVECTOR yAxis = DirectX::XMVectorSet(0.0f, 0.0f, scaleFactor, 0.0f);
     DirectX::XMVECTOR origin = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 
-    int xdivs = 1 * scaleFactor;
-    int ydivs = 1 * scaleFactor;
+   
     float col = 0.99f;
-    DirectX::XMVECTOR color = {col, col, col, 0.02f};
-    xdivs = std::max<int>(1, xdivs);
-    ydivs = std::max<int>(1, ydivs);
+    DirectX::XMVECTOR color = {col, col, col, .8f};
+    scaleFactor = std::max<int>(1, scaleFactor);
+    scaleFactor = std::max<int>(1, scaleFactor);
 
-    for (int i = 0; i <= xdivs; ++i)
+    for (int i = 0; i <= scaleFactor; ++i)
     {
-        float percent = static_cast<float>(i) / float(xdivs);
+        float percent = static_cast<float>(i) / static_cast<float>(scaleFactor);
         percent = (percent * 2.f) - 1.f;
         XMVECTOR scale = XMVectorScale(xAxis, percent);
         scale = XMVectorAdd(scale, origin);
@@ -57,9 +56,9 @@ void DebugDrawer::DrawGridInternal()
         lineBatch->DrawLine(v1, v2);
     }
 
-    for (int i = 0; i <= ydivs; i++)
+    for (int i = 0; i <= scaleFactor; i++)
     {
-        float percent = static_cast<float>(i) / static_cast<float>(ydivs);
+        float percent = static_cast<float>(i) / static_cast<float>(scaleFactor);
         percent = (percent * 2.f) - 1.f;
         XMVECTOR scale = XMVectorScale(yAxis, percent);
         scale = XMVectorAdd(scale, origin);

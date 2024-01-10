@@ -1,7 +1,11 @@
 cbuffer cbChangedPerFrame : register(b0)
 {
     matrix mvp;
-	matrix worldMatrix;
+    matrix worldMatrix;
+    float3 camForward;
+    float2 screenSize;
+	float3 ambientLightColor;
+	float ambientLightIntensity;
 };
 
 cbuffer MaterialBuffer : register(b1)

@@ -12,6 +12,7 @@
 #include "implementation/Logging/Debug.h"
 
 
+class SpotLightComponent;
 class GameObject;
 class IComponent;
 
@@ -29,6 +30,10 @@ public:
 
     template <>
     static void RegisterComponent<DirectionalLightComponent>(const std::string& alias);
+    template <>
+    static void RegisterComponent<SpotLightComponent>(const std::string& alias);
+    template <>
+    static void RegisterComponent<PointLightComponent>(const std::string& alias);
 
     static std::shared_ptr<IComponent> CreateComponent(const std::string& alias, std::shared_ptr<GameObject> gameObject)
     {

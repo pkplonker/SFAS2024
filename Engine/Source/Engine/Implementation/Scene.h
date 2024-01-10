@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <memory>
 
+#include "PointLightComponent.h"
 #include "Engine/Implementation/GameObject.h"
 #include "Engine/IRenderable.h"
 
@@ -37,6 +38,11 @@ public:
 
     std::weak_ptr<DirectionalLightComponent> GetDirectionalLight();
     std::string GetPath() { return filePath; }
+    Vec3 GetAmbientLightColor();
+    void SetAmbientLightColor(Vec3 value);
+    void RegisterLight(const std::shared_ptr<ILight>& shared);
+    void DeregisterLight(const std::shared_ptr<ILight>& shared);
+    std:: vector<std::shared_ptr<ILight>> GetLights(){return lights;}
 
 private:
     std::unique_ptr<std::map<std::string, std::shared_ptr<GameObject>>> objects = std::make_unique<std::map<
@@ -47,4 +53,6 @@ private:
     IGraphics* graphics;
     std::weak_ptr<DirectionalLightComponent> directionalLight;
     std::string filePath;
+    Vec3 ambientLightColor;
+    std:: vector<std::shared_ptr<ILight>> lights;
 };

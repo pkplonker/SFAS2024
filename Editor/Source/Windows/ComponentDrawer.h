@@ -1,5 +1,4 @@
 #pragma once
-#include "Engine/IComponent.h"
 
 class ComponentDrawer
 {

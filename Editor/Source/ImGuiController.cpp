@@ -37,7 +37,7 @@ void ImGuiController::LoadIconFonts()
 {
     ImGuiIO& io = ImGui::GetIO();
     io.Fonts->AddFontDefault();
-    
+
     static const ImWchar icons_ranges[] = {ICON_MIN_MD, ICON_MAX_16_MD, 0};
 
     ImFontConfig smallIconsConfig;
@@ -193,9 +193,25 @@ void ImGuiController::ImGuiPostUpdate() const
     }
 }
 
-void ImGuiController::Save()
+void ImGuiController::SaveAs()
 {
     SceneSerializer::Serialize(FileDialog::SaveFileDialog());
+}
+
+void ImGuiController::Save()
+{
+    if (const auto scene = SceneManager::GetScene().lock())
+    {
+        auto path = scene->GetPath();
+        if (path != "")
+        {
+            SceneSerializer::Serialize(path);
+        }
+        else
+        {
+            SaveAs();
+        }
+    }
 }
 
 bool showConfirmDialog = false;
@@ -263,6 +279,10 @@ void ImGuiController::DrawMenu()
             if (ImGui::MenuItem("Save", "Ctrl+S"))
             {
                 Save();
+            }
+            if (ImGui::MenuItem("Save As", "Ctrl+Shft+S"))
+            {
+                SaveAs();
             }
             if (ImGui::MenuItem("Open", "Ctrl+O"))
             {
@@ -335,6 +355,22 @@ void ImGuiController::Draw()
     DrawWindows();
     DrawViewport();
     DrawMenu();
+    if (input->IsKeyDown(Keys::LeftControl) && input->IsKeyPress(Keys::S))
+    {
+        Save();
+    }
+    if (input->IsKeyDown(Keys::LeftControl) && input->IsKeyDown(Keys::LeftShift) && input->IsKeyPress(Keys::S))
+    {
+        SaveAs();
+    }
+    if (input->IsKeyDown(Keys::LeftControl) && input->IsKeyPress(Keys::O))
+    {
+        LoadScene();
+    }
+    if (input->IsKeyDown(Keys::LeftControl) && input->IsKeyPress(Keys::N))
+    {
+        New();
+    }
 }
 
 

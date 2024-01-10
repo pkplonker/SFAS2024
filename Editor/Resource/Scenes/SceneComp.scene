@@ -1,4 +1,9 @@
 {
+    "Ambient Light": {
+        "ColorX": 0.11764705926179886,
+        "ColorY": 0.11764705926179886,
+        "ColorZ": 0.11764705926179886
+    },
     "objects": [
         [
             "Bottle1",
@@ -6,6 +11,31 @@
                 "guid": "{1C4775EB-1A6E-411A-A325-9EA8351B2346}",
                 "meshComponent": {
                     "material": {
+                        "Ambient": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Diffuse": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Emissive": {
+                            "a": 1.0,
+                            "b": 0.0,
+                            "g": 0.0,
+                            "r": 0.0
+                        },
+                        "Specular": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "SpecularPower": 32.0,
                         "color": {
                             "a": 1.0,
                             "b": 1.0,
@@ -13,8 +43,7 @@
                             "r": 1.0
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bottle1.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bottle1.smesh"
@@ -24,11 +53,45 @@
                     "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
                     "position": {
                         "x": 0.6666814684867859,
-                        "y": 3.0986404418945313,
+                        "y": 1.820539951324463,
                         "z": -4.317113876342773
                     },
                     "rotation": {
                         "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Spot Light",
+            {
+                "guid": "{2F927551-64B1-4A7D-94FB-403990EE9C1E}",
+                "name": "Spot Light",
+                "spotLight": {
+                    "ConstantAttenuation": 0.0,
+                    "LinearAttenuation": 0.0,
+                    "QuadraticAttenuation": 0.03999999910593033,
+                    "SpotAngle": 1.7100000381469727,
+                    "colorW": 0.9882352948188782,
+                    "colorX": 0.019607843831181526,
+                    "colorY": 0.9960784316062927,
+                    "colorZ": 0.03529411926865578
+                },
+                "transform": {
+                    "position": {
+                        "x": -6.845517158508301,
+                        "y": 2.766726493835449,
+                        "z": -0.07001560926437378
+                    },
+                    "rotation": {
+                        "x": -90.0,
                         "y": 0.0,
                         "z": 0.0
                     },
@@ -46,6 +109,31 @@
                 "guid": "{30E71215-4D91-470D-AD2C-06D672740CD3}",
                 "meshComponent": {
                     "material": {
+                        "Ambient": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Diffuse": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Emissive": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Specular": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "SpecularPower": 32.0,
                         "color": {
                             "a": 1.0,
                             "b": 1.0,
@@ -53,8 +141,7 @@
                             "r": 1.0
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Cup.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Cup.smesh"
@@ -64,7 +151,7 @@
                     "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
                     "position": {
                         "x": -0.711064875125885,
-                        "y": 3.5733728408813477,
+                        "y": 1.8194084167480469,
                         "z": -4.809295654296875
                     },
                     "rotation": {
@@ -86,6 +173,31 @@
                 "guid": "{32CA0A0C-7527-486F-AC8C-C329FEC9CF9C}",
                 "meshComponent": {
                     "material": {
+                        "Ambient": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Diffuse": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Emissive": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Specular": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "SpecularPower": 32.0,
                         "color": {
                             "a": 1.0,
                             "b": 1.0,
@@ -93,8 +205,7 @@
                             "r": 1.0
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell.smesh"
@@ -104,7 +215,7 @@
                     "parent": "{AEEB717D-3319-44B5-B922-2D0CB1449578}",
                     "position": {
                         "x": -7.631878852844238,
-                        "y": 3.8773629665374756,
+                        "y": 1.1320748329162598,
                         "z": -3.5538077354431152
                     },
                     "rotation": {
@@ -126,6 +237,31 @@
                 "guid": "{34007A8A-BE74-4B29-8F1B-C6861C7957D6}",
                 "meshComponent": {
                     "material": {
+                        "Ambient": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Diffuse": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Emissive": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Specular": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "SpecularPower": 32.0,
                         "color": {
                             "a": 1.0,
                             "b": 1.0,
@@ -133,8 +269,7 @@
                             "r": 1.0
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Plate.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Plate.smesh"
@@ -144,7 +279,7 @@
                     "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
                     "position": {
                         "x": 0.0,
-                        "y": 3.175492763519287,
+                        "y": 1.837655782699585,
                         "z": -5.43427848815918
                     },
                     "rotation": {
@@ -166,6 +301,31 @@
                 "guid": "{39214A2F-BD4C-425F-AAC4-00D357E66B5A}",
                 "meshComponent": {
                     "material": {
+                        "Ambient": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Diffuse": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Emissive": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Specular": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "SpecularPower": 32.0,
                         "color": {
                             "a": 1.0,
                             "b": 1.0,
@@ -173,8 +333,7 @@
                             "r": 1.0
                         },
                         "mesh": "",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": ""
@@ -206,6 +365,31 @@
                 "guid": "{3AAD112F-5395-493D-B7B3-437DAB4670FA}",
                 "meshComponent": {
                     "material": {
+                        "Ambient": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Diffuse": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Emissive": {
+                            "a": 1.0,
+                            "b": 0.0,
+                            "g": 0.0,
+                            "r": 0.0
+                        },
+                        "Specular": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "SpecularPower": 32.0,
                         "color": {
                             "a": 1.0,
                             "b": 1.0,
@@ -213,8 +397,7 @@
                             "r": 1.0
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Crate1.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Crate1.smesh"
@@ -224,13 +407,13 @@
                     "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
                     "position": {
                         "x": -0.36354386806488037,
-                        "y": 3.163240432739258,
-                        "z": -7.798708438873291
+                        "y": 1.0341479778289795,
+                        "z": -7.1987504959106445
                     },
                     "rotation": {
                         "x": 0.0,
-                        "y": -0.0,
-                        "z": 8.857160568237305
+                        "y": 0.0,
+                        "z": 0.0
                     },
                     "scale": {
                         "x": 3.0000016689300537,
@@ -241,49 +424,36 @@
             }
         ],
         [
-            "New Cube",
-            {
-                "guid": "{4DAC5B59-E0EA-4382-B6FF-09AE318F6BDA}",
-                "meshComponent": {
-                    "material": {
-                        "color": {
-                            "a": 1.0,
-                            "b": 1.0,
-                            "g": 1.0,
-                            "r": 1.0
-                        },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh",
-                        "shader": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Shaders/boing.fx",
-                        "skybox": false
-                    },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/cube.smesh"
-                },
-                "name": "New Cube",
-                "transform": {
-                    "position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "rotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            }
-        ],
-        [
             "Table",
             {
                 "guid": "{70E7F8B6-EC42-4DC6-AA9D-AEA185C6588E}",
                 "meshComponent": {
                     "material": {
+                        "Ambient": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Diffuse": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Emissive": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Specular": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "SpecularPower": 32.0,
                         "color": {
                             "a": 1.0,
                             "b": 1.0,
@@ -291,8 +461,7 @@
                             "r": 1.0
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Table.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Table.smesh"
@@ -302,7 +471,7 @@
                     "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
                     "position": {
                         "x": 0.0,
-                        "y": 2.939796209335327,
+                        "y": 1.6086578369140625,
                         "z": -4.801431179046631
                     },
                     "rotation": {
@@ -324,6 +493,31 @@
                 "guid": "{77ED40AD-57FE-4AF7-A543-26392BBB7775}",
                 "meshComponent": {
                     "material": {
+                        "Ambient": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Diffuse": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Emissive": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Specular": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "SpecularPower": 32.0,
                         "color": {
                             "a": 1.0,
                             "b": 1.0,
@@ -331,8 +525,7 @@
                             "r": 1.0
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell2.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell2.smesh"
@@ -342,13 +535,13 @@
                     "parent": "{AEEB717D-3319-44B5-B922-2D0CB1449578}",
                     "position": {
                         "x": -9.913932800292969,
-                        "y": 3.9190292358398438,
+                        "y": 1.0,
                         "z": -3.536602258682251
                     },
                     "rotation": {
                         "x": 0.0,
-                        "y": -0.0,
-                        "z": -26.588478088378906
+                        "y": 0.0,
+                        "z": 0.0
                     },
                     "scale": {
                         "x": 3.0000007152557373,
@@ -396,23 +589,59 @@
             "Directional Light",
             {
                 "directionalLight": {
+                    "ConstantAttenuation": 0.0,
+                    "LinearAttenuation": 0.0,
+                    "QuadraticAttenuation": 0.0,
+                    "SpotAngle": 1.5707963705062866,
                     "colorW": 1.0,
                     "colorX": 1.0,
                     "colorY": 1.0,
-                    "colorZ": 1.0,
-                    "intensity": 1.0
+                    "colorZ": 0.9921568632125854
                 },
                 "guid": "{925F3940-6452-4363-9163-F8BB0187E781}",
                 "name": "Directional Light",
                 "transform": {
                     "position": {
-                        "x": 0.0,
-                        "y": 10.123026847839355,
-                        "z": 0.0
+                        "x": -3.004079580307007,
+                        "y": 11.980422019958496,
+                        "z": -8.741937637329102
                     },
                     "rotation": {
-                        "x": 154.0,
-                        "y": 140.0,
+                        "x": -16.822460174560547,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "TestPoint",
+            {
+                "guid": "{9EE32C3B-B7A9-486B-9712-23753C3ED11F}",
+                "name": "TestPoint",
+                "pointLight": {
+                    "ConstantAttenuation": 0.0,
+                    "LinearAttenuation": 0.009999999776482582,
+                    "QuadraticAttenuation": 0.019999999552965164,
+                    "colorW": 0.9921568632125854,
+                    "colorX": 0.0,
+                    "colorY": 1.0,
+                    "colorZ": 0.0
+                },
+                "transform": {
+                    "position": {
+                        "x": -17.261533737182617,
+                        "y": 1.1508700847625732,
+                        "z": -4.471658706665039
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
                         "z": 0.0
                     },
                     "scale": {
@@ -429,6 +658,31 @@
                 "guid": "{A162262C-5ACE-4D82-8C5A-59D15B41C8C9}",
                 "meshComponent": {
                     "material": {
+                        "Ambient": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Diffuse": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Emissive": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Specular": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "SpecularPower": 32.0,
                         "color": {
                             "a": 1.0,
                             "b": 1.0,
@@ -436,8 +690,7 @@
                             "r": 1.0
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell.smesh"
@@ -447,13 +700,13 @@
                     "parent": "{AEEB717D-3319-44B5-B922-2D0CB1449578}",
                     "position": {
                         "x": -8.599287033081055,
-                        "y": 3.628145694732666,
+                        "y": 1.0,
                         "z": -4.560481071472168
                     },
                     "rotation": {
                         "x": 0.0,
-                        "y": -0.0,
-                        "z": -17.55978775024414
+                        "y": 0.0,
+                        "z": 0.0
                     },
                     "scale": {
                         "x": 2.9999630451202393,
@@ -469,6 +722,31 @@
                 "guid": "{ACB20410-D6AE-461A-8C4F-EF4DE0E96DBF}",
                 "meshComponent": {
                     "material": {
+                        "Ambient": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Diffuse": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Emissive": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Specular": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "SpecularPower": 32.0,
                         "color": {
                             "a": 1.0,
                             "b": 1.0,
@@ -476,8 +754,7 @@
                             "r": 1.0
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Fire.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Fire.smesh"
@@ -487,7 +764,7 @@
                     "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
                     "position": {
                         "x": -4.0,
-                        "y": 3.6465983390808105,
+                        "y": 0.9324833154678345,
                         "z": -4.368289947509766
                     },
                     "rotation": {
@@ -528,28 +805,85 @@
             }
         ],
         [
+            "Point Light2",
+            {
+                "guid": "{AF4F45E0-9547-45E4-A9C2-08AF36C533F2}",
+                "name": "Point Light2",
+                "pointLight": {
+                    "ConstantAttenuation": 0.0,
+                    "LinearAttenuation": 0.800000011920929,
+                    "QuadraticAttenuation": 0.0,
+                    "colorW": 1.0,
+                    "colorX": 1.0,
+                    "colorY": 0.0,
+                    "colorZ": 0.0
+                },
+                "transform": {
+                    "position": {
+                        "x": -3.8590779304504395,
+                        "y": 0.8014761209487915,
+                        "z": -4.277712345123291
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
             "Terrain",
             {
                 "guid": "{C0A3D52D-05F6-4821-BC64-8CB217D834FD}",
                 "meshComponent": {
                     "material": {
+                        "Ambient": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Diffuse": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Emissive": {
+                            "a": 1.0,
+                            "b": 0.0,
+                            "g": 0.0,
+                            "r": 0.0
+                        },
+                        "Specular": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "SpecularPower": 32.0,
                         "color": {
                             "a": 1.0,
-                            "b": 0.35921281576156616,
-                            "g": 0.47046101093292236,
-                            "r": 0.4852941036224365
+                            "b": 0.07792676240205765,
+                            "g": 0.24636168777942657,
+                            "r": 0.3382353186607361
                         },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Terrain.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false
+                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Terrain2.smesh",
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx"
                     },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Terrain.smesh"
+                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Terrain2.smesh"
                 },
                 "name": "Terrain",
                 "transform": {
                     "position": {
                         "x": 0.0,
-                        "y": -1.7737367153167725,
+                        "y": 0.2845122814178467,
                         "z": 15.702970504760742
                     },
                     "rotation": {
@@ -571,6 +905,31 @@
                 "guid": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
                 "meshComponent": {
                     "material": {
+                        "Ambient": {
+                            "a": 1.0,
+                            "b": 0.20000000298023224,
+                            "g": 0.20000000298023224,
+                            "r": 0.20000000298023224
+                        },
+                        "Diffuse": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Emissive": {
+                            "a": 1.0,
+                            "b": 0.0,
+                            "g": 0.0,
+                            "r": 0.0
+                        },
+                        "Specular": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "SpecularPower": 8.0,
                         "color": {
                             "a": 1.0,
                             "b": 1.0,
@@ -579,7 +938,6 @@
                         },
                         "mesh": "",
                         "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": ""
@@ -587,9 +945,42 @@
                 "name": "Props",
                 "transform": {
                     "position": {
+                        "x": -23.13327407836914,
+                        "y": 4.068063259124756,
+                        "z": 18.114219665527344
+                    },
+                    "rotation": {
                         "x": 0.0,
                         "y": 0.0,
                         "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            }
+        ],
+        [
+            "Point Light",
+            {
+                "guid": "{EC5587DB-0A4F-4F46-8BFD-FA71566ECC02}",
+                "name": "Point Light",
+                "pointLight": {
+                    "ConstantAttenuation": 0.009999999776482582,
+                    "LinearAttenuation": 0.0,
+                    "QuadraticAttenuation": 0.10000000149011612,
+                    "colorW": 1.0,
+                    "colorX": 1.0,
+                    "colorY": 0.491349458694458,
+                    "colorZ": 0.039215683937072754
+                },
+                "transform": {
+                    "position": {
+                        "x": -3.3763976097106934,
+                        "y": 1.5332413911819458,
+                        "z": -3.869427442550659
                     },
                     "rotation": {
                         "x": 0.0,
@@ -610,6 +1001,31 @@
                 "guid": "{EEF663E3-6223-4972-A01F-22A0A5C8B547}",
                 "meshComponent": {
                     "material": {
+                        "Ambient": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Diffuse": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Emissive": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Specular": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "SpecularPower": 32.0,
                         "color": {
                             "a": 1.0,
                             "b": 1.0,
@@ -617,8 +1033,7 @@
                             "r": 1.0
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Crate2.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Crate2.smesh"
@@ -628,11 +1043,11 @@
                     "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
                     "position": {
                         "x": -7.003708362579346,
-                        "y": 3.4144537448883057,
+                        "y": 1.3919677734375,
                         "z": -0.84326171875
                     },
                     "rotation": {
-                        "x": 19.625057220458984,
+                        "x": 0.0,
                         "y": 0.0,
                         "z": 0.0
                     },
@@ -650,6 +1065,31 @@
                 "guid": "{FD95BB93-DC97-4175-BDF1-286C221AE122}",
                 "meshComponent": {
                     "material": {
+                        "Ambient": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Diffuse": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Emissive": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "Specular": {
+                            "a": 1.0,
+                            "b": 1.0,
+                            "g": 1.0,
+                            "r": 1.0
+                        },
+                        "SpecularPower": 32.0,
                         "color": {
                             "a": 1.0,
                             "b": 1.0,
@@ -657,8 +1097,7 @@
                             "r": 1.0
                         },
                         "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bucket.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "skybox": false,
+                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
                         "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bucket.smesh"
@@ -667,9 +1106,9 @@
                 "transform": {
                     "parent": "{E52C4CD3-226C-48C0-B920-43C1DA64351D}",
                     "position": {
-                        "x": -3.0734446048736572,
-                        "y": 2.398859977722168,
-                        "z": 0.0
+                        "x": -6.064885139465332,
+                        "y": 0.4098326563835144,
+                        "z": -2.08292293548584
                     },
                     "rotation": {
                         "x": 0.0,

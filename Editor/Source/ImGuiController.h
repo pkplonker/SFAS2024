@@ -42,7 +42,8 @@ public:
         return isUsingGizmo;
     }
 
-    static void Save();
+    static void SaveAs();
+    void Save();
     void Save(std::string path);
     void SaveExistingScene();
     void DrawWindows();

@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <DirectXMath.h>
 #include "sstream"
-#include "Implementation/XInput/DirectXInput.h"
+#include "Engine/Implementation/XInput/DirectXInput.h"
 
 namespace dx = DirectX;
 
