@@ -12,6 +12,7 @@ PointLightComponent::~PointLightComponent()
 {
     if (auto scene = SceneManager::GetScene().lock())
     {
+        if(scene->GetLights().empty())return;
         scene->DeregisterLight(shared_from_this());
     }
 }

@@ -195,7 +195,11 @@ void ImGuiController::ImGuiPostUpdate() const
 
 void ImGuiController::SaveAs()
 {
-    SceneSerializer::Serialize(FileDialog::SaveFileDialog());
+    auto path = FileDialog::SaveFileDialog();
+    if (path != "")
+    {
+        SceneSerializer::Serialize();
+    }
 }
 
 void ImGuiController::Save()
