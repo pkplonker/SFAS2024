@@ -27,6 +27,7 @@ SceneSerializer::SceneSerializer(IGraphics* graphics)
 
 void SceneSerializer::WriteToFile(json sceneData, std::string path)
 {
+    path = Helpers::ToAbsolutePath(path);
     Trace("Saving to disk")
 
     std::ofstream outputFile(path);
@@ -53,11 +54,11 @@ nlohmann::json SceneSerializer::SerializeMaterial(const std::shared_ptr<IRendera
     {
         if (const auto shader = material->GetShader())
         {
-            serializedData["shader"] = Helpers::WideStringToString(shader->GetPath());
+            serializedData["shader"] = Helpers::ToRelativePath(Helpers::WideStringToString(shader->GetPath()));
         }
         if (const auto texture = material->GetTexture())
         {
-            serializedData["texture"] = Helpers::WideStringToString(texture->GetPath());
+            serializedData["texture"] = Helpers::ToRelativePath(Helpers::WideStringToString(texture->GetPath()));
         }
         //todo do this better
         auto color = material->GetMaterialProperties().Color;
@@ -99,7 +100,7 @@ nlohmann::json SceneSerializer::SerializeMeshComponent(const std::shared_ptr<Mes
 {
     nlohmann::json serializedData;
 
-    serializedData["mesh"] = meshComponent->GetMeshPath();
+    serializedData["mesh"] = Helpers::ToRelativePath(meshComponent->GetMeshPath());
     serializedData["material"] = SerializeMaterial(meshComponent, serializedData);
 
     return serializedData;
@@ -310,8 +311,9 @@ nlohmann::json SceneSerializer::SerializePointLight(const std::shared_ptr<PointL
 std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
 {
     json sceneData;
+    std::string absolutePath = Helpers::ToAbsolutePath(path);
 
-    std::ifstream inputFile(path);
+    std::ifstream inputFile(absolutePath);
     if (inputFile.is_open())
     {
         try
@@ -331,7 +333,7 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
         return nullptr;
     }
 
-    std::shared_ptr<Scene> scene = std::make_shared<Scene>(graphics, path);
+    std::shared_ptr<Scene> scene = std::make_shared<Scene>(graphics, Helpers::ToRelativePath(path));
     std::unordered_map<std::string, std::shared_ptr<GameObject>> gameObjectDict;
     std::unordered_map<std::string, std::string> parentsDict;
 
@@ -395,6 +397,9 @@ std::shared_ptr<Scene> SceneSerializer::Deserialize(std::string path)
 IMaterial* SceneSerializer::DeserializeMaterial(const nlohmann::json& data, std::string texturePath,
                                                 std::string shaderPath)
 {
+    texturePath = Helpers::ToRelativePath(texturePath);
+    shaderPath= Helpers::ToRelativePath(shaderPath);
+
     IMaterial* material = nullptr;
     if (data.contains("shader"))
     {
@@ -403,11 +408,15 @@ IMaterial* SceneSerializer::DeserializeMaterial(const nlohmann::json& data, std:
     if (data.contains("texture"))
     {
         texturePath = data["texture"];
+
     }
     if (shaderPath != "")
     {
+        shaderPath = Helpers::ToRelativePath(shaderPath);
+
         if (texturePath != "")
         {
+            texturePath = Helpers::ToRelativePath(texturePath);
             material = ResourceManager::GetMaterial(Helpers::StringToWstring(shaderPath),
                                                     Helpers::StringToWstring(texturePath));
         }

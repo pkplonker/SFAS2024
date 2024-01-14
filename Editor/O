@@ -1,0 +1,83 @@
+[Window][DockSpaceViewport_11111111]
+Pos=0,19
+Size=32,32
+Collapsed=0
+
+[Window][Debug##Default]
+Pos=60,60
+Size=400,400
+Collapsed=0
+
+[Window][Dear ImGui Demo]
+Pos=650,20
+Size=550,680
+Collapsed=0
+
+[Window][Debug Controls]
+Pos=60,60
+Size=210,53
+Collapsed=0
+
+[Window][ObjectControl]
+Pos=60,60
+Size=339,35
+Collapsed=0
+
+[Window][Editor Camera]
+Pos=60,60
+Size=226,197
+Collapsed=0
+
+[Window][Inputs Stats]
+Pos=60,60
+Size=142,66
+Collapsed=0
+
+[Window][Scene Settings]
+Pos=60,60
+Size=36,273
+Collapsed=0
+
+[Window][Inspector]
+Pos=60,60
+Size=220,55
+Collapsed=0
+
+[Window][Hierarchy]
+Pos=60,60
+Size=156,199
+Collapsed=0
+
+[Window][Draw Stats]
+Pos=60,60
+Size=156,198
+Collapsed=0
+
+[Window][Mesh Importer]
+Pos=60,60
+Size=173,53
+Collapsed=0
+
+[Window][EngineTime]
+Pos=60,60
+Size=339,85
+Collapsed=0
+
+[Window][Undo]
+Pos=60,60
+Size=134,90
+Collapsed=0
+
+[Window][Console]
+Pos=92,433
+Size=1061,75
+Collapsed=0
+
+[Window][GameView]
+Pos=60,60
+Size=32,35
+Collapsed=0
+
+[Docking][Data]
+DockSpace ID=0x8B93E3BD Window=0xA787BDB4 Pos=0,19 Size=32,32 CentralNode=1
+

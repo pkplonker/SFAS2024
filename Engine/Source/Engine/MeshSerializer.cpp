@@ -4,11 +4,12 @@
 #include <iostream>
 
 #include "Engine/Implementation/Logging/Debug.h"
+#include "Implementation/Helpers.h"
 
 
 bool MeshSerializer::Serialize(Mesh* mesh, std::string fullFilePath)
 {
-    std::ofstream file(fullFilePath, std::ios::binary);
+    std::ofstream file(Helpers::ToAbsolutePath(fullFilePath), std::ios::binary);
     // need to look at RAII. No finally block in C++ :/
     if (file.is_open())
     {
@@ -31,7 +32,7 @@ bool MeshSerializer::Serialize(Mesh* mesh, std::string fullFilePath)
 
 Mesh* MeshSerializer::Deserialize(std::string fullFilePath)
 {
-    std::ifstream file(fullFilePath, std::ios::binary);
+    std::ifstream file(Helpers::ToAbsolutePath(fullFilePath), std::ios::binary);
 
     if (file.is_open())
     {

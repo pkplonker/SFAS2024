@@ -56,7 +56,7 @@ bool Editor::Load()
     imguiController->LoadScene(
         EditorSettings::Get("LastScene",
                             Helpers::WideStringToString(
-                                L"S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/TestScene2.scene")));
+                                 Helpers::ToAbsolutePath(L"Resource/Scenes/TestScene2.scene"))));
 
 
     SceneManager::OnSceneChangedEvent.Subscribe([this]()

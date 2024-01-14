@@ -5,6 +5,7 @@
 #include "Engine/IInput.h"
 #include "Engine/SceneManager.h"
 #include "Engine/Implementation/GameObjectFactory.h"
+#include "Engine/Implementation/Helpers.h"
 #include "Engine/Implementation/Scene.h"
 #include "Engine/Implementation/Logging/Debug.h"
 
@@ -36,7 +37,7 @@ bool Game::IsValid()
 
 bool Game::Load()
 {
-    SceneManager::SetScene(SceneSerializer::Deserialize("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/SceneComp.scene"));
+    SceneManager::SetScene(SceneSerializer::Deserialize(Helpers::ToAbsolutePath("Resource/Scenes/SceneComp.scene")));
 
     return true;
 }
