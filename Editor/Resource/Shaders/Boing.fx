@@ -1,61 +1,110 @@
-cbuffer cbChangedPerFrame : register(b0)
-{
-    matrix mvp;
-    matrix worldMatrix;
-    float3 camForward;
-    float2 screenSize;
-	float3 ambientLightColor;
-	float ambientLightIntensity;
-};
+// https://www.3dgep.com/texturing-lighting-directx-11/#Materials_Properties
 
-cbuffer MaterialBuffer : register(b1)
+cbuffer PerObject : register( b0 )
 {
-    float4 materialColor;
-	bool useTex;
-};
-
-Texture2D colorMap : register(t0);
-SamplerState colorSample : register(s0);
-
-struct VS_Input
-{
-    float4 position : POSITION;
-    float4 color    : COLOR;
-    float3 normal   : NORMAL;
-    float2 uv       : TEXCOORD;
-};
-
-struct PS_Input
-{
-    float4 position : SV_POSITION;
-    float4 color    : COLOR;
-    float3 normal   : NORMAL;
-    float2 uv       : TEXCOORD;
-};
-
-PS_Input VS_Main(VS_Input vertex)
-{
-    PS_Input vsOut;
-    vsOut.position = mul(vertex.position, mvp);
-    vsOut.color = vertex.color;
-    vsOut.normal = vertex.normal;
-    vsOut.uv = vertex.uv;
-    return vsOut;
+    matrix WorldMatrix;
+    matrix InverseTransposeWorldMatrix;
+    matrix WorldViewProjectionMatrix;
 }
 
-float4 PS_Main(PS_Input frag) : SV_TARGET
+struct AppData
 {
-     
-	float4 finalColor = frag.color;  
-	if(useTex)
-	{
-		finalColor = colorMap.Sample(colorSample, frag.uv);
-	}
+    float4 Position : POSITION;
+	float4 Color    : COLOR;
+    float3 Normal   : NORMAL;
+    float2 TexCoord : TEXCOORD;
+};
 
-	
-    if(materialColor.x != 1.0f || materialColor.y != 1.0f || materialColor.z != 1.0f || materialColor.w != 1.0f )
-    {
-        finalColor = materialColor;
-    }
-    return float4(1.0f,0.0f,1.0f,1.0f);
+struct VertexShaderOutput
+{
+    float4 PositionWS   : TEXCOORD1;
+    float3 NormalWS     : TEXCOORD2;
+    float2 TexCoord     : TEXCOORD0;
+    float4 Position     : SV_Position;
+	float4 Color : COLOR;
+};
+
+VertexShaderOutput VS_Main( AppData IN )
+{
+    VertexShaderOutput OUT;
+
+    OUT.Position = mul( WorldViewProjectionMatrix, IN.Position );
+    OUT.PositionWS = mul( WorldMatrix, IN.Position );
+    OUT.NormalWS = mul( (float3x3)InverseTransposeWorldMatrix, IN.Normal );
+    OUT.TexCoord = IN.TexCoord;
+	OUT.Color = IN.Color;
+    return OUT;
+}
+
+#define MAX_LIGHTS 8
+
+// Light types.
+#define DIRECTIONAL_LIGHT 0
+#define POINT_LIGHT 1
+#define SPOT_LIGHT 2
+
+Texture2D Texture : register(t0);
+sampler Sampler : register(s0);
+
+struct Material
+{
+    float4  Emissive;       
+    float4  Ambient;        
+    float4  Diffuse;        
+    float4  Specular;       
+    float   SpecularPower;  
+    bool    UseTexture;     
+    float2  Padding;        
+	float4  Color;
+};
+
+cbuffer MaterialProperties : register(b0)
+{
+    Material material;
+};
+
+struct Light
+{
+    float4      Position;               
+    float4      Direction;              
+    float4      Color;                  
+    float       SpotAngle;              
+    float       ConstantAttenuation;    
+    float       LinearAttenuation;      
+    float       QuadraticAttenuation;  
+    int         LightType;            
+    bool        Enabled;          
+    int2        Padding;    
+};
+
+cbuffer LightProperties : register(b1)
+{
+    float4 EyePosition;                
+    float4 GlobalAmbient;              
+    Light Lights[MAX_LIGHTS];          
+};                       
+
+float4 DoDiffuse( Light light, float3 L, float3 N )
+{
+    float NdotL = max( 0, dot( N, L ) );
+    return light.Color * NdotL;
+}
+
+float4 DoSpecular( Light light, float3 V, float3 L, float3 N )
+{
+    // Phong lighting.
+    float3 R = normalize( reflect( -L, N ) );
+    float RdotV = max( 0, dot( R, V ) );
+
+    // Blinn-Phong lighting
+    float3 H = normalize( L + V );
+    float NdotH = max( 0, dot( N, H ) );
+
+    return light.Color * pow( NdotH, material.SpecularPower );
+}
+
+float4 PS_Main( VertexShaderOutput IN ) : SV_TARGET
+{
+  
+	return float4(1,0,1,1);
 }

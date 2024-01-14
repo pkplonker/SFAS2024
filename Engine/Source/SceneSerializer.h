@@ -1,8 +1,8 @@
 ﻿#pragma once
-#include <json.hpp>
+#include "json.hpp"
 #include <memory>
 
-#include "SpotLightComponent.h"
+#include "Engine/Implementation/SpotLightComponent.h"
 #include "Engine/Implementation/MeshComponent.h"
 
 class PointLightComponent;

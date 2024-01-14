@@ -3,11 +3,10 @@
 #include <fstream>
 #include <string>
 
-#include "ComponentRegistry.h"
-#include "DirectionalLightComponent.h"
-#include "json.hpp"
-#include "SceneManager.h"
-#include "SpriteComponent.h"
+#include "Engine/ComponentRegistry.h"
+#include "Engine/DirectionalLightComponent.h"
+#include "Engine/SceneManager.h"
+#include "Engine/Implementation/SpriteComponent.h"
 #include "Engine/IMaterial.h"
 #include "Engine/IShader.h"
 #include "Engine/ITexture.h"
@@ -18,7 +17,7 @@
 #include "Engine/Implementation/OrthographicCamera.h"
 #include "Engine/Implementation/PerspectiveCamera.h"
 #include "Engine/Implementation/Scene.h"
-#include "Logging/Debug.h"
+#include "Engine/Implementation/Logging/Debug.h"
 using json = nlohmann::json;
 
 SceneSerializer::SceneSerializer(IGraphics* graphics)

@@ -44,12 +44,14 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <AdditionalIncludeDirectories>$(ProjectDir)Packages\nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <AdditionalIncludeDirectories>$(ProjectDir)Packages\nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -79,7 +81,7 @@
     <IntDir>$(Configuration)\Editor\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Source\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Source\;$(ProjectDir)\Packages;$(ProjectDir)\Packages\nlohmann;$(IncludePath)</IncludePath>
     <IntDir>$(Configuration)\Engine\</IntDir>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -135,7 +137,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Packages\directxtk_dekstop_2019.2023.9.6.1;$(ProjectDir)\Packages\Microsoft.XAudio.Redist.1.2.11;$(ProjectDir)\Packages;$(ProjectDir)\Source\Implementation;$(ProjectDir)\Source\Engine;$(ProjectDir)\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Packages\directxtk_dekstop_2019.2023.9.6.1;$(ProjectDir)Packages\Microsoft.XAudio.Redist.1.2.11;$(ProjectDir)Packages;$(ProjectDir)Source\Implementation;$(ProjectDir)Source\Engine;$(ProjectDir)Source;$(ProjectDir)Packages\nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalUsingDirectories>$(ProjectDir)\Source</AdditionalUsingDirectories>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
@@ -203,6 +205,8 @@
     <ClInclude Include="packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xaudio2fxRedist.h" />
     <ClInclude Include="packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xaudio2Redist.h" />
     <ClInclude Include="packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include\xdsp.h" />
+    <ClInclude Include="Source\json.hpp" />
+    <ClInclude Include="Source\json_fwd.hpp" />
     <ClInclude Include="Source\Engine\ComponentRegistry.h" />
     <ClInclude Include="Source\Engine\DirectionalLightComponent.h" />
     <ClInclude Include="Source\Engine\Event.h" />
@@ -257,6 +261,7 @@
     <ClInclude Include="Source\Engine\SceneManager.h" />
     <ClInclude Include="Source\RenderingStats.h" />
     <ClInclude Include="Source\EngineTime.h" />
+    <ClInclude Include="Source\SceneSerializer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp" />
@@ -672,6 +677,80 @@
     <ClCompile Include="Source\Engine\ResourceManager.cpp" />
     <ClCompile Include="Source\Engine\SceneManager.cpp" />
     <ClCompile Include="Source\RenderingStats.cpp" />
+    <ClCompile Include="Source\SceneSerializer.cpp">
+      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>Debug\Editor\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>Debug\Editor\</BrowseInformationFile>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>true</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFuzzer>false</EnableFuzzer>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>Debug\Editor\</ModuleDependenciesFile>
+      <ModuleOutputFile>Debug\Editor\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ObjectFileName>Debug\Editor\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>Debug\Editor\vc143.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>Debug\Editor\Editor.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>Debug\Editor\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TrackerLogDirectory>Debug\Editor\Editor.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <XMLDocumentationFileName>Debug\Editor\</XMLDocumentationFileName>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <PreprocessorDefinitions>HAS_DIRECTXTK;HAS_DIRECTXTK;USING_XAUDIO2_REDIST;_MBCS;</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\packages\directxtk_desktop_2019.2023.10.31.1\build\native\..\..\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\directxtk_desktop_2019.2023.9.6.1\build\native\..\..\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\packages\Microsoft.XAudio2.Redist.1.2.11\build\native\include;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\\Star\Source\Game;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\\Engine\Source;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\Packages\ImGui\backends;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\Packages\ImGui;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\Packages\ImGuizmo;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\Packages\assimp;S:\Users\pkplo\OneDrive\Documents\C++\SFAS2024\Editor\Packages\nlohmann;;S:\Users\pkplo\Downloads\vcpkg\installed\x64-windows\include</AdditionalIncludeDirectories>
+      <LinkCompiled>true</LinkCompiled>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages\directxtk_desktop_2019.2023.9.6.1\include\SimpleMath.inl" />
