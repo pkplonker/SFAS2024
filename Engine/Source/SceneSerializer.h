@@ -4,6 +4,7 @@
 
 #include "Engine/Implementation/SpotLightComponent.h"
 #include "Engine/Implementation/MeshComponent.h"
+#include "Engine/Implementation/Helpers.h"
 
 class PointLightComponent;
 class DirectionalLightComponent;
@@ -54,8 +55,9 @@ public:
     static std::shared_ptr<OrthographicCamera> DeserializeOrthographicCamera(const nlohmann::json& data);
     static std::shared_ptr<PerspectiveCamera> DeserializePerspectiveCamera(const nlohmann::json& data);
     static bool Serialize(
-        std::string path = "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Scenes/TestScene.scene");
+        std::string path = DEFAULT_PATH);
 
 private:
+    inline static std::string DEFAULT_PATH = Helpers::ToAbsolutePath("Resource/Scenes/TestScene.scene");
     inline static IGraphics* graphics;
 };

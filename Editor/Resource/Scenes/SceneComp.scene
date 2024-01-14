@@ -42,11 +42,11 @@
                             "g": 1.0,
                             "r": 1.0
                         },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bottle1.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
-                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                        "mesh": "Resource\\Mesh\\Scene\\Bottle1.smesh",
+                        "shader": "Resource\\Shaders\\LitColorMesh.fx",
+                        "texture": "Resource\\Textures\\BaseColorDDS.dds"
                     },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bottle1.smesh"
+                    "mesh": "Resource\\Mesh\\Scene\\Bottle1.smesh"
                 },
                 "name": "Bottle1",
                 "transform": {
@@ -140,11 +140,11 @@
                             "g": 1.0,
                             "r": 1.0
                         },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Cup.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
-                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                        "mesh": "Resource\\Mesh\\Scene\\Cup.smesh",
+                        "shader": "Resource\\Shaders\\LitColorMesh.fx",
+                        "texture": "Resource\\Textures\\BaseColorDDS.dds"
                     },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Cup.smesh"
+                    "mesh": "Resource\\Mesh\\Scene\\Cup.smesh"
                 },
                 "name": "Cup",
                 "transform": {
@@ -204,11 +204,11 @@
                             "g": 1.0,
                             "r": 1.0
                         },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
-                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                        "mesh": "Resource\\Mesh\\Scene\\Barrell.smesh",
+                        "shader": "Resource\\Shaders\\LitColorMesh.fx",
+                        "texture": "Resource\\Textures\\BaseColorDDS.dds"
                     },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell.smesh"
+                    "mesh": "Resource\\Mesh\\Scene\\Barrell.smesh"
                 },
                 "name": "Barrel",
                 "transform": {
@@ -268,11 +268,11 @@
                             "g": 1.0,
                             "r": 1.0
                         },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Plate.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
-                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                        "mesh": "Resource\\Mesh\\Scene\\Plate.smesh",
+                        "shader": "Resource\\Shaders\\LitColorMesh.fx",
+                        "texture": "Resource\\Textures\\BaseColorDDS.dds"
                     },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Plate.smesh"
+                    "mesh": "Resource\\Mesh\\Scene\\Plate.smesh"
                 },
                 "name": "Plate",
                 "transform": {
@@ -333,8 +333,8 @@
                             "r": 1.0
                         },
                         "mesh": "",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
-                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                        "shader": "Resource\\Shaders\\LitColorMesh.fx",
+                        "texture": "Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": ""
                 },
@@ -396,11 +396,11 @@
                             "g": 1.0,
                             "r": 1.0
                         },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Crate1.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
-                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                        "mesh": "Resource\\Mesh\\Scene\\Crate1.smesh",
+                        "shader": "Resource\\Shaders\\LitColorMesh.fx",
+                        "texture": "Resource\\Textures\\BaseColorDDS.dds"
                     },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Crate1.smesh"
+                    "mesh": "Resource\\Mesh\\Scene\\Crate1.smesh"
                 },
                 "name": "Crate1",
                 "transform": {
@@ -460,11 +460,11 @@
                             "g": 1.0,
                             "r": 1.0
                         },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Table.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
-                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                        "mesh": "Resource\\Mesh\\Scene\\Table.smesh",
+                        "shader": "Resource\\Shaders\\LitColorMesh.fx",
+                        "texture": "Resource\\Textures\\BaseColorDDS.dds"
                     },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Table.smesh"
+                    "mesh": "Resource\\Mesh\\Scene\\Table.smesh"
                 },
                 "name": "Table",
                 "transform": {
@@ -524,11 +524,11 @@
                             "g": 1.0,
                             "r": 1.0
                         },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell2.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
-                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                        "mesh": "Resource\\Mesh\\Scene\\Barrell2.smesh",
+                        "shader": "Resource\\Shaders\\LitColorMesh.fx",
+                        "texture": "Resource\\Textures\\BaseColorDDS.dds"
                     },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell2.smesh"
+                    "mesh": "Resource\\Mesh\\Scene\\Barrell2.smesh"
                 },
                 "name": "Barrel2",
                 "transform": {
@@ -689,11 +689,11 @@
                             "g": 1.0,
                             "r": 1.0
                         },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
-                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                        "mesh": "Resource\\Mesh\\Scene\\Barrell.smesh",
+                        "shader": "Resource\\Shaders\\LitColorMesh.fx",
+                        "texture": "Resource\\Textures\\BaseColorDDS.dds"
                     },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Barrell.smesh"
+                    "mesh": "Resource\\Mesh\\Scene\\Barrell.smesh"
                 },
                 "name": "Barrel3",
                 "transform": {
@@ -753,11 +753,11 @@
                             "g": 1.0,
                             "r": 1.0
                         },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Fire.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
-                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                        "mesh": "Resource\\Mesh\\Fire.smesh",
+                        "shader": "Resource\\Shaders\\LitColorMesh.fx",
+                        "texture": "Resource\\Textures\\BaseColorDDS.dds"
                     },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Fire.smesh"
+                    "mesh": "Resource\\Mesh\\Fire.smesh"
                 },
                 "name": "Fire",
                 "transform": {
@@ -874,10 +874,10 @@
                             "g": 0.24636168777942657,
                             "r": 0.3382353186607361
                         },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Terrain2.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx"
+                        "mesh": "Resource\\Mesh\\Scene\\Terrain2.smesh",
+                        "shader": "Resource\\Shaders\\LitColorMesh.fx"
                     },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Terrain2.smesh"
+                    "mesh": "Resource\\Mesh\\Scene\\Terrain2.smesh"
                 },
                 "name": "Terrain",
                 "transform": {
@@ -937,8 +937,8 @@
                             "r": 1.0
                         },
                         "mesh": "",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\UnlitColorMesh.fx",
-                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                        "shader": "Resource\\Shaders\\UnlitColorMesh.fx",
+                        "texture": "Resource\\Textures\\BaseColorDDS.dds"
                     },
                     "mesh": ""
                 },
@@ -1032,11 +1032,11 @@
                             "g": 1.0,
                             "r": 1.0
                         },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Crate2.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
-                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                        "mesh": "Resource\\Mesh\\Scene\\Crate2.smesh",
+                        "shader": "Resource\\Shaders\\LitColorMesh.fx",
+                        "texture": "Resource\\Textures\\BaseColorDDS.dds"
                     },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Crate2.smesh"
+                    "mesh": "Resource\\Mesh\\Scene\\Crate2.smesh"
                 },
                 "name": "Crate2",
                 "transform": {
@@ -1096,11 +1096,11 @@
                             "g": 1.0,
                             "r": 1.0
                         },
-                        "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bucket.smesh",
-                        "shader": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Shaders\\LitColorMesh.fx",
-                        "texture": "S:\\Users\\pkplo\\OneDrive\\Documents\\C++\\SFAS2024\\Editor\\Resource\\Textures\\BaseColorDDS.dds"
+                        "mesh": "Resource\\Mesh\\Scene\\Bucket.smesh",
+                        "shader": "Resource\\Shaders\\LitColorMesh.fx",
+                        "texture": "Resource\\Textures\\BaseColorDDS.dds"
                     },
-                    "mesh": "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/Mesh/Scene/Bucket.smesh"
+                    "mesh": "Resource\\Mesh\\Scene\\Bucket.smesh"
                 },
                 "name": "Bucket",
                 "transform": {

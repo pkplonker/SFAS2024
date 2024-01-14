@@ -3,11 +3,13 @@
 #include <filesystem>
 #include <fstream>
 
+#include "Helpers.h"
 #include "Logging/Debug.h"
 
 void EditorSettings::SaveSettings()
 {
     Trace("Saving to " + settingsFile)
+    settingsFile = Helpers::ToAbsolutePath(settingsFile);
     std::ofstream file(settingsFile);
     if (file)
     {

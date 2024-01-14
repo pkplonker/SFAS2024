@@ -1,5 +1,6 @@
 ﻿#include "Helpers.h"
 
+#include <filesystem>
 #include <memory>
 
 #include "GameObject.h"
@@ -54,3 +55,29 @@ bool Helpers::TryGetStringFromGuid(GUID guid, std::string& guidString)
     CoTaskMemFree(olechar);
     return result;
 }
+
+std::filesystem::path Helpers::GetExecutablePath()
+{
+    return std::filesystem::current_path();
+}
+
+std::string Helpers::ToRelativePath(const std::string& absolutePath)
+{
+    return std::filesystem::relative(absolutePath, GetExecutablePath()).string();
+}
+
+std::string Helpers::ToAbsolutePath(const std::string& relativePath)
+{
+    return std::filesystem::absolute(relativePath).string();
+}
+
+std::wstring Helpers::ToRelativePath(const std::wstring& absolutePath)
+{
+    return std::filesystem::relative(absolutePath, GetExecutablePath()).wstring();
+}
+
+std::wstring Helpers::ToAbsolutePath(const std::wstring& relativePath)
+{
+    return std::filesystem::absolute(relativePath).wstring();
+}
+

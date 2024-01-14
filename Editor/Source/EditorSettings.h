@@ -171,7 +171,7 @@ public:
 private:
     static inline std::unordered_map<std::string, std::string> settingsMap = {};
     static inline std::string settingsFile =
-        "S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/settings.settings";
+        "Resource/settings.settings";
     static inline bool init = false;
     static inline std::unordered_map<std::string, std::unordered_set<
                                          EditorSettingData, EditorSettingDataHash, EditorSettingDataEqual>>
