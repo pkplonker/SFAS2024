@@ -10,8 +10,9 @@
 #include "implementation/Helpers.h"
 #include "Implementation/Logging/Debug.h"
 
-Mesh* ResourceManager::GetMesh(const std::string path)
+Mesh* ResourceManager::GetMesh(std::string path)
 {
+    path = Helpers::ToAbsolutePath(path);
     if (const auto it = meshes.find(path); it != meshes.end())
     {
         return it->second.get();
@@ -21,8 +22,9 @@ Mesh* ResourceManager::GetMesh(const std::string path)
     return mesh;
 }
 
-ITexture* ResourceManager::GetTexture(const std::wstring path)
+ITexture* ResourceManager::GetTexture(std::wstring path)
 {
+    path = Helpers::ToAbsolutePath(path);
     if (const auto it = textures.find(path); it != textures.end())
     {
         return it->second.get();
@@ -36,7 +38,8 @@ IShader* ResourceManager::GetShader(const std::wstring& shaderPath, const std::s
                                     const std::string& vsshader,
                                     const std::string& psentry, const std::string& psshader)
 {
-    auto key = GenerateShaderKey(shaderPath);
+    auto absolutePath = Helpers::ToAbsolutePath(shaderPath);
+    auto key = GenerateShaderKey(absolutePath);
 
     if (const auto it = shaders.find(key); it != shaders.end())
     {

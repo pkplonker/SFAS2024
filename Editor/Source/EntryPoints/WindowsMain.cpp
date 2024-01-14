@@ -4,6 +4,7 @@
 #include <Windows.h>
 
 #include "EngineTime.h"
+#include "Helpers.h"
 #include "Engine/Implementation/DirectX11/DirectX11Graphics.h"
 #include "Engine/Implementation/XInput/DirectXInput.h"
 #include "Engine/IRenderable.h"
@@ -29,7 +30,7 @@ IInput* Input;
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     auto consoleSink = new ConsoleSink();
-    auto fileSink = new FileSink("S:/Users/pkplo/OneDrive/Documents/C++/SFAS2024/Editor/Resource/log.log");
+    auto fileSink = new FileSink(Helpers::ToAbsolutePath("Resource/log.log"));
     Debug::RegisterSink(consoleSink);
     Debug::RegisterSink(fileSink);
 
