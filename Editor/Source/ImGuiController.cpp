@@ -147,7 +147,7 @@ void ImGuiController::ViewPortActiveWindowCheck()
 
 void ImGuiController::DrawViewport()
 {
-    ImGui::Begin("GameView", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+    ImGui::Begin("SceneView", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
     ViewPortActiveWindowCheck();
 
@@ -160,6 +160,26 @@ void ImGuiController::DrawViewport()
 
     isUsingGizmo = gizmoController->Update(IsViewportInFocus(), GetSelectedObject(), gameViewportSize,
                                            gameViewportPosition);
+
+
+    ImGui::End();
+}
+
+void ImGuiController::DrawGameView()
+{
+    ImGui::Begin("GameView", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+    ViewPortActiveWindowCheck();
+
+    ImGui::Image((ImTextureID)dx11Graphics->GetTextureView(),
+                 ImVec2(static_cast<float>(dx11Graphics->GetTextureWidth()),
+                        static_cast<float>(dx11Graphics->GetTextureHeight())));
+    gameViewportSize = ImGui::GetWindowSize();
+    gameViewportPosition = ImGui::GetWindowPos();
+
+
+    // isUsingGizmo = gizmoController->Update(IsViewportInFocus(), GetSelectedObject(), gameViewportSize,
+    //                                        gameViewportPosition);
 
 
     ImGui::End();
@@ -358,6 +378,7 @@ void ImGuiController::Draw()
 {
     DrawWindows();
     DrawViewport();
+    DrawGameView();
     DrawMenu();
     if (input->IsKeyDown(Keys::LeftControl) && input->IsKeyPress(Keys::S))
     {

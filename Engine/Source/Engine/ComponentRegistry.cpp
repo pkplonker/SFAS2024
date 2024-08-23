@@ -16,7 +16,6 @@ void ComponentRegistry::RegisterComponents()
     RegisterComponent<DirectionalLightComponent>("Directional Light");
     RegisterComponent<PointLightComponent>("Point Light");
     RegisterComponent<SpotLightComponent>("Spot Light");
-
 }
 
 template <>

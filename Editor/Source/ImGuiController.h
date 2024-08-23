@@ -34,6 +34,7 @@ public:
     void New();
     void DrawMenu();
     void DrawViewport();
+    void DrawGameView();
     void AddWindow(const std::shared_ptr<EditorWindow>& window);
     void SetSelectedObject(const std::shared_ptr<GameObject>& obj);
 

@@ -109,7 +109,7 @@ struct Transform3D : Transform
         Rotation.Z(roll * 180.0f / DirectX::XM_PI);
     }
 
-    void QuaternionToEuler(const DirectX::XMVECTOR& q, float& pitch, float& yaw, float& roll)
+    static void QuaternionToEuler(const DirectX::XMVECTOR& q, float& pitch, float& yaw, float& roll)
     {
         DirectX::XMFLOAT4 quat;
         DirectX::XMStoreFloat4(&quat, q);

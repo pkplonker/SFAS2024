@@ -20,6 +20,7 @@ public:
 private:
     static void ApplyTheme1()
     {
+        
         // Darcula style by ice1000 from ImThemes
         ImGuiStyle& style = ImGui::GetStyle();
         style.WindowPadding = ImVec2(10, 10);

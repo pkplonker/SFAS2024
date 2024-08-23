@@ -10,7 +10,7 @@
 #include "SceneSerializer.h"
 #include "Engine/ResourceManager.h"
 const char WindowClassName[] = "Star";
-const char WindowTitle[] = "Stuart Heath SFAS24 - WIP";
+const char WindowTitle[] = "Pickle Engine - WIP";
 const int WindowWidth = 1920;
 const int WindowHeight = 1080;
 

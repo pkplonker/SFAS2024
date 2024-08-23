@@ -76,15 +76,6 @@ bool GizmoController::Update(bool isInFocus, std::weak_ptr<GameObject> gameobjec
 
             if (isUsing)
             {
-                // float t[3] = {};
-                // float r[3] = {};
-                // float s[3] = {};
-                //
-                // ImGuizmo::DecomposeMatrixToComponents(&w.m[0][0], t, r, s);
-                // object->Transform()->SetScale(s);
-                // object->Transform()->SetRotationEuler(r);
-                // object->Transform()->SetTranslation(t);
-                //object->Transform()->SetWorldMatrix(&w.m[0][0]);
                 DirectX::XMMATRIX deltaMatrix = DirectX::XMMATRIX(&d.m[0][0]);
                 DirectX::XMVECTOR deltaTranslation, deltaRotationQuat, deltaScale;
                 Vec3 translationChange;

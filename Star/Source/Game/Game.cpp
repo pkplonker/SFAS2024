@@ -2,20 +2,9 @@
 
 #include "SceneSerializer.h"
 #include "Engine/IGraphics.h"
-#include "Engine/IInput.h"
 #include "Engine/SceneManager.h"
-#include "Engine/Implementation/GameObjectFactory.h"
 #include "Engine/Implementation/Helpers.h"
-#include "Engine/Implementation/Scene.h"
 #include "Engine/Implementation/Logging/Debug.h"
-
-#define CLAMP(v, x, y) fmin(fmax(v, x), y)
-
-constexpr float PieVal = 3.14159265359f;
-constexpr float TwoPies = PieVal * 2.0f;
-constexpr float DeltaTime = 0.016f;
-constexpr float SpinSpeed = 0.1f;
-constexpr float WinTolerance = PieVal / 10.0f;
 
 IApplication* GetApplication(IGraphics* Graphics, IInput* Input)
 {

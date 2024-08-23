@@ -15,7 +15,7 @@
 #include "Logging/Debug.h"
 #include "Logging/FileSink.h"
 const char WindowClassName[] = "Star";
-const char WindowTitle[] = "Stuart Heath SFAS24 - WIP";
+const char WindowTitle[] = "Pickle Engine - WIP";
 const int WindowWidth = 2560;
 const int WindowHeight = 1440;
 
