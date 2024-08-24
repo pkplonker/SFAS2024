@@ -10,6 +10,8 @@
 #include "Logging/BufferSink.h"
 #include "Windows/Hierarchy.h"
 
+class TextureRenderTarget;
+class RenderTarget;
 class SettingsWindow;
 class Game;
 class EditorWindow;
@@ -34,7 +36,7 @@ public:
     void New();
     void DrawMenu();
     void DrawViewport();
-    void DrawGameView();
+    //void DrawGameView();
     void AddWindow(const std::shared_ptr<EditorWindow>& window);
     void SetSelectedObject(const std::shared_ptr<GameObject>& obj);
 
@@ -51,7 +53,7 @@ public:
     void Draw();
     void ImGuiPostUpdate() const;
     void ShutDown();
-    void Resize(int width, int height) override;
+    void WindowResize(int width, int height) override;
 
     ImVec2 GetViewportPosition()
     {
@@ -85,6 +87,7 @@ private:
     std::shared_ptr<EditorCamera> camera;
     std::shared_ptr<GizmoController> gizmoController;
     bool isUsingGizmo;
+    std::shared_ptr<TextureRenderTarget> sceneViewRenderTarget;
     static inline constexpr float smallFontSize = 13 * 1.3f;
     static inline constexpr float largeFontSize = 13 * 2.0f;
     static inline ImFont* largeIcons;

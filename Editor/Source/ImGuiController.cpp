@@ -61,6 +61,7 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, II
                                  std::shared_ptr<EditorCamera> camera) :
     dx11Graphics(dx11Graphics), game(game), input(input), camera(camera)
 {
+    sceneViewRenderTarget = std::make_shared<TextureRenderTarget>(dx11Graphics,1,1);
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
@@ -68,8 +69,6 @@ ImGuiController::ImGuiController(DirectX11Graphics* dx11Graphics, Game* game, II
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-    //io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
-    //io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleFonts;
 
     ImGui_ImplWin32_Init(dx11Graphics->GetHWND());
     ImGui_ImplDX11_Init(dx11Graphics->GetDevice(), dx11Graphics->GetContext());
@@ -151,9 +150,12 @@ void ImGuiController::DrawViewport()
 
     ViewPortActiveWindowCheck();
 
-    ImGui::Image((ImTextureID)dx11Graphics->GetTextureView(),
-                 ImVec2(static_cast<float>(dx11Graphics->GetTextureWidth()),
-                        static_cast<float>(dx11Graphics->GetTextureHeight())));
+     //ImGui::Image((ImTextureID)dx11Graphics->GetTextureView(),
+     //              ImVec2(static_cast<float>(dx11Graphics->GetTextureWidth()),
+     //                     static_cast<float>(dx11Graphics->GetTextureHeight())));
+     ImGui::Image((ImTextureID)dx11Graphics->GetTextureView(),
+                  ImVec2(static_cast<float>(dx11Graphics->GetWidth()),
+                         static_cast<float>(dx11Graphics->GetHeight())));
     gameViewportSize = ImGui::GetWindowSize();
     gameViewportPosition = ImGui::GetWindowPos();
 
@@ -164,26 +166,29 @@ void ImGuiController::DrawViewport()
 
     ImGui::End();
 }
-
-void ImGuiController::DrawGameView()
-{
-    ImGui::Begin("GameView", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-
-    ViewPortActiveWindowCheck();
-
-    ImGui::Image((ImTextureID)dx11Graphics->GetTextureView(),
-                 ImVec2(static_cast<float>(dx11Graphics->GetTextureWidth()),
-                        static_cast<float>(dx11Graphics->GetTextureHeight())));
-    gameViewportSize = ImGui::GetWindowSize();
-    gameViewportPosition = ImGui::GetWindowPos();
-
-
-    // isUsingGizmo = gizmoController->Update(IsViewportInFocus(), GetSelectedObject(), gameViewportSize,
-    //                                        gameViewportPosition);
-
-
-    ImGui::End();
-}
+//
+// void ImGuiController::DrawGameView()
+// {
+//     ImGui::Begin("GameView", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+//
+//     ViewPortActiveWindowCheck();
+//
+//     // ImGui::Image((ImTextureID)dx11Graphics->GetTextureView(),
+//     //              ImVec2(static_cast<float>(dx11Graphics->GetTextureWidth()),
+//     //                     static_cast<float>(dx11Graphics->GetTextureHeight())));
+//     ImGui::Image((ImTextureID)dx11Graphics->GetTextureView(),
+//                  ImVec2(static_cast<float>(dx11Graphics->GetWidth()),
+//                         static_cast<float>(dx11Graphics->GetHeight())));
+//     gameViewportSize = ImGui::GetWindowSize();
+//     gameViewportPosition = ImGui::GetWindowPos();
+//
+//
+//     // isUsingGizmo = gizmoController->Update(IsViewportInFocus(), GetSelectedObject(), gameViewportSize,
+//     //                                        gameViewportPosition);
+//
+//
+//     ImGui::End();
+// }
 
 void ImGuiController::AddWindow(const std::shared_ptr<EditorWindow>& window)
 {
@@ -202,7 +207,7 @@ void ImGuiController::ImGuiPostUpdate() const
     ImGui::UpdatePlatformWindows();
     ImGui::RenderPlatformWindowsDefault();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-    dx11Graphics->SetRenderToTexture(true, static_cast<int>(gameViewportSize.x), static_cast<int>(gameViewportSize.y));
+    sceneViewRenderTarget->Resize(static_cast<int>(gameViewportSize.x), static_cast<int>(gameViewportSize.y));
     if (auto scene = SceneManager::GetScene().lock())
     {
         if (scene->GetActiveCamera() != nullptr)
@@ -378,7 +383,7 @@ void ImGuiController::Draw()
 {
     DrawWindows();
     DrawViewport();
-    DrawGameView();
+    //DrawGameView();
     DrawMenu();
     if (input->IsKeyDown(Keys::LeftControl) && input->IsKeyPress(Keys::S))
     {
@@ -412,7 +417,7 @@ void ImGuiController::ShutDown()
     delete bufferSink;
 }
 
-void ImGuiController::Resize(int width, int height)
+void ImGuiController::WindowResize(int width, int height)
 {
     RECT rect;
     ::GetClientRect(dx11Graphics->GetHWND(), &rect);

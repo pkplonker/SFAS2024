@@ -16,7 +16,7 @@ public:
     virtual void Update() = 0;
     virtual void Cleanup() = 0;
     virtual void PostGraphics() = 0;
-    void Resize(int width, int height) override = 0;
+    void WindowResize(int width, int height) override = 0;
 
     static IGraphics* GetGraphics() { return Graphics; }
 

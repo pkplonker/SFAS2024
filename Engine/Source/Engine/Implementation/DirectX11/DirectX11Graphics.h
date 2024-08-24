@@ -10,6 +10,7 @@
 
 #include "Engine/IMaterial.h"
 #include "RenderingStats.h"
+#include "RenderTarget.h"
 #include "Engine/ICamera.h"
 #include "Engine/Math/Vector4.h"
 #include "Engine/Implementation/ILight.h"
@@ -52,6 +53,7 @@ public:
 	bool IsValid() override;
 	void RenderBucket(RenderingStats& stats, IShader* previousShader,
 		std::map<IMaterial*, std::list<std::shared_ptr<IRenderable>>>::iterator bucket);
+	void RenderScene(std::shared_ptr<IRenderTarget> target);
 
 	ITexture* CreateTexture(const wchar_t* filepath) override;
 	bool TryCreateShaderData(const wchar_t* filepath, const char* vsentry, const char* vsshader, const char* psentry,
@@ -67,18 +69,19 @@ public:
 	ID3D11Device* GetDevice() const { return Device; }
 	HWND GetHWND() const { return hwnd; }
 	ID3D11DeviceContext* GetContext() const { return Context; }
-	void SetRenderToTexture(bool state, int width, int height) override;
-	int GetWidth() override { return width; }
-	int GetHeight() override { return height; }
+	void SetRenderToTexture(int width, int height) override;
+	int GetWidth() override { return windowRenderTarget->Width; }
+	int GetHeight() override { return windowRenderTarget->Height; }
 	ID3D11ShaderResourceView* GetTextureView() const;
 	ID3D11Texture2D* GetTexture() const;
-	int GetTextureWidth() { return texWidth; }
-	int GetTextureHeight() { return texHeight; }
+	// int GetTextureWidth() { return texWidth; }
+	// int GetTextureHeight() { return texHeight; }
 	IMaterial* CreateMaterial(IShader* shader, ITexture* texture) override;
-	void Resize(int width, int height) override;
+	void WindowResize(int width, int height) override;
 	void UpdateRenderToTextureResources(int newWidth, int newHeight);
 	bool TryUpdateShader(IShader* shader, const char* vsentry, const char* vsshader, const char* psentry,
 		const char* psshader) override;
+	IDXGISwapChain* GetSwapChain() const;
 
 protected:
 	virtual void SetMatrixBuffers(std::weak_ptr<Transform3D> transform);
@@ -88,23 +91,18 @@ private:
 	ID3D11Device* Device = nullptr;
 	ID3D11DeviceContext* Context = nullptr;
 	IDXGISwapChain* SwapChain = nullptr;
-	ID3D11RenderTargetView* BackbufferView = nullptr;
-	ID3D11Texture2D* BackbufferTexture = nullptr;
-	ID3D11DepthStencilView* DepthStencilView = nullptr;
+	// ID3D11RenderTargetView* RenderTargetView = nullptr;
+	// ID3D11Texture2D* BackbufferTexture = nullptr;
+	// ID3D11DepthStencilView* DepthStencilView = nullptr;
 	ID3D11BlendState* BlendState = nullptr;
 	D3D_FEATURE_LEVEL FeatureLevel;
 	HWND hwnd;
-	int width;
-	int height;
-	int texWidth;
-	int texHeight;
 	std::shared_ptr<ICamera> camera;
 	ID3D11Texture2D* renderTargetTexture = nullptr;
-	ID3D11RenderTargetView* renderTargetView = nullptr;
+	ID3D11RenderTargetView* viewportRenderTargetView = nullptr;
 	ID3D11ShaderResourceView* shaderResourceView = nullptr;
 	ID3D11Texture2D* textureTargetDepthStencilBuffer = nullptr;
 	ID3D11DepthStencilView* textureTargetDepthStencilView = nullptr;
-	bool renderToTexture;
 	ID3D11DepthStencilState* depthState;
 	ID3D11DepthStencilState* skyDepthState;
 	ID3D11Buffer* perFrameConstantBuffer;
@@ -112,4 +110,6 @@ private:
 	ID3D11Buffer* lightPropertiesConstantBuffer;
 	ID3D11Buffer* materialPropertiesConstantBuffer;
 	LightProperties lightProperties;
+	std::vector<std::weak_ptr<IRenderTarget>> RenderTargets;
+	std::shared_ptr<WindowRenderTarget> windowRenderTarget;
 };

@@ -49,9 +49,8 @@ bool Editor::IsValid()
 
 bool Editor::Load()
 {
-
     sceneSerializer = std::make_unique<SceneSerializer>(dx11Graphics);
-    dx11Graphics->SetRenderToTexture(true, 1, 1);
+    dx11Graphics->SetRenderToTexture(1, 1);
     ResourceManager::Init(dx11Graphics);
     imguiController->LoadScene(
         EditorSettings::Get("LastScene",
@@ -119,8 +118,8 @@ IGraphics* Editor::GetGraphics()
     return Editor::dx11Graphics;
 }
 
-void Editor::Resize(int width, int height)
+void Editor::WindowResize(int width, int height)
 {
-    Graphics->Resize(width, height);
-    imguiController->Resize(width, height);
+    Graphics->WindowResize(width, height);
+    imguiController->WindowResize(width, height);
 }

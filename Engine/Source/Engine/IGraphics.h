@@ -39,10 +39,10 @@ public:
     virtual int GetWidth() = 0;
     virtual int GetHeight() = 0;
     virtual void RemoveRenderable(const std::shared_ptr<IRenderable>& shared) = 0;
-    virtual void SetRenderToTexture(bool state, int width, int height) = 0;
+    virtual void SetRenderToTexture(int width, int height) = 0;
     virtual IMaterial* CreateMaterial(IShader* shader, ITexture* texture) =0;
     virtual void UpdateRenderable(IMaterial* mat, const std::shared_ptr<IRenderable>& shared) =0;
-    virtual void Resize(int width, int height) = 0;
+    virtual void WindowResize(int width, int height) = 0;
     virtual bool TryUpdateShader(IShader* shader, const char* vsentry, const char* vsshader,
                                  const char* psentry, const char* psshader) = 0;
     RenderingStats currentStats;

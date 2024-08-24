@@ -15,6 +15,7 @@
 #include "DirectX11Material.h"
 #include "DirectX11Mesh.h"
 #include "RenderingStats.h"
+#include "RenderTarget.h"
 #include "ResourceManager.h"
 #include "SceneManager.h"
 #include "Engine/Implementation/Logging/Debug.h"
@@ -37,14 +38,13 @@ struct PerObjectConstantBufferData
 
 #define MAX_LIGHTS 8
 
-DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : FeatureLevel(D3D_FEATURE_LEVEL_11_0), hwnd(hwndIn),
-                                                    width(0), height(0), texWidth(0), texHeight(0),
-                                                    renderToTexture(false)
+DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : FeatureLevel(D3D_FEATURE_LEVEL_11_0), hwnd(hwndIn)
 {
     RECT dimensions;
     GetClientRect(hwnd, &dimensions);
-    width = dimensions.right - dimensions.left;
-    height = dimensions.bottom - dimensions.top;
+    auto width = dimensions.right - dimensions.left;
+    auto height = dimensions.bottom - dimensions.top;
+    
 
     D3D_DRIVER_TYPE driverTypes[] = {D3D_DRIVER_TYPE_HARDWARE, D3D_DRIVER_TYPE_WARP, D3D_DRIVER_TYPE_SOFTWARE};
     unsigned int totalDriverTypes = ARRAYSIZE(driverTypes);
@@ -81,20 +81,23 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : FeatureLevel(D3D_FEATURE_LEV
             break;
         }
     }
-
+    
+    windowRenderTarget = std::make_shared<WindowRenderTarget>(this,width,height);
+    RenderTargets.emplace_back(windowRenderTarget);
+    
     if (SUCCEEDED(hr))
     {
-        hr = SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<LPVOID*>(&BackbufferTexture));
+        hr = SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<LPVOID*>(&windowRenderTarget->BackbufferTexture));
     }
 
     if (SUCCEEDED(hr))
     {
-        hr = Device->CreateRenderTargetView(BackbufferTexture, 0, &BackbufferView);
+        hr = Device->CreateRenderTargetView(windowRenderTarget->BackbufferTexture, 0, &windowRenderTarget->RenderTargetView);
     }
 
-    if (BackbufferTexture)
+    if (windowRenderTarget->BackbufferTexture)
     {
-        BackbufferTexture->Release();
+        windowRenderTarget->BackbufferTexture->Release();
     }
 
     if (FAILED(hr))
@@ -185,9 +188,9 @@ DirectX11Graphics::DirectX11Graphics(HWND hwndIn) : FeatureLevel(D3D_FEATURE_LEV
         depthViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
         depthViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
         depthViewDesc.Texture2D.MipSlice = 0;
-        Device->CreateDepthStencilView(depthStencil, &depthViewDesc, &DepthStencilView);
+        Device->CreateDepthStencilView(depthStencil, &depthViewDesc, &windowRenderTarget->DepthStencilView);
 
-        Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
+        Context->OMSetRenderTargets(1, &windowRenderTarget->RenderTargetView, windowRenderTarget->DepthStencilView);
     }
 }
 
@@ -198,12 +201,7 @@ DirectX11Graphics::~DirectX11Graphics()
     {
         BlendState->Release();
     }
-
-    if (BackbufferView)
-    {
-        BackbufferView->Release();
-    }
-
+    
     if (SwapChain)
     {
         SwapChain->Release();
@@ -219,7 +217,7 @@ DirectX11Graphics::~DirectX11Graphics()
         Device->Release();
     }
     if (renderTargetTexture) renderTargetTexture->Release();
-    if (renderTargetView) renderTargetView->Release();
+    if (viewportRenderTargetView) viewportRenderTargetView->Release();
     if (shaderResourceView) shaderResourceView->Release();
     if (depthState) depthState->Release();
     if (skyDepthState) skyDepthState->Release();
@@ -274,6 +272,102 @@ void DirectX11Graphics::RenderBucket(RenderingStats& stats, IShader* previousSha
     }
 }
 
+void DirectX11Graphics::RenderScene(std::shared_ptr<IRenderTarget> target)
+{
+    Context->OMSetRenderTargets(1, &target->RenderTargetView, target->DepthStencilView);
+    //clear depth stencil for main frame regardless of target
+    // Context->ClearDepthStencilView(windowRenderTarget->DepthStencilView, D3D11_CLEAR_DEPTH, 1, 0);
+    Context->ClearDepthStencilView(target->DepthStencilView, D3D11_CLEAR_DEPTH, 1, 0);
+
+    // if (renderToTexture)
+    if (false)
+    {
+        float color = 32.0f / 255;
+        float clearColour[4] = {color, color, color, 1.0f};
+        float textureClearColour[4] = {color, color, color, 1.0f}; //{1.0f, 1.0f, 1.0f, 1.0f};
+        Context->ClearRenderTargetView(viewportRenderTargetView, clearColour);
+        //Context->ClearRenderTargetView(RenderTargetView, textureClearColour);
+    }
+    else
+    {
+        float clearColour[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+        Context->ClearRenderTargetView(windowRenderTarget->RenderTargetView, clearColour);
+        D3D11_VIEWPORT viewport;
+        viewport.Width = static_cast<float>(target->Width);
+        viewport.Height = static_cast<float>(target->Height);
+        viewport.MinDepth = 0.0f;
+        viewport.MaxDepth = 1.0f;
+        viewport.TopLeftX = 0.0f;
+        viewport.TopLeftY = 0.0f;
+        Context->RSSetViewports(1, &viewport);
+    }
+    RenderingStats stats;
+    stats.width = target->Width;
+    stats.height = target->Height;
+    // stats.viewportWidth = texWidth;
+    // stats.viewportHeight = texHeight;
+    stats.viewportWidth = target->Width;
+    stats.viewportHeight = target->Height;
+    IShader* previousShader = nullptr;
+    PerFrameConstantBufferData constantBufferData;
+
+    if (camera)
+    {
+        constantBufferData.ViewProjectionMatrix = camera->GetViewProjectionMatrix();
+    }
+    Context->UpdateSubresource(perFrameConstantBuffer, 0, nullptr, &constantBufferData, 0, 0);
+
+    if (camera != nullptr)
+    {
+        auto pos = camera->GetTransform()->Position;
+        lightProperties.EyePosition = XMFLOAT4(pos.X(), pos.Y(), pos.Z(), 1);
+    }
+
+    if (const auto& scene = SceneManager::GetScene().lock())
+    {
+        lightProperties.GlobalAmbient = XMFLOAT4(scene->GetAmbientLightColor().vec.x,
+                                                 scene->GetAmbientLightColor().vec.y,
+                                                 scene->GetAmbientLightColor().vec.z, 1.0f);
+        int count = 0;
+        const auto dirLight = scene->GetDirectionalLight();
+        if (const auto dirLightShared = dirLight.lock())
+        {
+            lightProperties.Lights[count] = dirLightShared->GetLight();
+            count++;
+        }
+        for (auto light : scene->GetLights())
+        {
+            lightProperties.Lights[count] = light->GetLight();
+            count++;
+            if (count == MAX_LIGHTS)
+            {
+                break;
+            }
+        }
+    }
+    Context->UpdateSubresource(lightPropertiesConstantBuffer, 0, nullptr, &lightProperties, 0, 0);
+    Context->PSSetConstantBuffers(1, 1, &lightPropertiesConstantBuffer);
+
+    for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
+    {
+        if (bucket->first == nullptr)
+        {
+            continue;
+        }
+
+        RenderBucket(stats, previousShader, bucket);
+    }
+    currentStats = stats;
+    for (auto strategy : postRenderStrategies)
+    {
+        if (strategy != nullptr)
+        {
+            strategy->Update();
+        }
+    }
+    Context->OMSetRenderTargets(1, &windowRenderTarget->RenderTargetView, windowRenderTarget->DepthStencilView);
+}
+
 void DirectX11Graphics::Update()
 {
     for (auto it = Renderables.begin(); it != Renderables.end();)
@@ -290,99 +384,11 @@ void DirectX11Graphics::Update()
 
     if (Context && SwapChain)
     {
-        ID3D11RenderTargetView* activeRenderTarget = renderToTexture ? renderTargetView : BackbufferView;
-        ID3D11DepthStencilView* activedepthView = renderToTexture ? textureTargetDepthStencilView : DepthStencilView;
-
-        Context->OMSetRenderTargets(1, &activeRenderTarget, activedepthView);
-        //clear depth stencil for main frame regardless of target
-        Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH, 1, 0);
-        Context->ClearDepthStencilView(activedepthView, D3D11_CLEAR_DEPTH, 1, 0);
-
-        if (renderToTexture)
+        for (auto target : RenderTargets)
         {
-            float color = 32.0f / 255;
-            float clearColour[4] = {color, color, color, 1.0f};
-            float textureClearColour[4] = {color, color, color, 1.0f}; //{1.0f, 1.0f, 1.0f, 1.0f};
-            Context->ClearRenderTargetView(renderTargetView, clearColour);
-            Context->ClearRenderTargetView(BackbufferView, textureClearColour);
+            auto targetLock = target.lock();
+            RenderScene(targetLock);
         }
-        else
-        {
-            float clearColour[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-            Context->ClearRenderTargetView(BackbufferView, clearColour);
-            D3D11_VIEWPORT viewport;
-            viewport.Width = static_cast<float>(width);
-            viewport.Height = static_cast<float>(height);
-            viewport.MinDepth = 0.0f;
-            viewport.MaxDepth = 1.0f;
-            viewport.TopLeftX = 0.0f;
-            viewport.TopLeftY = 0.0f;
-            Context->RSSetViewports(1, &viewport);
-        }
-        RenderingStats stats;
-        stats.width = width;
-        stats.height = height;
-        stats.viewportWidth = texWidth;
-        stats.viewportHeight = texHeight;
-        IShader* previousShader = nullptr;
-        PerFrameConstantBufferData constantBufferData;
-
-        if (camera)
-        {
-            constantBufferData.ViewProjectionMatrix = camera->GetViewProjectionMatrix();
-        }
-        Context->UpdateSubresource(perFrameConstantBuffer, 0, nullptr, &constantBufferData, 0, 0);
-
-        if (camera != nullptr)
-        {
-            auto pos = camera->GetTransform()->Position;
-            lightProperties.EyePosition = XMFLOAT4(pos.X(), pos.Y(), pos.Z(), 1);
-        }
-
-        if (const auto& scene = SceneManager::GetScene().lock())
-        {
-            lightProperties.GlobalAmbient = XMFLOAT4(scene->GetAmbientLightColor().vec.x,
-                                                     scene->GetAmbientLightColor().vec.y,
-                                                     scene->GetAmbientLightColor().vec.z, 1.0f);
-            int count = 0;
-            const auto dirLight = scene->GetDirectionalLight();
-            if(const auto dirLightShared = dirLight.lock())
-            {
-                lightProperties.Lights[count] = dirLightShared->GetLight();
-                count++;
-            }
-            for (auto light : scene->GetLights())
-            {
-                
-                lightProperties.Lights[count] = light->GetLight();
-                count++;
-                if (count == MAX_LIGHTS)
-                {
-                    break;
-                }
-            }
-        }
-        Context->UpdateSubresource(lightPropertiesConstantBuffer, 0, nullptr, &lightProperties, 0, 0);
-        Context->PSSetConstantBuffers(1, 1, &lightPropertiesConstantBuffer);
-
-        for (auto bucket = Renderables.begin(); bucket != Renderables.end(); ++bucket)
-        {
-            if (bucket->first == nullptr)
-            {
-                continue;
-            }
-
-            RenderBucket(stats, previousShader, bucket);
-        }
-        currentStats = stats;
-        for (auto strategy : postRenderStrategies)
-        {
-            if (strategy != nullptr)
-            {
-                strategy->Update();
-            }
-        }
-        Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
     }
 }
 
@@ -744,65 +750,61 @@ void DirectX11Graphics::SetActiveCamera(std::shared_ptr<ICamera> camera)
     this->camera = camera;
 }
 
-void DirectX11Graphics::SetRenderToTexture(bool state, int width, int height)
+void DirectX11Graphics::SetRenderToTexture(int width, int height)
 {
-    if (state)
+    auto texWidth = width;
+    auto texHeight = height;
+
+    if (renderTargetTexture) renderTargetTexture->Release();
+    if (viewportRenderTargetView) viewportRenderTargetView->Release();
+    if (shaderResourceView) shaderResourceView->Release();
+
+    if (textureTargetDepthStencilBuffer) textureTargetDepthStencilBuffer->Release();
+    if (textureTargetDepthStencilView) textureTargetDepthStencilView->Release();
+
+    D3D11_VIEWPORT textureViewport;
+    textureViewport.TopLeftX = 0.0f;
+    textureViewport.TopLeftY = 0.0f;
+    textureViewport.Width = static_cast<float>(texWidth);
+    textureViewport.Height = static_cast<float>(texHeight);
+    textureViewport.MinDepth = 0.0f;
+    textureViewport.MaxDepth = 1.0f;
+    Context->RSSetViewports(1, &textureViewport);
+
+    D3D11_TEXTURE2D_DESC textureDesc;
+    ZeroMemory(&textureDesc, sizeof(textureDesc));
+    textureDesc.Width = texWidth;
+    textureDesc.Height = texHeight;
+    textureDesc.MipLevels = 1;
+    textureDesc.ArraySize = 1;
+    textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    textureDesc.SampleDesc.Count = 1;
+    textureDesc.Usage = D3D11_USAGE_DEFAULT;
+    textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+    Device->CreateTexture2D(&textureDesc, nullptr, &renderTargetTexture);
+    Device->CreateRenderTargetView(renderTargetTexture, nullptr, &viewportRenderTargetView);
+    Device->CreateShaderResourceView(renderTargetTexture, nullptr, &shaderResourceView);
+
+    D3D11_TEXTURE2D_DESC depthDesc;
+    ZeroMemory(&depthDesc, sizeof(depthDesc));
+    depthDesc.Width = width;
+    depthDesc.Height = height;
+    depthDesc.MipLevels = 1;
+    depthDesc.ArraySize = 1;
+    depthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depthDesc.SampleDesc.Count = 1;
+    depthDesc.Usage = D3D11_USAGE_DEFAULT;
+    depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    Device->CreateTexture2D(&depthDesc, nullptr, &textureTargetDepthStencilBuffer);
+
+    Device->CreateDepthStencilView(textureTargetDepthStencilBuffer, nullptr, &textureTargetDepthStencilView);
+
+    Context->OMSetRenderTargets(1, &viewportRenderTargetView, textureTargetDepthStencilView);
+    if (camera != nullptr)
     {
-        texWidth = width;
-        texHeight = height;
-
-        if (renderTargetTexture) renderTargetTexture->Release();
-        if (renderTargetView) renderTargetView->Release();
-        if (shaderResourceView) shaderResourceView->Release();
-
-        if (textureTargetDepthStencilBuffer) textureTargetDepthStencilBuffer->Release();
-        if (textureTargetDepthStencilView) textureTargetDepthStencilView->Release();
-
-        D3D11_VIEWPORT textureViewport;
-        textureViewport.TopLeftX = 0.0f;
-        textureViewport.TopLeftY = 0.0f;
-        textureViewport.Width = static_cast<float>(texWidth);
-        textureViewport.Height = static_cast<float>(texHeight);
-        textureViewport.MinDepth = 0.0f;
-        textureViewport.MaxDepth = 1.0f;
-        Context->RSSetViewports(1, &textureViewport);
-
-        D3D11_TEXTURE2D_DESC textureDesc;
-        ZeroMemory(&textureDesc, sizeof(textureDesc));
-        textureDesc.Width = texWidth;
-        textureDesc.Height = texHeight;
-        textureDesc.MipLevels = 1;
-        textureDesc.ArraySize = 1;
-        textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        textureDesc.SampleDesc.Count = 1;
-        textureDesc.Usage = D3D11_USAGE_DEFAULT;
-        textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-        Device->CreateTexture2D(&textureDesc, nullptr, &renderTargetTexture);
-        Device->CreateRenderTargetView(renderTargetTexture, nullptr, &renderTargetView);
-        Device->CreateShaderResourceView(renderTargetTexture, nullptr, &shaderResourceView);
-
-        D3D11_TEXTURE2D_DESC depthDesc;
-        ZeroMemory(&depthDesc, sizeof(depthDesc));
-        depthDesc.Width = width;
-        depthDesc.Height = height;
-        depthDesc.MipLevels = 1;
-        depthDesc.ArraySize = 1;
-        depthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-        depthDesc.SampleDesc.Count = 1;
-        depthDesc.Usage = D3D11_USAGE_DEFAULT;
-        depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-        Device->CreateTexture2D(&depthDesc, nullptr, &textureTargetDepthStencilBuffer);
-
-        Device->CreateDepthStencilView(textureTargetDepthStencilBuffer, nullptr, &textureTargetDepthStencilView);
-
-        Context->OMSetRenderTargets(1, &renderTargetView, textureTargetDepthStencilView);
-        if (camera != nullptr)
-        {
-            camera->SetWidth(static_cast<float>(texWidth));
-            camera->SetHeight(static_cast<float>(texHeight));
-        }
+        camera->SetWidth(static_cast<float>(texWidth));
+        camera->SetHeight(static_cast<float>(texHeight));
     }
-    renderToTexture = state;
 }
 
 ID3D11ShaderResourceView* DirectX11Graphics::GetTextureView() const
@@ -820,86 +822,22 @@ IMaterial* DirectX11Graphics::CreateMaterial(IShader* shader, ITexture* texture)
     return new DirectX11Material(shader, texture);
 }
 
-void DirectX11Graphics::Resize(int newWidth, int newHeight)
+void DirectX11Graphics::WindowResize(int newWidth, int newHeight)
 {
     if (Device == nullptr || newWidth == 0 || newHeight == 0) return;
-
-    Context->OMSetRenderTargets(0, nullptr, nullptr);
-    if (BackbufferView)
-    {
-        BackbufferView->Release();
-        BackbufferView = nullptr;
-    }
-    if (DepthStencilView)
-    {
-        DepthStencilView->Release();
-        DepthStencilView = nullptr;
-    }
-
-    HRESULT hr = SwapChain->ResizeBuffers(0, newWidth, newHeight, DXGI_FORMAT_UNKNOWN, 0);
-    if (FAILED(hr))
-    {
-        Error("Failed resizing swapchain buffersr")
-    }
-
-    ID3D11Texture2D* backBuffer = nullptr;
-    hr = SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer));
-    if (SUCCEEDED(hr))
-    {
-        hr = Device->CreateRenderTargetView(backBuffer, nullptr, &BackbufferView);
-        backBuffer->Release();
-    }
-    if (FAILED(hr))
-    {
-        Error("Failed resetting back buffer")
-    }
-
-    D3D11_TEXTURE2D_DESC depthStencilDesc;
-    ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
-    depthStencilDesc.Width = newWidth;
-    depthStencilDesc.Height = newHeight;
-    depthStencilDesc.MipLevels = 1;
-    depthStencilDesc.ArraySize = 1;
-    depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depthStencilDesc.SampleDesc.Count = 1;
-    depthStencilDesc.SampleDesc.Quality = 0;
-    depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-    depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-
-    ID3D11Texture2D* depthStencilBuffer;
-    hr = Device->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencilBuffer);
-    if (SUCCEEDED(hr))
-    {
-        hr = Device->CreateDepthStencilView(depthStencilBuffer, nullptr, &DepthStencilView);
-        depthStencilBuffer->Release();
-    }
-    if (FAILED(hr))
-    {
-        Error("Failed modifying depth buffer")
-    }
-
-    Context->OMSetRenderTargets(1, &BackbufferView, DepthStencilView);
-
-    D3D11_VIEWPORT viewport = {};
-    viewport.Width = static_cast<float>(newWidth);
-    viewport.Height = static_cast<float>(newHeight);
-    viewport.MinDepth = 0.0f;
-    viewport.MaxDepth = 1.0f;
-    viewport.TopLeftX = 0.0f;
-    viewport.TopLeftY = 0.0f;
-    Context->RSSetViewports(1, &viewport);
-
-    this->width = newWidth;
-    this->height = newHeight;
+    windowRenderTarget->Resize(newWidth, newHeight);
+    
+    
     UpdateRenderToTextureResources(newWidth, newHeight);
 }
 
 void DirectX11Graphics::UpdateRenderToTextureResources(int newWidth, int newHeight)
 {
-    if (renderToTexture)
+    // if (renderToTexture)
+    if(false)
     {
         if (renderTargetTexture) renderTargetTexture->Release();
-        if (renderTargetView) renderTargetView->Release();
+        if (viewportRenderTargetView) viewportRenderTargetView->Release();
         if (shaderResourceView) shaderResourceView->Release();
 
         D3D11_TEXTURE2D_DESC textureDesc;
@@ -913,16 +851,13 @@ void DirectX11Graphics::UpdateRenderToTextureResources(int newWidth, int newHeig
         textureDesc.Usage = D3D11_USAGE_DEFAULT;
         textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
         Device->CreateTexture2D(&textureDesc, nullptr, &renderTargetTexture);
-        Device->CreateRenderTargetView(renderTargetTexture, nullptr, &renderTargetView);
+        Device->CreateRenderTargetView(renderTargetTexture, nullptr, &viewportRenderTargetView);
         Device->CreateShaderResourceView(renderTargetTexture, nullptr, &shaderResourceView);
-
-        texWidth = newWidth;
-        texHeight = newHeight;
-
+        
         if (camera)
         {
-            camera->SetWidth(static_cast<float>(texWidth));
-            camera->SetHeight(static_cast<float>(texHeight));
+            camera->SetWidth(static_cast<float>(newWidth));
+            camera->SetHeight(static_cast<float>(newHeight));
         }
     }
 }
@@ -956,6 +891,11 @@ bool DirectX11Graphics::TryUpdateShader(IShader* iShader, const char* vsentry, c
         MessageBox(nullptr, "Invalid DirectX11Graphics", "Error!", MB_ICONEXCLAMATION | MB_OK);
     }
     return true;
+}
+
+IDXGISwapChain* DirectX11Graphics::GetSwapChain() const
+{
+    return SwapChain;
 }
 
 

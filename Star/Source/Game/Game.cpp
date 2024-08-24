@@ -43,9 +43,9 @@ void Game::PostGraphics()
 {
 }
 
-void Game::Resize(int width, int height)
+void Game::WindowResize(int width, int height)
 {
-    Graphics->Resize(width,height);
+    Graphics->WindowResize(width,height);
 }
 
 

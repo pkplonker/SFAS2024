@@ -118,7 +118,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 void HandleWindowResize(int width, int height)
 {
-    if (Application) Application->Resize(width, height);
+    if (Application) Application->WindowResize(width, height);
 }
 
 void ShepherdMouseInput(UINT msg, WPARAM wParam, LPARAM lParam)

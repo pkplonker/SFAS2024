@@ -36,7 +36,7 @@ public:
     virtual void Cleanup();
     virtual void PostGraphics();
     static IGraphics* GetGraphics();
-    void Resize(int width, int height) override;
+    void WindowResize(int width, int height) override;
 
 private:
     inline static std::shared_ptr<GameObject> camera = {};
